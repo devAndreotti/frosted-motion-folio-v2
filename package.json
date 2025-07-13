@@ -1,5 +1,6 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "frosted-motion-folio",
+  "homepage": "https://devandreotti.github.io/frosted-motion-folio/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
