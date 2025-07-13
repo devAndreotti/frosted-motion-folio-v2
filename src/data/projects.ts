@@ -14,7 +14,7 @@ export const projects: Project[] = [
     id: 1,
     title: "Cook App",
     description: "Aplicação móvel desenvolvida em React Native, Expo e Supabase para gerenciamento de dados. Criada como parte de um curso da Rocketseat, oferece uma experiência de usuário completa e funcional em dispositivos Android e iOS.",
-    image: "./public/projects/httpsgithub.comdevAndreotticook-app/project.png",
+    image: "./projects/httpsgithub.comdevAndreotticook-app/project.png",
     technologies: ["React Native", "Expo", "Supabase", "TypeScript"],
     githubUrl: "https://github.com/devAndreotti/cook-app"
   },
