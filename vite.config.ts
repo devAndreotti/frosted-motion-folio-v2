@@ -4,7 +4,7 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
-  base: '/frosted-motion-folio/', // <-- ESSA LINHA É FUNDAMENTAL
+  base: '/frosted-motion-folio-v2/', // <-- ESSA LINHA É FUNDAMENTAL
   server: {
     host: "::",
     port: 8080,
