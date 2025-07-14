@@ -8,8 +8,8 @@ body {
   @apply bg-gray-900; /* Ou a cor de fundo que você preferir */
 }
 
-#root {
-  min-height: 100vh;
+html {
+  overflow-x: hidden;
 }
 
 @layer base {
