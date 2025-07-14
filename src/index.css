@@ -3,6 +3,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body {
+  @apply bg-gray-900; /* Ou a cor de fundo que você preferir */
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
