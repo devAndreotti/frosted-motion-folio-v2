@@ -8,6 +8,10 @@ body {
   @apply bg-gray-900; /* Ou a cor de fundo que você preferir */
 }
 
+#root {
+  min-height: 100vh;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
