@@ -1,73 +1,117 @@
-# Welcome to your Lovable project
+# ❄️ Frosted Motion Folio - Portfólio Interativo e Dinâmico!
+<p align="center">
+  <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/devAndreotti/frosted-motion-folio-v2?color=FFF&labelColor=336699&style=flat-square">
+  <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/devAndreotti/frosted-motion-folio-v2?color=FFF&labelColor=336699&style=flat-square">
+  <img alt="GitHub License" src="https://img.shields.io/github/license/devAndreotti/frosted-motion-folio-v2?color=FFF&labelColor=336699&style=flat-square">
+</p>
 
-## Project info
+<div align="center">
+  <img src="./public/img/project.png" alt="Captura de tela do Frosted Motion Folio">
+</div>
 
-**URL**: https://lovable.dev/projects/d6beff58-3adb-4e66-b32a-2b8df08849d6
+## 📋 Sobre o Projeto
+O **Frosted Motion Folio** é um portfólio pessoal interativo e visualmente atraente, desenvolvido para apresentar projetos de forma dinâmica e moderna. Utilizando tecnologias como **React**, **TypeScript** e **Tailwind CSS**, o projeto foca em uma **experiência de usuário fluida**, **design responsivo** e **animações sutis** que destacam o conteúdo. A interface 
 
-## How can I edit this code?
+apresenta um efeito de "vidro fosco" (frosted glass) que adiciona um toque de elegância e modernidade.
 
-There are several ways of editing your application.
+## ⚙️ Funcionalidades Principais
+* **Design Interativo**: Navegação intuitiva e animações que enriquecem a experiência do usuário.
+* **Seções Dedicadas**: Áreas para "Início", "Sobre", "Skills", "Projetos" e "Contato".
+* **Projetos Detalhados**: Apresentação de projetos com descrições, tecnologias e links para código/demo.
+* **Responsividade**: Adaptação perfeita para diferentes tamanhos de tela, de desktops a dispositivos móveis.
+* **Efeito Frosted Glass**: Um visual moderno e elegante que se destaca.
 
-**Use Lovable**
+## 🌐 Visualize o Projeto
+Acesse o portfólio diretamente pelo link:
+👉 [**Frosted Motion Folio**](https://devandreotti.github.io/frosted-motion-folio-v2/)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/d6beff58-3adb-4e66-b32a-2b8df08849d6) and start prompting.
+## 🛠 Tecnologias Utilizadas
+* **[React](https://react.dev/)** — Biblioteca JavaScript para construção de interfaces de usuário.
+* **[TypeScript](https://www.typescriptlang.org/)** — Adiciona tipagem estática ao JavaScript para maior robustez.
+* **[Vite](https://vitejs.dev/)** — Ferramenta de build rápida e moderna para projetos web.
+* **[Tailwind CSS](https://tailwindcss.com/)** — Framework CSS utilitário para estilização rápida e responsiva.
+* **[Framer Motion](https://www.framer.com/motion/)** — Biblioteca para animações declarativas e de alta performance.
+* **[React Router DOM](https://reactrouter.com/en/main/start/tutorial)** — Gerenciamento de rotas na aplicação.
+* **[Lucide React](https://lucide.dev/guide/packages/lucide-react)** — Coleção de ícones SVG personalizáveis.
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+## 📂 Estrutura do Projeto
+```
+frosted-motion-folio-v2/
+├── public/
+│   ├── img/
+│   │   └── project.png
+│   └── ...
+├── src/
+│   ├── assets/
+│   ├── components/
+│   │   ├── About.tsx
+│   │   ├── Contact.tsx
+│   │   ├── Home.tsx
+│   │   ├── Navbar.tsx
+│   │   ├── Projects.tsx
+│   │   ├── Skills.tsx
+│   │   └── ...
+│   ├── App.tsx
+│   ├── main.tsx
+│   ├── index.css
+│   ├── App.css
+│   └── ...
+├── package.json
+├── tsconfig.json
+├── vite.config.ts
+└── ...
 ```
 
-**Edit a file directly in GitHub**
+## 🚀 Como Rodar Localmente
+1. **Clone o repositório:**
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+   ```bash
+   git clone https://github.com/devAndreotti/frosted-motion-folio-v2.git
+   ```
+2. **Acesse a pasta do projeto:**
 
-**Use GitHub Codespaces**
+   ```bash
+   cd frosted-motion-folio-v2
+   ```
+3. **Instale as dependências:**
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+   ```bash
+   npm install
+   # ou yarn
+   # ou bun
+   ```
+4. **Execute o servidor de desenvolvimento:**
 
-## What technologies are used for this project?
+   ```bash
+   npm run dev
+   # ou yarn dev
+   # ou bun dev
+   ```
 
-This project is built with:
+## 🔮 Futuras Melhorias
+* [ ] **Novos Projetos**: Adicionar mais exemplos de projetos desenvolvidos.
+* [ ] **Otimização de Performance**: Melhorar o carregamento e a fluidez das animações.
+* [ ] **Internacionalização**: Suporte a múltiplos idiomas.
+* [ ] **Testes Automatizados**: Implementar testes unitários e de integração.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 💪 Como Contribuir
+Contribuições são bem-vindas!
+Siga os passos abaixo para contribuir:
 
-## How can I deploy this project?
+1. Faça um fork do repositório.
+2. Crie uma branch: `git checkout -b feature/sua-feature`.
+3. Commit suas alterações: `git commit -m "feat: minha contribuição"`.
+4. Faça o push da branch: `git push origin feature/sua-feature`.
+5. Abra um Pull Request com um resumo das alterações propostas.
 
-Simply open [Lovable](https://lovable.dev/projects/d6beff58-3adb-4e66-b32a-2b8df08849d6) and click on Share -> Publish.
+## 📝 Licença
+Este projeto está sob a licença MIT.
+Consulte o arquivo [LICENSE](https://github.com/devAndreotti/devAndreotti/blob/main/LICENSE) para mais detalhes.
 
-## Can I connect a custom domain to my Lovable project?
+<br>
 
-Yes, you can!
+---
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+<p align="center">
+  Desenvolvido com ☕ por <a href="https://github.com/devAndreotti">Ricardo Andreotti Gonçalves</a> 🧑‍💻
+</P>
