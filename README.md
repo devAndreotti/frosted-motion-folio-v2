@@ -60,7 +60,7 @@ frosted-motion-folio-v2/
 ├── package.json
 ├── tsconfig.json
 └── vite.config.ts
-````
+```
 
 ## 🚀 Como Rodar Localmente
 1. **Clone o repositório:**
