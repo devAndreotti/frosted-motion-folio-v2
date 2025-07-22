@@ -2,7 +2,7 @@
 <p align="center">
   <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/devAndreotti/frosted-motion-folio-v2?color=FFF&labelColor=336699&style=flat-square">
   <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/devAndreotti/frosted-motion-folio-v2?color=FFF&labelColor=336699&style=flat-square">
-  <img alt="GitHub License" src="https://img.shields.io/github/license/devAndreotti/frosted-motion-folio-v2?color=FFF&labelColor=336699&style=flat-square">
+  <img alt="GitHub License" src="https://img.shields.io/github/license/devAndreotti/devAndreotti?color=FFF&labelColor=336699&style=flat-square">
 </p>
 
 <p align="center">
@@ -88,12 +88,12 @@ frosted-motion-folio-v2/
    # ou yarn dev
    # ou bun dev
    ```
+````
 
 ## 🔮 Melhorias Futuras
 * [ ] Adicionar novos projetos
 * [ ] Melhorar performance e fluidez das animações
 * [ ] Implementar suporte a múltiplos idiomas
-* [ ] Adicionar testes automatizados
 
 ## 💪 Como Contribuir
 1. Faça um fork do repositório
@@ -105,6 +105,8 @@ frosted-motion-folio-v2/
 ## 📝 Licença
 Este projeto está sob a licença MIT.
 Consulte o arquivo [LICENSE](https://github.com/devAndreotti/devAndreotti/blob/main/LICENSE) para mais detalhes.
+
+<br>
 
 ---
 
