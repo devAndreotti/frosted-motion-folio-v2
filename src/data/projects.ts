@@ -245,6 +245,35 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/devAndreotti/pokedex",
     liveUrl: "https://devandreotti.github.io/pokedex"
   }
+
+,
+  {
+    "id": 28,
+    "title": "Essential Tools Navigator",
+    "description": "Plataforma web que permite buscar diversas ferramentas de produtividade, oferecendo informações detalhadas sobre cada uma para ajudar os usuários a maximizar sua eficiência.",
+    "image": "./projects/httpsgithub.comdevAndreottiessential-tools-navigator.png",
+    "technologies": ["HTML5", "CSS3", "JavaScript Vanilla"],
+    "githubUrl": "https://github.com/devAndreotti/essential-tools-navigator",
+    "liveUrl": "https://devandreotti.github.io/essential-tools-navigator"
+  },
+  {
+    "id": 29,
+    "title": "Crypto Glass Hub",
+    "description": "Plataforma cripto com dados dinâmicos, visual 3D e tema claro/escuro. Feita com React, TypeScript, Tailwind e Spline. Moderna, fluida e responsiva para todos os dispositivos.",
+    "image": "./projects/httpsgithub.comdevAndreotticrypto-glass-hub.png",
+    "technologies": ["React", "TypeScript", "Tailwind CSS", "Shadcn UI", "Spline"],
+    "githubUrl": "https://github.com/devAndreotti/crypto-glass-hub",
+    "liveUrl": "https://devandreotti.github.io/crypto-glass-hub"
+  },
+  {
+    "id": 30,
+    "title": "Git Wizard Commander",
+    "description": "Plataforma interativa que ensina Git de forma visual e prática. Permite montar comandos, criar commits, testar conhecimentos com quizzes e acompanhar o progresso.",
+    "image": "./projects/httpsgithub.comdevAndreottigit-wizard-commander.png",
+    "technologies": ["React", "TypeScript", "Tailwind CSS", "Spline", "Shadcn UI"],
+    "githubUrl": "https://github.com/devAndreotti/git-wizard-commander",
+    "liveUrl": "https://devandreotti.github.io/git-wizard-commander"
+  }
 ];
 
 export const skills = [
