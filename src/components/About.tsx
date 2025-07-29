@@ -1,8 +1,10 @@
-import { motion } from 'framer-motion';
-import { Code2, Palette, Zap, Heart } from 'lucide-react';
-import { personalInfo } from '@/data/projects';
+import { motion } from 'framer-motion'; // Animações declarativas com framer-motion
+import { Code2, Palette, Zap, Heart } from 'lucide-react'; // Ícones do pacote lucide-react
+import { personalInfo } from '@/data/projects'; // Dados personalizados (não utilizados neste trecho, mas provavelmente futuros)
 
+// Componente About
 const About = () => {
+  // Destaques de habilidades com ícones e gradientes
   const highlights = [
     { icon: Code2, text: "Clean Code", color: "from-blue-400 to-cyan-400" },
     { icon: Palette, text: "UI/UX Design", color: "from-cyan-400 to-blue-500" },
@@ -12,7 +14,7 @@ const About = () => {
 
   return (
     <section id="about" className="py-20 md:py-32 relative">
-      {/* Background decoration */}
+      {/* Elementos decorativos de fundo com animação suave */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
           className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-r from-blue-400/20 to-cyan-400/20 rounded-full blur-2xl"
@@ -41,6 +43,7 @@ const About = () => {
         />
       </div>
 
+      {/* Conteúdo principal da seção */}
       <div className="container mx-auto px-4 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -49,12 +52,13 @@ const About = () => {
           viewport={{ once: true }}
           className="max-w-5xl mx-auto"
         >
+          {/* Cartão com efeito glass e animação ao hover */}
           <motion.div 
             className="glass-card text-center relative overflow-hidden group"
             whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
-            {/* Animated background gradient */}
+            {/* Gradiente animado de fundo do card */}
             <motion.div
               className="absolute inset-0 bg-gradient-to-br from-blue-400/10 via-transparent to-cyan-400/10"
               animate={{
@@ -68,6 +72,7 @@ const About = () => {
             />
 
             <div className="relative z-10">
+              {/* Título animado da seção */}
               <motion.h2 
                 className="text-4xl md:text-5xl font-bold text-gradient-vibrant mb-8"
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -78,7 +83,9 @@ const About = () => {
                 Sobre Mim
               </motion.h2>
 
+              {/* Grid com descrição e destaques */}
               <div className="grid md:grid-cols-2 gap-8 items-center">
+                {/* Bloco de texto com informações pessoais */}
                 <motion.div
                   className="space-y-6"
                   initial={{ opacity: 0, x: -50 }}
@@ -87,6 +94,7 @@ const About = () => {
                   viewport={{ once: true }}
                 >
                   <div className="text-lg md:text-xl leading-relaxed text-white/90 dark:text-blue-50 space-y-4">
+                    {/* Parágrafos com animações suaves de entrada */}
                     <motion.p
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
@@ -118,6 +126,7 @@ const About = () => {
                   </div>
                 </motion.div>
 
+                {/* Bloco de destaques com ícones e gradientes animados */}
                 <motion.div
                   className="grid grid-cols-2 gap-4"
                   initial={{ opacity: 0, x: 50 }}
@@ -140,9 +149,11 @@ const About = () => {
                       viewport={{ once: true }}
                       whileHover={{ y: -5 }}
                     >
+                      {/* Gradiente de fundo ao passar o mouse */}
                       <motion.div
                         className={`absolute inset-0 bg-gradient-to-br ${highlight.color} opacity-0 group-hover:opacity-20 transition-opacity duration-300`}
                       />
+                      {/* Ícone com destaque visual */}
                       <motion.div
                         className={`w-12 h-12 mx-auto mb-3 bg-gradient-to-br ${highlight.color} rounded-xl flex items-center justify-center relative z-10`}
                         whileHover={{ scale: 1.1 }}
@@ -150,6 +161,7 @@ const About = () => {
                       >
                         <highlight.icon className="w-6 h-6 text-white" />
                       </motion.div>
+                      {/* Texto do destaque */}
                       <span className="text-sm font-semibold text-white/90 dark:text-blue-50 relative z-10">
                         {highlight.text}
                       </span>

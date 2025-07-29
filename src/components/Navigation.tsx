@@ -4,17 +4,22 @@ import { Moon, Sun, Menu, X } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 
 const Navigation = () => {
+  // Obtém o tema atual e a função para alternar o tema do contexto
   const { theme, toggleTheme } = useTheme();
+
+  // Estado para controlar a visibilidade do menu mobile
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // Função para rolar suavemente até uma seção da página
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
-      setIsMobileMenuOpen(false); // Fecha o menu após clicar
+      setIsMobileMenuOpen(false); // Fecha o menu após a navegação
     }
   };
 
+  // Itens do menu de navegação
   const navItems = [
     { name: 'Início', id: 'header' },
     { name: 'Sobre', id: 'about' },
@@ -24,6 +29,7 @@ const Navigation = () => {
   ];
 
   return (
+    // Navbar com animação inicial de entrada
     <motion.nav
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -32,7 +38,7 @@ const Navigation = () => {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
+          {/* Logo com efeito de escala no hover */}
           <motion.div
             whileHover={{ scale: 1.05 }}
             className="text-xl font-bold text-gradient-vibrant cursor-pointer"
@@ -41,7 +47,7 @@ const Navigation = () => {
             Ricardo Andreotti
           </motion.div>
 
-          {/* Desktop Navigation */}
+          {/* Navegação para desktop */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item, index) => (
               <motion.button
@@ -54,11 +60,12 @@ const Navigation = () => {
                 transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
               >
                 {item.name}
+                {/* Linha animada abaixo do item ao passar o mouse */}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-cyan-400 group-hover:w-full transition-all duration-300" />
               </motion.button>
             ))}
 
-            {/* Theme Toggle */}
+            {/* Botão de alternância de tema (claro/escuro) */}
             <motion.button
               onClick={toggleTheme}
               className="glass-button p-2 relative overflow-hidden"
@@ -68,13 +75,15 @@ const Navigation = () => {
               animate={{ opacity: 1, scale: 1, rotate: 0 }}
               transition={{ duration: 0.6, delay: 0.8, type: "spring", stiffness: 150 }}
             >
+              {/* Efeito visual de fundo ao passar o mouse */}
               <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
               {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
             </motion.button>
           </div>
 
-          {/* Mobile Menu Toggle */}
+          {/* Ícones de tema e menu para dispositivos móveis */}
           <div className="md:hidden flex items-center space-x-2">
+            {/* Botão de tema no mobile */}
             <motion.button
               onClick={toggleTheme}
               className="glass-button p-2"
@@ -84,6 +93,7 @@ const Navigation = () => {
               {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
             </motion.button>
 
+            {/* Botão de abrir/fechar o menu mobile */}
             <motion.button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="glass-button p-2"
@@ -95,7 +105,7 @@ const Navigation = () => {
           </div>
         </div>
 
-        {/* Mobile Menu Content */}
+        {/* Conteúdo do menu mobile (visível quando aberto) */}
         {isMobileMenuOpen && (
           <motion.div
             className="md:hidden pb-4 pt-2"

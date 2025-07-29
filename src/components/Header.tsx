@@ -1,12 +1,19 @@
+// Importa animações do Framer Motion
 import { motion } from 'framer-motion';
+// Importa ícones da biblioteca Lucide
 import { Moon, Sun, Github, Linkedin, Mail, Sparkles } from 'lucide-react';
+// Hook personalizado para alternar tema claro/escuro
 import { useTheme } from '@/contexts/ThemeContext';
+// Dados pessoais e links sociais
 import { personalInfo, socialLinks } from '@/data/projects';
+// Componente de navegação
 import Navigation from './Navigation';
 
 const Header = () => {
+  // Acessa o tema atual e a função para alternar
   const { theme, toggleTheme } = useTheme();
 
+  // Retorna o ícone correspondente ao nome da rede social
   const getSocialIcon = (iconName: string) => {
     switch (iconName) {
       case 'github':
@@ -22,7 +29,10 @@ const Header = () => {
 
   return (
     <>
+      {/* Componente de navegação fixo no topo */}
       <Navigation />
+
+      {/* Cabeçalho animado com entrada do topo */}
       <motion.header
         id="header"
         initial={{ opacity: 0, y: -50 }}
@@ -32,7 +42,8 @@ const Header = () => {
       >
         <div className="container mx-auto px-4">
           <div className="flex flex-col items-center text-center relative">
-            {/* Decorative elements */}
+            
+            {/* Círculo decorativo azul na esquerda */}
             <motion.div
               className="absolute -top-10 -left-10 w-20 h-20 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full opacity-20 blur-xl"
               animate={{
@@ -45,7 +56,8 @@ const Header = () => {
                 ease: "easeInOut",
               }}
             />
-            
+
+            {/* Círculo decorativo azul na direita */}
             <motion.div
               className="absolute -top-5 -right-5 w-16 h-16 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full opacity-15 blur-lg"
               animate={{
@@ -60,7 +72,7 @@ const Header = () => {
               }}
             />
 
-            {/* Avatar */}
+            {/* Avatar com animação e brilho */}
             <motion.div
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
@@ -68,12 +80,17 @@ const Header = () => {
               className="mb-8 relative"
             >
               <div className="relative group">
+                {/* Fundo brilhante pulsante atrás do avatar */}
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 rounded-full blur-lg opacity-75 group-hover:opacity-100 transition-opacity duration-300 animate-pulse-slow"></div>
+
+                {/* Imagem do perfil */}
                 <img
                   src="./profile.jpg"
                   alt={personalInfo.name}
                   className="relative w-40 h-40 md:w-48 md:h-48 rounded-full object-cover glass-intense border-4 border-white/40 shadow-3xl group-hover:scale-105 transition-transform duration-300"
                 />
+
+                {/* Camada animada sobre o avatar */}
                 <motion.div
                   className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-400/30 to-cyan-400/30"
                   animate={{
@@ -86,8 +103,8 @@ const Header = () => {
                     ease: "easeInOut",
                   }}
                 />
-                
-                {/* Sparkle effects */}
+
+                {/* Ícone de brilho girando */}
                 <motion.div
                   className="absolute -top-2 -right-2"
                   animate={{
@@ -105,13 +122,14 @@ const Header = () => {
               </div>
             </motion.div>
 
-            {/* Nome e Título */}
+            {/* Nome e título animados */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
               className="mb-6"
             >
+              {/* Nome com efeito de brilho */}
               <motion.h1 
                 className="text-5xl md:text-7xl font-bold text-gradient-vibrant mb-4 relative"
                 whileHover={{ scale: 1.05 }}
@@ -129,6 +147,8 @@ const Header = () => {
                   }}
                 />
               </motion.h1>
+
+              {/* Título profissional */}
               <motion.p 
                 className="text-2xl md:text-3xl text-blue-100 dark:text-blue-200 font-medium"
                 initial={{ opacity: 0 }}
@@ -139,7 +159,7 @@ const Header = () => {
               </motion.p>
             </motion.div>
 
-            {/* Bio */}
+            {/* Bio curta do desenvolvedor */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -151,14 +171,14 @@ const Header = () => {
               </p>
             </motion.div>
 
-            {/* Redes Sociais e Toggle Theme */}
+            {/* Área de links sociais e botão de tema */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 1.2, ease: "easeOut" }}
               className="flex items-center gap-6 flex-wrap justify-center"
             >
-              {/* Redes Sociais */}
+              {/* Links de redes sociais com animações */}
               <div className="flex gap-4">
                 {socialLinks.map((social, index) => (
                   <motion.a
@@ -181,13 +201,14 @@ const Header = () => {
                       stiffness: 150
                     }}
                   >
+                    {/* Gradiente animado de fundo */}
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-cyan-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
                     {getSocialIcon(social.icon)}
                   </motion.a>
                 ))}
               </div>
 
-              {/* Divisor */}
+              {/* Divisor visual entre ícones sociais e toggle */}
               <motion.div 
                 className="w-px h-12 bg-gradient-to-b from-transparent via-white/30 to-transparent"
                 initial={{ scaleY: 0 }}
@@ -195,7 +216,7 @@ const Header = () => {
                 transition={{ delay: 1.6, duration: 0.5 }}
               />
 
-              {/* Toggle Theme */}
+              {/* Botão para alternar tema claro/escuro */}
               <motion.button
                 onClick={toggleTheme}
                 className="glass-button group relative overflow-hidden"
@@ -213,7 +234,10 @@ const Header = () => {
                   stiffness: 150
                 }}
               >
+                {/* Gradiente suave ao passar o mouse */}
                 <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
+                
+                {/* Ícone muda conforme o tema */}
                 {theme === 'light' ? (
                   <Moon className="w-6 h-6" />
                 ) : (
