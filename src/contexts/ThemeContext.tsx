@@ -1,43 +1,50 @@
-
 import { createContext, useContext, useEffect, useState } from 'react';
 
+// Tipagem do tema
 type Theme = 'light' | 'dark';
 
+// Interface do contexto
 interface ThemeContextType {
   theme: Theme;
   toggleTheme: () => void;
 }
 
+// Contexto inicial
 const ThemeContext = createContext<ThemeContextType>({
   theme: 'light',
   toggleTheme: () => {},
 });
 
+// Hook personalizado para consumir o tema
 export const useTheme = () => useContext(ThemeContext);
 
+// Provedor do tema
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [theme, setTheme] = useState<Theme>('light');
 
+  // Ao carregar, busca tema salvo ou preferência do sistema
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') as Theme;
-    if (savedTheme) {
-      setTheme(savedTheme);
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setTheme('dark');
+    const saved = localStorage.getItem('theme') as Theme | null;
+
+    if (saved) {
+      setTheme(saved);
+    } else {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(prefersDark ? 'dark' : 'light');
     }
   }, []);
 
+  // Atualiza localStorage e classe do HTML sempre que o tema muda
   useEffect(() => {
     localStorage.setItem('theme', theme);
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+
+    const root = document.documentElement;
+    root.classList.toggle('dark', theme === 'dark');
   }, [theme]);
 
+  // Alterna entre light e dark
   const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
+    setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
   };
 
   return (

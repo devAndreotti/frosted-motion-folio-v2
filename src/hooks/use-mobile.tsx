@@ -1,19 +1,32 @@
-import * as React from "react"
+import * as React from "react";
 
-const MOBILE_BREAKPOINT = 768
+// Define o breakpoint de mobile (em pixels)
+const MOBILE_BREAKPOINT = 768;
 
+// Hook personalizado que detecta se a tela é considerada "mobile"
 export function useIsMobile() {
-  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)
+  // Estado que indica se a tela é mobile (true/false)
+  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined);
 
   React.useEffect(() => {
-    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
-    const onChange = () => {
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
-    }
-    mql.addEventListener("change", onChange)
-    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
-    return () => mql.removeEventListener("change", onChange)
-  }, [])
+    // Cria um MediaQueryList para observar a mudança de largura
+    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
 
-  return !!isMobile
+    // Função que atualiza o estado com base no tamanho atual da janela
+    const onChange = () => {
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    };
+
+    // Adiciona o ouvinte de mudança no tamanho da tela
+    mql.addEventListener("change", onChange);
+
+    // Define o valor inicial
+    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+
+    // Limpa o ouvinte ao desmontar
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+
+  // Garante que o hook sempre retorne um booleano
+  return !!isMobile;
 }

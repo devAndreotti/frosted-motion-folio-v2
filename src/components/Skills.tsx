@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Code, Globe, Wrench, Database, Bot, Blocks } from 'lucide-react';
 
+// Lista categorizada de habilidades e tecnologias com ícones
 const skillsCategories = [
   {
     title: "Linguagens de Programação",
@@ -37,7 +38,7 @@ const skillsCategories = [
 const Skills = () => {
   return (
     <section id="skills" className="py-20 md:py-32 relative">
-      {/* Decorative background */}
+      {/* Fundo animado com gradientes para estética visual */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
           className="absolute top-1/4 left-0 w-64 h-64 bg-gradient-to-r from-blue-400/15 to-transparent rounded-full blur-3xl"
@@ -67,6 +68,7 @@ const Skills = () => {
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
+        {/* Título da seção com animação de entrada */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -82,6 +84,7 @@ const Skills = () => {
           </p>
         </motion.div>
 
+        {/* Grid com categorias de habilidades */}
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
             {skillsCategories.map((category, categoryIndex) => (
@@ -100,13 +103,13 @@ const Skills = () => {
                 }}
                 className="glass-card group relative overflow-hidden"
               >
-                {/* Hover background effect */}
+                {/* Efeito de fundo ao passar o mouse */}
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-br from-blue-400/10 via-cyan-400/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 />
 
                 <div className="relative z-10">
-                  {/* Category Header */}
+                  {/* Cabeçalho da categoria */}
                   <div className="flex items-center gap-3 mb-6">
                     <motion.div
                       className="w-12 h-12 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-xl flex items-center justify-center"
@@ -120,7 +123,7 @@ const Skills = () => {
                     </h3>
                   </div>
 
-                  {/* Skills Grid */}
+                  {/* Lista das skills individuais */}
                   <div className="flex flex-wrap gap-2">
                     {category.skills.map((skill, skillIndex) => (
                       <motion.span
@@ -144,7 +147,7 @@ const Skills = () => {
             ))}
           </div>
 
-          {/* Sempre aprendendo - Centralizado e melhor posicionado */}
+          {/* Mensagem final de aprendizado contínuo com animações */}
           <motion.div
             className="flex justify-center"
             initial={{ opacity: 0, y: 30 }}
@@ -157,6 +160,7 @@ const Skills = () => {
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
+              {/* Ícone animado */}
               <motion.div
                 className="w-12 h-12 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0"
                 animate={{
@@ -171,6 +175,7 @@ const Skills = () => {
                 <span className="text-xl">🚀</span>
               </motion.div>
               
+              {/* Texto de incentivo */}
               <div className="text-left">
                 <p className="text-lg font-semibold text-white/90 dark:text-blue-50 mb-2">
                   Sempre aprendendo e evoluindo
