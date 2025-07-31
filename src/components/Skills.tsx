@@ -147,7 +147,7 @@ const Skills = () => {
             ))}
           </div>
 
-          {/* Mensagem final de aprendizado contínuo com animações */}
+          {/* Mensagem final de aprendizado com animações */}
           <motion.div
             className="flex justify-center"
             initial={{ opacity: 0, y: 30 }}
