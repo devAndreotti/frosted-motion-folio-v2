@@ -123,7 +123,7 @@ const Skills = () => {
                     </h3>
                   </div>
 
-                  {/* Lista das skills individuais */}
+                  {/* Lista das skills */}
                   <div className="flex flex-wrap gap-2">
                     {category.skills.map((skill, skillIndex) => (
                       <motion.span
