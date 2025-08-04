@@ -36,11 +36,11 @@ html {
     --radius: 0.5rem;
     
     /* Blue gradient variables */
-    --blue-deep: 220 100% 15%;
-    --blue-ocean: 210 100% 25%;
-    --blue-sky: 200 100% 40%;
-    --blue-electric: 195 100% 50%;
-    --blue-cyan: 185 100% 60%;
+    --blue-deep: 210 100% 15%;
+    --blue-ocean: 200 100% 23%;
+    --blue-sky: 200 100% 35%;
+    --blue-electric: 210 100% 23%;
+    --blue-cyan: 200 100% 40%;
   }
 
   .dark {
