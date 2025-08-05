@@ -232,7 +232,7 @@ export const projects: Project[] = [
     title: "Self-Sync Daily",
     description: "Aplicação de produtividade pessoal construída com foco em gestão de tempo, monitoramento de energia e reflexão diária.",
     image: "./projects/httpsgithub.comdevAndreottiself-sync-daily.png",
-    technologies: ["Lovable", "React", "TypeScript", "Supabase", "Tailwind CSS", "shadcn/ui", "Vite", "React Query", "React Router", "Recharts"],
+    technologies: ["React", "TypeScript", "Supabase", "Tailwind CSS", "shadcn/ui", "Vite", "React Query", "React Router"],
     githubUrl: "https://github.com/devAndreotti/self-sync-daily",
     liveUrl: "https://self-sync-daily.lovable.app"
   },
@@ -244,9 +244,7 @@ export const projects: Project[] = [
     technologies: ["HTML", "CSS", "JavaScript"],
     githubUrl: "https://github.com/devAndreotti/pokedex",
     liveUrl: "https://devandreotti.github.io/pokedex"
-  }
-
-,
+  },
   {
     "id": 28,
     "title": "Essential Tools Navigator",
@@ -261,7 +259,7 @@ export const projects: Project[] = [
     "title": "Crypto Glass Hub",
     "description": "Plataforma cripto com dados dinâmicos, visual 3D e tema claro/escuro. Feita com React, TypeScript, Tailwind e Spline. Moderna, fluida e responsiva para todos os dispositivos.",
     "image": "./projects/httpsgithub.comdevAndreotticrypto-glass-hub.png",
-    "technologies": ["React", "TypeScript", "Tailwind CSS", "Shadcn UI", "Spline"],
+    "technologies": ["React", "TypeScript", "Tailwind CSS", "Spline"],
     "githubUrl": "https://github.com/devAndreotti/crypto-glass-hub",
     "liveUrl": "https://devandreotti.github.io/crypto-glass-hub"
   },
@@ -270,7 +268,7 @@ export const projects: Project[] = [
     "title": "Git Wizard Commander",
     "description": "Plataforma interativa que ensina Git de forma visual e prática. Permite montar comandos, criar commits, testar conhecimentos com quizzes e acompanhar o progresso.",
     "image": "./projects/httpsgithub.comdevAndreottigit-wizard-commander.png",
-    "technologies": ["React", "TypeScript", "Tailwind CSS", "Spline", "Shadcn UI"],
+    "technologies": ["React", "TypeScript", "Tailwind CSS", "Spline"],
     "githubUrl": "https://github.com/devAndreotti/git-wizard-commander",
     "liveUrl": "https://devandreotti.github.io/git-wizard-commander"
   }
