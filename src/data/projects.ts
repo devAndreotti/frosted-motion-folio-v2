@@ -76,7 +76,8 @@ export const projects: Project[] = [
     description: "Site para clínica odontológica, feito com HTML, CSS e JavaScript. Criado durante curso técnico e atualizado em 2024 com foco em usabilidade, design moderno e formulários com validação.",
     image: "./projects/httpsgithub.comdevAndreottiupa-clinic/new-footer.png",
     technologies: ["HTML", "CSS", "JavaScript"],
-    githubUrl: "https://github.com/devAndreotti/upa-clinic"
+    githubUrl: "https://github.com/devAndreotti/upa-clinic",
+    liveUrl: "https://devandreotti.github.io/upa-clinic"
   },
   {
     id: 9,
@@ -218,6 +219,7 @@ export const projects: Project[] = [
     image: "./projects/httpsgithub.comdevAndreottiAPS-01.png",
     technologies: ["HTML", "CSS", "JavaScript"],
     githubUrl: "https://github.com/devAndreotti/APS-01",
+    liveUrl: "https://devandreotti.github.io/APS-01"
   },
   {
     id: 25,
