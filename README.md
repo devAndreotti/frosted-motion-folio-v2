@@ -44,22 +44,32 @@ Construído com **React**, **TypeScript**, **Tailwind CSS** e **Framer Motion**.
 
 ## 📂 Estrutura do Projeto
 ```
-frosted-motion-folio-v2/
-├── public/
-│   └── img/
-├── src/
-│   ├── assets/
-│   ├── components/
-│   │   ├── About.tsx
-│   │   ├── Contact.tsx
-│   │   ├── Home.tsx
-│   │   ├── Navbar.tsx
-│   │   ├── Projects.tsx
-│   │   ├── Skills.tsx
-│   └── App.tsx
-├── package.json
-├── tsconfig.json
-└── vite.config.ts
+src/
+├── app/
+│   └── transactions/
+│       ├── layout.tsx
+│       └── page.tsx
+├── components/
+│   ├── charts/
+│   ├── layout/
+│   ├── shared/
+│   └── transactions/
+├── config/
+│   ├── charts.ts
+│   └── filters.ts
+├── constants/
+│   ├── app.ts
+│   └── messages.ts
+├── hooks/
+│   └── useFilteredTransactions.ts
+├── lib/
+│   ├── stores/
+│   ├── utils/
+│   └── validations/
+├── styles/
+│   └── globals.css
+├── types/
+└── middleware.ts
 ```
 
 ## 🚀 Como Rodar Localmente
