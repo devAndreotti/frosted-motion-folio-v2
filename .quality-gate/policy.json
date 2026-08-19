@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "profile": "strict-node",
+  "project": {
+    "surfaces": [
+      {
+        "type": "node",
+        "root": ".",
+        "required": true,
+        "commands": {
+          "install": "npm ci",
+          "test": "npm run test --if-present",
+          "lint": "npm run lint --if-present",
+          "build": "npm run build --if-present",
+          "audit": "npm audit --audit-level=moderate"
+        }
+      }
+    ]
+  },
+  "ci": {
+    "_comment": "SonarCloud removed from CI (2026-08-19): the devandreotti org is at its free-tier 50k LOC cap across all projects, so analysis fails on quota, not code quality. Static analysis stays local-only via eslint-plugin-sonarjs (already wired in eslint.config.js) and `npm run lint`/local-validate.cjs.",
+    "requiredChecks": [
+      "Security audit",
+      "Lint",
+      "Tests & ratchet",
+      "Docker image gate"
+    ],
+    "advisoryChecks": [],
+    "coverageRatchet": true,
+    "maxFileLines": 300
+  },
+  "bootstrap": {
+    "license": {
+      "enabled": true,
+      "type": "MIT"
+    },
+    "funding": {
+      "enabled": true,
+      "buyMeACoffee": "ricardo230a"
+    },
+    "dependabot": {
+      "enabled": true
+    },
+    "readme": {
+      "enabled": true,
+      "style": "devandreotti"
+    }
+  },
+  "github": {
+    "copilotReview": true,
+    "branchProtection": true,
+    "requireConversationResolution": true
+  },
+  "dockerImageDoctor": {
+    "enabled": "auto",
+    "runWhen": "docker-files-present",
+    "scriptPath": "D:\\Dev\\Scripts\\seguranca\\18-Docker-Image-Doctor.ps1",
+    "agentArgs": [
+      "-Preset",
+      "AI",
+      "-ForAI",
+      "-Json",
+      "-FixPlan",
+      "-NoPrompt"
+    ],
+    "interactiveAllowed": false,
+    "blockOn": [
+      "Critical"
+    ],
+    "warnOn": [
+      "High",
+      "Medium"
+    ],
+    "fallbackWhenUnavailable": "static-advisory"
+  },
+  "localValidation": {
+    "untrackedAllowlist": [
+      "samples/**"
+    ],
+    "pytestBasetempPattern": ".pytest-tmp-qg-${timestamp}-${pid}"
+  }
+}
