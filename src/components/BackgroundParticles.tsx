@@ -1,83 +1,65 @@
-import { motion } from 'framer-motion'; // Importa o componente de animação do Framer Motion
+// Partículas e orbes gerados uma única vez em tempo de importação (não a cada render)
+// e animados via CSS puro (@keyframes), muito mais barato que JS/Framer Motion
+// para um efeito ambiente sem interatividade.
+const PARTICLE_COUNT = 24; // Reduzido de 60: mesmo efeito visual, muito menos elementos animados
+const ORB_COUNT = 6; // Reduzido de 8
+
+const particles = Array.from({ length: PARTICLE_COUNT }, (_, i) => ({
+  id: i,
+  size: Math.random() * 6 + 2, // Tamanho entre 2 e 8px
+  x: Math.random() * 100, // Posição horizontal (%)
+  y: Math.random() * 100, // Posição vertical (%)
+  duration: Math.random() * 25 + 15, // Duração da animação entre 15s e 40s
+  delay: Math.random() * 10, // Atraso aleatório na animação
+  // Alterna entre quatro cores com transparência
+  color: i % 4 === 0 ? 'bg-blue-400/30' :
+         i % 4 === 1 ? 'bg-cyan-400/30' :
+         i % 4 === 2 ? 'bg-blue-300/20' : 'bg-cyan-300/20',
+}));
+
+const orbs = Array.from({ length: ORB_COUNT }, (_, i) => ({
+  id: i,
+  size: Math.random() * 200 + 100, // Tamanho entre 100 e 300px
+  x: Math.random() * 100, // Posição horizontal (%)
+  y: Math.random() * 100, // Posição vertical (%)
+  duration: Math.random() * 20 + 30, // Duração entre 30s e 50s
+  delay: Math.random() * 5, // Atraso aleatório
+}));
 
 const BackgroundParticles = () => {
-  // Gera 60 partículas com propriedades aleatórias (tamanho, posição, duração, etc.)
-  const particles = Array.from({ length: 60 }, (_, i) => ({
-    id: i,
-    size: Math.random() * 6 + 2, // Tamanho entre 2 e 8px
-    x: Math.random() * 100, // Posição horizontal (%)
-    y: Math.random() * 100, // Posição vertical (%)
-    duration: Math.random() * 25 + 15, // Duração da animação entre 15s e 40s
-    delay: Math.random() * 10, // Atraso aleatório na animação
-    // Alterna entre quatro cores com transparência
-    color: i % 4 === 0 ? 'bg-blue-400/30' : 
-           i % 4 === 1 ? 'bg-cyan-400/30' : 
-           i % 4 === 2 ? 'bg-blue-300/20' : 'bg-cyan-300/20',
-  }));
-
-  // Gera 8 orbes flutuantes com tamanhos e posições aleatórias
-  const orbs = Array.from({ length: 8 }, (_, i) => ({
-    id: i,
-    size: Math.random() * 200 + 100, // Tamanho entre 100 e 300px
-    x: Math.random() * 100, // Posição horizontal (%)
-    y: Math.random() * 100, // Posição vertical (%)
-    duration: Math.random() * 20 + 30, // Duração entre 30s e 50s
-    delay: Math.random() * 5, // Atraso aleatório
-  }));
-
   return (
     <>
-      {/* Orbes flutuantes animados com movimento suave e pulsação */}
+      {/* Orbes flutuantes animados com movimento suave e pulsação (CSS puro) */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         {orbs.map((orb) => (
-          <motion.div
+          <div
             key={`orb-${orb.id}`}
-            className="floating-orb"
+            className="floating-orb animate-orb-drift"
             style={{
               width: orb.size,
               height: orb.size,
               left: `${orb.x}%`,
               top: `${orb.y}%`,
-            }}
-            animate={{
-              x: [0, 100, -100, 0], // Movimento lateral oscilante
-              y: [0, -100, 100, 0], // Movimento vertical oscilante
-              opacity: [0.05, 0.15, 0.05], // Oscilação da opacidade
-              scale: [1, 1.2, 0.8, 1], // Pulsação
-            }}
-            transition={{
-              duration: orb.duration,
-              delay: orb.delay,
-              repeat: Infinity,
-              ease: "easeInOut",
+              animationDuration: `${orb.duration}s`,
+              animationDelay: `${orb.delay}s`,
             }}
           />
         ))}
       </div>
 
-      {/* Partículas pequenas com movimento contínuo, simulando um efeito leve de "pó mágico" */}
+      {/* Partículas pequenas com movimento contínuo, simulando um efeito leve de "pó mágico" (CSS puro) */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         {particles.map((particle) => (
-          <motion.div
+          <div
             key={`particle-${particle.id}`}
-            className={`absolute rounded-full ${particle.color} blur-sm`}
+            className={`absolute rounded-full ${particle.color} blur-sm animate-particle-drift`}
             style={{
               width: particle.size,
               height: particle.size,
               left: `${particle.x}%`,
               top: `${particle.y}%`,
-            }}
-            animate={{
-              y: [0, -150, 0], // Movimento vertical ascendente e retorno
-              x: [0, Math.random() * 100 - 50, 0], // Leve movimento horizontal aleatório
-              opacity: [0, 1, 0], // Aparecimento e desaparecimento suave
-              scale: [0, 1.5, 0], // Crescimento e contração
-            }}
-            transition={{
-              duration: particle.duration,
-              delay: particle.delay,
-              repeat: Infinity,
-              ease: "easeInOut",
+              animationDuration: `${particle.duration}s`,
+              animationDelay: `${particle.delay}s`,
             }}
           />
         ))}

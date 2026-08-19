@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { ExternalLink, Github } from 'lucide-react';
+import { useState } from 'react';
 import { Project } from '@/data/projects';
 
 interface ProjectCardProps {
@@ -8,6 +9,8 @@ interface ProjectCardProps {
 }
 
 const ProjectCard = ({ project, index }: ProjectCardProps) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   return (
     <motion.div
       // Animação de entrada e efeito de hover
@@ -18,12 +21,17 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
       className="glass-card group h-full flex flex-col"
     >
       {/* Imagem do projeto com efeito de zoom no hover */}
-      <div className="relative overflow-hidden rounded-xl mb-4">
+      {/* aspect-ratio fixo evita layout shift; fade-in no onLoad evita o "pop" de imagem em branco */}
+      <div className="relative overflow-hidden rounded-xl mb-4 aspect-[4/3] bg-secondary/30">
         <img
           src={project.image}
           alt={project.title}
           loading="lazy"
-          className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+          decoding="async"
+          onLoad={() => setImageLoaded(true)}
+          className={`w-full h-full object-cover transition-[opacity,transform] duration-300 group-hover:scale-110 ${
+            imageLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
         />
         {/* Gradiente escuro visível no hover */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
