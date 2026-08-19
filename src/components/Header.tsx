@@ -186,6 +186,7 @@ const Header = () => {
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label={social.name}
                     className="glass-button group relative overflow-hidden"
                     whileHover={{ 
                       scale: 1.15,
@@ -219,8 +220,9 @@ const Header = () => {
               {/* Botão para alternar tema claro/escuro */}
               <motion.button
                 onClick={toggleTheme}
+                aria-label="Alternar tema"
                 className="glass-button group relative overflow-hidden"
-                whileHover={{ 
+                whileHover={{
                   scale: 1.15,
                   rotate: theme === 'light' ? 180 : -180,
                 }}
