@@ -176,8 +176,8 @@ function buildValidationPlan(options = {}) {
     command('quality-gate-check', projectRoot, 'node scripts/quality-gate.cjs check', {
       artifact: path.join(reportsRoot, 'quality-gate-check.log'),
       file: process.execPath,
-      args: [path.join(scriptsRoot, 'quality-gate.js'), 'check'],
-      requiresFile: path.join(scriptsRoot, 'quality-gate.js'),
+      args: [path.join(scriptsRoot, 'quality-gate.cjs'), 'check'],
+      requiresFile: path.join(scriptsRoot, 'quality-gate.cjs'),
       requiresFreshCoverage: exists(path.join(pipelineRoot, 'pyproject.toml')),
     }),
     command('quality-gate-doctor', projectRoot, 'node scripts/doctor.cjs --dry-run --root .', {

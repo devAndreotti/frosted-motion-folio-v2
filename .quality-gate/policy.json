@@ -18,17 +18,14 @@
     ]
   },
   "ci": {
+    "_comment": "SonarCloud removed from CI (2026-08-19): the devandreotti org is at its free-tier 50k LOC cap across all projects, so analysis fails on quota, not code quality. Static analysis stays local-only via eslint-plugin-sonarjs (already wired in eslint.config.js) and `npm run lint`/local-validate.cjs.",
     "requiredChecks": [
       "Security audit",
       "Lint",
       "Tests & ratchet",
-      "SonarCloud",
       "Docker image gate"
     ],
-    "advisoryChecks": [
-      "SonarCloud",
-      "SonarCloud Code Analysis"
-    ],
+    "advisoryChecks": [],
     "coverageRatchet": true,
     "maxFileLines": 300
   },
