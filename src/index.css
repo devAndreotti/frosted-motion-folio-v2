@@ -183,12 +183,11 @@ html {
   .floating-orb {
     position: absolute;
     border-radius: 50%;
-    background: linear-gradient(45deg, 
-      hsl(var(--blue-electric)), 
+    background: linear-gradient(45deg,
+      hsl(var(--blue-electric)),
       hsl(var(--blue-cyan))
     );
     opacity: 0.1;
-    animation: float 6s ease-in-out infinite;
     pointer-events: none;
   }
 }
@@ -236,6 +235,42 @@ html {
   }
   66% {
     transform: translateY(-10px) rotate(240deg);
+  }
+}
+
+@keyframes orb-drift {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.05; }
+  33% { transform: translate(100px, -100px) scale(1.2); opacity: 0.15; }
+  66% { transform: translate(-100px, 100px) scale(0.8); opacity: 0.1; }
+}
+
+@keyframes particle-drift {
+  0% { transform: translateY(0) scale(0); opacity: 0; }
+  50% { transform: translateY(-150px) scale(1.5); opacity: 1; }
+  100% { transform: translateY(0) scale(0); opacity: 0; }
+}
+
+.animate-orb-drift {
+  animation-name: orb-drift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.animate-particle-drift {
+  animation-name: particle-drift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/* Respeita a preferência do usuário por menos movimento: desativa as animações
+   ambientes (orbes/partículas/pulso) sem remover o efeito visual estático. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-orb-drift,
+  .animate-particle-drift,
+  .animate-pulse-slow,
+  .animate-float,
+  .animate-bounce-slow {
+    animation: none !important;
   }
 }
 
