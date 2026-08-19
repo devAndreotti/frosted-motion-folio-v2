@@ -3,9 +3,10 @@
  * quality-gate.js — coverage/lint/file-size ratchet.
  */
 
-const fs = require('node:fs');
-const path = require('node:path');
-const { renderTable } = require('./lib/console-ui.cjs');
+import fs from 'node:fs';
+import path from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { renderTable } from './lib/console-ui.cjs';
 
 function parseArgs(argv) {
   return {
@@ -288,11 +289,11 @@ function main(argv = process.argv.slice(2)) {
   }
 }
 
-if (require.main === module) {
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   main();
 }
 
-module.exports = {
+export {
   buildUpdatedBaseline,
   compareMetrics,
   filterGitStatusEntries,

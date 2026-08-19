@@ -6,7 +6,10 @@ import sonarjs from "eslint-plugin-sonarjs";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist"] },
+  // dashboard-tui.mjs and menu-tui.mjs are generated bundles (see header:
+  // "GERADO por scripts/build-tui.mjs -- NAO EDITE A MAO"); lint the
+  // generator (build-tui.mjs) but not its generated output.
+  { ignores: ["dist", "scripts/dashboard-tui.mjs", "scripts/menu-tui.mjs"] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],
