@@ -28460,7 +28460,7 @@ var require_dashboard = __commonJS({
         }
         if (!state.ratchet.rows?.length) lines.push("    (sem metricas coletadas ainda)");
       } else {
-        lines.push("    scripts/quality-gate.js nao encontrado neste projeto");
+        lines.push("    scripts/quality-gate.cjs nao encontrado neste projeto");
       }
       lines.push("");
       lines.push(renderSection("PR (ultimo snapshot local)", "\u25C7"));
@@ -38027,7 +38027,7 @@ function RatchetSection({ ratchet }) {
   const rows = ratchet?.rows || [];
   return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Box_default, { flexDirection: "column", borderStyle: "round", borderColor: "yellow", paddingX: 1, marginBottom: 1, children: [
     /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Text, { bold: true, color: "yellow", children: "\u25A4 RATCHET" }),
-    !ratchet && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Text, { color: "gray", children: "scripts/quality-gate.js nao encontrado neste projeto" }),
+    !ratchet && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Text, { color: "gray", children: "scripts/quality-gate.cjs nao encontrado neste projeto" }),
     ratchet?.error && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Text, { color: "yellow", children: [
       "\u26A0\uFE0F  ",
       ratchet.error

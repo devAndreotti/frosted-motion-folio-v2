@@ -37,7 +37,7 @@ cat coverage/coverage-summary.json | node -e "
 
 **Validação**
 ```bash
-npm run test:coverage:ci && node scripts/quality-gate.js check
+npm run test:coverage:ci && node scripts/quality-gate.cjs check
 ```
 
 ---

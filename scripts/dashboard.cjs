@@ -95,7 +95,7 @@ function render(root, state) {
     }
     if (!state.ratchet.rows?.length) lines.push('    (sem metricas coletadas ainda)');
   } else {
-    lines.push('    scripts/quality-gate.js nao encontrado neste projeto');
+    lines.push('    scripts/quality-gate.cjs nao encontrado neste projeto');
   }
   lines.push('');
 

@@ -173,7 +173,7 @@ function buildValidationPlan(options = {}) {
   }
 
   commands.push(
-    command('quality-gate-check', projectRoot, 'node scripts/quality-gate.js check', {
+    command('quality-gate-check', projectRoot, 'node scripts/quality-gate.cjs check', {
       artifact: path.join(reportsRoot, 'quality-gate-check.log'),
       file: process.execPath,
       args: [path.join(scriptsRoot, 'quality-gate.js'), 'check'],

@@ -184,7 +184,7 @@ function renderQualityGateWorkflow(policy = {}) {
           GITHUB_REPOSITORY: \${{ github.repository }}
           PR_NUMBER: \${{ github.event.pull_request.number }}
         continue-on-error: true
-      - run: node scripts/pr-comment.js
+      - run: node scripts/pr-comment.cjs
         env:
           GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: \${{ github.event.pull_request.number }}

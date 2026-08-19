@@ -6,7 +6,16 @@ import sonarjs from "eslint-plugin-sonarjs";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist"] },
+  {
+    ignores: [
+      "dist",
+      "coverage",
+      "scripts/**",
+      ".quality-gate/**",
+      ".codex/**",
+      ".claude/**",
+    ],
+  },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],

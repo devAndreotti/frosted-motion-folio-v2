@@ -48,9 +48,9 @@ const REQUIRED_FILES = [
   'scripts/docker-gate.cjs',
   'scripts/local-validate.cjs',
   'scripts/pr-snapshot.cjs',
-  'scripts/quality-gate.js',
+  'scripts/quality-gate.cjs',
   'scripts/test-coverage-ci.cjs',
-  'scripts/pr-comment.js',
+  'scripts/pr-comment.cjs',
   'scripts/setup.js',
   'scripts/lib/docker-detect.cjs',
   'scripts/lib/policy.cjs',
@@ -259,7 +259,7 @@ function checkModuleMode(root) {
     ? JSON.parse(fs.readFileSync(packagePath, 'utf8'))
     : null;
   const moduleType = packageJson?.type === 'module';
-  const esmScripts = ['scripts/quality-gate.js', 'scripts/pr-comment.js', 'scripts/setup.js']
+  const esmScripts = ['scripts/quality-gate.cjs', 'scripts/pr-comment.cjs', 'scripts/setup.js']
     .filter((file) => exists(root, file) && hasEsmSyntax(readText(root, file)));
   let detail;
   if (moduleType) {
@@ -306,7 +306,7 @@ function checkRichTui(root) {
 
 function checkDryRunSupport(root) {
   const setup = readText(root, 'scripts/setup.js');
-  const qualityGate = readText(root, 'scripts/quality-gate.js');
+  const qualityGate = readText(root, 'scripts/quality-gate.cjs');
   const setupHasDryRun = setup.includes('--dry-run') && /dryRun/i.test(setup);
   const qualityGateMutates = /command === 'update'/.test(qualityGate) && /dryRun/.test(qualityGate);
 

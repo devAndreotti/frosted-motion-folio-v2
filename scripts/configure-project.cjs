@@ -182,7 +182,7 @@ jobs:
           uv run pytest --basetemp .pytest-tmp-qg --cov=src --cov-report=json:${coverageJson} --cov-report=xml:${coverageXml} --cov-report=term-missing
       - name: Ratchet
         working-directory: .
-        run: node scripts/quality-gate.js check
+        run: node scripts/quality-gate.cjs check
       - name: Upload coverage
         uses: actions/upload-artifact@v7
         if: always()
@@ -239,7 +239,7 @@ ${sonarJob}
           PR_NUMBER: \${{ github.event.pull_request.number }}
         continue-on-error: true
       - name: Postar sticky comment no PR
-        run: node scripts/pr-comment.js
+        run: node scripts/pr-comment.cjs
         env:
           GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: \${{ github.event.pull_request.number }}
@@ -377,7 +377,7 @@ jobs:
         run: npm run build --if-present
       - name: Ratchet
         working-directory: .
-        run: node scripts/quality-gate.js check
+        run: node scripts/quality-gate.cjs check
       - name: Upload coverage
         uses: actions/upload-artifact@v7
         if: always()
@@ -434,7 +434,7 @@ ${sonarJob}
           PR_NUMBER: \${{ github.event.pull_request.number }}
         continue-on-error: true
       - name: Postar sticky comment no PR
-        run: node scripts/pr-comment.js
+        run: node scripts/pr-comment.cjs
         env:
           GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: \${{ github.event.pull_request.number }}
