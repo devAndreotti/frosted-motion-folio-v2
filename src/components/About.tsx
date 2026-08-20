@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'; // Animações declarativas com framer-motion
 import { Code2, Palette, Zap, Heart } from 'lucide-react'; // Ícones do pacote lucide-react
 import { personalInfo } from '@/data/projects'; // Dados personalizados (não utilizados neste trecho, mas provavelmente futuros)
+import { cardGlowPulse, fadeInUp, pulseGlow } from '@/lib/motion';
 
 // Componente About
 const About = () => {
@@ -18,15 +19,7 @@ const About = () => {
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
           className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-r from-blue-400/20 to-cyan-400/20 rounded-full blur-2xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.2, 0.4, 0.2],
-          }}
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
+          {...pulseGlow(6)}
         />
         <motion.div
           className="absolute bottom-10 right-10 w-40 h-40 bg-gradient-to-l from-cyan-400/20 to-blue-500/20 rounded-full blur-2xl"
@@ -46,10 +39,7 @@ const About = () => {
       {/* Conteúdo principal da seção */}
       <div className="container mx-auto px-4 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-          viewport={{ once: true }}
+          {...fadeInUp(1)}
           className="max-w-5xl mx-auto"
         >
           {/* Cartão com efeito glass e animação ao hover */}
@@ -61,14 +51,7 @@ const About = () => {
             {/* Gradiente animado de fundo do card */}
             <motion.div
               className="absolute inset-0 bg-gradient-to-br from-blue-400/10 via-transparent to-cyan-400/10"
-              animate={{
-                opacity: [0.5, 0.8, 0.5],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
+              {...cardGlowPulse}
             />
 
             <div className="relative z-10">

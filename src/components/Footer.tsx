@@ -1,44 +1,21 @@
 import { motion } from 'framer-motion'; // Biblioteca de animações
-import { Heart, Github, Linkedin, Mail } from 'lucide-react'; // Ícones SVG
 import { socialLinks, personalInfo } from '@/data/projects'; // Dados personalizados
+import SocialIcon from './SocialIcon';
+import { cardGlowPulse, fadeInUp } from '@/lib/motion';
 
 const Footer = () => {
-  // Função para retornar o ícone correspondente com base no nome
-  const getSocialIcon = (iconName: string) => {
-    switch (iconName) {
-      case 'github':
-        return <Github className="w-5 h-5" />;
-      case 'linkedin':
-        return <Linkedin className="w-5 h-5" />;
-      case 'mail':
-        return <Mail className="w-5 h-5" />;
-      default:
-        return null;
-    }
-  };
-
   return (
     <footer id="contact" className="py-12 md:py-16">
       <div className="container mx-auto px-4">
         {/* Cartão com efeito glass e animação de entrada */}
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
+          {...fadeInUp()}
           className="glass-card text-center relative overflow-hidden group"
         >
           {/* Gradiente animado de fundo do card */}
           <motion.div
             className="absolute inset-0 bg-gradient-to-br from-blue-400/10 via-transparent to-cyan-400/10"
-            animate={{
-              opacity: [0.5, 0.8, 0.5],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
+            {...cardGlowPulse}
           />
 
           <div className="relative z-10">
@@ -69,7 +46,7 @@ const Footer = () => {
                   viewport={{ once: true }}
                   title={social.name}
                 >
-                  {getSocialIcon(social.icon)} {/* Ícone da rede social */}
+                  <SocialIcon icon={social.icon} className="w-5 h-5" /> {/* Ícone da rede social */}
                 </motion.a>
               ))}
             </div>

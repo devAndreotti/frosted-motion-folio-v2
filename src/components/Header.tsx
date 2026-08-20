@@ -1,31 +1,19 @@
 // Importa animações do Framer Motion
 import { motion } from 'framer-motion';
 // Importa ícones da biblioteca Lucide
-import { Moon, Sun, Github, Linkedin, Mail, Sparkles } from 'lucide-react';
+import { Moon, Sun, Sparkles } from 'lucide-react';
 // Hook personalizado para alternar tema claro/escuro
 import { useTheme } from '@/contexts/ThemeContext';
 // Dados pessoais e links sociais
 import { personalInfo, socialLinks } from '@/data/projects';
 // Componente de navegação
 import Navigation from './Navigation';
+import SocialIcon from './SocialIcon';
+import { fadeInMount, pulseGlow, springPop } from '@/lib/motion';
 
 const Header = () => {
   // Acessa o tema atual e a função para alternar
   const { theme, toggleTheme } = useTheme();
-
-  // Retorna o ícone correspondente ao nome da rede social
-  const getSocialIcon = (iconName: string) => {
-    switch (iconName) {
-      case 'github':
-        return <Github className="w-6 h-6" />;
-      case 'linkedin':
-        return <Linkedin className="w-6 h-6" />;
-      case 'mail':
-        return <Mail className="w-6 h-6" />;
-      default:
-        return null;
-    }
-  };
 
   return (
     <>
@@ -46,15 +34,7 @@ const Header = () => {
             {/* Círculo decorativo azul na esquerda */}
             <motion.div
               className="absolute -top-10 -left-10 w-20 h-20 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full opacity-20 blur-xl"
-              animate={{
-                scale: [1, 1.2, 1],
-                opacity: [0.2, 0.4, 0.2],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
+              {...pulseGlow(4)}
             />
 
             {/* Círculo decorativo azul na direita */}
@@ -124,9 +104,7 @@ const Header = () => {
 
             {/* Nome e título animados */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
+              {...fadeInMount(0.6, 30)}
               className="mb-6"
             >
               {/* Nome com efeito de brilho */}
@@ -161,9 +139,7 @@ const Header = () => {
 
             {/* Bio curta do desenvolvedor */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 1, ease: "easeOut" }}
+              {...fadeInMount(1)}
               className="glass-card max-w-3xl mb-10"
             >
               <p className="text-lg md:text-xl leading-relaxed text-white/90 dark:text-blue-50">
@@ -173,9 +149,7 @@ const Header = () => {
 
             {/* Área de links sociais e botão de tema */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 1.2, ease: "easeOut" }}
+              {...fadeInMount(1.2)}
               className="flex items-center gap-6 flex-wrap justify-center"
             >
               {/* Links de redes sociais com animações */}
@@ -195,16 +169,11 @@ const Header = () => {
                     whileTap={{ scale: 0.95 }}
                     initial={{ opacity: 0, scale: 0, rotate: 180 }}
                     animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                    transition={{ 
-                      duration: 0.6, 
-                      delay: 1.4 + index * 0.1,
-                      type: "spring",
-                      stiffness: 150
-                    }}
+                    transition={springPop(1.4 + index * 0.1)}
                   >
                     {/* Gradiente animado de fundo */}
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-cyan-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
-                    {getSocialIcon(social.icon)}
+                    <SocialIcon icon={social.icon} />
                   </motion.a>
                 ))}
               </div>
@@ -229,12 +198,7 @@ const Header = () => {
                 whileTap={{ scale: 0.95 }}
                 initial={{ opacity: 0, scale: 0, rotate: -180 }}
                 animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                transition={{ 
-                  duration: 0.6, 
-                  delay: 1.7,
-                  type: "spring",
-                  stiffness: 150
-                }}
+                transition={springPop(1.7)}
               >
                 {/* Gradiente suave ao passar o mouse */}
                 <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
