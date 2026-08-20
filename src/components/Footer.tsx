@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'; // Biblioteca de animações
-import { socialLinks, personalInfo } from '@/data/projects'; // Dados personalizados
+import { socialLinks, personalInfo } from '@/data/personal';
 import SocialIcon from './SocialIcon';
 import { cardGlowPulse, fadeInUp } from '@/lib/motion';
 
