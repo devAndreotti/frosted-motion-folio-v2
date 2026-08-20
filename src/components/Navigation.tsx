@@ -68,6 +68,7 @@ const Navigation = () => {
             {/* Botão de alternância de tema (claro/escuro) */}
             <motion.button
               onClick={toggleTheme}
+              aria-label="Alternar tema"
               className="glass-button p-2 relative overflow-hidden"
               whileHover={{ scale: 1.1, rotate: theme === 'light' ? 180 : -180 }}
               whileTap={{ scale: 0.95 }}
@@ -86,6 +87,7 @@ const Navigation = () => {
             {/* Botão de tema no mobile */}
             <motion.button
               onClick={toggleTheme}
+              aria-label="Alternar tema"
               className="glass-button p-2"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
