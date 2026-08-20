@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { personalInfo, socialLinks } from "../../src/data/projects";
+import { personalInfo, socialLinks } from "../../src/data/personal";
 
 test("hero shows the name, title and social links", async ({ page }) => {
   await page.goto("");

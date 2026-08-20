@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'; // Animações declarativas com framer-motion
 import { Code2, Palette, Zap, Heart } from 'lucide-react'; // Ícones do pacote lucide-react
-import { personalInfo } from '@/data/projects'; // Dados personalizados (não utilizados neste trecho, mas provavelmente futuros)
+import { personalInfo } from '@/data/personal';
 import { cardGlowPulse, fadeInUp, pulseGlow } from '@/lib/motion';
 
 // Componente About

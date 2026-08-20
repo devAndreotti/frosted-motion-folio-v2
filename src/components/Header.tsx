@@ -5,7 +5,7 @@ import { Moon, Sun, Sparkles } from 'lucide-react';
 // Hook personalizado para alternar tema claro/escuro
 import { useTheme } from '@/contexts/ThemeContext';
 // Dados pessoais e links sociais
-import { personalInfo, socialLinks } from '@/data/projects';
+import { personalInfo, socialLinks } from '@/data/personal';
 // Componente de navegação
 import Navigation from './Navigation';
 import SocialIcon from './SocialIcon';
