@@ -19,6 +19,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
       transition={{ duration: 0.6, delay: index * 0.2 }}
       whileHover={{ y: -10 }}
       className="glass-card group h-full flex flex-col"
+      data-testid={`project-${project.id}`}
     >
       {/* Imagem do projeto com efeito de zoom no hover */}
       {/* aspect-ratio fixo evita layout shift; fade-in no onLoad evita o "pop" de imagem em branco */}
