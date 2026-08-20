@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Moon, Sun, Menu, X } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
+import { springPop } from '@/lib/motion';
 
 const Navigation = () => {
   // Obtém o tema atual e a função para alternar o tema do contexto
@@ -74,7 +75,7 @@ const Navigation = () => {
               whileTap={{ scale: 0.95 }}
               initial={{ opacity: 0, scale: 0, rotate: -180 }}
               animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              transition={{ duration: 0.6, delay: 0.8, type: "spring", stiffness: 150 }}
+              transition={springPop(0.8)}
             >
               {/* Efeito visual de fundo ao passar o mouse */}
               <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300" />

@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion';
 import { Code, Globe, Wrench, Database, Bot, Blocks } from 'lucide-react';
+import SectionHeading from './SectionHeading';
+import { drift } from '@/lib/motion';
 
 // Lista categorizada de habilidades e tecnologias com ícones
 const skillsCategories = [
@@ -42,47 +44,20 @@ const Skills = () => {
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
           className="absolute top-1/4 left-0 w-64 h-64 bg-gradient-to-r from-blue-400/15 to-transparent rounded-full blur-3xl"
-          animate={{
-            x: [0, 100, 0],
-            scale: [1, 1.2, 1],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
+          {...drift(100, 1.2, 10)}
         />
         <motion.div
           className="absolute bottom-1/4 right-0 w-80 h-80 bg-gradient-to-l from-cyan-400/15 to-transparent rounded-full blur-3xl"
-          animate={{
-            x: [0, -100, 0],
-            scale: [1, 1.3, 1],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 2,
-          }}
+          {...drift(-100, 1.3, 12, 2)}
         />
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Título da seção com animação de entrada */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-gradient-vibrant mb-4">
-            Skills & Tecnologias
-          </h2>
-          <p className="text-lg text-white/90 dark:text-blue-50 max-w-2xl mx-auto">
-            Ferramentas e tecnologias que uso para criar soluções completas:
-          </p>
-        </motion.div>
+        <SectionHeading
+          title="Skills & Tecnologias"
+          description="Ferramentas e tecnologias que uso para criar soluções completas:"
+        />
 
         {/* Grid com categorias de habilidades */}
         <div className="max-w-7xl mx-auto">
