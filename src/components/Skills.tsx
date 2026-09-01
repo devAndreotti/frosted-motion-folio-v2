@@ -11,7 +11,7 @@ const Skills = () => {
     <section id="skills" className="relative py-20 md:py-32 overflow-hidden">
       <div
         className="absolute top-1/4 -left-40 w-[480px] h-[480px] rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(var(--accent-rgb), 0.1) 0%, transparent 70%)' }}
+        style={{ background: 'radial-gradient(circle, rgba(var(--accent-rgb), 0.06) 0%, transparent 70%)' }}
       />
 
       <div className="relative z-10 container mx-auto px-4">

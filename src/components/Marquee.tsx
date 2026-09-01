@@ -78,7 +78,7 @@ const Marquee = () => {
     <section id="marquee" className="relative py-14 overflow-hidden" aria-label="Stack e ferramentas">
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(var(--accent-rgb), 0.08) 0%, transparent 60%)' }}
+        style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(var(--accent-rgb), 0.05) 0%, transparent 60%)' }}
       />
 
       <div className="relative z-10 px-6 md:px-16 flex items-end justify-between gap-4 flex-wrap mb-7">

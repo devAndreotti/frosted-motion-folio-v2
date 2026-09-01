@@ -32,7 +32,7 @@ const Footer = () => {
     <footer id="contact" className="relative py-16 md:py-20 overflow-hidden">
       <div
         className="absolute -top-40 left-1/2 -translate-x-1/2 w-[640px] h-[640px] rounded-full pointer-events-none animate-orb-drift"
-        style={{ background: 'radial-gradient(circle, rgba(var(--accent-rgb), 0.12) 0%, transparent 70%)' }}
+        style={{ background: 'radial-gradient(circle, rgba(var(--accent-rgb), 0.07) 0%, transparent 70%)' }}
       />
 
       <div className="relative z-10 container mx-auto px-4">

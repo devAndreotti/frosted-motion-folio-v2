@@ -8,14 +8,13 @@ html {
 }
 
 /* Mode tokens: text/dot stay simple light/dark. Everything that should carry
-   the selected color — background gradient, ambient glow blobs, accent,
-   glass surface/border — is computed per hue+mode by src/lib/theme.ts and
-   set on this same root element at runtime by ThemeContext. The values here
-   (--bg-gradient, --glow-*, --surface-*, --border-*, --accent*) are only
-   fallbacks for the instant before that first effect runs. */
+   the selected color — accent, glass surface/border — is computed per
+   hue+mode by src/lib/theme.ts and set on this same root element at runtime
+   by ThemeContext. The background gradient + ambient blobs are rendered by
+   <BackgroundLayers> instead of CSS (it needs the raw values in JS to
+   crossfade a color/theme change — see that component for why). */
 @layer base {
   :root {
-    --bg-gradient: #f6f5f3;
     --fg-1: #131316;
     --fg-2: rgba(19, 19, 22, 0.7);
     /* fg-3/fg-4 are tuned to clear WCAG AA (4.5:1) against --bg at normal text sizes,
@@ -27,9 +26,6 @@ html {
     --surface-1: rgba(19, 19, 22, 0.045);
     --surface-2: rgba(19, 19, 22, 0.07);
     --dot: rgba(19, 19, 22, 0.06);
-    --glow-1: transparent;
-    --glow-2: transparent;
-    --glow-3: transparent;
 
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
@@ -38,7 +34,6 @@ html {
   }
 
   .dark {
-    --bg-gradient: #08080a;
     --fg-1: #f5f5f5;
     --fg-2: rgba(255, 255, 255, 0.7);
     --fg-3: rgba(255, 255, 255, 0.5);
@@ -48,9 +43,6 @@ html {
     --surface-1: rgba(255, 255, 255, 0.06);
     --surface-2: rgba(255, 255, 255, 0.1);
     --dot: rgba(255, 255, 255, 0.06);
-    --glow-1: transparent;
-    --glow-2: transparent;
-    --glow-3: transparent;
 
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
@@ -64,27 +56,13 @@ html {
   }
 
   body {
-    background: var(--bg-gradient);
+    /* Static fallback only, for the instant before React mounts —
+       <BackgroundLayers> paints the real gradient+blobs behind everything. */
+    background: #08080a;
     color: var(--fg-1);
     min-height: 100vh;
     position: relative;
-    transition: background 0.5s ease, color 0.4s ease;
-  }
-
-  /* Ambient "aurora" blobs behind every glass panel — soft, colored from the
-     selected hue, fixed so they read as one continuous backdrop while
-     scrolling. This is what makes the glassmorphism actually visible:
-     backdrop-blur needs something with texture/color behind it to blur. */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(circle at 20% 80%, var(--glow-1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, var(--glow-2) 0%, transparent 50%),
-      radial-gradient(circle at 40% 40%, var(--glow-3) 0%, transparent 45%);
-    pointer-events: none;
-    z-index: 0;
-    transition: background 0.5s ease;
+    transition: color 0.4s ease;
   }
 
   #root {
@@ -201,6 +179,22 @@ html {
   animation: orb-drift-reverse 18s ease-in-out infinite;
 }
 
+@keyframes blob-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+}
+
+.animate-blob-breathe {
+  animation: blob-breathe 12s ease-in-out infinite;
+}
+
 @keyframes bob {
   0%,
   100% {
@@ -305,6 +299,7 @@ html {
   .animate-pulse-dot,
   .animate-orb-drift,
   .animate-orb-drift-reverse,
+  .animate-blob-breathe,
   .animate-bob,
   .shimmer {
     animation: none !important;

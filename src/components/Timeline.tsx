@@ -21,7 +21,7 @@ const Timeline = () => {
     <section id="timeline" className="relative py-16 md:py-20 overflow-hidden">
       <div
         className="absolute -top-36 left-[30%] w-[520px] h-[520px] rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(var(--accent-rgb), 0.1) 0%, transparent 70%)' }}
+        style={{ background: 'radial-gradient(circle, rgba(var(--accent-rgb), 0.06) 0%, transparent 70%)' }}
       />
 
       <div className="relative z-10 container mx-auto px-4 flex items-end justify-between mb-9 flex-wrap gap-4">

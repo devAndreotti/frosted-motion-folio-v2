@@ -1,4 +1,3 @@
-import { ThemeProvider } from '@/contexts/ThemeContext';
 import Navigation from '@/components/Navigation';
 import Header from '@/components/Header';
 import Marquee from '@/components/Marquee';
@@ -9,7 +8,7 @@ import Footer from '@/components/Footer';
 
 const Index = () => {
   return (
-    <ThemeProvider>
+    <>
       <a
         href="#header"
         className="fixed left-4 top-4 z-[100] -translate-y-24 focus:translate-y-0 transition-transform glass px-4 py-2 rounded-full text-sm font-semibold"
@@ -28,7 +27,7 @@ const Index = () => {
           <Footer />
         </main>
       </div>
-    </ThemeProvider>
+    </>
   );
 };
 

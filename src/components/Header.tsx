@@ -60,13 +60,16 @@ const Header = () => {
         }}
       />
 
+      {/* These stay subtle on purpose — <BackgroundLayers> already carries the
+          hue's color wash site-wide; a local orb this size only needs to add
+          a little emphasis behind the hero, not repeat the whole effect. */}
       <div
         className="absolute -top-24 -right-36 w-[640px] h-[640px] rounded-full pointer-events-none animate-orb-drift"
-        style={{ background: 'radial-gradient(circle, rgba(var(--accent-rgb), 0.15) 0%, transparent 70%)' }}
+        style={{ background: 'radial-gradient(circle, rgba(var(--accent-rgb), 0.09) 0%, transparent 70%)' }}
       />
       <div
         className="absolute -bottom-40 -left-28 w-[480px] h-[480px] rounded-full pointer-events-none animate-orb-drift-reverse"
-        style={{ background: 'radial-gradient(circle, rgba(var(--accent-rgb), 0.08) 0%, transparent 70%)' }}
+        style={{ background: 'radial-gradient(circle, rgba(var(--accent-rgb), 0.05) 0%, transparent 70%)' }}
       />
       <div
         className="absolute w-[360px] h-[360px] rounded-full pointer-events-none transition-transform duration-300 ease-out"
@@ -75,7 +78,7 @@ const Header = () => {
           left: '38%',
           marginTop: -180,
           marginLeft: -180,
-          background: 'radial-gradient(circle, rgba(var(--accent-rgb), 0.07) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(var(--accent-rgb), 0.05) 0%, transparent 70%)',
           transform: `translate(${parallax.x}px, ${parallax.y}px)`,
         }}
       />

@@ -45,7 +45,7 @@ const CardStack = () => {
     <div className="relative h-[460px] flex items-center justify-center">
       <div
         className="absolute w-[380px] h-[380px] rounded-full blur-[10px]"
-        style={{ background: 'radial-gradient(circle, rgba(var(--accent-rgb), 0.13) 0%, transparent 70%)' }}
+        style={{ background: 'radial-gradient(circle, rgba(var(--accent-rgb), 0.08) 0%, transparent 70%)' }}
       />
       <div className="absolute w-[400px] h-[400px] rounded-full border border-dashed" style={{ borderColor: 'var(--border-1)' }} />
 

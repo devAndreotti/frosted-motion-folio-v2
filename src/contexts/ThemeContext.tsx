@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { buildHueTheme, hexToRgbTriplet, HUE_ORDER, type Hue, type ModeTokens } from '@/lib/theme';
+import { buildHueTheme, hexToRgbTriplet, HUE_ORDER, type Hue } from '@/lib/theme';
 
 export type { Hue };
 export { HUE_ORDER, hexToRgbTriplet };
@@ -22,18 +22,18 @@ const ThemeContext = createContext<ThemeContextType>({
 
 export const useTheme = () => useContext(ThemeContext);
 
-const CSS_VAR_BY_TOKEN: Record<keyof ModeTokens, string> = {
-  bg: '--bg-gradient',
-  glow1: '--glow-1',
-  glow2: '--glow-2',
-  glow3: '--glow-3',
+// The gradient/glow tokens are consumed directly by BackgroundLayers (it
+// needs the raw values in JS to crossfade), not via CSS var — everything
+// else (accent, glass surface/border) is still read as var(...) throughout
+// the component tree, so those stay as CSS custom properties.
+const CSS_VAR_BY_TOKEN = {
   accent: '--accent',
   accentText: '--accent-text',
   glassSurface: '--surface-1',
   glassBorder: '--border-1',
   glassStrongSurface: '--surface-2',
   glassStrongBorder: '--border-2',
-};
+} as const;
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   // Default theme is dark black-glass, not the system preference — that is
@@ -57,7 +57,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem('hue', hue);
     const tokens = buildHueTheme(hue)[theme];
     const root = document.documentElement.style;
-    (Object.keys(CSS_VAR_BY_TOKEN) as (keyof ModeTokens)[]).forEach((key) => {
+    (Object.keys(CSS_VAR_BY_TOKEN) as (keyof typeof CSS_VAR_BY_TOKEN)[]).forEach((key) => {
       root.setProperty(CSS_VAR_BY_TOKEN[key], tokens[key]);
     });
     root.setProperty('--accent-rgb', hexToRgbTriplet(tokens.accent));
