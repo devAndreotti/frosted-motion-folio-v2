@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Skeleton } from 'boneyard-js/react';
 import { ArrowUp, ArrowUpRight, Clock, Github, Linkedin } from 'lucide-react';
 import { personalInfo } from '@/data/personal';
-import { useGithubActivity } from '@/hooks/useGithubActivity';
 
 function localTime(): string {
   try {
@@ -21,7 +19,6 @@ const QUICK_LINKS = [
 
 const Footer = () => {
   const [time, setTime] = useState(localTime());
-  const { lastCommit, loading: activityLoading } = useGithubActivity();
 
   useEffect(() => {
     const timer = setInterval(() => setTime(localTime()), 15000);
@@ -60,56 +57,6 @@ const Footer = () => {
             <p className="max-w-sm text-[15px] leading-relaxed mb-7" style={{ color: 'var(--fg-3)' }}>
               Sempre aberto a novas oportunidades, freelas e ideias fora do comum.
             </p>
-
-            <Skeleton
-              name="footer-github-activity"
-              loading={activityLoading}
-              fixture={
-                <div className="glass rounded-2xl p-4 mb-7 max-w-sm">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10.5px] uppercase tracking-wide" style={{ color: 'var(--fg-4)' }}>
-                      Atividade no GitHub
-                    </span>
-                    <span className="text-[10.5px]" style={{ color: 'var(--fg-4)' }}>
-                      há 12 min
-                    </span>
-                  </div>
-                  <div className="text-[13px] font-bold mb-1">devAndreotti/self-sync-daily</div>
-                  <div className="text-[12.5px]" style={{ color: 'var(--fg-3)' }}>
-                    fix: corrige cálculo de energia semanal
-                  </div>
-                </div>
-              }
-            >
-              <div className="glass rounded-2xl p-4 mb-7 max-w-sm">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10.5px] uppercase tracking-wide" style={{ color: 'var(--fg-4)' }}>
-                    Atividade no GitHub
-                  </span>
-                  {lastCommit && (
-                    <span className="text-[10.5px]" style={{ color: 'var(--fg-4)' }}>
-                      {lastCommit.relativeTime}
-                    </span>
-                  )}
-                </div>
-                {lastCommit ? (
-                  <>
-                    <div className="text-[13px] font-bold mb-1">devAndreotti/{lastCommit.repo}</div>
-                    <div className="text-[12.5px]" style={{ color: 'var(--fg-3)' }}>
-                      {lastCommit.message}
-                    </div>
-                  </>
-                ) : (
-                  <div className="text-[12.5px]" style={{ color: 'var(--fg-3)' }}>
-                    Sem atividade pública recente —{' '}
-                    <a href="https://github.com/devAndreotti" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: 'var(--accent)' }}>
-                      confira o perfil
-                    </a>
-                    .
-                  </div>
-                )}
-              </div>
-            </Skeleton>
 
             <div className="flex gap-3 flex-wrap">
               <a

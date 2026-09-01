@@ -1,10 +1,10 @@
 {
   "coverage": {
-    "lines": 36.49,
-    "statements": 36.49,
-    "functions": 51.02,
-    "branches": 82.4
+    "lines": 45.14,
+    "statements": 45.14,
+    "functions": 57.14,
+    "branches": 83.62
   },
-  "updatedAt": "2026-09-01T19:00:17.671Z",
+  "updatedAt": "2026-09-01T19:23:42.007Z",
   "oversizedFiles": 0
 }

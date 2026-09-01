@@ -1,6 +1,7 @@
 import Navigation from '@/components/Navigation';
 import Header from '@/components/Header';
 import Marquee from '@/components/Marquee';
+import GithubActivityFeed from '@/components/GithubActivityFeed';
 import Projects from '@/components/Projects';
 import Skills from '@/components/Skills';
 import Timeline from '@/components/Timeline';
@@ -21,6 +22,7 @@ const Index = () => {
         <main>
           <Header />
           <Marquee />
+          <GithubActivityFeed />
           <Projects />
           <Skills />
           <Timeline />
