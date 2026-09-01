@@ -1,59 +1,46 @@
 import { test, expect } from "@playwright/test";
 import { projects } from "../../src/data/projects";
-import { featuredProject, curatedProjects, CATEGORY_FILTERS } from "../../src/data/curatedProjects";
 
-const OTHERS_COUNT = projects.length - (curatedProjects.length + 1);
-
-test("shows the featured case and every curated project in the ranked list", async ({ page }) => {
+test("renders a card for every project", async ({ page }) => {
   await page.goto("");
-  const section = page.locator("#projects");
-
-  await expect(section.getByRole("heading", { name: featuredProject.title })).toBeVisible();
-  for (const project of curatedProjects) {
-    await expect(section.getByText(project.title, { exact: true })).toBeVisible();
-  }
+  // Card titles are h3s scoped under #projects; count proves every entry in
+  // the data file actually rendered, not just that the section exists.
+  await expect(
+    page.locator("#projects").getByRole("heading", { level: 3 })
+  ).toHaveCount(projects.length);
 });
 
-test("category filters narrow the ranked list", async ({ page }) => {
+test('project card with a live demo shows working "Código" and "Demo" links', async ({
+  page,
+}) => {
+  const sample = projects.find((p) => p.githubUrl && p.liveUrl);
+  if (!sample) test.skip(true, "no project in the data file has both links to test");
+
   await page.goto("");
-  const section = page.locator("#projects");
-  const mobileOnly = curatedProjects.filter((p) => p.cat === "mobile");
-  const nonMobile = curatedProjects.filter((p) => p.cat !== "mobile");
-  test.skip(mobileOnly.length === 0, "no curated project is tagged mobile");
+  const card = page.getByTestId(`project-${sample!.id}`);
+  await card.scrollIntoViewIfNeeded();
 
-  await section.getByRole("button", { name: "Mobile", exact: true }).click();
-
-  for (const project of mobileOnly) {
-    await expect(section.getByText(project.title, { exact: true })).toBeVisible();
-  }
-  for (const project of nonMobile) {
-    await expect(section.getByText(project.title, { exact: true })).not.toBeVisible();
-  }
-
-  await section.getByRole("button", { name: CATEGORY_FILTERS[0].label, exact: true }).click();
-  for (const project of curatedProjects) {
-    await expect(section.getByText(project.title, { exact: true })).toBeVisible();
-  }
+  await expect(card.getByRole("link", { name: "Código" })).toHaveAttribute(
+    "href",
+    sample!.githubUrl!
+  );
+  await expect(card.getByRole("link", { name: "Demo" })).toHaveAttribute(
+    "href",
+    sample!.liveUrl!
+  );
 });
 
-test("opening a project from the ranked list shows its case study", async ({ page }) => {
+test('project card without a live demo has no "Demo" link', async ({ page }) => {
+  const sample = projects.find((p) => p.githubUrl && !p.liveUrl);
+  if (!sample) test.skip(true, "every project in the data file has a liveUrl");
+
   await page.goto("");
-  const section = page.locator("#projects");
-  const sample = curatedProjects[0];
+  const card = page.getByTestId(`project-${sample!.id}`);
+  await card.scrollIntoViewIfNeeded();
 
-  await section.getByRole("button", { name: new RegExp(sample.title) }).click();
-
-  const dialog = page.getByRole("dialog");
-  await expect(dialog.getByRole("heading", { name: sample.title })).toBeVisible();
-  await expect(dialog.getByText(sample.long)).toBeVisible();
-
-  await dialog.getByRole("button", { name: "Fechar" }).click();
-  await expect(dialog).not.toBeVisible();
-});
-
-test('"outros projetos no GitHub" link points at the real profile with the right count', async ({ page }) => {
-  await page.goto("");
-  const link = page.locator("#projects").getByRole("link", { name: `+ ${OTHERS_COUNT} outros projetos no GitHub` });
-
-  await expect(link).toHaveAttribute("href", "https://github.com/devAndreotti?tab=repositories");
+  await expect(card.getByRole("link", { name: "Código" })).toHaveAttribute(
+    "href",
+    sample!.githubUrl!
+  );
+  await expect(card.getByRole("link", { name: "Demo" })).toHaveCount(0);
 });

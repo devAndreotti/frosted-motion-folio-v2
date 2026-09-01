@@ -1,222 +1,220 @@
-import { useEffect, useRef, useState } from 'react';
+// Importa animações do Framer Motion
 import { motion } from 'framer-motion';
-import CardStack from './CardStack';
-
-const ROLES = ['propósito real.', 'que resolvem problemas.', 'bem pensados.', 'com boa DX.'];
-const ROLE_INTERVAL_MS = 2600;
-
-const STATS = [
-  { value: '30+', label: 'Projetos', desc: 'Do estudo à produção' },
-  { value: '6', label: 'Áreas', desc: 'Web, IA, automação, dados' },
-  { value: '7º', label: 'Semestre', desc: 'Ciência da Computação — UNIP' },
-  { value: '24/7', label: 'Aprendendo', desc: 'Sempre construindo algo novo' },
-];
-
-const RECRUITER_BULLETS = [
-  '30+ projetos, do estudo à produção — React, Node.js, TypeScript.',
-  '7º semestre de Ciência da Computação — UNIP.',
-  'Stack principal: React, TypeScript, Node.js, Supabase, Python.',
-  'Disponível para novos projetos e freelas agora.',
-];
+// Importa ícones da biblioteca Lucide
+import { Moon, Sun, Sparkles } from 'lucide-react';
+// Hook personalizado para alternar tema claro/escuro
+import { useTheme } from '@/contexts/ThemeContext';
+// Dados pessoais e links sociais
+import { personalInfo, socialLinks } from '@/data/personal';
+// Componente de navegação
+import Navigation from './Navigation';
+import SocialIcon from './SocialIcon';
+import { fadeInMount, pulseGlow, springPop } from '@/lib/motion';
 
 const Header = () => {
-  const [roleIdx, setRoleIdx] = useState(0);
-  const [recruiterMode, setRecruiterMode] = useState(false);
-  const [magnet, setMagnet] = useState({ x: 0, y: 0 });
-  const [parallax, setParallax] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const timer = setInterval(() => setRoleIdx((prev) => (prev + 1) % ROLES.length), ROLE_INTERVAL_MS);
-    return () => clearInterval(timer);
-  }, []);
-
-  const handleHeroMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    setParallax({ x: x * 30, y: y * 30 });
-  };
-
-  const handleMagnetMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    setMagnet({ x: x * 14, y: y * 10 });
-  };
+  // Acessa o tema atual e a função para alternar
+  const { theme, toggleTheme } = useTheme();
 
   return (
-    <header
-      id="header"
-      className="relative overflow-hidden pt-16 min-h-[960px] flex flex-col"
-      onMouseMove={handleHeroMove}
-    >
-      {/* dot-grid texture */}
-      <div
-        className="absolute inset-0 opacity-50 pointer-events-none"
-        style={{
-          backgroundImage: 'radial-gradient(var(--dot) 1px, transparent 1px)',
-          backgroundSize: '28px 28px',
-          maskImage: 'radial-gradient(ellipse 900px 600px at 70% 20%, #000 0%, transparent 75%)',
-        }}
-      />
+    <>
+      {/* Componente de navegação fixo no topo */}
+      <Navigation />
 
-      <div
-        className="absolute -top-24 -right-36 w-[640px] h-[640px] rounded-full pointer-events-none animate-orb-drift"
-        style={{ background: 'radial-gradient(circle, rgba(var(--accent-rgb), 0.15) 0%, transparent 70%)' }}
-      />
-      <div
-        className="absolute -bottom-40 -left-28 w-[480px] h-[480px] rounded-full pointer-events-none animate-orb-drift-reverse"
-        style={{ background: 'radial-gradient(circle, rgba(var(--accent-rgb), 0.08) 0%, transparent 70%)' }}
-      />
-      <div
-        className="absolute w-[360px] h-[360px] rounded-full pointer-events-none transition-transform duration-300 ease-out"
-        style={{
-          top: '38%',
-          left: '38%',
-          marginTop: -180,
-          marginLeft: -180,
-          background: 'radial-gradient(circle, rgba(var(--accent-rgb), 0.07) 0%, transparent 70%)',
-          transform: `translate(${parallax.x}px, ${parallax.y}px)`,
-        }}
-      />
+      {/* Cabeçalho animado com entrada do topo */}
+      <motion.header
+        id="header"
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, ease: "easeOut" }}
+        className="relative z-10 py-12 md:py-20 mt-16"
+      >
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col items-center text-center relative">
+            
+            {/* Círculo decorativo azul na esquerda */}
+            <motion.div
+              className="absolute -top-10 -left-10 w-20 h-20 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full opacity-20 blur-xl"
+              {...pulseGlow(4)}
+            />
 
-      {!recruiterMode ? (
-        <>
-          <div className="relative z-10 flex-1 flex items-center px-6 md:px-16">
-            <div className="w-full grid md:grid-cols-[1.15fr_1fr] gap-12 items-center">
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-                <div className="flex items-center gap-2.5 mb-5">
-                  <span className="glass px-3.5 py-1.5 rounded-full text-xs uppercase tracking-wider" style={{ color: 'var(--fg-2)' }}>
-                    Full Stack &amp; IA
-                  </span>
-                  <span className="text-[13px]" style={{ color: 'var(--fg-4)' }}>
-                    Sorocaba, SP
-                  </span>
-                </div>
+            {/* Círculo decorativo azul na direita */}
+            <motion.div
+              className="absolute -top-5 -right-5 w-16 h-16 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full opacity-15 blur-lg"
+              animate={{
+                scale: [1, 1.3, 1],
+                opacity: [0.15, 0.3, 0.15],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 1,
+              }}
+            />
 
-                <h1 className="text-5xl md:text-6xl font-extrabold leading-[1.03] tracking-tight min-h-[190px] md:min-h-0">
-                  Desenvolvo
-                  <br />
-                  produtos com
-                  <br />
-                  <span style={{ color: 'var(--accent)' }}>{ROLES[roleIdx]}</span>
-                </h1>
-
-                <p className="mt-6 max-w-[460px] text-lg leading-relaxed" style={{ color: 'var(--fg-3)' }}>
-                  React, Node.js, IA aplicada e automação. Cada projeto une design, eficiência e um problema de verdade pra resolver.
-                </p>
-
-                <div className="flex items-center gap-2 mt-5">
-                  <span className="relative w-2 h-2 rounded-full bg-green-400">
-                    <span className="absolute inset-0 rounded-full bg-green-400 animate-pulse-dot" />
-                  </span>
-                  <span className="text-[12.5px]" style={{ color: 'var(--fg-3)' }}>
-                    Disponível para novos projetos
-                  </span>
-                </div>
-
-                <div className="flex flex-wrap gap-3.5 mt-6">
-                  <div
-                    onMouseMove={handleMagnetMove}
-                    onMouseLeave={() => setMagnet({ x: 0, y: 0 })}
-                    style={{
-                      background: 'var(--accent)',
-                      color: 'var(--accent-text)',
-                      transform: `translate(${magnet.x}px, ${magnet.y}px)`,
-                    }}
-                    className="glass-strong px-6 py-3.5 rounded-2xl font-semibold text-[15px] cursor-pointer transition-transform duration-150 ease-out"
-                  >
-                    <a href="#projects" onClick={(e) => { e.preventDefault(); document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' }); }}>
-                      Ver projetos reais
-                    </a>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setRecruiterMode(true)}
-                    className="glass px-6 py-3.5 rounded-2xl font-semibold text-[15px]"
-                  >
-                    Modo recrutador
-                  </button>
-                </div>
-                <p className="mt-6 text-xs" style={{ color: 'var(--fg-4)' }}>
-                  Clique nas cartas ao lado — a de cima vai pro fim da pilha, qualquer outra vem pra frente.
-                </p>
-              </motion.div>
-
-              <CardStack />
-            </div>
-          </div>
-
-          <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 mx-6 md:mx-16" style={{ borderTop: '1px solid var(--border-1)' }}>
-            {STATS.map((stat, i) => (
-              <div
-                key={stat.label}
-                className="py-6 px-4 md:px-6 flex gap-3.5 items-start"
-                style={i < STATS.length - 1 ? { borderRight: '1px solid var(--border-1)' } : undefined}
-              >
-                <div>
-                  <div className="text-2xl md:text-[28px] font-extrabold" style={{ color: 'var(--accent)' }}>
-                    {stat.value}
-                  </div>
-                  <div className="text-[13.5px] font-semibold mt-0.5">{stat.label}</div>
-                  <div className="text-xs mt-1 leading-snug" style={{ color: 'var(--fg-4)' }}>
-                    {stat.desc}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="relative z-10 flex justify-center py-6">
-            <button
-              type="button"
-              aria-label="Rolar para a próxima seção"
-              onClick={() => document.getElementById('marquee')?.scrollIntoView({ behavior: 'smooth' })}
-              className="animate-bob glass w-9 h-9 rounded-full flex items-center justify-center hover:bg-[var(--surface-2)] transition-colors"
-              style={{ color: 'var(--fg-4)' }}
+            {/* Avatar com animação e brilho */}
+            <motion.div
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ duration: 1.2, delay: 0.3, type: "spring", stiffness: 100 }}
+              className="mb-8 relative"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" fill="none">
-                <path d="M12 5v14M5 12l7 7 7-7" />
-              </svg>
-            </button>
-          </div>
-        </>
-      ) : (
-        <div className="relative z-10 flex-1 flex items-center justify-center px-6 py-16">
-          <div className="glass-strong w-full max-w-2xl rounded-[28px] p-10 md:p-12">
-            <div className="text-[11px] uppercase tracking-wider mb-3.5" style={{ color: 'var(--fg-4)' }}>
-              Resumo rápido
-            </div>
-            <div className="text-3xl md:text-[34px] font-extrabold mb-1.5">Ricardo A. Gonçalves</div>
-            <div className="text-[15.5px] mb-7" style={{ color: 'var(--fg-2)' }}>
-              Full Stack &amp; IA — Sorocaba, SP
-            </div>
-            <ul className="flex flex-col gap-4 mb-8">
-              {RECRUITER_BULLETS.map((bullet) => (
-                <li key={bullet} className="flex gap-2.5 items-start">
-                  <span className="w-1.5 h-1.5 mt-2 rounded-full flex-shrink-0" style={{ background: 'var(--accent)' }} />
-                  <span className="text-[14.5px] leading-relaxed" style={{ color: 'var(--fg-2)' }}>
-                    {bullet}
-                  </span>
-                </li>
-              ))}
-            </ul>
-            <div className="flex gap-3">
-              <a
-                href="mailto:OrlaEK@proton.me"
-                className="px-6 py-3 rounded-xl font-semibold text-sm"
-                style={{ background: 'var(--accent)', color: 'var(--accent-text)' }}
+              <div className="relative group">
+                {/* Fundo brilhante pulsante atrás do avatar */}
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 rounded-full blur-lg opacity-75 group-hover:opacity-100 transition-opacity duration-300 animate-pulse-slow"></div>
+
+                {/* Imagem do perfil */}
+                <img
+                  src="./profile.jpg"
+                  alt={personalInfo.name}
+                  className="relative w-40 h-40 md:w-48 md:h-48 rounded-full object-cover glass-intense border-4 border-white/40 shadow-3xl group-hover:scale-105 transition-transform duration-300"
+                />
+
+                {/* Camada animada sobre o avatar */}
+                <motion.div
+                  className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-400/30 to-cyan-400/30"
+                  animate={{
+                    opacity: [0.3, 0.6, 0.3],
+                    scale: [1, 1.05, 1],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                />
+
+                {/* Ícone de brilho girando */}
+                <motion.div
+                  className="absolute -top-2 -right-2"
+                  animate={{
+                    rotate: [0, 360],
+                    scale: [1, 1.2, 1],
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                >
+                  <Sparkles className="w-6 h-6 text-cyan-400" />
+                </motion.div>
+              </div>
+            </motion.div>
+
+            {/* Nome e título animados */}
+            <motion.div
+              {...fadeInMount(0.6, 30)}
+              className="mb-6"
+            >
+              {/* Nome com efeito de brilho */}
+              <motion.h1 
+                className="text-5xl md:text-7xl font-bold text-gradient-vibrant mb-4 relative"
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
               >
-                Enviar e-mail
-              </a>
-              <button type="button" onClick={() => setRecruiterMode(false)} className="glass px-6 py-3 rounded-xl font-semibold text-sm">
-                Voltar ao normal
-              </button>
-            </div>
+                {personalInfo.name}
+                <motion.div
+                  className="absolute inset-0 shimmer"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 0.3, 0] }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    repeatDelay: 2,
+                  }}
+                />
+              </motion.h1>
+
+              {/* Título profissional */}
+              <motion.p 
+                className="text-2xl md:text-3xl text-blue-100 dark:text-blue-200 font-medium"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8, duration: 1 }}
+              >
+                {personalInfo.title}
+              </motion.p>
+            </motion.div>
+
+            {/* Bio curta do desenvolvedor */}
+            <motion.div
+              {...fadeInMount(1)}
+              className="glass-card max-w-3xl mb-10"
+            >
+              <p className="text-lg md:text-xl leading-relaxed text-white/90 dark:text-blue-50">
+                {personalInfo.bio}
+              </p>
+            </motion.div>
+
+            {/* Área de links sociais e botão de tema */}
+            <motion.div
+              {...fadeInMount(1.2)}
+              className="flex items-center gap-6 flex-wrap justify-center"
+            >
+              {/* Links de redes sociais com animações */}
+              <div className="flex gap-4">
+                {socialLinks.map((social, index) => (
+                  <motion.a
+                    key={social.name}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.name}
+                    className="glass-button group relative overflow-hidden"
+                    whileHover={{ 
+                      scale: 1.15,
+                      rotate: [0, -5, 5, 0],
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                    initial={{ opacity: 0, scale: 0, rotate: 180 }}
+                    animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                    transition={springPop(1.4 + index * 0.1)}
+                  >
+                    {/* Gradiente animado de fundo */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-cyan-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
+                    <SocialIcon icon={social.icon} />
+                  </motion.a>
+                ))}
+              </div>
+
+              {/* Divisor visual entre ícones sociais e toggle */}
+              <motion.div 
+                className="w-px h-12 bg-gradient-to-b from-transparent via-white/30 to-transparent"
+                initial={{ scaleY: 0 }}
+                animate={{ scaleY: 1 }}
+                transition={{ delay: 1.6, duration: 0.5 }}
+              />
+
+              {/* Botão para alternar tema claro/escuro */}
+              <motion.button
+                onClick={toggleTheme}
+                aria-label="Alternar tema"
+                className="glass-button group relative overflow-hidden"
+                whileHover={{
+                  scale: 1.15,
+                  rotate: theme === 'light' ? 180 : -180,
+                }}
+                whileTap={{ scale: 0.95 }}
+                initial={{ opacity: 0, scale: 0, rotate: -180 }}
+                animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                transition={springPop(1.7)}
+              >
+                {/* Gradiente suave ao passar o mouse */}
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
+                
+                {/* Ícone muda conforme o tema */}
+                {theme === 'light' ? (
+                  <Moon className="w-6 h-6" />
+                ) : (
+                  <Sun className="w-6 h-6" />
+                )}
+              </motion.button>
+            </motion.div>
           </div>
         </div>
-      )}
-    </header>
+      </motion.header>
+    </>
   );
 };
 

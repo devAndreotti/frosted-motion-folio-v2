@@ -1,44 +1,29 @@
 import { test, expect } from "@playwright/test";
 
+// Scoped to #header (the hero section) because the theme-toggle button also
+// appears in Navigation's desktop and mobile bars with the same accessible
+// name — scoping avoids the strict-mode "multiple elements match" error.
 test("theme toggle flips the dark class and persists across reload", async ({ page }) => {
   await page.goto("");
   const html = page.locator("html");
-  const toggle = page.getByRole("button", { name: "Alternar tema claro/escuro" });
+  const toggle = page.locator("#header").getByRole("button", { name: "Alternar tema" });
 
-  // The redesign defaults to dark ("black glass"), regardless of system preference.
-  await expect(html).toHaveClass(/dark/);
+  // Playwright's default color scheme is light, and no prior test in this
+  // context has written to localStorage, so the app starts in light mode.
+  await expect(html).not.toHaveClass(/dark/);
 
   await toggle.click();
-  await expect(html).not.toHaveClass(/dark/);
-  await expect
-    .poll(() => page.evaluate(() => localStorage.getItem("theme")))
-    .toBe("light");
-
-  await page.reload();
-  await expect(html).not.toHaveClass(/dark/);
-
-  await page.getByRole("button", { name: "Alternar tema claro/escuro" }).click();
   await expect(html).toHaveClass(/dark/);
   await expect
     .poll(() => page.evaluate(() => localStorage.getItem("theme")))
     .toBe("dark");
-});
-
-test("picking a color swatch updates the accent and persists across reload", async ({ page }) => {
-  await page.goto("");
-
-  const blueSwatch = page.getByRole("button", { name: "Cor de destaque: Azul" });
-  await blueSwatch.click();
-
-  await expect
-    .poll(() => page.evaluate(() => localStorage.getItem("hue")))
-    .toBe("blue");
-  await expect
-    .poll(() => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--accent").trim()))
-    .toBe("#3b82f6");
 
   await page.reload();
+  await expect(html).toHaveClass(/dark/);
+
+  await page.locator("#header").getByRole("button", { name: "Alternar tema" }).click();
+  await expect(html).not.toHaveClass(/dark/);
   await expect
-    .poll(() => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--accent").trim()))
-    .toBe("#3b82f6");
+    .poll(() => page.evaluate(() => localStorage.getItem("theme")))
+    .toBe("light");
 });
