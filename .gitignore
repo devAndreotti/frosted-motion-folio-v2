@@ -25,6 +25,8 @@ coverage
 *.sw?
 
 .claude/worktrees/
+.claude/design-work/
+.claude/design-work-fresh/
 
 # Quality Gate
 .quality-gate/state.json
