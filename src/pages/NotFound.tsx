@@ -12,14 +12,12 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center" style={{ background: '#08080a', color: '#f5f5f5' }}>
-      <div className="text-center px-6">
-        <h1 className="text-6xl font-extrabold mb-4">404</h1>
-        <p className="text-lg mb-6" style={{ color: 'rgba(255,255,255,0.5)' }}>
-          Essa página não existe.
-        </p>
-        <a href="./" className="glass-button inline-block px-6 py-3 rounded-full font-semibold" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.14)' }}>
-          Voltar ao início
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold mb-4">404</h1>
+        <p className="text-xl text-gray-600 mb-4">Oops! Page not found</p>
+        <a href="/" className="text-blue-500 hover:text-blue-700 underline">
+          Return to Home
         </a>
       </div>
     </div>

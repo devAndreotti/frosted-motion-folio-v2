@@ -1,151 +1,181 @@
-import { useState } from 'react';
-import { CORE_SKILLS, SKILL_CATEGORIES } from '@/data/skills';
-import SkillsRadar from './SkillsRadar';
+import { motion } from 'framer-motion';
+import { Code, Globe, Wrench, Database, Bot, Blocks } from 'lucide-react';
+import SectionHeading from './SectionHeading';
+import { drift } from '@/lib/motion';
 
-type View = 'bento' | 'radar';
+// Lista categorizada de habilidades e tecnologias com ícones
+const skillsCategories = [
+  {
+    title: "Linguagens de Programação",
+    icon: Code,
+    skills: ["JavaScript", "TypeScript", "Python", "Java", "C#", "HTML", "CSS", "SQL", "Solidity"]
+  },
+  {
+    title: "Desenvolvimento Web",
+    icon: Globe,
+    skills: ["React", "Node.js", "HTML5", "Bootstrap", "CSS3", "Tailwind CSS", "ASP.NET Core", "json-server", "anime.js"]
+  },
+  {
+    title: "Ferramentas & Tecnologias",
+    icon: Wrench,
+    skills: ["Git e GitKraken", "Power BI", "Arduino", "n8n", "Excel", "Vite", "Jupyter Notebook"]
+  },
+  {
+    title: "Banco de Dados",
+    icon: Database,
+    skills: ["SQL", "Supabase", "Database Design", "Data Analysis"]
+  },
+  {
+    title: "Inteligência Artificial",
+    icon: Bot,
+    skills: ["Machine Learning", "Python ML", "KNN", "Random Forest", "AI Design"]
+  },
+  {
+    title: "Blockchain & Web3",
+    icon: Blocks,
+    skills: ["Solidity", "Smart Contracts", "MetaMask", "NFTs", "ERC-20 Tokens", "OpenZeppelin", "Truffle", "Ganache"]
+  }
+];
 
 const Skills = () => {
-  const [view, setView] = useState<View>('bento');
-
   return (
-    <section id="skills" className="relative py-20 md:py-32 overflow-hidden">
-      <div
-        className="absolute top-1/4 -left-40 w-[480px] h-[480px] rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(var(--accent-rgb), 0.1) 0%, transparent 70%)' }}
-      />
+    <section id="skills" className="py-20 md:py-32 relative">
+      {/* Fundo animado com gradientes para estética visual */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          className="absolute top-1/4 left-0 w-64 h-64 bg-gradient-to-r from-blue-400/15 to-transparent rounded-full blur-3xl"
+          {...drift(100, 1.2, 10)}
+        />
+        <motion.div
+          className="absolute bottom-1/4 right-0 w-80 h-80 bg-gradient-to-l from-cyan-400/15 to-transparent rounded-full blur-3xl"
+          {...drift(-100, 1.3, 12, 2)}
+        />
+      </div>
 
-      <div className="relative z-10 container mx-auto px-4">
-        <div className="flex items-end justify-between mb-10 flex-wrap gap-4">
-          <div>
-            <div className="flex items-center gap-2.5 mb-2">
-              <span className="w-7 h-0.5" style={{ background: 'var(--accent)' }} />
-              <span className="text-xs uppercase tracking-wider" style={{ color: 'var(--fg-4)' }}>
-                Skills &amp; tecnologias
-              </span>
-            </div>
-            <h2 className="text-[28px] md:text-[32px] font-extrabold">Onde eu foco</h2>
-          </div>
+      <div className="container mx-auto px-4 relative z-10">
+        {/* Título da seção com animação de entrada */}
+        <SectionHeading
+          title="Skills & Tecnologias"
+          description="Ferramentas e tecnologias que uso para criar soluções completas:"
+        />
 
-          <div className="glass relative flex gap-1 p-1.5 rounded-full">
-            <div
-              className="absolute top-1.5 left-1.5 h-[calc(100%-12px)] w-[90px] rounded-full transition-transform duration-500"
-              style={{ background: 'var(--accent)', transform: `translateX(${view === 'bento' ? 0 : 94}px)`, transitionTimingFunction: 'cubic-bezier(0.34,1.56,0.64,1)' }}
-            />
-            <button
-              type="button"
-              onClick={() => setView('bento')}
-              className="relative z-10 w-[90px] text-center py-2 text-[12.5px] font-semibold"
-              style={{ color: view === 'bento' ? 'var(--accent-text)' : 'var(--fg-3)' }}
-            >
-              Bento
-            </button>
-            <button
-              type="button"
-              onClick={() => setView('radar')}
-              className="relative z-10 w-[90px] text-center py-2 text-[12.5px] font-semibold"
-              style={{ color: view === 'radar' ? 'var(--accent-text)' : 'var(--fg-3)' }}
-            >
-              Radar
-            </button>
-          </div>
-        </div>
-
-        {view === 'bento' ? (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div
-              className="glass col-span-2 row-span-3 rounded-[22px] p-7 flex flex-col justify-between transition-all duration-300 hover:bg-[var(--surface-2)]"
-              style={{ ['--glow' as string]: 'rgba(var(--accent-rgb), 0.2)' }}
-            >
-              <div>
-                <div
-                  className="w-10 h-10 rounded-[11px] flex items-center justify-center mb-4.5"
-                  style={{ background: `linear-gradient(155deg, var(--accent), rgba(var(--accent-rgb), 0.6))`, boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.3)' }}
-                >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--accent-text)">
-                    <path d="M12 2l2.9 6.4L22 9.3l-5 4.9 1.2 7-6.2-3.4L5.8 21.2 7 14.2 2 9.3l7.1-1z" />
-                  </svg>
-                </div>
-                <div className="text-[17px] font-extrabold mb-1">Core stack</div>
-                <div className="text-[12.5px] mb-5" style={{ color: 'var(--fg-4)' }}>
-                  O que eu uso todo dia, do front ao dado.
-                </div>
-              </div>
-              <div className="flex flex-col gap-2.5">
-                {CORE_SKILLS.map((skill) => (
-                  <div key={skill.name} className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[13.5px] font-semibold">{skill.name}</span>
-                      {skill.learning && (
-                        <span className="flex items-center gap-1 px-2 py-0.5 rounded-full" style={{ background: 'var(--surface-2)' }}>
-                          <span className="relative w-1.5 h-1.5 rounded-full bg-green-400">
-                            <span className="absolute inset-0 rounded-full bg-green-400 animate-pulse-dot" />
-                          </span>
-                          <span className="text-[9.5px] font-bold uppercase tracking-wide text-green-400">aprendendo</span>
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex gap-1">
-                      {Array.from({ length: 5 }, (_, i) => (
-                        <span
-                          key={i}
-                          className="w-1.5 h-1.5 rounded-full"
-                          style={{ background: i < skill.level ? 'var(--accent)' : 'var(--border-1)' }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {SKILL_CATEGORIES.map((cat) => (
-              <div
-                key={cat.title}
-                className="glass rounded-[22px] p-5.5 flex flex-col gap-3 transition-all duration-300 hover:bg-[var(--surface-2)] hover:-translate-y-1"
-                style={{ ['--glow' as string]: `${cat.tint}33` }}
+        {/* Grid com categorias de habilidades */}
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            {skillsCategories.map((category, categoryIndex) => (
+              <motion.div
+                key={category.title}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ 
+                  duration: 0.6, 
+                  delay: categoryIndex * 0.1,
+                }}
+                viewport={{ once: true }}
+                whileHover={{ 
+                  scale: 1.02,
+                  y: -5,
+                }}
+                className="glass-card group relative overflow-hidden"
               >
-                <div
-                  className="w-[34px] h-[34px] rounded-[9px] flex items-center justify-center text-[12.5px] font-extrabold"
-                  style={{ background: `linear-gradient(155deg, ${cat.tint}, ${cat.tint}99)`, boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.3)' }}
-                >
-                  {cat.mono}
+                {/* Efeito de fundo ao passar o mouse */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-br from-blue-400/10 via-cyan-400/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                />
+
+                <div className="relative z-10">
+                  {/* Cabeçalho da categoria */}
+                  <div className="flex items-center gap-3 mb-6">
+                    <motion.div
+                      className="w-12 h-12 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-xl flex items-center justify-center"
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <category.icon className="w-6 h-6 text-white" />
+                    </motion.div>
+                    <h3 className="text-lg font-semibold text-white/90 dark:text-blue-50 group-hover:text-white transition-colors">
+                      {category.title}
+                    </h3>
+                  </div>
+
+                  {/* Lista das skills */}
+                  <div className="flex flex-wrap gap-2">
+                    {category.skills.map((skill, skillIndex) => (
+                      <motion.span
+                        key={skill}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        transition={{ 
+                          duration: 0.4, 
+                          delay: categoryIndex * 0.1 + skillIndex * 0.05,
+                        }}
+                        viewport={{ once: true }}
+                        whileHover={{ scale: 1.05 }}
+                        className="px-3 py-1.5 bg-white/20 text-white/90 dark:text-blue-50 rounded-full text-sm font-medium hover:bg-white/30 transition-all duration-300 cursor-default"
+                      >
+                        {skill}
+                      </motion.span>
+                    ))}
+                  </div>
                 </div>
-                <div className="text-sm font-bold">{cat.title}</div>
-                <div className="flex flex-wrap gap-1.5">
-                  {cat.skills.map((skill) => (
-                    <span key={skill} className="text-[11px] px-2.5 py-1 rounded-full transition-colors hover:bg-[var(--surface-2)]" style={{ background: 'var(--surface-1)', color: 'var(--fg-3)' }}>
-                      {skill}
-                    </span>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Mensagem final de aprendizado com animações */}
+          <motion.div
+            className="flex justify-center"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            viewport={{ once: true }}
+          >
+            <motion.div
+              className="glass-card inline-flex items-center gap-4 px-8 py-6 max-w-md"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              {/* Ícone animado */}
+              <motion.div
+                className="w-12 h-12 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0"
+                animate={{
+                  rotate: [0, 360],
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+              >
+                <span className="text-xl">🚀</span>
+              </motion.div>
+              
+              {/* Texto de incentivo */}
+              <div className="text-left">
+                <p className="text-lg font-semibold text-white/90 dark:text-blue-50 mb-2">
+                  Sempre aprendendo e evoluindo
+                </p>
+                <div className="flex gap-1">
+                  {[1, 2, 3].map((dot) => (
+                    <motion.div
+                      key={dot}
+                      className="w-2 h-2 bg-cyan-400 rounded-full"
+                      animate={{
+                        scale: [1, 1.3, 1],
+                        opacity: [0.5, 1, 0.5],
+                      }}
+                      transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
+                        delay: dot * 0.2,
+                      }}
+                    />
                   ))}
                 </div>
               </div>
-            ))}
-          </div>
-        ) : (
-          <div className="glass rounded-3xl p-8 md:p-11 grid md:grid-cols-[auto_1fr] gap-12 items-center">
-            <div className="flex justify-center">
-              <SkillsRadar />
-            </div>
-            <div>
-              <div className="text-[17px] font-extrabold mb-1.5">Radar da stack</div>
-              <div className="text-[13px] max-w-[360px] mb-6 leading-relaxed" style={{ color: 'var(--fg-4)' }}>
-                Mesma leitura do bento, em outro formato — nível relativo (1 a 5) nas seis frentes que mais uso.
-              </div>
-              <div className="flex flex-col gap-2.5">
-                {CORE_SKILLS.map((skill) => (
-                  <div key={skill.name} className="flex items-center justify-between gap-3 max-w-[320px]">
-                    <span className="text-[13.5px] font-semibold">{skill.name}</span>
-                    <div className="flex gap-1">
-                      {Array.from({ length: 5 }, (_, i) => (
-                        <span key={i} className="w-1.5 h-1.5 rounded-full" style={{ background: i < skill.level ? 'var(--accent)' : 'var(--border-1)' }} />
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
+            </motion.div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

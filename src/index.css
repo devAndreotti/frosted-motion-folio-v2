@@ -3,117 +3,222 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body {
+  @apply bg-gray-900; /* Ou a cor de fundo que você preferir */
+}
+
 html {
   overflow-x: hidden;
 }
 
-/* Mode tokens: black-glass by default (dark), warm-white in light mode.
-   Hue tokens (--accent, --accent-text, --accent-rgb) are set on this same
-   root element at runtime by ThemeContext, based on the selected color. */
 @layer base {
   :root {
-    --bg: #f6f5f3;
-    --fg-1: #131316;
-    --fg-2: rgba(19, 19, 22, 0.7);
-    /* fg-3/fg-4 are tuned to clear WCAG AA (4.5:1) against --bg at normal text sizes,
-       not just visually "close enough" — both are used for real body/meta copy. */
-    --fg-3: rgba(19, 19, 22, 0.62);
-    --fg-4: rgba(19, 19, 22, 0.6);
-    --border-1: rgba(19, 19, 22, 0.1);
-    --border-2: rgba(19, 19, 22, 0.16);
-    --surface-1: rgba(19, 19, 22, 0.045);
-    --surface-2: rgba(19, 19, 22, 0.07);
-    --dot: rgba(19, 19, 22, 0.06);
-
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 214 88% 27%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 200 94% 50%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
+    
+    /* Blue gradient variables */
+    --blue-deep: 210 100% 15%;
+    --blue-ocean: 200 100% 23%;
+    --blue-sky: 200 100% 35%;
+    --blue-electric: 210 100% 23%;
+    --blue-cyan: 200 100% 40%;
   }
 
   .dark {
-    --bg: #08080a;
-    --fg-1: #f5f5f5;
-    --fg-2: rgba(255, 255, 255, 0.7);
-    --fg-3: rgba(255, 255, 255, 0.5);
-    --fg-4: rgba(255, 255, 255, 0.48);
-    --border-1: rgba(255, 255, 255, 0.14);
-    --border-2: rgba(255, 255, 255, 0.22);
-    --surface-1: rgba(255, 255, 255, 0.06);
-    --surface-2: rgba(255, 255, 255, 0.1);
-    --dot: rgba(255, 255, 255, 0.06);
-
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 200 94% 50%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 214 88% 27%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    
+    /* Dark mode blue variants */
+    --blue-deep: 220 80% 8%;
+    --blue-ocean: 210 90% 12%;
+    --blue-sky: 200 95% 20%;
+    --blue-electric: 195 100% 35%;
+    --blue-cyan: 185 100% 45%;
   }
 }
 
 @layer base {
   * {
-    border-color: var(--border-1);
+    @apply border-border;
   }
 
   body {
-    background: var(--bg);
-    color: var(--fg-1);
+    @apply bg-background text-foreground;
+    background: linear-gradient(135deg, 
+      hsl(var(--blue-deep)) 0%, 
+      hsl(var(--blue-ocean)) 20%,
+      hsl(var(--blue-sky)) 40%,
+      hsl(var(--blue-electric)) 60%,
+      hsl(var(--blue-cyan)) 80%,
+      hsl(var(--blue-sky)) 100%
+    );
     min-height: 100vh;
-    transition: background-color 0.4s ease, color 0.4s ease;
+    position: relative;
+    overflow-x: hidden;
   }
 
-  :focus-visible {
-    outline: 2px solid var(--accent, #3b82f6);
-    outline-offset: 2px;
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 80%, hsl(var(--blue-electric)) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, hsl(var(--blue-cyan)) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, hsl(var(--blue-sky)) 0%, transparent 50%);
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .dark body {
+    background: linear-gradient(135deg, 
+      hsl(var(--blue-deep)) 0%, 
+      hsl(var(--blue-ocean)) 25%,
+      hsl(var(--blue-sky)) 50%,
+      hsl(var(--blue-ocean)) 75%,
+      hsl(var(--blue-deep)) 100%
+    );
+  }
+
+  .dark body::before {
+    background: radial-gradient(circle at 20% 80%, hsl(var(--blue-electric)) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, hsl(var(--blue-cyan)) 0%, transparent 40%),
+                radial-gradient(circle at 40% 40%, hsl(var(--blue-sky)) 0%, transparent 30%);
+    opacity: 0.2;
   }
 }
 
 @layer components {
   .glass {
-    background: var(--surface-1);
-    border: 1px solid var(--border-1);
+    background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 
+      0 8px 32px 0 rgba(31, 38, 135, 0.37),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
   }
-
+  
+  .dark .glass {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+  
   .glass-card {
-    @apply glass rounded-3xl p-8 transition-all duration-500 hover:scale-[1.02];
+    @apply glass rounded-3xl p-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-3xl;
+    backdrop-filter: blur(20px);
     transform-style: preserve-3d;
   }
-
+  
   .glass-card:hover {
-    background: var(--surface-2);
+    background: rgba(255, 255, 255, 0.25);
   }
-
+  
+  .dark .glass-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+  
   .glass-button {
     @apply glass rounded-full px-8 py-4 transition-all duration-300 hover:scale-110 active:scale-95;
     backdrop-filter: blur(15px);
   }
-
+  
   .glass-button:hover {
-    background: var(--surface-2);
+    background: rgba(255, 255, 255, 0.30);
   }
-
-  .glass-strong {
-    background: var(--surface-2);
-    border: 1px solid var(--border-2);
-    backdrop-filter: blur(28px);
-    -webkit-backdrop-filter: blur(28px);
+  
+  .dark .glass-button:hover {
+    background: rgba(255, 255, 255, 0.12);
   }
 
   .glass-intense {
-    background: var(--surface-2);
+    background: rgba(255, 255, 255, 0.20);
     backdrop-filter: blur(25px);
-    border: 1px solid var(--border-2);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.30);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+  
+  .dark .glass-intense {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.20);
+  }
+
+  .floating-orb {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(45deg,
+      hsl(var(--blue-electric)),
+      hsl(var(--blue-cyan))
+    );
+    opacity: 0.1;
+    pointer-events: none;
   }
 }
 
 @layer utilities {
   .text-gradient {
-    background: linear-gradient(90deg, var(--accent, #3b82f6), var(--fg-1));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    @apply bg-gradient-to-r from-blue-400 via-blue-500 to-cyan-400 bg-clip-text text-transparent;
+  }
+  
+  .text-gradient-vibrant {
+    @apply bg-gradient-to-r from-blue-300 via-cyan-400 to-blue-500 bg-clip-text text-transparent;
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-bounce-slow {
+    animation: bounce 3s infinite;
+  }
+
+  .bg-blue-gradient {
+    background: linear-gradient(135deg, 
+      hsl(var(--blue-deep)), 
+      hsl(var(--blue-ocean)), 
+      hsl(var(--blue-sky))
+    );
   }
 
   .shadow-3xl {
@@ -121,156 +226,70 @@ html {
   }
 }
 
-@keyframes pulse-dot {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
   }
-  50% {
-    opacity: 0.4;
-    transform: scale(0.8);
+  33% {
+    transform: translateY(-20px) rotate(120deg);
   }
-}
-
-.animate-pulse-dot {
-  animation: pulse-dot 2s ease-in-out infinite;
+  66% {
+    transform: translateY(-10px) rotate(240deg);
+  }
 }
 
 @keyframes orb-drift {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  50% {
-    transform: translate(30px, -40px) scale(1.1);
-  }
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.05; }
+  33% { transform: translate(100px, -100px) scale(1.2); opacity: 0.15; }
+  66% { transform: translate(-100px, 100px) scale(0.8); opacity: 0.1; }
+}
+
+@keyframes particle-drift {
+  0% { transform: translateY(0) scale(0); opacity: 0; }
+  50% { transform: translateY(-150px) scale(1.5); opacity: 1; }
+  100% { transform: translateY(0) scale(0); opacity: 0; }
 }
 
 .animate-orb-drift {
-  animation: orb-drift 15s ease-in-out infinite;
+  animation-name: orb-drift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
 }
 
-@keyframes orb-drift-reverse {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
+.animate-particle-drift {
+  animation-name: particle-drift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/* Respeita a preferência do usuário por menos movimento: desativa as animações
+   ambientes (orbes/partículas/pulso) sem remover o efeito visual estático. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-orb-drift,
+  .animate-particle-drift,
+  .animate-pulse-slow,
+  .animate-float,
+  .animate-bounce-slow {
+    animation: none !important;
   }
-  50% {
-    transform: translate(-24px, 26px) scale(1.08);
-  }
-}
-
-.animate-orb-drift-reverse {
-  animation: orb-drift-reverse 18s ease-in-out infinite;
-}
-
-@keyframes bob {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(6px);
-  }
-}
-
-.animate-bob {
-  animation: bob 2s ease-in-out infinite;
-}
-
-@keyframes blink {
-  0%,
-  49% {
-    opacity: 1;
-  }
-  50%,
-  100% {
-    opacity: 0;
-  }
-}
-
-.animate-blink {
-  animation: blink 1s step-end infinite;
-}
-
-@keyframes marquee-left {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-@keyframes marquee-right {
-  from {
-    transform: translateX(-50%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-
-.animate-marquee-left {
-  animation: marquee-left 34s linear infinite;
-}
-
-.animate-marquee-right {
-  animation: marquee-right 34s linear infinite;
-}
-
-.marquee-boosted {
-  animation-duration: 7s !important;
 }
 
 @keyframes shimmer {
   0% {
-    background-position: 100% 0;
+    background-position: -1000px 0;
   }
   100% {
-    background-position: 0 0;
+    background-position: 1000px 0;
   }
 }
 
 .shimmer {
   background: linear-gradient(
     90deg,
-    var(--surface-1) 25%,
-    var(--surface-2) 37%,
-    var(--surface-1) 63%
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
   );
-  background-size: 400% 100%;
-  animation: shimmer 1.6s ease-in-out infinite;
-}
-
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.5s ease;
-}
-
-/* Respeita a preferência do usuário por menos movimento: desativa as
-   animações ambientes sem remover o efeito visual estático. */
-/* The marquee ticker is deliberately exempt: it's a content list (not ambient
-   decoration), already offers a pause-on-hover/click-to-control affordance
-   per WCAG 2.2.2, and every item it shows is also present, fully readable,
-   in the DOM without motion. */
-@media (prefers-reduced-motion: reduce) {
-  .animate-pulse-dot,
-  .animate-orb-drift,
-  .animate-orb-drift-reverse,
-  .animate-bob,
-  .shimmer {
-    animation: none !important;
-  }
+  background-size: 1000px 100%;
+  animation: shimmer 3s infinite;
 }
