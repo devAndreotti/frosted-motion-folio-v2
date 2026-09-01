@@ -17,7 +17,7 @@ const Index = () => {
       >
         Pular para o conteúdo
       </a>
-      <div className="min-h-screen relative" style={{ background: 'var(--bg)' }}>
+      <div className="min-h-screen relative">
         <Navigation />
         <main>
           <Header />

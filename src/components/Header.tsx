@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import CardStack from './CardStack';
 
 const ROLES = ['propósito real.', 'que resolvem problemas.', 'bem pensados.', 'com boa DX.'];
@@ -94,12 +94,25 @@ const Header = () => {
                   </span>
                 </div>
 
-                <h1 className="text-5xl md:text-6xl font-extrabold leading-[1.03] tracking-tight min-h-[190px] md:min-h-0">
+                <h1 className="text-5xl md:text-6xl font-extrabold leading-[1.03] tracking-tight">
                   Desenvolvo
                   <br />
                   produtos com
                   <br />
-                  <span style={{ color: 'var(--accent)' }}>{ROLES[roleIdx]}</span>
+                  <span className="relative block min-h-[100px] md:min-h-[136px] overflow-hidden" style={{ color: 'var(--accent)' }}>
+                    <AnimatePresence mode="wait">
+                      <motion.span
+                        key={roleIdx}
+                        initial={{ opacity: 0, y: 14 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -14 }}
+                        transition={{ duration: 0.4, ease: 'easeOut' }}
+                        className="absolute inset-x-0 top-0"
+                      >
+                        {ROLES[roleIdx]}
+                      </motion.span>
+                    </AnimatePresence>
+                  </span>
                 </h1>
 
                 <p className="mt-6 max-w-[460px] text-lg leading-relaxed" style={{ color: 'var(--fg-3)' }}>

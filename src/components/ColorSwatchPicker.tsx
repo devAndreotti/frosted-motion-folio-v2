@@ -1,4 +1,5 @@
-import { HUES, HUE_ORDER, useTheme } from '@/contexts/ThemeContext';
+import { HUE_ORDER, useTheme } from '@/contexts/ThemeContext';
+import { HUE_THEMES } from '@/lib/theme';
 
 const HUE_LABELS: Record<string, string> = {
   black: 'Preto',
@@ -25,7 +26,7 @@ const ColorSwatchPicker = () => {
           aria-pressed={hue === option}
           className="w-3.5 h-3.5 rounded-full border-2 transition-transform hover:scale-110"
           style={{
-            background: HUES[option].swatch,
+            background: HUE_THEMES[option].swatch,
             borderColor: hue === option ? 'var(--fg-1)' : 'transparent',
           }}
         />

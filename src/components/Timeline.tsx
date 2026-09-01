@@ -61,7 +61,7 @@ const Timeline = () => {
             <div key={stop.year} className="w-[300px] flex-shrink-0">
               <div
                 className="w-3.5 h-3.5 rounded-full mb-5"
-                style={{ background: 'var(--accent)', border: '3px solid var(--bg)', boxShadow: '0 0 0 1px var(--border-1)' }}
+                style={{ background: 'var(--accent)', border: '3px solid var(--surface-2)', boxShadow: '0 0 0 1px var(--border-1)' }}
               />
               <div className="glass rounded-2xl p-5">
                 <div className="text-xs font-bold uppercase tracking-wide mb-2" style={{ color: 'var(--accent)' }}>
