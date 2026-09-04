@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { personalInfo } from '@/data/personal';
-import { projects } from '@/data/projects';
+import { featuredProject, curatedProjects } from '@/data/curatedProjects';
 import { reorderStack } from '@/lib/cardStack';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface StackCard {
   id: string;
@@ -15,25 +16,30 @@ interface StackCard {
 
 // Five real projects picked for the stack — same curation as the featured
 // set in Projects.tsx, so the hero and the projects section tell one story.
+// Pulled from curatedProjects (not the raw project list) so the description
+// shown here is already localized, reusing the same translated copy.
 const STACK_PROJECT_IDS = [26, 9, 2, 5, 1];
-const TINTS: Record<number, string> = { 26: '#3b82f6', 9: '#eab308', 2: '#22c55e', 5: '#a855f7', 1: '#f97316' };
+const ALL_CURATED = [featuredProject, ...curatedProjects];
 
-const STACK_PROJECTS: StackCard[] = STACK_PROJECT_IDS.map((id) => {
-  const project = projects.find((p) => p.id === id)!;
-  return {
-    id: String(id),
-    title: project.title,
-    desc: project.description,
-    tags: project.technologies.slice(0, 3),
-    tint: TINTS[id],
-    initial: project.title.charAt(0),
-  };
-});
-
-const CARDS: StackCard[] = [{ id: 'photo', isPhoto: true }, ...STACK_PROJECTS];
+function buildStackCards(lang: 'pt' | 'en'): StackCard[] {
+  const projectCards = STACK_PROJECT_IDS.map((id) => {
+    const project = ALL_CURATED.find((p) => p.id === id)!;
+    return {
+      id: String(id),
+      title: project.title,
+      desc: project.description[lang],
+      tags: project.technologies.slice(0, 3),
+      tint: project.tint,
+      initial: project.title.charAt(0),
+    };
+  });
+  return [{ id: 'photo', isPhoto: true }, ...projectCards];
+}
 
 /** Clickable stack of glass cards — click the front one to send it to the back, click any other to bring it forward. */
 const CardStack = () => {
+  const { lang, t } = useLanguage();
+  const CARDS = buildStackCards(lang);
   const [order, setOrder] = useState<string[]>(CARDS.map((c) => c.id));
   const byId = Object.fromEntries(CARDS.map((c) => [c.id, c]));
 
@@ -67,7 +73,7 @@ const CardStack = () => {
             key={id}
             type="button"
             onClick={() => handleClick(id)}
-            aria-label={card.isPhoto ? `Foto de ${personalInfo.name}` : `Projeto: ${card.title}`}
+            aria-label={card.isPhoto ? t.header.photoAlt(personalInfo.name) : t.header.projectAlt(card.title ?? '')}
             className="glass-strong absolute top-0 left-0 w-[320px] h-[420px] rounded-3xl overflow-hidden cursor-pointer text-left hover:brightness-[1.06]"
             style={{ ...style, transition: 'transform 450ms cubic-bezier(0.22,1,0.36,1), box-shadow 450ms ease, opacity 450ms ease, filter 0.2s ease' }}
           >
@@ -77,7 +83,7 @@ const CardStack = () => {
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/75" />
                 <div className="absolute left-[22px] bottom-[22px] right-[22px]">
                   <div className="text-xl font-extrabold text-white">{personalInfo.name}</div>
-                  <div className="text-[13px] text-white/65 mt-0.5">{personalInfo.title}</div>
+                  <div className="text-[13px] text-white/65 mt-0.5">{personalInfo.title[lang]}</div>
                 </div>
               </div>
             ) : (

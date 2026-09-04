@@ -8,8 +8,10 @@ describe("curatedProjects", () => {
   it("resolves the featured project against a real entry in the full project list", () => {
     expect(projects.some((p) => p.id === featuredProject.id)).toBe(true);
     expect(featuredProject.title).toBeTruthy();
-    expect(featuredProject.long.length).toBeGreaterThan(featuredProject.description.length);
-    expect(featuredProject.points.length).toBeGreaterThan(0);
+    expect(featuredProject.long.pt.length).toBeGreaterThan(featuredProject.description.pt.length);
+    expect(featuredProject.long.en.length).toBeGreaterThan(featuredProject.description.en.length);
+    expect(featuredProject.points.pt.length).toBeGreaterThan(0);
+    expect(featuredProject.points.en.length).toBe(featuredProject.points.pt.length);
   });
 
   it("resolves every curated project against a real entry, with no duplicates and a valid category", () => {
@@ -20,7 +22,9 @@ describe("curatedProjects", () => {
     for (const project of curatedProjects) {
       expect(projects.some((p) => p.id === project.id)).toBe(true);
       expect(VALID_CATEGORIES.has(project.cat)).toBe(true);
-      expect(project.points.length).toBeGreaterThan(0);
+      expect(project.points.pt.length).toBeGreaterThan(0);
+      expect(project.points.en.length).toBe(project.points.pt.length);
+      expect(project.images.length).toBeGreaterThan(0);
     }
   });
 });

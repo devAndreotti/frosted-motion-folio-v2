@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import { ArrowUp, ArrowUpRight, Clock, Github, Linkedin } from 'lucide-react';
 import { personalInfo } from '@/data/personal';
+import { useLanguage } from '@/contexts/LanguageContext';
+import CopyEmailButton from './CopyEmailButton';
+
+const CONTACT_EMAIL = 'OrlaEK@proton.me';
 
 function localTime(): string {
   try {
@@ -10,15 +14,16 @@ function localTime(): string {
   }
 }
 
-const QUICK_LINKS = [
-  { label: 'GitHub', href: 'https://github.com/devAndreotti' },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/ricardo-andreotti-gon%C3%A7alves-0b5785283/' },
-  { label: 'Projetos', href: '#projects' },
-  { label: 'Skills', href: '#skills' },
-];
-
 const Footer = () => {
+  const { t } = useLanguage();
   const [time, setTime] = useState(localTime());
+
+  const QUICK_LINKS = [
+    { label: t.footer.quickLinks.github, href: 'https://github.com/devAndreotti' },
+    { label: t.footer.quickLinks.linkedin, href: 'https://www.linkedin.com/in/ricardo-andreotti-gon%C3%A7alves-0b5785283/' },
+    { label: t.footer.quickLinks.projects, href: '#projects' },
+    { label: t.footer.quickLinks.skills, href: '#skills' },
+  ];
 
   useEffect(() => {
     const timer = setInterval(() => setTime(localTime()), 15000);
@@ -40,41 +45,42 @@ const Footer = () => {
                 <span className="absolute inset-0 rounded-full bg-green-400 animate-pulse-dot" />
               </span>
               <span className="text-[12.5px]" style={{ color: 'var(--fg-3)' }}>
-                Disponível para novos projetos
+                {t.header.availability}
               </span>
               <span className="glass flex items-center gap-1.5 px-3 py-1 rounded-full ml-1.5">
                 <Clock className="w-2.5 h-2.5" style={{ color: 'var(--fg-3)' }} />
                 <span className="text-[11.5px] tabular-nums" style={{ color: 'var(--fg-3)' }}>
-                  {time} em Sorocaba, SP
+                  {t.footer.localTime(time)}
                 </span>
               </span>
             </div>
             <h2 className="text-3xl md:text-[38px] font-extrabold leading-tight mb-3.5">
-              Vamos construir
+              {t.footer.heading1}
               <br />
-              algo real?
+              {t.footer.heading2}
             </h2>
             <p className="max-w-sm text-[15px] leading-relaxed mb-7" style={{ color: 'var(--fg-3)' }}>
-              Sempre aberto a novas oportunidades, freelas e ideias fora do comum.
+              {t.footer.paragraph}
             </p>
 
-            <div className="flex gap-3 flex-wrap">
+            <div className="flex gap-3 flex-wrap items-center">
               <a
-                href="mailto:OrlaEK@proton.me"
+                href={`mailto:${CONTACT_EMAIL}`}
                 className="flex items-center gap-2 px-6 py-3.5 rounded-2xl font-semibold text-[14.5px]"
                 style={{ background: 'var(--accent)', color: 'var(--accent-text)' }}
               >
-                Enviar e-mail
+                {t.common.sendEmail}
               </a>
+              <CopyEmailButton email={CONTACT_EMAIL} />
               <a href="#header" className="glass px-6 py-3.5 rounded-2xl font-semibold text-[14.5px]">
-                Currículo
+                {t.footer.resume}
               </a>
             </div>
           </div>
 
           <div>
             <div className="text-[11px] uppercase tracking-wide mb-3" style={{ color: 'var(--fg-4)' }}>
-              Direto ao ponto
+              {t.footer.directLabel}
             </div>
             {QUICK_LINKS.map((link) => (
               <a
@@ -99,12 +105,12 @@ const Footer = () => {
 
         <div className="relative z-10 flex items-center justify-between mt-6 px-1">
           <p className="text-[13px]" style={{ color: 'var(--fg-4)' }}>
-            © 2026 {personalInfo.name} — feito com React, Tailwind CSS e muito café.
+            {t.footer.copyright(personalInfo.name)}
           </p>
           <button
             type="button"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            aria-label="Voltar ao topo"
+            aria-label={t.footer.backToTopAria}
             className="glass w-9 h-9 rounded-full flex items-center justify-center hover:-translate-y-1 hover:bg-[var(--surface-2)] transition-all"
           >
             <ArrowUp className="w-4 h-4" />

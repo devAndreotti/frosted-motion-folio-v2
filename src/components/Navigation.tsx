@@ -2,9 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Moon, Sun, Menu, X, Github, Linkedin } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { useGithubActivity } from '@/hooks/useGithubActivity';
 import { springPop } from '@/lib/motion';
 import ColorSwatchPicker from './ColorSwatchPicker';
+import SudoTerminal from './SudoTerminal';
 
 const GLITCH_CHARS = '#$%&01</>{}=+*';
 const GLITCH_TICKS = 10;
@@ -17,48 +19,25 @@ export function scrambled(text: string): string {
     .join('');
 }
 
-const NAV_ITEMS = [
-  { name: 'Início', id: 'header' },
-  { name: 'Projetos', id: 'projects' },
-  { name: 'Skills', id: 'skills' },
-  { name: 'Trajetória', id: 'timeline' },
-  { name: 'Contato', id: 'contact' },
-];
-
 const NAME = 'Ricardo Andreotti';
 
 const Navigation = () => {
   const { theme, toggleTheme } = useTheme();
+  const { lang, toggleLang, t } = useLanguage();
   const { publicRepos } = useGithubActivity();
+  const NAV_ITEMS = [
+    { name: t.nav.home, id: 'header' },
+    { name: t.nav.projects, id: 'projects' },
+    { name: t.nav.skills, id: 'skills' },
+    { name: t.nav.journey, id: 'timeline' },
+    { name: t.nav.contact, id: 'contact' },
+  ];
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [glitchText, setGlitchText] = useState<string | null>(null);
-  const [showTerminal, setShowTerminal] = useState(false);
   const [activeId, setActiveId] = useState('header');
 
   const holdTimer = useRef<ReturnType<typeof setTimeout>>();
   const glitchInterval = useRef<ReturnType<typeof setInterval>>();
-  const sudoBuffer = useRef('');
-
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log('%cRicardo A. Gonçalves', 'font-weight:800;font-size:16px;');
-    // eslint-disable-next-line no-console
-    console.log('Full stack dev — abriu o devtools? bora trabalhar junto: contato no rodapé da página.');
-
-    const onKeydown = (e: KeyboardEvent) => {
-      if (e.metaKey || e.ctrlKey || e.altKey) return;
-      if (e.key === 'Escape') {
-        setShowTerminal(false);
-        return;
-      }
-      if (e.key && e.key.length === 1) {
-        sudoBuffer.current = (sudoBuffer.current + e.key).slice(-4).toLowerCase();
-        if (sudoBuffer.current === 'sudo') setShowTerminal(true);
-      }
-    };
-    window.addEventListener('keydown', onKeydown);
-    return () => window.removeEventListener('keydown', onKeydown);
-  }, []);
 
   useEffect(
     () => () => {
@@ -166,16 +145,25 @@ const Navigation = () => {
                     <span className="absolute inset-0 rounded-full bg-green-400 animate-pulse-dot" />
                   </span>
                   <span className="text-[11px]" style={{ color: 'var(--fg-3)' }}>
-                    {publicRepos} repositórios no GitHub
+                    {t.nav.reposLabel(publicRepos)}
                   </span>
                 </div>
               )}
 
               <ColorSwatchPicker />
 
+              <button
+                type="button"
+                onClick={toggleLang}
+                aria-label={t.nav.langToggleAria}
+                className="glass w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-bold uppercase"
+              >
+                {lang === 'pt' ? 'EN' : 'PT'}
+              </button>
+
               <motion.button
                 onClick={toggleTheme}
-                aria-label="Alternar tema claro/escuro"
+                aria-label={t.nav.themeToggleAria}
                 className="glass w-9 h-9 rounded-full flex items-center justify-center"
                 whileHover={{ scale: 1.1, rotate: theme === 'light' ? 180 : -180 }}
                 whileTap={{ scale: 0.95 }}
@@ -205,9 +193,17 @@ const Navigation = () => {
             </div>
 
             <div className="md:hidden flex items-center gap-2">
+              <button
+                type="button"
+                onClick={toggleLang}
+                aria-label={t.nav.langToggleAria}
+                className="glass w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-bold uppercase"
+              >
+                {lang === 'pt' ? 'EN' : 'PT'}
+              </button>
               <motion.button
                 onClick={toggleTheme}
-                aria-label="Alternar tema claro/escuro"
+                aria-label={t.nav.themeToggleAria}
                 className="glass w-9 h-9 rounded-full flex items-center justify-center"
                 whileTap={{ scale: 0.95 }}
               >
@@ -215,7 +211,7 @@ const Navigation = () => {
               </motion.button>
               <motion.button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                aria-label={isMobileMenuOpen ? 'Fechar menu' : 'Abrir menu'}
+                aria-label={isMobileMenuOpen ? t.nav.menuCloseAria : t.nav.menuOpenAria}
                 className="glass w-9 h-9 rounded-full flex items-center justify-center"
                 whileTap={{ scale: 0.95 }}
               >
@@ -246,41 +242,7 @@ const Navigation = () => {
         </div>
       </motion.nav>
 
-      {showTerminal && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 px-4" onClick={() => setShowTerminal(false)}>
-          <div
-            className="w-full max-w-lg rounded-2xl overflow-hidden font-mono"
-            style={{ background: 'rgba(20,20,24,0.9)', border: '1px solid rgba(255,255,255,0.16)', backdropFilter: 'blur(28px)' }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.14)' }}>
-              <div className="flex gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-white/20" />
-                <span className="w-2.5 h-2.5 rounded-full bg-white/20" />
-                <span className="w-2.5 h-2.5 rounded-full bg-white/20" />
-              </div>
-              <button
-                type="button"
-                aria-label="Fechar terminal"
-                onClick={() => setShowTerminal(false)}
-                className="w-6 h-6 rounded-md flex items-center justify-center hover:bg-white/15 transition-colors"
-              >
-                <X className="w-3 h-3 text-white" />
-              </button>
-            </div>
-            <div className="px-5 py-5 text-[13px] leading-[1.9]" style={{ color: '#c8ffcf' }}>
-              <div>$ whoami</div>
-              <div className="text-white/60 mb-2">ricardo — full stack dev, sempre com café por perto</div>
-              <div>$ cat curriculo.txt</div>
-              <div className="text-white/60 mb-2">React · Node.js · TypeScript · IA aplicada · disponível pra novos projetos</div>
-              <div>
-                $ echo $STATUS
-                <span className="inline-block w-[7px] h-3.5 bg-green-400 align-middle animate-blink" />
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <SudoTerminal />
     </>
   );
 };

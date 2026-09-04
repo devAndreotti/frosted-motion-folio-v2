@@ -130,10 +130,10 @@ function buildModeTokens(hue: Hue, mode: Mode): ModeTokens {
     // Glass stays in the white family (matches the reference screenshot and
     // the project's original recipe) with just enough hue tint to feel
     // color-coordinated with the background wash, never opaque.
-    glassSurface: hsla(hueAngle, sat, 96, mode === 'light' ? 0.22 : 0.08),
-    glassBorder: hsla(hueAngle, sat, 96, mode === 'light' ? 0.4 : 0.2),
-    glassStrongSurface: hsla(hueAngle, sat, 96, mode === 'light' ? 0.32 : 0.13),
-    glassStrongBorder: hsla(hueAngle, sat, 96, mode === 'light' ? 0.5 : 0.28),
+    glassSurface: hsla(hueAngle, sat, 96, mode === 'light' ? 0.22 : 0.13),
+    glassBorder: hsla(hueAngle, sat, 96, mode === 'light' ? 0.4 : 0.28),
+    glassStrongSurface: hsla(hueAngle, sat, 96, mode === 'light' ? 0.32 : 0.19),
+    glassStrongBorder: hsla(hueAngle, sat, 96, mode === 'light' ? 0.5 : 0.36),
   };
 }
 

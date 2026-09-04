@@ -1,19 +1,11 @@
 import { HUE_ORDER, useTheme } from '@/contexts/ThemeContext';
 import { HUE_THEMES } from '@/lib/theme';
-
-const HUE_LABELS: Record<string, string> = {
-  black: 'Preto',
-  blue: 'Azul',
-  purple: 'Roxo',
-  orange: 'Laranja',
-  red: 'Vermelho',
-  green: 'Verde',
-  yellow: 'Amarelo',
-};
+import { useLanguage } from '@/contexts/LanguageContext';
 
 /** The 7-dot color picker — swaps the accent hue used across buttons, glows and highlights. */
 const ColorSwatchPicker = () => {
   const { hue, setHue } = useTheme();
+  const { t } = useLanguage();
 
   return (
     <div className="glass flex items-center gap-1.5 px-2.5 py-1.5 rounded-full">
@@ -22,7 +14,7 @@ const ColorSwatchPicker = () => {
           key={option}
           type="button"
           onClick={() => setHue(option)}
-          aria-label={`Cor de destaque: ${HUE_LABELS[option]}`}
+          aria-label={t.colorPicker.hueLabel(t.colorPicker.hueNames[option])}
           aria-pressed={hue === option}
           className="w-3.5 h-3.5 rounded-full border-2 transition-transform hover:scale-110"
           style={{

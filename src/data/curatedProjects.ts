@@ -1,93 +1,156 @@
 import { projects, Project } from './projects';
+import type { Localized } from '@/lib/i18n';
 
 export type ProjectCategory = 'web' | 'ia' | 'mobile' | 'tool';
 
-export interface CuratedProject extends Project {
-  type: string;
+export interface CuratedProject extends Omit<Project, 'description'> {
+  type: Localized<string>;
   cat: ProjectCategory;
   tint: string;
-  long: string;
-  points: string[];
+  description: Localized<string>;
+  long: Localized<string>;
+  points: Localized<string[]>;
+  images: string[];
 }
 
 interface CurationMeta {
   id: number;
-  type: string;
+  type: Localized<string>;
   cat: ProjectCategory;
   tint: string;
-  long: string;
-  points: string[];
+  description: Localized<string>;
+  long: Localized<string>;
+  points: Localized<string[]>;
+  images?: string[];
 }
 
 const FEATURED_META: CurationMeta = {
   id: 26,
-  type: 'Produto pessoal',
+  type: { pt: 'Produto pessoal', en: 'Personal product' },
   cat: 'web',
   tint: '#3b82f6',
-  long: 'Nasceu de um problema meu: eu tentava vários apps de produtividade e nenhum unia tempo, energia e reflexão no mesmo lugar. O Self-Sync Daily junta um planner de tarefas, registro de energia ao longo do dia e um diário curto de reflexão, com autenticação real e dados persistidos por usuário.',
-  points: [
-    'Modelagem do banco e regras de acesso por usuário no Supabase (RLS).',
-    'Dashboard de hábitos com gráficos de energia ao longo da semana.',
-    'Onboarding guiado e estado persistido entre sessões.',
-  ],
+  description: {
+    pt: 'Nasceu de um problema meu: eu tentava vários apps de produtividade e nenhum unia tempo, energia e reflexão no mesmo lugar.',
+    en: 'Born from a problem of my own: I tried several productivity apps and none of them combined time, energy, and reflection in one place.',
+  },
+  long: {
+    pt: 'Nasceu de um problema meu: eu tentava vários apps de produtividade e nenhum unia tempo, energia e reflexão no mesmo lugar. O Self-Sync Daily junta um planner de tarefas, registro de energia ao longo do dia e um diário curto de reflexão, com autenticação real e dados persistidos por usuário.',
+    en: 'Born from a problem of my own: I tried several productivity apps and none of them combined time, energy, and reflection in one place. Self-Sync Daily brings together a task planner, an energy log throughout the day, and a short reflection journal, with real authentication and per-user persisted data.',
+  },
+  points: {
+    pt: [
+      'Modelagem do banco e regras de acesso por usuário no Supabase (RLS).',
+      'Dashboard de hábitos com gráficos de energia ao longo da semana.',
+      'Onboarding guiado e estado persistido entre sessões.',
+    ],
+    en: [
+      'Database modeling and per-user access rules in Supabase (RLS).',
+      'Habit dashboard with energy charts across the week.',
+      'Guided onboarding and state persisted between sessions.',
+    ],
+  },
 };
 
 const LIST_META: CurationMeta[] = [
   {
     id: 9,
-    type: 'Web app',
+    type: { pt: 'Web app', en: 'Web app' },
     cat: 'web',
     tint: '#eab308',
-    long: 'Ferramenta para simular alocação de carteira com ativos do mercado brasileiro, visualizando risco e diversificação em gráficos interativos — pensada pra quem quer entender a própria carteira sem depender de planilha solta.',
-    points: ['Cálculo de diversificação e risco por classe de ativo.', 'Gráficos interativos com Recharts.', 'Interface responsiva pensada pra uso rápido no celular.'],
+    description: {
+      pt: 'Ferramenta inteligente de análise e otimização de carteiras de investimento, construída com foco em mercado brasileiro, diversificação inteligente e recomendações personalizadas.',
+      en: 'Smart tool for analyzing and optimizing investment portfolios, built with a focus on the Brazilian market, smart diversification, and personalized recommendations.',
+    },
+    long: {
+      pt: 'Ferramenta para simular alocação de carteira com ativos do mercado brasileiro, visualizando risco e diversificação em gráficos interativos — pensada pra quem quer entender a própria carteira sem depender de planilha solta.',
+      en: 'A tool to simulate portfolio allocation with Brazilian market assets, visualizing risk and diversification through interactive charts — built for anyone who wants to understand their own portfolio without relying on a loose spreadsheet.',
+    },
+    points: {
+      pt: ['Cálculo de diversificação e risco por classe de ativo.', 'Gráficos interativos com Recharts.', 'Interface responsiva pensada pra uso rápido no celular.'],
+      en: ['Diversification and risk calculation per asset class.', 'Interactive charts with Recharts.', 'Responsive interface built for quick use on mobile.'],
+    },
   },
   {
     id: 2,
-    type: 'IA aplicada',
+    type: { pt: 'IA aplicada', en: 'Applied AI' },
     cat: 'ia',
     tint: '#22c55e',
-    long: 'App que recebe os ingredientes que você tem em casa e devolve sugestões de receita geradas pelo Gemini, com um fluxo de automação via n8n conectando a interface ao modelo de IA.',
-    points: ['Prompt engineering pra respostas consistentes em português.', 'Automação da chamada de IA via n8n.', 'UI simples e responsiva feita em Tailwind.'],
+    description: {
+      pt: 'Uma aplicação feita com React, Tailwind e n8n, que usa o modelo Gemini para sugerir receitas personalizadas a partir dos ingredientes enviados pelo usuário. A interface é simples e responsiva.',
+      en: 'An app built with React, Tailwind, and n8n that uses the Gemini model to suggest personalized recipes from the ingredients a user sends in. The interface is simple and responsive.',
+    },
+    long: {
+      pt: 'App que recebe os ingredientes que você tem em casa e devolve sugestões de receita geradas pelo Gemini, com um fluxo de automação via n8n conectando a interface ao modelo de IA.',
+      en: 'An app that takes the ingredients you have at home and returns recipe suggestions generated by Gemini, with an n8n automation flow connecting the interface to the AI model.',
+    },
+    points: {
+      pt: ['Prompt engineering pra respostas consistentes em português.', 'Automação da chamada de IA via n8n.', 'UI simples e responsiva feita em Tailwind.'],
+      en: ['Prompt engineering for consistent responses in Portuguese.', 'Automated the AI call via n8n.', 'Simple, responsive UI built with Tailwind.'],
+    },
   },
   {
     id: 5,
-    type: 'Ferramenta',
+    type: { pt: 'Ferramenta', en: 'Tool' },
     cat: 'tool',
     tint: '#a855f7',
-    long: 'Um agente criativo voltado a game design e prototipagem rápida — ajuda a estruturar ideias de projeto, narrativa e escopo inicial antes de partir pro código.',
-    points: ['Fluxo guiado de geração de conceito a escopo.', 'Componentes shadcn/ui customizados.', 'Base em Vite pra iteração rápida.'],
+    description: {
+      pt: 'Agente criativo de geração de projetos, construído com foco em design de jogos, storytelling e prototipagem inteligente.',
+      en: 'A creative project-generation agent, built with a focus on game design, storytelling, and smart prototyping.',
+    },
+    long: {
+      pt: 'Um agente criativo voltado a game design e prototipagem rápida — ajuda a estruturar ideias de projeto, narrativa e escopo inicial antes de partir pro código.',
+      en: 'A creative agent focused on game design and rapid prototyping — it helps structure project ideas, narrative, and initial scope before jumping into code.',
+    },
+    points: {
+      pt: ['Fluxo guiado de geração de conceito a escopo.', 'Componentes shadcn/ui customizados.', 'Base em Vite pra iteração rápida.'],
+      en: ['Guided flow from concept to scope.', 'Customized shadcn/ui components.', 'Built on Vite for fast iteration.'],
+    },
   },
   {
     id: 30,
-    type: 'Educacional',
+    type: { pt: 'Educacional', en: 'Educational' },
     cat: 'tool',
     tint: '#ef4444',
-    long: 'Plataforma educacional que ensina Git montando comandos visualmente, criando commits de exemplo e testando o conhecimento com quizzes — feita pra quem trava na hora de aprender Git só lendo doc.',
-    points: ['Simulador visual de comandos Git.', 'Sistema de quizzes com progresso salvo.', 'Cenas 3D com Spline pra tornar o aprendizado mais leve.'],
+    description: {
+      pt: 'Plataforma interativa que ensina Git de forma visual e prática. Permite montar comandos, criar commits, testar conhecimentos com quizzes e acompanhar o progresso.',
+      en: 'An interactive platform that teaches Git visually and hands-on. Lets you build commands, create commits, test your knowledge with quizzes, and track progress.',
+    },
+    long: {
+      pt: 'Plataforma educacional que ensina Git montando comandos visualmente, criando commits de exemplo e testando o conhecimento com quizzes — feita pra quem trava na hora de aprender Git só lendo doc.',
+      en: 'An educational platform that teaches Git by visually assembling commands, creating example commits, and testing knowledge with quizzes — built for anyone who gets stuck learning Git from docs alone.',
+    },
+    points: {
+      pt: ['Simulador visual de comandos Git.', 'Sistema de quizzes com progresso salvo.', 'Cenas 3D com Spline pra tornar o aprendizado mais leve.'],
+      en: ['Visual simulator for Git commands.', 'Quiz system with saved progress.', '3D scenes with Spline to make learning lighter.'],
+    },
   },
   {
     id: 1,
-    type: 'Mobile',
+    type: { pt: 'Mobile', en: 'Mobile' },
     cat: 'mobile',
     tint: '#f97316',
-    long: 'App mobile de receitas construído durante um curso da Rocketseat, com CRUD completo via Supabase e experiência nativa em Android e iOS via Expo.',
-    points: ['CRUD completo de receitas com Supabase.', 'Build e testes via Expo em Android e iOS.', 'Navegação nativa com React Navigation.'],
+    description: {
+      pt: 'Aplicação móvel desenvolvida em React Native, Expo e Supabase para gerenciamento de dados. Criada como parte de um curso da Rocketseat, oferece uma experiência de usuário completa e funcional em dispositivos Android e iOS.',
+      en: 'A mobile app built with React Native, Expo, and Supabase for data management. Created as part of a Rocketseat course, it offers a complete, functional user experience on Android and iOS.',
+    },
+    long: {
+      pt: 'App mobile de receitas construído durante um curso da Rocketseat, com CRUD completo via Supabase e experiência nativa em Android e iOS via Expo.',
+      en: 'A mobile recipe app built during a Rocketseat course, with full CRUD via Supabase and a native experience on Android and iOS via Expo.',
+    },
+    points: {
+      pt: ['CRUD completo de receitas com Supabase.', 'Build e testes via Expo em Android e iOS.', 'Navegação nativa com React Navigation.'],
+      en: ['Full recipe CRUD with Supabase.', 'Build and testing via Expo on Android and iOS.', 'Native navigation with React Navigation.'],
+    },
   },
 ];
 
 function merge(meta: CurationMeta): CuratedProject {
   const project = projects.find((p) => p.id === meta.id);
   if (!project) throw new Error(`curatedProjects: no project with id ${meta.id} in data/projects.ts`);
-  return { ...project, ...meta };
+  return { ...project, ...meta, images: meta.images ?? [project.image] };
 }
 
 export const featuredProject: CuratedProject = merge(FEATURED_META);
 export const curatedProjects: CuratedProject[] = LIST_META.map(merge);
 
-export const CATEGORY_FILTERS: { key: ProjectCategory | 'all'; label: string }[] = [
-  { key: 'all', label: 'Todos' },
-  { key: 'web', label: 'Web' },
-  { key: 'ia', label: 'IA' },
-  { key: 'mobile', label: 'Mobile' },
-  { key: 'tool', label: 'Ferramentas' },
-];
+export const CATEGORY_FILTERS: { key: ProjectCategory | 'all' }[] = [{ key: 'all' }, { key: 'web' }, { key: 'ia' }, { key: 'mobile' }, { key: 'tool' }];

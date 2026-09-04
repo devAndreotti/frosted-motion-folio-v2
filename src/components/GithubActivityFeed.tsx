@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { Skeleton } from 'boneyard-js/react';
 import { ChevronLeft, ChevronRight, GitCommit, GitPullRequest, Star, GitBranch, CircleDot, ExternalLink } from 'lucide-react';
 import { useGithubActivity, relativeTime, type ActivityKind, type GithubActivityItem } from '@/hooks/useGithubActivity';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { ACTIVITY_TEXT_EN } from '@/lib/i18n';
+import ContributionHeatmap from './ContributionHeatmap';
 
 const KIND_META: Record<ActivityKind, { icon: typeof GitCommit; tint: string }> = {
   push: { icon: GitCommit, tint: '#3b82f6' },
@@ -21,9 +24,10 @@ const FIXTURE_ITEMS: GithubActivityItem[] = [
   { id: 'f3', kind: 'star', repo: 'shadcn-ui/ui', text: 'Deu estrela', time: new Date().toISOString() },
 ];
 
-const Card = ({ item, now }: { item: GithubActivityItem; now: number }) => {
+const Card = ({ item, now, lang }: { item: GithubActivityItem; now: number; lang: 'pt' | 'en' }) => {
   const meta = KIND_META[item.kind];
   const Icon = meta.icon;
+  const displayText = lang === 'pt' ? item.text : (ACTIVITY_TEXT_EN[item.text] ?? item.text);
   return (
     <div className="glass rounded-2xl p-5 flex flex-col gap-3" style={{ width: CARD_WIDTH, flexShrink: 0 }} data-testid="activity-card">
       <div
@@ -35,7 +39,7 @@ const Card = ({ item, now }: { item: GithubActivityItem; now: number }) => {
       <div>
         <div className="text-[13px] font-bold mb-1">{item.repo}</div>
         <div className="text-[13.5px] font-semibold" style={{ color: 'var(--fg-2)' }}>
-          {item.text}
+          {displayText}
         </div>
         {item.detail && (
           <div className="text-[12.5px] mt-1 line-clamp-2" style={{ color: 'var(--fg-3)' }}>
@@ -44,14 +48,15 @@ const Card = ({ item, now }: { item: GithubActivityItem; now: number }) => {
         )}
       </div>
       <div className="text-[11px] mt-auto" style={{ color: 'var(--fg-4)' }}>
-        {relativeTime(item.time, now)}
+        {relativeTime(item.time, now, lang)}
       </div>
     </div>
   );
 };
 
-/** Horizontal, arrow-navigable feed of recent real GitHub activity — pushes, PRs, stars, branches, issues. */
+/** Horizontal, arrow-navigable feed of recent real GitHub activity — pushes, PRs, stars, branches, issues — plus a contribution heatmap. */
 const GithubActivityFeed = () => {
+  const { lang, t } = useLanguage();
   const { items, fetchedAt, loading } = useGithubActivity();
   const [offset, setOffset] = useState(0);
   const [now, setNow] = useState(() => Date.now());
@@ -76,21 +81,21 @@ const GithubActivityFeed = () => {
           <div className="flex items-center gap-2.5 mb-2">
             <span className="w-7 h-0.5" style={{ background: 'var(--accent)' }} />
             <span className="text-xs uppercase tracking-wider" style={{ color: 'var(--fg-4)' }}>
-              Atividade
+              {t.activity.sectionLabel}
             </span>
           </div>
-          <h2 className="text-2xl md:text-[30px] font-extrabold">O que ando fazendo no GitHub</h2>
+          <h2 className="text-2xl md:text-[30px] font-extrabold">{t.activity.title}</h2>
         </div>
         <div className="flex items-center gap-3">
           {fetchedAt && (
             <span className="text-[11.5px]" style={{ color: 'var(--fg-4)' }}>
-              atualizado {relativeTime(new Date(fetchedAt).toISOString(), now)}
+              {t.activity.updated(relativeTime(new Date(fetchedAt).toISOString(), now, lang))}
             </span>
           )}
           <div className="flex gap-2">
             <button
               type="button"
-              aria-label="Atividade anterior"
+              aria-label={t.activity.prevAria}
               onClick={() => go(STEP)}
               className="glass w-9 h-9 rounded-full flex items-center justify-center hover:bg-[var(--surface-2)] transition-colors"
             >
@@ -98,7 +103,7 @@ const GithubActivityFeed = () => {
             </button>
             <button
               type="button"
-              aria-label="Próxima atividade"
+              aria-label={t.activity.nextAria}
               onClick={() => go(-STEP)}
               className="glass w-9 h-9 rounded-full flex items-center justify-center hover:bg-[var(--surface-2)] transition-colors"
             >
@@ -108,6 +113,10 @@ const GithubActivityFeed = () => {
         </div>
       </div>
 
+      <div className="relative z-10 container mx-auto px-4">
+        <ContributionHeatmap />
+      </div>
+
       <div className="relative z-10 container mx-auto px-4 overflow-hidden pb-2">
         <Skeleton
           name="github-activity-feed"
@@ -115,7 +124,7 @@ const GithubActivityFeed = () => {
           fixture={
             <div className="flex gap-5">
               {FIXTURE_ITEMS.map((item) => (
-                <Card key={item.id} item={item} now={Date.now()} />
+                <Card key={item.id} item={item} now={Date.now()} lang={lang} />
               ))}
             </div>
           }
@@ -123,14 +132,14 @@ const GithubActivityFeed = () => {
           {items.length > 0 ? (
             <div className="flex gap-5" style={{ transform: `translateX(${offset}px)`, transition: 'transform 500ms cubic-bezier(0.22,1,0.36,1)' }}>
               {items.map((item) => (
-                <Card key={item.id} item={item} now={now} />
+                <Card key={item.id} item={item} now={now} lang={lang} />
               ))}
             </div>
           ) : (
             <div className="glass rounded-2xl p-6 text-center text-[13.5px]" style={{ color: 'var(--fg-3)' }}>
-              Sem atividade pública recente —{' '}
+              {t.activity.emptyState}{' '}
               <a href="https://github.com/devAndreotti" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: 'var(--accent)' }}>
-                confira o perfil
+                {t.activity.emptyStateLink}
               </a>
               .
             </div>
@@ -146,7 +155,7 @@ const GithubActivityFeed = () => {
           className="glass inline-flex items-center gap-2 px-6 py-3 rounded-full text-[13px]"
           style={{ color: 'var(--fg-3)' }}
         >
-          Ver tudo no GitHub
+          {t.activity.viewAllGithub}
           <ExternalLink className="w-3.5 h-3.5" />
         </a>
       </div>

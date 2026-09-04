@@ -1,5 +1,6 @@
 import { CORE_SKILLS } from '@/data/skills';
 import { radarPoint } from '@/lib/radar';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const CENTER = 170;
 const MAX_R = 130;
@@ -8,13 +9,14 @@ const point = (index: number, level: number) => radarPoint(index, level, CORE_SK
 
 /** SVG radar chart plotting each core skill's 1-5 level around a hexagon. */
 const SkillsRadar = () => {
+  const { t } = useLanguage();
   const dots = CORE_SKILLS.map((skill, i) => point(i, skill.level));
   const axesEnds = CORE_SKILLS.map((_, i) => point(i, 5));
   const labels = CORE_SKILLS.map((_, i) => point(i, 6.1));
   const rings = [0.25, 0.5, 0.75, 1];
 
   return (
-    <svg width="340" height="340" viewBox="0 0 340 340" role="img" aria-label="Radar de proficiência nas tecnologias principais">
+    <svg width="340" height="340" viewBox="0 0 340 340" role="img" aria-label={t.skills.radarSvgAria}>
       {rings.map((f) => (
         <circle key={f} cx={CENTER} cy={CENTER} r={MAX_R * f} fill="none" stroke="var(--border-1)" strokeWidth={1} />
       ))}

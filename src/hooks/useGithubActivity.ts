@@ -29,9 +29,16 @@ interface CachedPayload {
   items: GithubActivityItem[];
 }
 
-export function relativeTime(iso: string, now: number = Date.now()): string {
+export function relativeTime(iso: string, now: number = Date.now(), lang: 'pt' | 'en' = 'pt'): string {
   const diffMs = now - new Date(iso).getTime();
   const minutes = Math.floor(diffMs / 60000);
+  if (lang === 'en') {
+    if (minutes < 1) return 'just now';
+    if (minutes < 60) return `${minutes} min ago`;
+    const hoursEn = Math.floor(minutes / 60);
+    if (hoursEn < 24) return `${hoursEn}h ago`;
+    return `${Math.floor(hoursEn / 24)}d ago`;
+  }
   if (minutes < 1) return 'agora mesmo';
   if (minutes < 60) return `há ${minutes} min`;
   const hours = Math.floor(minutes / 60);

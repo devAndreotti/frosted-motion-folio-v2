@@ -1,8 +1,10 @@
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const NotFound = () => {
   const location = useLocation();
+  const { t } = useLanguage();
 
   useEffect(() => {
     console.error(
@@ -18,10 +20,10 @@ const NotFound = () => {
           404
         </h1>
         <p className="text-lg mb-6" style={{ color: 'var(--fg-3)' }}>
-          Essa página não existe.
+          {t.notFound.message}
         </p>
         <a href="./" className="glass-button inline-block px-6 py-3 rounded-full font-semibold">
-          Voltar ao início
+          {t.notFound.backHome}
         </a>
       </div>
     </div>

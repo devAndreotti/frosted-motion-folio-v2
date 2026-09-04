@@ -5,6 +5,14 @@
 
 html {
   overflow-x: hidden;
+  /* Same-page anchor jumps (footer links, skip-to-content) don't run through
+     our JS scrollIntoView({behavior:'smooth'}) calls, so without this they
+     snap instantly instead of animating. scroll-padding-top keeps the
+     landing section clear of the fixed 64px nav bar either way. Browsers
+     already fall back to instant scroll under prefers-reduced-motion, so
+     this doesn't fight that preference. */
+  scroll-behavior: smooth;
+  scroll-padding-top: 64px;
 }
 
 /* Mode tokens: text/dot stay simple light/dark. Everything that should carry
@@ -222,36 +230,6 @@ html {
 
 .animate-blink {
   animation: blink 1s step-end infinite;
-}
-
-@keyframes marquee-left {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-@keyframes marquee-right {
-  from {
-    transform: translateX(-50%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-
-.animate-marquee-left {
-  animation: marquee-left 34s linear infinite;
-}
-
-.animate-marquee-right {
-  animation: marquee-right 34s linear infinite;
-}
-
-.marquee-boosted {
-  animation-duration: 7s !important;
 }
 
 @keyframes shimmer {

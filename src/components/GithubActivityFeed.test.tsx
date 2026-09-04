@@ -110,7 +110,11 @@ describe("GithubActivityFeed", () => {
     await waitFor(() => {
       expect(screen.getByText("devAndreotti/cached-repo")).toBeTruthy();
     });
-    expect(fetchSpy).not.toHaveBeenCalled();
+    // The section also renders a contribution heatmap fed by a separate,
+    // independently-cached hook (see ContributionHeatmap.test.tsx) — this
+    // assertion only cares that the ACTIVITY feed itself skipped the network.
+    const activityApiCalls = fetchSpy.mock.calls.filter(([url]) => typeof url === "string" && url.includes("api.github.com"));
+    expect(activityApiCalls).toHaveLength(0);
   });
 
   it("falls back to the empty state when the GitHub API is unreachable", async () => {

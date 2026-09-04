@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { CORE_SKILLS, SKILL_CATEGORIES } from '@/data/skills';
 import SkillsRadar from './SkillsRadar';
 
 type View = 'bento' | 'radar';
 
 const Skills = () => {
+  const { lang, t } = useLanguage();
   const [view, setView] = useState<View>('bento');
 
   return (
@@ -20,10 +22,10 @@ const Skills = () => {
             <div className="flex items-center gap-2.5 mb-2">
               <span className="w-7 h-0.5" style={{ background: 'var(--accent)' }} />
               <span className="text-xs uppercase tracking-wider" style={{ color: 'var(--fg-4)' }}>
-                Skills &amp; tecnologias
+                {t.skills.sectionLabel}
               </span>
             </div>
-            <h2 className="text-[28px] md:text-[32px] font-extrabold">Onde eu foco</h2>
+            <h2 className="text-[28px] md:text-[32px] font-extrabold">{t.skills.title}</h2>
           </div>
 
           <div className="glass relative flex gap-1 p-1.5 rounded-full">
@@ -37,7 +39,7 @@ const Skills = () => {
               className="relative z-10 w-[90px] text-center py-2 text-[12.5px] font-semibold"
               style={{ color: view === 'bento' ? 'var(--accent-text)' : 'var(--fg-3)' }}
             >
-              Bento
+              {t.skills.bentoTab}
             </button>
             <button
               type="button"
@@ -45,7 +47,7 @@ const Skills = () => {
               className="relative z-10 w-[90px] text-center py-2 text-[12.5px] font-semibold"
               style={{ color: view === 'radar' ? 'var(--accent-text)' : 'var(--fg-3)' }}
             >
-              Radar
+              {t.skills.radarTab}
             </button>
           </div>
         </div>
@@ -65,9 +67,9 @@ const Skills = () => {
                     <path d="M12 2l2.9 6.4L22 9.3l-5 4.9 1.2 7-6.2-3.4L5.8 21.2 7 14.2 2 9.3l7.1-1z" />
                   </svg>
                 </div>
-                <div className="text-[17px] font-extrabold mb-1">Core stack</div>
+                <div className="text-[17px] font-extrabold mb-1">{t.skills.coreTitle}</div>
                 <div className="text-[12.5px] mb-5" style={{ color: 'var(--fg-4)' }}>
-                  O que eu uso todo dia, do front ao dado.
+                  {t.skills.coreDesc}
                 </div>
               </div>
               <div className="flex flex-col gap-2.5">
@@ -80,7 +82,7 @@ const Skills = () => {
                           <span className="relative w-1.5 h-1.5 rounded-full bg-green-400">
                             <span className="absolute inset-0 rounded-full bg-green-400 animate-pulse-dot" />
                           </span>
-                          <span className="text-[9.5px] font-bold uppercase tracking-wide text-green-400">aprendendo</span>
+                          <span className="text-[9.5px] font-bold uppercase tracking-wide text-green-400">{t.skills.learningBadge}</span>
                         </span>
                       )}
                     </div>
@@ -100,7 +102,7 @@ const Skills = () => {
 
             {SKILL_CATEGORIES.map((cat) => (
               <div
-                key={cat.title}
+                key={cat.title.pt}
                 className="glass rounded-[22px] p-5.5 flex flex-col gap-3 transition-all duration-300 hover:bg-[var(--surface-2)] hover:-translate-y-1"
                 style={{ ['--glow' as string]: `${cat.tint}33` }}
               >
@@ -110,7 +112,7 @@ const Skills = () => {
                 >
                   {cat.mono}
                 </div>
-                <div className="text-sm font-bold">{cat.title}</div>
+                <div className="text-sm font-bold">{cat.title[lang]}</div>
                 <div className="flex flex-wrap gap-1.5">
                   {cat.skills.map((skill) => (
                     <span key={skill} className="text-[11px] px-2.5 py-1 rounded-full transition-colors hover:bg-[var(--surface-2)]" style={{ background: 'var(--surface-1)', color: 'var(--fg-3)' }}>
@@ -127,9 +129,9 @@ const Skills = () => {
               <SkillsRadar />
             </div>
             <div>
-              <div className="text-[17px] font-extrabold mb-1.5">Radar da stack</div>
+              <div className="text-[17px] font-extrabold mb-1.5">{t.skills.radarTitle}</div>
               <div className="text-[13px] max-w-[360px] mb-6 leading-relaxed" style={{ color: 'var(--fg-4)' }}>
-                Mesma leitura do bento, em outro formato — nível relativo (1 a 5) nas seis frentes que mais uso.
+                {t.skills.radarDesc}
               </div>
               <div className="flex flex-col gap-2.5">
                 {CORE_SKILLS.map((skill) => (

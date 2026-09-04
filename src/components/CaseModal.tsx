@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
-import { X, Github, ExternalLink } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { X, Github, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
 import { CuratedProject } from '@/data/curatedProjects';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface CaseModalProps {
   project: CuratedProject;
@@ -9,6 +10,10 @@ interface CaseModalProps {
 
 /** Full case-study detail for a project, opened from the featured card or a ranked row. */
 const CaseModal = ({ project, onClose }: CaseModalProps) => {
+  const { lang, t } = useLanguage();
+  const [imgIdx, setImgIdx] = useState(0);
+  const images = project.images.length > 0 ? project.images : [project.image];
+
   useEffect(() => {
     const onKeydown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -18,24 +23,24 @@ const CaseModal = ({ project, onClose }: CaseModalProps) => {
   }, [onClose]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 p-6 md:p-10" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-md p-6 md:p-10" onClick={onClose}>
       <div
         className="glass-strong w-full max-w-3xl max-h-full overflow-auto rounded-3xl p-8 md:p-11"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
-        aria-label={`Detalhes do projeto ${project.title}`}
+        aria-label={t.caseModal.dialogAria(project.title)}
       >
         <div className="flex items-start justify-between mb-5">
           <span
             className="inline-block px-3.5 py-1.5 rounded-full text-[11px] font-extrabold uppercase tracking-wide"
             style={{ background: project.tint }}
           >
-            {project.type}
+            {project.type[lang]}
           </span>
           <button
             type="button"
-            aria-label="Fechar"
+            aria-label={t.caseModal.closeAria}
             onClick={onClose}
             className="glass w-8 h-8 rounded-lg flex items-center justify-center"
           >
@@ -43,16 +48,51 @@ const CaseModal = ({ project, onClose }: CaseModalProps) => {
           </button>
         </div>
 
+        {images.length > 0 && (
+          <div className="relative rounded-2xl overflow-hidden mb-6 aspect-[16/9]" style={{ background: 'var(--surface-1)' }}>
+            <img src={images[imgIdx]} alt={t.caseModal.imageAlt(project.title, imgIdx + 1)} className="w-full h-full object-cover" loading="lazy" />
+            {images.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  aria-label={t.caseModal.prevImageAria}
+                  onClick={() => setImgIdx((prev) => (prev - 1 + images.length) % images.length)}
+                  className="glass absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  aria-label={t.caseModal.nextImageAria}
+                  onClick={() => setImgIdx((prev) => (prev + 1) % images.length)}
+                  className="glass absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                  {images.map((src, i) => (
+                    <span
+                      key={src}
+                      className="w-1.5 h-1.5 rounded-full"
+                      style={{ background: i === imgIdx ? 'var(--accent)' : 'rgba(255,255,255,0.4)' }}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
         <h3 className="text-[28px] md:text-[32px] font-extrabold mb-4">{project.title}</h3>
         <p className="text-[15px] leading-relaxed mb-6" style={{ color: 'var(--fg-2)' }}>
-          {project.long}
+          {project.long[lang]}
         </p>
 
         <div className="text-xs uppercase tracking-wide mb-3" style={{ color: 'var(--fg-4)' }}>
-          O que eu fiz
+          {t.caseModal.whatIDid}
         </div>
         <div className="flex flex-col gap-2.5 mb-7">
-          {project.points.map((point) => (
+          {project.points[lang].map((point) => (
             <div key={point} className="flex gap-2.5 items-start text-sm leading-relaxed" style={{ color: 'var(--fg-2)' }}>
               <span className="w-[5px] h-[5px] mt-2 rounded-full flex-shrink-0" style={{ background: project.tint }} />
               {point}
@@ -78,7 +118,7 @@ const CaseModal = ({ project, onClose }: CaseModalProps) => {
               style={{ background: project.tint, color: '#08080a' }}
             >
               <Github className="w-4 h-4" />
-              Ver repositório
+              {t.caseModal.viewRepo}
             </a>
           )}
           {project.liveUrl && (
@@ -89,7 +129,7 @@ const CaseModal = ({ project, onClose }: CaseModalProps) => {
               className="glass flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm"
             >
               <ExternalLink className="w-4 h-4" />
-              Ver ao vivo
+              {t.caseModal.viewLive}
             </a>
           )}
         </div>
