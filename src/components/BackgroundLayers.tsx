@@ -1,6 +1,6 @@
-import { useLayoutEffect, useRef, useState } from 'react';
-import { buildHueTheme } from '@/lib/theme';
-import { useTheme } from '@/contexts/ThemeContext';
+import { useLayoutEffect, useRef, useState } from "react";
+import { buildHueTheme } from "@/lib/theme";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface LayerContent {
   bg: string;
@@ -9,24 +9,28 @@ interface LayerContent {
   glow3: string;
 }
 
-export function tokensFor(hue: ReturnType<typeof useTheme>['hue'], theme: ReturnType<typeof useTheme>['theme']): LayerContent {
+export function tokensFor(hue: ReturnType<typeof useTheme>["hue"], theme: ReturnType<typeof useTheme>["theme"]): LayerContent {
   const tokens = buildHueTheme(hue)[theme];
   return { bg: tokens.bg, glow1: tokens.glow1, glow2: tokens.glow2, glow3: tokens.glow3 };
 }
 
+function prefersReducedMotion(): boolean {
+  try {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  } catch {
+    return false;
+  }
+}
+
 /**
- * Renders the page-wide gradient wash + ambient blobs behind everything,
- * once, above the router — so both the home page and the 404 page pick up
- * the selected hue/theme. Two stacked layers ping-pong so a color/theme
- * change crossfades instead of snapping: `background-image` (what a CSS
- * gradient is) doesn't animate via a plain `transition`, so the fade has to
- * happen in JS by swapping which layer is visible.
+ * Renders the page-wide gradient wash + ambient blobs behind everything.
+ * Respects prefers-reduced-motion: skips crossfade and disables blob breathing.
  */
 const BackgroundLayers = () => {
   const { hue, theme } = useTheme();
   const current = tokensFor(hue, theme);
 
-  const [front, setFront] = useState<'a' | 'b'>('a');
+  const [front, setFront] = useState<"a" | "b">("a");
   const [contentA, setContentA] = useState<LayerContent>(current);
   const [contentB, setContentB] = useState<LayerContent>(current);
   const isFirstRun = useRef(true);
@@ -36,13 +40,14 @@ const BackgroundLayers = () => {
       isFirstRun.current = false;
       return;
     }
-    // Update the currently-hidden layer first (invisible, no flash), then
-    // flip which layer is front so the swap crossfades. useLayoutEffect (not
-    // useEffect) + a double rAF guarantees the hidden layer has actually
-    // painted with its new content before we start animating its opacity —
-    // skip either step and the browser can coalesce the two paints and the
-    // fade never visibly starts.
-    if (front === 'a') {
+
+    if (prefersReducedMotion()) {
+      setContentA(current);
+      setContentB(current);
+      return;
+    }
+
+    if (front === "a") {
       setContentB(current);
     } else {
       setContentA(current);
@@ -50,7 +55,7 @@ const BackgroundLayers = () => {
     let raf2 = 0;
     const raf1 = requestAnimationFrame(() => {
       raf2 = requestAnimationFrame(() => {
-        setFront((prev) => (prev === 'a' ? 'b' : 'a'));
+        setFront((prev) => (prev === "a" ? "b" : "a"));
       });
     });
     return () => {
@@ -76,8 +81,8 @@ const BackgroundLayers = () => {
 
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }} aria-hidden="true" data-testid="background-layers">
-      {renderLayer(contentA, front === 'a')}
-      {renderLayer(contentB, front === 'b')}
+      {renderLayer(contentA, front === "a")}
+      {renderLayer(contentB, front === "b")}
     </div>
   );
 };
