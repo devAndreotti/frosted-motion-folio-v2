@@ -1,27 +1,42 @@
-
-import { ThemeProvider } from '@/contexts/ThemeContext';
+import Navigation from '@/components/Navigation';
 import Header from '@/components/Header';
-import About from '@/components/About';
-import Skills from '@/components/Skills';
+import Marquee from '@/components/Marquee';
+import GithubActivityFeed from '@/components/GithubActivityFeed';
 import Projects from '@/components/Projects';
+import Skills from '@/components/Skills';
+import Timeline from '@/components/Timeline';
 import Footer from '@/components/Footer';
-import BackgroundParticles from '@/components/BackgroundParticles';
+import ScrollProgress from '@/components/ScrollProgress';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useSectionKeyboardNav } from '@/hooks/useSectionKeyboardNav';
 
 const Index = () => {
+  const { t } = useLanguage();
+  useSectionKeyboardNav();
+
   return (
-    <ThemeProvider>
+    <>
+      <ScrollProgress />
+      <a
+        href="#header"
+        className="fixed left-4 top-4 z-[100] -translate-y-24 focus:translate-y-0 transition-transform glass px-4 py-2 rounded-full text-sm font-semibold"
+        style={{ color: 'var(--fg-1)' }}
+      >
+        {t.common.skipToContent}
+      </a>
       <div className="min-h-screen relative">
-        <BackgroundParticles />
-        
-        <div className="relative z-10">
+        <Navigation />
+        <main>
           <Header />
-          <About />
-          <Skills />
+          <Marquee />
+          <GithubActivityFeed />
           <Projects />
+          <Skills />
+          <Timeline />
           <Footer />
-        </div>
+        </main>
       </div>
-    </ThemeProvider>
+    </>
   );
 };
 

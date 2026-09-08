@@ -9,6 +9,7 @@ lerna-debug.log*
 
 node_modules
 dist
+dist-vps
 dist-ssr
 coverage
 *.local
@@ -25,6 +26,8 @@ coverage
 *.sw?
 
 .claude/worktrees/
+.claude/design-work/
+.claude/design-work-fresh/
 
 # Quality Gate
 .quality-gate/state.json

@@ -82,6 +82,32 @@ jobs:
           retention-days: 7
 
 
+  e2e:
+    name: E2E tests (Playwright)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Playwright tests
+        run: npx playwright test
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          if-no-files-found: ignore
+          retention-days: 7
 
   docker:
     name: Docker image gate
@@ -105,7 +131,7 @@ jobs:
   report:
     name: PR report
     runs-on: ubuntu-latest
-    needs: [security, lint, test, docker]
+    needs: [security, lint, test, e2e, docker]
     if: always() && github.event_name == 'pull_request'
     permissions:
       contents: read
@@ -138,6 +164,7 @@ jobs:
           SECURITY_RESULT: ${{ needs.security.result }}
           LINT_RESULT: ${{ needs.lint.result }}
           TEST_RESULT: ${{ needs.test.result }}
-          REQUIRED_CHECKS: 'Security audit,Lint,Tests & ratchet,Docker image gate'
+          E2E_RESULT: ${{ needs.e2e.result }}
+          REQUIRED_CHECKS: 'Security audit,Lint,Tests & ratchet,E2E tests (Playwright),Docker image gate'
           SNAPSHOT_PATH: .quality-gate/reports/pr-snapshot.json
           DOCKER_RESULT: ${{ needs.docker.result }}

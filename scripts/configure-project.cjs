@@ -7,6 +7,7 @@ const REQUIRED_CHECKS = [
   'Lint',
   'Tests & ratchet',
   'SonarCloud',
+  'E2E tests (Playwright)',
   'Docker image gate',
 ];
 
@@ -264,7 +265,7 @@ function nodeWorkflow(projectDir, options = {}) {
     needs: test
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - uses: actions/download-artifact@v8
@@ -297,8 +298,8 @@ function nodeWorkflow(projectDir, options = {}) {
           SONAR_TOKEN: \${{ secrets.SONAR_TOKEN }}
 ` : '';
   const reportNeeds = includeSonar
-    ? '[security, lint, test, sonar, docker]'
-    : '[security, lint, test, docker]';
+    ? '[security, lint, test, sonar, e2e, docker]'
+    : '[security, lint, test, e2e, docker]';
   const sonarResultEnv = includeSonar
     ? '          SONAR_RESULT: ${{ needs.sonar.result }}\n'
     : '';
@@ -327,8 +328,8 @@ jobs:
       run:
         working-directory: ${workingDirectory}
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 20
           cache: npm
@@ -346,8 +347,8 @@ jobs:
       run:
         working-directory: ${workingDirectory}
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 20
           cache: npm
@@ -362,10 +363,10 @@ jobs:
       run:
         working-directory: ${workingDirectory}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 20
           cache: npm
@@ -387,12 +388,39 @@ jobs:
           retention-days: 7
 
 ${sonarJob}
+  e2e:
+    name: E2E tests (Playwright)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${workingDirectory}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: ${workingDirectory === '.' ? 'package-lock.json' : `${workingDirectory}/package-lock.json`}
+      - run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Playwright tests
+        run: npx playwright test
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          if-no-files-found: ignore
+          retention-days: 7
+
   docker:
     name: Docker image gate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 20
       - name: Docker Image Doctor gate
@@ -416,8 +444,8 @@ ${sonarJob}
       issues: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 20
       - uses: actions/download-artifact@v8
@@ -442,6 +470,7 @@ ${sonarJob}
           SECURITY_RESULT: \${{ needs.security.result }}
           LINT_RESULT: \${{ needs.lint.result }}
           TEST_RESULT: \${{ needs.test.result }}
+          E2E_RESULT: \${{ needs.e2e.result }}
 ${sonarResultEnv}          REQUIRED_CHECKS: '${requiredChecks(options).join(',')}'
           SNAPSHOT_PATH: .quality-gate/reports/pr-snapshot.json
           DOCKER_RESULT: \${{ needs.docker.result }}

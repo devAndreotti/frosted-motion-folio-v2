@@ -1,181 +1,118 @@
-import { motion } from 'framer-motion';
-import { Code, Globe, Wrench, Database, Bot, Blocks } from 'lucide-react';
-import SectionHeading from './SectionHeading';
-import { drift } from '@/lib/motion';
+import { useState } from 'react';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { CORE_SKILLS, SKILL_CATEGORIES } from '@/data/skills';
+import SkillsRadar from './SkillsRadar';
+import SegmentedControl from './SegmentedControl';
 
-// Lista categorizada de habilidades e tecnologias com ícones
-const skillsCategories = [
-  {
-    title: "Linguagens de Programação",
-    icon: Code,
-    skills: ["JavaScript", "TypeScript", "Python", "Java", "C#", "HTML", "CSS", "SQL", "Solidity"]
-  },
-  {
-    title: "Desenvolvimento Web",
-    icon: Globe,
-    skills: ["React", "Node.js", "HTML5", "Bootstrap", "CSS3", "Tailwind CSS", "ASP.NET Core", "json-server", "anime.js"]
-  },
-  {
-    title: "Ferramentas & Tecnologias",
-    icon: Wrench,
-    skills: ["Git e GitKraken", "Power BI", "Arduino", "n8n", "Excel", "Vite", "Jupyter Notebook"]
-  },
-  {
-    title: "Banco de Dados",
-    icon: Database,
-    skills: ["SQL", "Supabase", "Database Design", "Data Analysis"]
-  },
-  {
-    title: "Inteligência Artificial",
-    icon: Bot,
-    skills: ["Machine Learning", "Python ML", "KNN", "Random Forest", "AI Design"]
-  },
-  {
-    title: "Blockchain & Web3",
-    icon: Blocks,
-    skills: ["Solidity", "Smart Contracts", "MetaMask", "NFTs", "ERC-20 Tokens", "OpenZeppelin", "Truffle", "Ganache"]
-  }
-];
+type View = 'bento' | 'radar';
 
 const Skills = () => {
+  const { lang, t } = useLanguage();
+  const [view, setView] = useState<View>('bento');
+
   return (
-    <section id="skills" className="py-20 md:py-32 relative">
-      {/* Fundo animado com gradientes para estética visual */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          className="absolute top-1/4 left-0 w-64 h-64 bg-gradient-to-r from-blue-400/15 to-transparent rounded-full blur-3xl"
-          {...drift(100, 1.2, 10)}
-        />
-        <motion.div
-          className="absolute bottom-1/4 right-0 w-80 h-80 bg-gradient-to-l from-cyan-400/15 to-transparent rounded-full blur-3xl"
-          {...drift(-100, 1.3, 12, 2)}
-        />
-      </div>
+    <section id="skills" className="relative py-16 md:py-24 overflow-hidden">
+      <div
+        className="absolute top-1/4 -left-40 w-[220px] h-[220px] sm:w-[340px] sm:h-[340px] md:w-[480px] md:h-[480px] rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgb(var(--accent-rgb) / 0.06) 0%, transparent 70%)' }}
+      />
 
-      <div className="container mx-auto px-4 relative z-10">
-        {/* Título da seção com animação de entrada */}
-        <SectionHeading
-          title="Skills & Tecnologias"
-          description="Ferramentas e tecnologias que uso para criar soluções completas:"
-        />
-
-        {/* Grid com categorias de habilidades */}
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {skillsCategories.map((category, categoryIndex) => (
-              <motion.div
-                key={category.title}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ 
-                  duration: 0.6, 
-                  delay: categoryIndex * 0.1,
-                }}
-                viewport={{ once: true }}
-                whileHover={{ 
-                  scale: 1.02,
-                  y: -5,
-                }}
-                className="glass-card group relative overflow-hidden"
-              >
-                {/* Efeito de fundo ao passar o mouse */}
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-br from-blue-400/10 via-cyan-400/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                />
-
-                <div className="relative z-10">
-                  {/* Cabeçalho da categoria */}
-                  <div className="flex items-center gap-3 mb-6">
-                    <motion.div
-                      className="w-12 h-12 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-xl flex items-center justify-center"
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <category.icon className="w-6 h-6 text-white" />
-                    </motion.div>
-                    <h3 className="text-lg font-semibold text-white/90 dark:text-blue-50 group-hover:text-white transition-colors">
-                      {category.title}
-                    </h3>
-                  </div>
-
-                  {/* Lista das skills */}
-                  <div className="flex flex-wrap gap-2">
-                    {category.skills.map((skill, skillIndex) => (
-                      <motion.span
-                        key={skill}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        transition={{ 
-                          duration: 0.4, 
-                          delay: categoryIndex * 0.1 + skillIndex * 0.05,
-                        }}
-                        viewport={{ once: true }}
-                        whileHover={{ scale: 1.05 }}
-                        className="px-3 py-1.5 bg-white/20 text-white/90 dark:text-blue-50 rounded-full text-sm font-medium hover:bg-white/30 transition-all duration-300 cursor-default"
-                      >
-                        {skill}
-                      </motion.span>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+      <div className="relative z-10 container mx-auto px-4">
+        <div className="flex items-end justify-between mb-10 flex-wrap gap-4">
+          <div>
+            <div className="flex items-center gap-2.5 mb-2">
+              <span className="w-7 h-0.5" style={{ background: 'var(--accent)' }} />
+              <span className="text-xs uppercase tracking-wider" style={{ color: 'var(--fg-4)' }}>
+                {t.skills.sectionLabel}
+              </span>
+            </div>
+            <h2 className="text-[28px] md:text-[32px] font-extrabold">{t.skills.title}</h2>
           </div>
 
-          {/* Mensagem final de aprendizado com animações */}
-          <motion.div
-            className="flex justify-center"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            viewport={{ once: true }}
-          >
-            <motion.div
-              className="glass-card inline-flex items-center gap-4 px-8 py-6 max-w-md"
-              whileHover={{ scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              {/* Ícone animado */}
-              <motion.div
-                className="w-12 h-12 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0"
-                animate={{
-                  rotate: [0, 360],
-                }}
-                transition={{
-                  duration: 5,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-              >
-                <span className="text-xl">🚀</span>
-              </motion.div>
-              
-              {/* Texto de incentivo */}
-              <div className="text-left">
-                <p className="text-lg font-semibold text-white/90 dark:text-blue-50 mb-2">
-                  Sempre aprendendo e evoluindo
-                </p>
-                <div className="flex gap-1">
-                  {[1, 2, 3].map((dot) => (
-                    <motion.div
-                      key={dot}
-                      className="w-2 h-2 bg-cyan-400 rounded-full"
-                      animate={{
-                        scale: [1, 1.3, 1],
-                        opacity: [0.5, 1, 0.5],
-                      }}
-                      transition={{
-                        duration: 1.5,
-                        repeat: Infinity,
-                        delay: dot * 0.2,
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
+          <SegmentedControl
+            layoutId="skills-view-toggle"
+            value={view}
+            onChange={setView}
+            options={[
+              { value: 'bento', label: t.skills.bentoTab },
+              { value: 'radar', label: t.skills.radarTab },
+            ]}
+          />
         </div>
+
+        {view === 'bento' ? (
+          <div>
+            {/* Core stack — one glance, no boxes: name, level and status all read in a single pill. */}
+            <div className="flex flex-wrap gap-3 mb-8">
+              {CORE_SKILLS.map((skill) => (
+                <div key={skill.name} className="glass flex items-center gap-3 pl-5 pr-4 py-3 rounded-2xl transition-all duration-300 hover:bg-[var(--surface-2)] hover:-translate-y-0.5">
+                  <span className="text-[15px] font-extrabold">{skill.name}</span>
+                  <div className="flex gap-1">
+                    {Array.from({ length: 5 }, (_, i) => (
+                      <span key={i} className="w-1.5 h-1.5 rounded-full" style={{ background: i < skill.level ? 'var(--accent)' : 'var(--border-1)' }} />
+                    ))}
+                  </div>
+                  {skill.learning && (
+                    <span className="flex items-center gap-1 pl-1.5 pr-2 py-0.5 rounded-full" style={{ background: 'var(--surface-2)' }}>
+                      <span className="relative w-1.5 h-1.5 rounded-full bg-green-400">
+                        <span className="absolute inset-0 rounded-full bg-green-400 animate-pulse-dot" />
+                      </span>
+                      <span className="text-[9px] font-bold uppercase tracking-wide text-green-400">{t.skills.learningBadge}</span>
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Categories — numbered rows, same ranking idiom as Projects, instead of a wall of competing cards. */}
+            <div style={{ borderTop: '1px solid var(--border-1)' }}>
+              {SKILL_CATEGORIES.map((cat, i) => (
+                <div
+                  key={cat.title.pt}
+                  className="flex flex-wrap items-center gap-4 md:gap-6 py-5 px-2 rounded-2xl transition-all hover:translate-x-1 hover:bg-[var(--surface-2)]"
+                  style={{ borderBottom: '1px solid var(--border-1)' }}
+                >
+                  <span className="text-2xl md:text-3xl font-extrabold w-10 flex-shrink-0" style={{ color: 'var(--fg-4)' }}>
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span className="w-1.5 h-9 rounded-sm flex-shrink-0" style={{ background: cat.tint }} />
+                  <span className="text-[15px] md:text-[16px] font-extrabold w-full sm:w-[190px] flex-shrink-0">{cat.title[lang]}</span>
+                  <span className="flex flex-wrap gap-2 flex-1 justify-start sm:justify-end">
+                    {cat.skills.map((skill) => (
+                      <span key={skill} className="text-[11px] px-3 py-1.5 rounded-full whitespace-nowrap" style={{ background: 'var(--surface-1)', color: 'var(--fg-3)' }}>
+                        {skill}
+                      </span>
+                    ))}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="glass rounded-3xl p-8 md:p-11 grid md:grid-cols-[auto_1fr] gap-12 items-center">
+            <div className="flex justify-center">
+              <SkillsRadar />
+            </div>
+            <div>
+              <div className="text-[17px] font-extrabold mb-1.5">{t.skills.radarTitle}</div>
+              <div className="text-[13px] max-w-[360px] mb-6 leading-relaxed" style={{ color: 'var(--fg-4)' }}>
+                {t.skills.radarDesc}
+              </div>
+              <div className="flex flex-col gap-2.5">
+                {CORE_SKILLS.map((skill) => (
+                  <div key={skill.name} className="flex items-center justify-between gap-3 max-w-[320px]">
+                    <span className="text-[13.5px] font-semibold">{skill.name}</span>
+                    <div className="flex gap-1">
+                      {Array.from({ length: 5 }, (_, i) => (
+                        <span key={i} className="w-1.5 h-1.5 rounded-full" style={{ background: i < skill.level ? 'var(--accent)' : 'var(--border-1)' }} />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

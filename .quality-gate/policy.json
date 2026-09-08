@@ -23,6 +23,7 @@
       "Security audit",
       "Lint",
       "Tests & ratchet",
+      "E2E tests (Playwright)",
       "Docker image gate"
     ],
     "advisoryChecks": [],
