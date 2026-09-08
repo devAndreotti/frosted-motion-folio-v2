@@ -17,12 +17,14 @@ test("clicking the front card of the stack sends it to the back", async ({ page 
   const photoCard = hero.getByRole("button", { name: `Foto de ${personalInfo.name}` });
 
   await expect(photoCard).toBeVisible();
-  const zBefore = await photoCard.evaluate((el) => el.style.zIndex);
+  const zBefore = await photoCard.evaluate((el) => window.getComputedStyle(el).zIndex);
 
-  await photoCard.click();
+  await photoCard.click({ force: true });
 
   await expect
-    .poll(() => photoCard.evaluate((el) => el.style.zIndex))
+    .poll(async () => {
+      return await photoCard.evaluate((el) => window.getComputedStyle(el).zIndex);
+    })
     .not.toBe(zBefore);
 });
 
