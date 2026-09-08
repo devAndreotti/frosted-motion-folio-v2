@@ -18,9 +18,6 @@ function mockGithubApi(events: unknown[]) {
 describe("GithubActivityFeed", () => {
   beforeEach(() => {
     sessionStorage.clear();
-    // jsdom implements neither of these — <Skeleton> uses matchMedia to pick
-    // its bone color for the current color scheme, and ResizeObserver to
-    // measure the container it's skinning.
     window.matchMedia =
       window.matchMedia ??
       ((query: string) => ({
@@ -47,16 +44,18 @@ describe("GithubActivityFeed", () => {
     vi.unstubAllGlobals();
   });
 
-  it("renders the section header and nav controls", () => {
+  it("renders the section header and nav controls", async () => {
     mockGithubApi([]);
     render(
       <ThemeProvider>
         <GithubActivityFeed />
       </ThemeProvider>
     );
-    expect(screen.getByText("O que ando fazendo no GitHub")).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Atividade anterior" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Próxima atividade" })).toBeTruthy();
+    await waitFor(() => {
+      expect(screen.getByText("O que ando fazendo no GitHub")).toBeTruthy();
+      expect(screen.getByRole("button", { name: "Atividade anterior" })).toBeTruthy();
+      expect(screen.getByRole("button", { name: "Próxima atividade" })).toBeTruthy();
+    });
   });
 
   it("renders real events as cards, most recent first, once the fetch resolves", async () => {
@@ -110,9 +109,6 @@ describe("GithubActivityFeed", () => {
     await waitFor(() => {
       expect(screen.getByText("devAndreotti/cached-repo")).toBeTruthy();
     });
-    // The section also renders a contribution heatmap fed by a separate,
-    // independently-cached hook (see ContributionHeatmap.test.tsx) — this
-    // assertion only cares that the ACTIVITY feed itself skipped the network.
     const activityApiCalls = fetchSpy.mock.calls.filter(([url]) => typeof url === "string" && url.includes("api.github.com"));
     expect(activityApiCalls).toHaveLength(0);
   });
