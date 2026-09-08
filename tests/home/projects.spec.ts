@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { projects } from "../../src/data/projects";
 import { featuredProject, curatedProjects, CATEGORY_FILTERS } from "../../src/data/curatedProjects";
+import { strings } from "../../src/lib/i18n";
 
 const OTHERS_COUNT = projects.length - (curatedProjects.length + 1);
 
@@ -30,7 +31,7 @@ test("category filters narrow the ranked list", async ({ page }) => {
     await expect(section.getByText(project.title, { exact: true })).not.toBeVisible();
   }
 
-  await section.getByRole("button", { name: CATEGORY_FILTERS[0].label, exact: true }).click();
+  await section.getByRole("button", { name: strings.pt.projects.categoryFilters[CATEGORY_FILTERS[0].key], exact: true }).click();
   for (const project of curatedProjects) {
     await expect(section.getByText(project.title, { exact: true })).toBeVisible();
   }
@@ -45,7 +46,7 @@ test("opening a project from the ranked list shows its case study", async ({ pag
 
   const dialog = page.getByRole("dialog");
   await expect(dialog.getByRole("heading", { name: sample.title })).toBeVisible();
-  await expect(dialog.getByText(sample.long)).toBeVisible();
+  await expect(dialog.getByText(sample.long.pt)).toBeVisible();
 
   await dialog.getByRole("button", { name: "Fechar" }).click();
   await expect(dialog).not.toBeVisible();

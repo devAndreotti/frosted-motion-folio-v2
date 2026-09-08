@@ -130,10 +130,11 @@ function Show-Menu {
     Write-Host '   [3] Rodar Home (nav, tema, hero, projetos)'
     Write-Host '   [4] Rodar teste especifico'
     Write-Host '   [5] Rodar so os que falharam (--last-failed)'
+    Write-Host '   [6] Rodar auditoria responsiva (9 viewports + 3 dispositivos)'
     Write-Host ''
     Write-Host '  DEBUG' -ForegroundColor $ColorMuted
-    Write-Host '   [6] Abrir Playwright UI'
-    Write-Host '   [7] Abrir ultimo relatorio HTML'
+    Write-Host '   [7] Abrir Playwright UI'
+    Write-Host '   [8] Abrir ultimo relatorio HTML'
     Write-Host ''
     Write-Host '   [0] Sair'
     Write-Host ''
@@ -232,6 +233,10 @@ function Invoke-LastFailed {
     Invoke-Playwright -PwArgs @('test', '--last-failed', '--project=chromium') -Label 'so os que falharam'
 }
 
+function Invoke-ResponsiveAudit {
+    Invoke-Playwright -PwArgs @('test', 'tests/responsive', '--project=vp-*', '--project=device-*') -Label 'auditoria responsiva'
+}
+
 function Invoke-ShowReport {
     Invoke-Playwright -PwArgs @('show-report') -Label 'relatorio HTML'
 }
@@ -258,8 +263,9 @@ try {
             '3' { Invoke-HomeGroup }
             '4' { Invoke-SpecificTest }
             '5' { Invoke-LastFailed }
-            '6' { Invoke-UiMode }
-            '7' { Invoke-ShowReport }
+            '6' { Invoke-ResponsiveAudit }
+            '7' { Invoke-UiMode }
+            '8' { Invoke-ShowReport }
             '0' { $exit = $true }
             default { Write-Host 'Opcao invalida.' -ForegroundColor $ColorWarn }
         }

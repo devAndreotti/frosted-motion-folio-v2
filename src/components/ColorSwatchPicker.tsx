@@ -8,7 +8,7 @@ const ColorSwatchPicker = () => {
   const { t } = useLanguage();
 
   return (
-    <div className="glass flex items-center gap-1.5 px-2.5 py-1.5 rounded-full">
+    <div className="glass flex items-center px-1.5 py-1.5 rounded-full">
       {HUE_ORDER.map((option) => (
         <button
           key={option}
@@ -16,12 +16,16 @@ const ColorSwatchPicker = () => {
           onClick={() => setHue(option)}
           aria-label={t.colorPicker.hueLabel(t.colorPicker.hueNames[option])}
           aria-pressed={hue === option}
-          className="w-3.5 h-3.5 rounded-full border-2 transition-transform hover:scale-110"
-          style={{
-            background: HUE_THEMES[option].swatch,
-            borderColor: hue === option ? 'var(--fg-1)' : 'transparent',
-          }}
-        />
+          className="w-6 h-6 flex items-center justify-center flex-shrink-0"
+        >
+          <span
+            className="w-3.5 h-3.5 rounded-full border-2 transition-transform hover:scale-110"
+            style={{
+              background: HUE_THEMES[option].swatch,
+              borderColor: hue === option ? 'var(--fg-1)' : 'transparent',
+            }}
+          />
+        </button>
       ))}
     </div>
   );

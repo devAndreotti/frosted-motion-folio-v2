@@ -3,7 +3,10 @@ import { ArrowRight } from 'lucide-react';
 import { projects } from '@/data/projects';
 import { featuredProject, curatedProjects, CATEGORY_FILTERS, CuratedProject, ProjectCategory } from '@/data/curatedProjects';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { track } from '@/lib/track';
 import CaseModal from './CaseModal';
+import ImageWithSkeleton from './ImageWithSkeleton';
+import SegmentedControl from './SegmentedControl';
 
 const OTHERS_COUNT = projects.length - (curatedProjects.length + 1);
 
@@ -11,14 +14,18 @@ const Projects = () => {
   const { lang, t } = useLanguage();
   const [filter, setFilter] = useState<ProjectCategory | 'all'>('all');
   const [openProject, setOpenProject] = useState<CuratedProject | null>(null);
+  const openCase = (project: CuratedProject) => {
+    track(`project-open-${project.id}`);
+    setOpenProject(project);
+  };
 
   const filtered = filter === 'all' ? curatedProjects : curatedProjects.filter((p) => p.cat === filter);
 
   return (
-    <section id="projects" className="relative py-20 md:py-32 overflow-hidden">
+    <section id="projects" className="relative py-16 md:py-24 overflow-hidden">
       <div
-        className="absolute -top-40 right-0 w-[560px] h-[560px] rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(var(--accent-rgb), 0.06) 0%, transparent 70%)' }}
+        className="absolute -top-40 right-0 w-[260px] h-[260px] sm:w-[380px] sm:h-[380px] md:w-[560px] md:h-[560px] rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgb(var(--accent-rgb) / 0.06) 0%, transparent 70%)' }}
       />
 
       <div className="relative z-10 container mx-auto px-4">
@@ -32,25 +39,13 @@ const Projects = () => {
             </div>
             <h2 className="text-[28px] md:text-[34px] font-extrabold max-w-2xl leading-tight">{t.projects.title}</h2>
           </div>
-          <div className="flex gap-2 flex-wrap">
-            {CATEGORY_FILTERS.map((f) => {
-              const active = filter === f.key;
-              return (
-                <button
-                  key={f.key}
-                  type="button"
-                  onClick={() => setFilter(f.key)}
-                  className="glass px-4 py-2.5 rounded-full text-[12.5px] font-semibold transition-colors"
-                  style={{
-                    background: active ? 'var(--accent)' : undefined,
-                    color: active ? 'var(--accent-text)' : 'var(--fg-2)',
-                  }}
-                >
-                  {t.projects.categoryFilters[f.key]}
-                </button>
-              );
-            })}
-          </div>
+          <SegmentedControl
+            layoutId="projects-category-filter"
+            value={filter}
+            onChange={setFilter}
+            scrollable
+            options={CATEGORY_FILTERS.map((f) => ({ value: f.key, label: t.projects.categoryFilters[f.key] }))}
+          />
         </div>
         <p className="text-[14.5px] max-w-lg mb-10" style={{ color: 'var(--fg-4)' }}>
           {t.projects.subtitle}
@@ -99,7 +94,7 @@ const Projects = () => {
             </div>
             <button
               type="button"
-              onClick={() => setOpenProject(featuredProject)}
+              onClick={() => openCase(featuredProject)}
               className="mt-7 flex items-center gap-2 text-sm font-semibold"
               style={{ color: 'var(--accent)' }}
             >
@@ -110,11 +105,11 @@ const Projects = () => {
 
           <button
             type="button"
-            onClick={() => setOpenProject(featuredProject)}
-            className="glass rounded-2xl overflow-hidden text-left aspect-[4/3]"
+            onClick={() => openCase(featuredProject)}
+            className="glass relative rounded-2xl overflow-hidden text-left aspect-[4/3]"
             aria-label={t.projects.viewDetailsAria(featuredProject.title)}
           >
-            <img src={featuredProject.image} alt="" className="w-full h-full object-cover" loading="lazy" />
+            <ImageWithSkeleton src={featuredProject.image} alt="" className="w-full h-full object-cover" loading="lazy" />
           </button>
         </div>
 
@@ -124,14 +119,14 @@ const Projects = () => {
             <button
               key={project.id}
               type="button"
-              onClick={() => setOpenProject(project)}
-              className="w-full grid grid-cols-[40px_6px_1fr_auto_24px] items-center gap-4 md:gap-5 py-6 px-3 rounded-2xl text-left border-b border-[var(--border-1)] transition-all hover:translate-x-1 hover:border hover:border-[var(--border-2)] hover:bg-[var(--surface-2)] hover:shadow-[0_12px_28px_-16px_rgba(0,0,0,0.55)] group"
+              onClick={() => openCase(project)}
+              className="w-full grid grid-cols-[40px_6px_1fr_auto_24px] items-center gap-4 md:gap-5 py-6 px-3 rounded-2xl text-left border-b border-[var(--border-1)] transition-all hover:translate-x-1 hover:border hover:border-[var(--border-2)] hover:bg-[var(--surface-2)] hover:shadow-[0_12px_28px_-16px_rgba(0,0,0,0.55)] active:translate-x-1 active:bg-[var(--surface-2)] group"
             >
               <span className="text-2xl font-extrabold" style={{ color: 'var(--fg-4)' }}>
                 {String(i + 2).padStart(2, '0')}
               </span>
               <span className="w-1.5 h-11 rounded-sm" style={{ background: project.tint }} />
-              <span>
+              <span className="min-w-0">
                 <span className="flex items-center gap-2.5 mb-2 flex-wrap">
                   <span className="text-lg font-extrabold">{project.title}</span>
                   <span className="text-[10.5px] px-2.5 py-0.5 rounded-full uppercase tracking-wide" style={{ background: 'var(--surface-2)', color: 'var(--fg-3)' }}>
@@ -149,7 +144,7 @@ const Projects = () => {
                   </span>
                 ))}
               </span>
-              <ArrowRight className="w-[18px] h-[18px] opacity-35 transition-opacity group-hover:opacity-100" />
+              <ArrowRight className="w-[18px] h-[18px] opacity-35 transition-opacity group-hover:opacity-100 group-active:opacity-100" />
             </button>
           ))}
           {filtered.length === 0 && (

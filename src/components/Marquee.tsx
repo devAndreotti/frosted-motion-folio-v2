@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useHorizontalDragScroll } from '@/hooks/useHorizontalDragScroll';
 
 type CatKey = 'lang' | 'frontend' | 'backend' | 'data' | 'tool' | 'automation';
 
@@ -36,7 +37,7 @@ const Tile = ({ item }: { item: StackItem }) => {
   const { t } = useLanguage();
   return (
     <div
-      className="glass flex-shrink-0 flex items-center gap-3 pl-3 pr-5 py-3 rounded-2xl transition-all duration-200 hover:-translate-y-1 hover:scale-[1.03] hover:shadow-[0_12px_32px_-8px_var(--glow)]"
+      className="glass flex-shrink-0 flex items-center gap-3 pl-3 pr-5 py-3 rounded-2xl transition-all duration-200 hover:-translate-y-1 hover:scale-[1.03] hover:shadow-[0_8px_24px_-10px_var(--glow)]"
       style={{ ['--glow' as string]: `${item.tint}44`, borderColor: undefined }}
       onMouseEnter={(e) => (e.currentTarget.style.borderColor = item.tint)}
       onMouseLeave={(e) => (e.currentTarget.style.borderColor = '')}
@@ -60,14 +61,17 @@ const Tile = ({ item }: { item: StackItem }) => {
 // JS/rAF-driven instead of a CSS keyframe animation: a plain CSS animation
 // can't change speed without jumping (the browser reinterprets elapsed-time
 // as a fraction of the new duration, snapping the track to a different
-// position). Tracking a persistent offset ourselves means "boost" only ever
-// changes how fast the offset grows from here — never where it currently is.
+// position). Tracking scrollLeft ourselves means "boost" only ever changes
+// how fast it grows from here — never where it currently is. The row is a
+// real scroll container (via useHorizontalDragScroll) so it can also be
+// grabbed and dragged with release inertia; the auto-tick simply skips
+// writing scrollLeft while a drag/inertia is in control (isInteracting()),
+// so the two never fight over the same property.
 const Row = ({ items, direction, boosted }: { items: StackItem[]; direction: 'left' | 'right'; boosted: boolean }) => {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const progressRef = useRef(0);
-  const pausedRef = useRef(false);
+  const { containerRef, handlers, isInteracting } = useHorizontalDragScroll({ redirectWheel: false });
   const boostedRef = useRef(boosted);
   boostedRef.current = boosted;
+  const seededRef = useRef(false);
 
   useEffect(() => {
     let raf = 0;
@@ -76,34 +80,54 @@ const Row = ({ items, direction, boosted }: { items: StackItem[]; direction: 'le
     const tick = (now: number) => {
       const dt = (now - last) / 1000;
       last = now;
-      const track = trackRef.current;
-      if (track) {
-        const half = track.scrollWidth / 2;
-        if (!pausedRef.current && half > 0) {
-          const speed = half / (boostedRef.current ? BOOST_DURATION_S : BASE_DURATION_S);
-          progressRef.current = (progressRef.current + speed * dt) % half;
+      const container = containerRef.current;
+      if (container) {
+        const half = container.scrollWidth / 2;
+        if (half > 0) {
+          if (!seededRef.current) {
+            // Two duplicated copies of the list sit back to back; start each
+            // row at the equivalent point in its own scroll direction.
+            container.scrollLeft = direction === 'left' ? 0 : half;
+            seededRef.current = true;
+          }
+          if (!isInteracting()) {
+            const speed = half / (boostedRef.current ? BOOST_DURATION_S : BASE_DURATION_S);
+            const next = container.scrollLeft + speed * dt * (direction === 'left' ? 1 : -1);
+            // True modulo (not a single conditional subtract) so a huge one-frame
+            // dt — a backgrounded/throttled tab resuming, or a slow test runner —
+            // still wraps correctly instead of overshooting past `half` forever.
+            container.scrollLeft = ((next % half) + half) % half;
+          }
         }
-        const x = direction === 'left' ? -progressRef.current : -half + progressRef.current;
-        track.style.transform = `translateX(${x}px)`;
       }
       raf = requestAnimationFrame(tick);
     };
 
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
+    // containerRef and isInteracting close over stable refs from the hook
+    // (same object across Row re-renders), so it's correct — and important,
+    // to avoid tearing down/restarting this loop on every `boosted` toggle —
+    // to leave them out of the dependency list.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [direction]);
 
   return (
     <div
-      className="relative w-full overflow-x-hidden py-2"
+      ref={containerRef}
+      {...handlers}
+      data-testid="marquee-track"
+      className="scrollbar-none relative w-full py-4 cursor-grab active:cursor-grabbing"
       style={{
+        overflowX: 'auto',
+        overflowY: 'hidden',
+        touchAction: 'pan-y',
+        overscrollBehaviorX: 'contain',
         maskImage: 'linear-gradient(90deg, transparent 0, #000 64px, #000 calc(100% - 64px), transparent 100%)',
         WebkitMaskImage: 'linear-gradient(90deg, transparent 0, #000 64px, #000 calc(100% - 64px), transparent 100%)',
       }}
-      onMouseEnter={() => { pausedRef.current = true; }}
-      onMouseLeave={() => { pausedRef.current = false; }}
     >
-      <div ref={trackRef} data-testid="marquee-track" className="flex items-center gap-4 w-max">
+      <div className="flex items-center gap-4 w-max">
         {[...items, ...items].map((item, i) => (
           <Tile key={`${item.name}-${i}`} item={item} />
         ))}
@@ -112,7 +136,7 @@ const Row = ({ items, direction, boosted }: { items: StackItem[]; direction: 'le
   );
 };
 
-/** Two-row infinite stack ticker — click anywhere to briefly speed it up, hover a lane to pause it. */
+/** Two-row infinite stack ticker — drag it, click to briefly speed it up. */
 const Marquee = () => {
   const { t } = useLanguage();
   const [boosted, setBoosted] = useState(false);
@@ -123,10 +147,10 @@ const Marquee = () => {
   };
 
   return (
-    <section id="marquee" className="relative py-14 overflow-hidden" aria-label={t.marquee.ariaLabel}>
+    <section id="marquee" className="relative py-14 md:py-16 overflow-hidden" aria-label={t.marquee.ariaLabel}>
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(var(--accent-rgb), 0.05) 0%, transparent 60%)' }}
+        style={{ background: 'radial-gradient(ellipse at 50% 0%, rgb(var(--accent-rgb) / 0.05) 0%, transparent 60%)' }}
       />
 
       <div className="relative z-10 px-6 md:px-16 flex items-end justify-between gap-4 flex-wrap mb-7">

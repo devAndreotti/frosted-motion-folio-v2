@@ -75,7 +75,7 @@ const BackgroundLayers = () => {
   );
 
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }} aria-hidden="true">
+    <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }} aria-hidden="true" data-testid="background-layers">
       {renderLayer(contentA, front === 'a')}
       {renderLayer(contentB, front === 'b')}
     </div>

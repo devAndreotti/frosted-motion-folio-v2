@@ -21,6 +21,14 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
   const [lang, setLang] = useState<Lang>('pt');
 
   useEffect(() => {
+    // A ?lang= in the URL (what the hreflang alternates in index.html point
+    // at) wins over a saved preference -- someone following the English
+    // link should land in English even if this browser saved 'pt' before.
+    const urlLang = new URLSearchParams(window.location.search).get('lang');
+    if (urlLang === 'pt' || urlLang === 'en') {
+      setLang(urlLang);
+      return;
+    }
     const saved = localStorage.getItem('lang') as Lang | null;
     if (saved === 'pt' || saved === 'en') setLang(saved);
   }, []);

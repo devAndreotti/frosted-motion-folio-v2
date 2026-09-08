@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ArrowUp, ArrowUpRight, Clock, Github, Linkedin } from 'lucide-react';
 import { personalInfo } from '@/data/personal';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { track } from '@/lib/track';
 import CopyEmailButton from './CopyEmailButton';
 
 const CONTACT_EMAIL = 'OrlaEK@proton.me';
@@ -19,8 +20,8 @@ const Footer = () => {
   const [time, setTime] = useState(localTime());
 
   const QUICK_LINKS = [
-    { label: t.footer.quickLinks.github, href: 'https://github.com/devAndreotti' },
-    { label: t.footer.quickLinks.linkedin, href: 'https://www.linkedin.com/in/ricardo-andreotti-gon%C3%A7alves-0b5785283/' },
+    { label: t.footer.quickLinks.github, href: 'https://github.com/devAndreotti', trackEvent: 'click-github' },
+    { label: t.footer.quickLinks.linkedin, href: 'https://www.linkedin.com/in/ricardo-andreotti-gon%C3%A7alves-0b5785283/', trackEvent: 'click-linkedin' },
     { label: t.footer.quickLinks.projects, href: '#projects' },
     { label: t.footer.quickLinks.skills, href: '#skills' },
   ];
@@ -31,10 +32,10 @@ const Footer = () => {
   }, []);
 
   return (
-    <footer id="contact" className="relative py-16 md:py-20 overflow-hidden">
+    <footer id="contact" className="relative py-16 md:py-24 overflow-hidden">
       <div
-        className="absolute -top-40 left-1/2 -translate-x-1/2 w-[640px] h-[640px] rounded-full pointer-events-none animate-orb-drift"
-        style={{ background: 'radial-gradient(circle, rgba(var(--accent-rgb), 0.07) 0%, transparent 70%)' }}
+        className="absolute -top-40 left-1/2 -translate-x-1/2 w-[280px] h-[280px] sm:w-[420px] sm:h-[420px] md:w-[640px] md:h-[640px] rounded-full pointer-events-none animate-orb-drift"
+        style={{ background: 'radial-gradient(circle, rgb(var(--accent-rgb) / 0.07) 0%, transparent 70%)' }}
       />
 
       <div className="relative z-10 container mx-auto px-4">
@@ -66,13 +67,20 @@ const Footer = () => {
             <div className="flex gap-3 flex-wrap items-center">
               <a
                 href={`mailto:${CONTACT_EMAIL}`}
+                onClick={() => track('click-send-email')}
                 className="flex items-center gap-2 px-6 py-3.5 rounded-2xl font-semibold text-[14.5px]"
                 style={{ background: 'var(--accent)', color: 'var(--accent-text)' }}
               >
                 {t.common.sendEmail}
               </a>
               <CopyEmailButton email={CONTACT_EMAIL} />
-              <a href="#header" className="glass px-6 py-3.5 rounded-2xl font-semibold text-[14.5px]">
+              <a
+                href="./resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => track('click-resume')}
+                className="glass px-6 py-3.5 rounded-2xl font-semibold text-[14.5px]"
+              >
                 {t.footer.resume}
               </a>
             </div>
@@ -88,6 +96,7 @@ const Footer = () => {
                 href={link.href}
                 target={link.href.startsWith('http') ? '_blank' : undefined}
                 rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                onClick={link.trackEvent ? () => track(link.trackEvent!) : undefined}
                 className="flex items-center justify-between py-3.5 px-2 rounded-lg transition-all hover:pl-3 hover:bg-[var(--surface-1)] group"
                 style={{ borderBottom: '1px solid var(--border-1)' }}
               >

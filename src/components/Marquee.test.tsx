@@ -3,8 +3,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import Marquee from "./Marquee";
 
 function readX(el: HTMLElement): number {
-  const match = /translateX\(([-\d.]+)px\)/.exec(el.style.transform);
-  return match ? parseFloat(match[1]) : 0;
+  return el.scrollLeft;
 }
 
 describe("Marquee", () => {
@@ -47,7 +46,10 @@ describe("Marquee", () => {
     const justAfterClick = readX(track);
     const elapsedS = (performance.now() - clickTime) / 1000;
     const maxBoostedSpeed = 600 / 7; // half-width (scrollWidth/2 = 1200/2) / BOOST_DURATION_S
-    expect(Math.abs(justAfterClick - beforeBoost2)).toBeLessThan(maxBoostedSpeed * elapsedS + 5);
+    // Generous multiplier + constant: real elapsed time already absorbs a slow
+    // test runner, this only needs extra room for measurement/rounding jitter
+    // around the boundary — a real jump bug overshoots this by 10x or more.
+    expect(Math.abs(justAfterClick - beforeBoost2)).toBeLessThan(maxBoostedSpeed * elapsedS * 1.5 + 15);
 
     const boosted1 = readX(track);
     await new Promise((r) => setTimeout(r, 200));

@@ -8,7 +8,6 @@ export interface CoreSkill {
 
 export interface SkillCategory {
   title: Localized<string>;
-  mono: string;
   tint: string;
   skills: string[];
 }
@@ -25,10 +24,10 @@ export const CORE_SKILLS: CoreSkill[] = [
 ];
 
 export const SKILL_CATEGORIES: SkillCategory[] = [
-  { title: { pt: 'Dados', en: 'Data' }, mono: 'DB', tint: '#3b82f6', skills: ['SQL', 'PostgreSQL', 'Power BI'] },
-  { title: { pt: 'Automação', en: 'Automation' }, mono: 'AT', tint: '#ef4444', skills: ['n8n', 'Python', 'Scripts'] },
-  { title: { pt: 'Mobile', en: 'Mobile' }, mono: 'RN', tint: '#f97316', skills: ['React Native', 'Expo'] },
-  { title: { pt: 'IA aplicada', en: 'Applied AI' }, mono: 'AI', tint: '#a855f7', skills: ['Gemini', 'Machine Learning', 'Prompting'] },
-  { title: { pt: 'Ferramentas', en: 'Tools' }, mono: 'GT', tint: '#22c55e', skills: ['Git', 'Vite', 'Docker'] },
-  { title: { pt: 'Linguagens', en: 'Languages' }, mono: '{}', tint: '#eab308', skills: ['JavaScript', 'C#', 'Java'] },
+  { title: { pt: 'Dados', en: 'Data' }, tint: '#3b82f6', skills: ['SQL', 'PostgreSQL', 'Power BI'] },
+  { title: { pt: 'Automação', en: 'Automation' }, tint: '#ef4444', skills: ['n8n', 'Python', 'Scripts'] },
+  { title: { pt: 'Mobile', en: 'Mobile' }, tint: '#f97316', skills: ['React Native', 'Expo'] },
+  { title: { pt: 'IA aplicada', en: 'Applied AI' }, tint: '#a855f7', skills: ['Gemini', 'Machine Learning', 'Prompting'] },
+  { title: { pt: 'Ferramentas', en: 'Tools' }, tint: '#22c55e', skills: ['Git', 'Vite', 'Docker'] },
+  { title: { pt: 'Linguagens', en: 'Languages' }, tint: '#eab308', skills: ['JavaScript', 'C#', 'Java'] },
 ];

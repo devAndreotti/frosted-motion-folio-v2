@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Moon, Sun, Menu, X, Github, Linkedin } from 'lucide-react';
+import { Moon, Sun, Menu, X } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useGithubActivity } from '@/hooks/useGithubActivity';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
 import { springPop } from '@/lib/motion';
 import ColorSwatchPicker from './ColorSwatchPicker';
 import SudoTerminal from './SudoTerminal';
+import { RepoBadge, SocialLinks, LangToggleButton } from './NavExtras';
 
 const GLITCH_CHARS = '#$%&01</>{}=+*';
 const GLITCH_TICKS = 10;
@@ -24,7 +26,7 @@ const NAME = 'Ricardo Andreotti';
 const Navigation = () => {
   const { theme, toggleTheme } = useTheme();
   const { lang, toggleLang, t } = useLanguage();
-  const { publicRepos } = useGithubActivity();
+  const { publicRepos, loading: reposLoading } = useGithubActivity();
   const NAV_ITEMS = [
     { name: t.nav.home, id: 'header' },
     { name: t.nav.projects, id: 'projects' },
@@ -36,8 +38,19 @@ const Navigation = () => {
   const [glitchText, setGlitchText] = useState<string | null>(null);
   const [activeId, setActiveId] = useState('header');
 
+  const [scrolled, setScrolled] = useState(false);
   const holdTimer = useRef<ReturnType<typeof setTimeout>>();
   const glitchInterval = useRef<ReturnType<typeof setInterval>>();
+
+  // Floats transparent over the hero, solidifies once the page actually
+  // scrolls -- same macOS/iOS nav-bar behavior, same listener pattern as
+  // ScrollProgress.tsx.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   useEffect(
     () => () => {
@@ -46,6 +59,10 @@ const Navigation = () => {
     },
     []
   );
+
+  // Menus opened via disclosure (not a modal dialog) still get the
+  // conventional Escape-to-close keyboard behavior.
+  useEscapeKey(isMobileMenuOpen, () => setIsMobileMenuOpen(false));
 
   // Scroll-spy: highlight whichever section currently sits in the vertical
   // "reading band" of the viewport, so the nav shows where you actually are.
@@ -90,15 +107,29 @@ const Navigation = () => {
 
   return (
     <>
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-40 md:hidden" onClick={() => setIsMobileMenuOpen(false)} aria-hidden="true" />
+      )}
       <motion.nav
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg"
-        style={{ background: 'var(--surface-1)', borderBottom: '1px solid var(--border-1)' }}
+        className="fixed top-0 left-0 right-0 z-50"
       >
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16 gap-4">
+        {/* Blur/background/border stay always-on here; only opacity crossfades
+            as the page scrolls -- animating backdrop-filter itself is janky
+            in most browsers, opacity isn't (same two-layer-crossfade idea as
+            BackgroundLayers.tsx, just one layer since "off" is just invisible). */}
+        <div
+          className="absolute inset-0 backdrop-blur-lg pointer-events-none transition-opacity duration-300 ease-out"
+          style={{
+            background: 'var(--surface-1)',
+            borderBottom: '1px solid var(--border-1)',
+            opacity: scrolled ? 1 : 0,
+          }}
+        />
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="flex items-center justify-between h-16 gap-4" data-testid="nav-bar">
             <button
               type="button"
               onMouseDown={() => {
@@ -107,10 +138,14 @@ const Navigation = () => {
               onMouseUp={() => clearTimeout(holdTimer.current)}
               onMouseLeave={() => clearTimeout(holdTimer.current)}
               onClick={() => scrollToSection('header')}
-              className="text-lg font-extrabold tracking-wide select-none"
+              className="text-lg font-extrabold tracking-wide select-none whitespace-nowrap flex-shrink-0"
               style={{ color: glitchText ? 'var(--accent)' : 'var(--fg-1)', fontFamily: glitchText ? 'monospace' : 'inherit' }}
             >
-              {glitchText ?? NAME}
+              {glitchText ?? (
+                <>
+                  Ricardo<span className="hidden xl:inline"> Andreotti</span>
+                </>
+              )}
             </button>
 
             <div className="hidden md:flex items-center gap-6">
@@ -118,7 +153,7 @@ const Navigation = () => {
                 const isActive = activeId === item.id;
                 return (
                   <motion.button
-                    key={item.name}
+                    key={item.id}
                     onClick={() => scrollToSection(item.id)}
                     aria-current={isActive ? 'true' : undefined}
                     className="text-sm font-medium transition-colors duration-300 relative group"
@@ -139,27 +174,11 @@ const Navigation = () => {
             </div>
 
             <div className="hidden md:flex items-center gap-3">
-              {publicRepos != null && (
-                <div className="glass flex items-center gap-2 px-3 py-1.5 rounded-full">
-                  <span className="relative w-1.5 h-1.5 rounded-full bg-green-400">
-                    <span className="absolute inset-0 rounded-full bg-green-400 animate-pulse-dot" />
-                  </span>
-                  <span className="text-[11px]" style={{ color: 'var(--fg-3)' }}>
-                    {t.nav.reposLabel(publicRepos)}
-                  </span>
-                </div>
-              )}
+              <RepoBadge loading={reposLoading} count={publicRepos} label={t.nav.reposLabel} />
 
               <ColorSwatchPicker />
 
-              <button
-                type="button"
-                onClick={toggleLang}
-                aria-label={t.nav.langToggleAria}
-                className="glass w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-bold uppercase"
-              >
-                {lang === 'pt' ? 'EN' : 'PT'}
-              </button>
+              <LangToggleButton lang={lang} onClick={toggleLang} ariaLabel={t.nav.langToggleAria} />
 
               <motion.button
                 onClick={toggleTheme}
@@ -172,35 +191,11 @@ const Navigation = () => {
                 {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
               </motion.button>
 
-              <a
-                href="https://github.com/devAndreotti"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub"
-                className="glass w-9 h-9 rounded-full flex items-center justify-center"
-              >
-                <Github className="w-4 h-4" />
-              </a>
-              <a
-                href="https://www.linkedin.com/in/ricardo-andreotti-gon%C3%A7alves-0b5785283/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn"
-                className="glass w-9 h-9 rounded-full flex items-center justify-center"
-              >
-                <Linkedin className="w-4 h-4" />
-              </a>
+              <SocialLinks />
             </div>
 
             <div className="md:hidden flex items-center gap-2">
-              <button
-                type="button"
-                onClick={toggleLang}
-                aria-label={t.nav.langToggleAria}
-                className="glass w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-bold uppercase"
-              >
-                {lang === 'pt' ? 'EN' : 'PT'}
-              </button>
+              <LangToggleButton lang={lang} onClick={toggleLang} ariaLabel={t.nav.langToggleAria} />
               <motion.button
                 onClick={toggleTheme}
                 aria-label={t.nav.themeToggleAria}
@@ -221,19 +216,31 @@ const Navigation = () => {
           </div>
 
           {isMobileMenuOpen && (
-            <motion.div className="md:hidden pb-4 pt-2" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} transition={{ duration: 0.4 }}>
-              <div className="flex flex-col items-center gap-3">
-                {NAV_ITEMS.map((item) => (
-                  <button
-                    key={item.name}
-                    onClick={() => scrollToSection(item.id)}
-                    className="glass w-full text-center px-4 py-2 rounded-md text-sm font-medium"
-                    style={{ color: 'var(--fg-2)' }}
-                  >
-                    {item.name}
-                  </button>
-                ))}
-                <div className="pt-2">
+            <motion.div className="md:hidden pb-4 pt-1 overflow-hidden" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} transition={{ duration: 0.4 }}>
+              <div className="glass-strong rounded-2xl p-3 flex flex-col gap-1" data-testid="mobile-menu">
+                <RepoBadge loading={reposLoading} count={publicRepos} label={t.nav.reposLabel} compact />
+
+                {NAV_ITEMS.map((item) => {
+                  const isActive = activeId === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => scrollToSection(item.id)}
+                      aria-current={isActive ? 'true' : undefined}
+                      className="text-left px-3.5 py-3 rounded-xl text-[15px] font-semibold transition-colors hover:bg-[var(--surface-2)] active:bg-[var(--surface-2)]"
+                      style={{ color: isActive ? 'var(--accent)' : 'var(--fg-2)', background: isActive ? 'var(--surface-2)' : undefined }}
+                    >
+                      {item.name}
+                    </button>
+                  );
+                })}
+
+                <div className="h-px my-2 mx-1" style={{ background: 'var(--border-1)' }} />
+
+                <div className="flex items-center justify-between px-1 pb-1">
+                  <div className="flex items-center gap-2">
+                    <SocialLinks size="md" />
+                  </div>
                   <ColorSwatchPicker />
                 </div>
               </div>

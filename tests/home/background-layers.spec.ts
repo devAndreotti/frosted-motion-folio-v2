@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test("switching hue crossfades the background layer to the new gradient", async ({ page }) => {
   await page.goto("");
-  const layersHost = page.locator('div[aria-hidden="true"]');
+  const layersHost = page.getByTestId("background-layers");
   const layers = layersHost.locator("> div");
   await expect(layers).toHaveCount(2);
 
@@ -31,6 +31,9 @@ test("switching hue crossfades the background layer to the new gradient", async 
 });
 
 test("the 404 page picks up the selected theme instead of a hardcoded look", async ({ page }) => {
+  // Blue's dark-mode accent hex is the one asserted below; pin the
+  // color-scheme so this isn't coupled to the system-preference default.
+  await page.emulateMedia({ colorScheme: "dark" });
   await page.goto("");
   await page.getByRole("button", { name: "Cor de destaque: Azul" }).click();
   await page.waitForTimeout(300);
@@ -39,6 +42,6 @@ test("the 404 page picks up the selected theme instead of a hardcoded look", asy
   const accent = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--accent").trim());
   expect(accent.toLowerCase()).toBe("#3b82f6");
 
-  const layersHost = page.locator('div[aria-hidden="true"]');
+  const layersHost = page.getByTestId("background-layers");
   await expect(layersHost).toBeVisible();
 });

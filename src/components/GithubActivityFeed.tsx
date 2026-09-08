@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, GitCommit, GitPullRequest, Star, GitBranch, 
 import { useGithubActivity, relativeTime, type ActivityKind, type GithubActivityItem } from '@/hooks/useGithubActivity';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ACTIVITY_TEXT_EN } from '@/lib/i18n';
+import { useHorizontalDragScroll } from '@/hooks/useHorizontalDragScroll';
 import ContributionHeatmap from './ContributionHeatmap';
 
 const KIND_META: Record<ActivityKind, { icon: typeof GitCommit; tint: string }> = {
@@ -17,6 +18,7 @@ const KIND_META: Record<ActivityKind, { icon: typeof GitCommit; tint: string }> 
 const CARD_WIDTH = 280;
 const GAP = 20;
 const STEP = CARD_WIDTH + GAP;
+const EDGE_FADE = 24;
 
 const FIXTURE_ITEMS: GithubActivityItem[] = [
   { id: 'f1', kind: 'push', repo: 'devAndreotti/self-sync-daily', text: 'Fez push', detail: 'fix: corrige cálculo de energia semanal', time: new Date().toISOString() },
@@ -58,22 +60,21 @@ const Card = ({ item, now, lang }: { item: GithubActivityItem; now: number; lang
 const GithubActivityFeed = () => {
   const { lang, t } = useLanguage();
   const { items, fetchedAt, loading } = useGithubActivity();
-  const [offset, setOffset] = useState(0);
   const [now, setNow] = useState(() => Date.now());
+  const { containerRef, handlers } = useHorizontalDragScroll();
 
   useEffect(() => {
     const timer = setInterval(() => setNow(Date.now()), 30000);
     return () => clearInterval(timer);
   }, []);
 
-  const maxOffset = -(STEP * Math.max(items.length - 1, 0));
-  const go = (delta: number) => setOffset((prev) => Math.max(maxOffset, Math.min(0, prev + delta)));
+  const go = (delta: number) => containerRef.current?.scrollBy({ left: delta, behavior: 'smooth' });
 
   return (
-    <section id="github-activity" className="relative py-16 md:py-20 overflow-hidden">
+    <section id="github-activity" className="relative py-16 md:py-24 overflow-hidden">
       <div
         className="absolute top-1/3 -right-40 w-[480px] h-[480px] rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(var(--accent-rgb), 0.06) 0%, transparent 70%)' }}
+        style={{ background: 'radial-gradient(circle, rgb(var(--accent-rgb) / 0.06) 0%, transparent 70%)' }}
       />
 
       <div className="relative z-10 container mx-auto px-4 flex items-end justify-between mb-9 flex-wrap gap-4">
@@ -96,7 +97,7 @@ const GithubActivityFeed = () => {
             <button
               type="button"
               aria-label={t.activity.prevAria}
-              onClick={() => go(STEP)}
+              onClick={() => go(-STEP)}
               className="glass w-9 h-9 rounded-full flex items-center justify-center hover:bg-[var(--surface-2)] transition-colors"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -104,7 +105,7 @@ const GithubActivityFeed = () => {
             <button
               type="button"
               aria-label={t.activity.nextAria}
-              onClick={() => go(-STEP)}
+              onClick={() => go(STEP)}
               className="glass w-9 h-9 rounded-full flex items-center justify-center hover:bg-[var(--surface-2)] transition-colors"
             >
               <ChevronRight className="w-4 h-4" />
@@ -117,7 +118,19 @@ const GithubActivityFeed = () => {
         <ContributionHeatmap />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 overflow-hidden pb-2">
+      <div
+        ref={containerRef}
+        {...handlers}
+        className="custom-scrollbar relative z-10 container mx-auto px-4 pt-2 pb-6 cursor-grab active:cursor-grabbing"
+        style={{
+          overflowX: 'auto',
+          overflowY: 'hidden',
+          touchAction: 'pan-y',
+          overscrollBehaviorX: 'contain',
+          maskImage: `linear-gradient(90deg, transparent 0, #000 ${EDGE_FADE}px, #000 calc(100% - ${EDGE_FADE}px), transparent 100%)`,
+          WebkitMaskImage: `linear-gradient(90deg, transparent 0, #000 ${EDGE_FADE}px, #000 calc(100% - ${EDGE_FADE}px), transparent 100%)`,
+        }}
+      >
         <Skeleton
           name="github-activity-feed"
           loading={loading}
@@ -130,18 +143,14 @@ const GithubActivityFeed = () => {
           }
         >
           {items.length > 0 ? (
-            <div className="flex gap-5" style={{ transform: `translateX(${offset}px)`, transition: 'transform 500ms cubic-bezier(0.22,1,0.36,1)' }}>
+            <div className="flex gap-5">
               {items.map((item) => (
                 <Card key={item.id} item={item} now={now} lang={lang} />
               ))}
             </div>
           ) : (
             <div className="glass rounded-2xl p-6 text-center text-[13.5px]" style={{ color: 'var(--fg-3)' }}>
-              {t.activity.emptyState}{' '}
-              <a href="https://github.com/devAndreotti" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: 'var(--accent)' }}>
-                {t.activity.emptyStateLink}
-              </a>
-              .
+              {t.activity.emptyState}
             </div>
           )}
         </Skeleton>

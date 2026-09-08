@@ -89,10 +89,12 @@ html {
      drop shadow so the panel visibly separates from the page (depth), and a
      thin inner top-light so the edge catches light like actual glass. */
   .glass {
+    @apply active:scale-[0.97];
+    transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
     background: var(--surface-1);
     border: 1px solid var(--border-1);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25), inset 0 1px 0 0 rgba(255, 255, 255, 0.18);
   }
 
@@ -107,7 +109,8 @@ html {
 
   .glass-button {
     @apply glass rounded-full px-8 py-4 transition-all duration-300 hover:scale-110 active:scale-95;
-    backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px) saturate(180%);
+    -webkit-backdrop-filter: blur(15px) saturate(180%);
   }
 
   .glass-button:hover {
@@ -115,22 +118,64 @@ html {
   }
 
   .glass-strong {
+    @apply active:scale-[0.97];
+    transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
     background: var(--surface-2);
     border: 1px solid var(--border-2);
-    backdrop-filter: blur(28px);
-    -webkit-backdrop-filter: blur(28px);
+    /* Lower saturation than .glass -- this variant covers big panels (modals,
+       mobile menu) that can sit over detailed content like a photo, where
+       180% turns whatever bleeds through into a distractingly vivid blob. */
+    backdrop-filter: blur(28px) saturate(140%);
+    -webkit-backdrop-filter: blur(28px) saturate(140%);
     box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.32), inset 0 1px 0 0 rgba(255, 255, 255, 0.22);
   }
 
   .glass-intense {
     background: var(--surface-2);
-    backdrop-filter: blur(25px);
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
     border: 1px solid var(--border-2);
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.22);
   }
 }
 
 @layer utilities {
+  /* Thin, accent-tinted scrollbar for native horizontal-scroll strips (the
+     contribution heatmap) — the OS default is a fat, theme-blind bar that
+     looks out of place against the glass panels. */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--accent-rgb) / 0.4) transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgb(var(--accent-rgb) / 0.4);
+    border-radius: 999px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--accent-rgb) / 0.6);
+  }
+
+  /* For draggable rails that fake infinite content by wrapping scrollLeft
+     (the stack marquee) — a real scrollbar thumb would jump on every wrap. */
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
   .text-gradient {
     background: linear-gradient(90deg, var(--accent, #3b82f6), var(--fg-1));
     -webkit-background-clip: text;
@@ -281,5 +326,41 @@ html {
   .animate-bob,
   .shimmer {
     animation: none !important;
+  }
+}
+
+/* Printing (Ctrl+P / "save as PDF") isolates the Recruiter Mode summary --
+   the rest of the page (nav, decorative blobs, sections) has no print
+   layout of its own and would otherwise print as a dark, blurred mess.
+   This is a lightweight stand-in for the real resume PDF, not a replacement
+   for it. */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  [data-print-target='recruiter-summary'],
+  [data-print-target='recruiter-summary'] * {
+    visibility: visible;
+  }
+
+  [data-print-target='recruiter-summary'] {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    background: #fff !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    border: none !important;
+  }
+
+  [data-print-target='recruiter-summary'] * {
+    color: #000 !important;
+    background: transparent !important;
+  }
+
+  [data-print-hide] {
+    display: none !important;
   }
 }

@@ -23,6 +23,16 @@ function mockContributionsApi(contributions: unknown[] | null) {
 describe("ContributionHeatmap", () => {
   beforeEach(() => {
     sessionStorage.clear();
+    // jsdom doesn't implement ResizeObserver — the heatmap uses it to fit
+    // however many weeks the container width allows.
+    const win = window as unknown as { ResizeObserver?: unknown };
+    win.ResizeObserver =
+      win.ResizeObserver ??
+      class {
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      };
   });
 
   afterEach(() => {
@@ -58,7 +68,7 @@ describe("ContributionHeatmap", () => {
   it("serves from the session cache without hitting the network again", async () => {
     const fetchSpy = vi.fn();
     vi.stubGlobal("fetch", fetchSpy);
-    sessionStorage.setItem("github-contributions-cache-v1", JSON.stringify({ fetchedAt: Date.now(), days: SAMPLE_DAYS }));
+    sessionStorage.setItem("github-contributions-cache-v2", JSON.stringify({ fetchedAt: Date.now(), days: SAMPLE_DAYS }));
 
     render(
       <ThemeProvider>

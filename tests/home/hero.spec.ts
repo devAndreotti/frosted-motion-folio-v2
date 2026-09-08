@@ -8,7 +8,7 @@ test("hero shows the rotating headline and the photo card", async ({ page }) => 
 
   const hero = page.locator("#header");
   await expect(hero.getByText(personalInfo.name, { exact: true })).toBeVisible();
-  await expect(hero.getByText(personalInfo.title, { exact: true })).toBeVisible();
+  await expect(hero.getByText(personalInfo.title.pt, { exact: true })).toBeVisible();
 });
 
 test("clicking the front card of the stack sends it to the back", async ({ page }) => {

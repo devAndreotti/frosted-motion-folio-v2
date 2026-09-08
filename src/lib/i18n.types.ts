@@ -103,7 +103,6 @@ export interface Strings {
     prevAria: string;
     nextAria: string;
     emptyState: string;
-    emptyStateLink: string;
     viewAllGithub: string;
     heatmapLess: string;
     heatmapMore: string;

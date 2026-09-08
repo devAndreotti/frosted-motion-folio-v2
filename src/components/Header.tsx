@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { track } from '@/lib/track';
+import { useScrollLock } from '@/hooks/useScrollLock';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 import CardStack from './CardStack';
 import CopyEmailButton from './CopyEmailButton';
 
@@ -19,14 +22,9 @@ const Header = () => {
     return () => clearInterval(timer);
   }, [t.header.roles.length]);
 
-  useEffect(() => {
-    if (!recruiterMode) return;
-    const onKeydown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setRecruiterMode(false);
-    };
-    window.addEventListener('keydown', onKeydown);
-    return () => window.removeEventListener('keydown', onKeydown);
-  }, [recruiterMode]);
+  const recruiterDialogRef = useRef<HTMLDivElement>(null);
+  useScrollLock(recruiterMode);
+  useFocusTrap(recruiterMode, recruiterDialogRef, () => setRecruiterMode(false));
 
   const handleHeroMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -62,12 +60,12 @@ const Header = () => {
           hue's color wash site-wide; a local orb this size only needs to add
           a little emphasis behind the hero, not repeat the whole effect. */}
       <div
-        className="absolute -top-24 -right-36 w-[640px] h-[640px] rounded-full pointer-events-none animate-orb-drift"
-        style={{ background: 'radial-gradient(circle, rgba(var(--accent-rgb), 0.09) 0%, transparent 70%)' }}
+        className="absolute -top-24 -right-36 w-[280px] h-[280px] sm:w-[420px] sm:h-[420px] md:w-[640px] md:h-[640px] rounded-full pointer-events-none animate-orb-drift"
+        style={{ background: 'radial-gradient(circle, rgb(var(--accent-rgb) / 0.09) 0%, transparent 70%)' }}
       />
       <div
-        className="absolute -bottom-40 -left-28 w-[480px] h-[480px] rounded-full pointer-events-none animate-orb-drift-reverse"
-        style={{ background: 'radial-gradient(circle, rgba(var(--accent-rgb), 0.05) 0%, transparent 70%)' }}
+        className="absolute -bottom-40 -left-28 w-[220px] h-[220px] sm:w-[340px] sm:h-[340px] md:w-[480px] md:h-[480px] rounded-full pointer-events-none animate-orb-drift-reverse"
+        style={{ background: 'radial-gradient(circle, rgb(var(--accent-rgb) / 0.05) 0%, transparent 70%)' }}
       />
       <div
         className="absolute w-[360px] h-[360px] rounded-full pointer-events-none transition-transform duration-300 ease-out"
@@ -76,29 +74,33 @@ const Header = () => {
           left: '38%',
           marginTop: -180,
           marginLeft: -180,
-          background: 'radial-gradient(circle, rgba(var(--accent-rgb), 0.05) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgb(var(--accent-rgb) / 0.05) 0%, transparent 70%)',
           transform: `translate(${parallax.x}px, ${parallax.y}px)`,
         }}
       />
 
-      <div className="relative z-10 flex-1 flex items-center px-6 md:px-16">
-        <div className="w-full grid md:grid-cols-[1.15fr_1fr] gap-12 items-center">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <div className="flex items-center gap-2.5 mb-5">
-              <span className="glass px-3.5 py-1.5 rounded-full text-xs uppercase tracking-wider" style={{ color: 'var(--fg-2)' }}>
+      <div className="relative z-10 flex-1 flex items-center px-4 sm:px-6 md:px-16">
+        <div className="w-full grid grid-cols-[1fr_auto] gap-3 sm:gap-6 items-start md:grid-cols-[1.15fr_1fr] md:gap-12 md:items-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 mb-3 sm:mb-5">
+              <span className="glass px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full text-[10px] sm:text-xs uppercase tracking-wider" style={{ color: 'var(--fg-2)' }}>
                 {t.header.badge}
               </span>
-              <span className="text-[13px]" style={{ color: 'var(--fg-4)' }}>
+              <span className="text-[11px] sm:text-[13px]" style={{ color: 'var(--fg-4)' }}>
                 Sorocaba, SP
               </span>
             </div>
 
-            <h1 className="text-5xl md:text-6xl font-extrabold leading-[1.03] tracking-tight">
+            <h1 className="text-2xl sm:text-4xl md:text-6xl font-extrabold leading-[1.08] md:leading-[1.03] tracking-tight">
               {t.header.lead1}
               <br />
               {t.header.lead2}
               <br />
-              <span className="relative block min-h-[100px] md:min-h-[136px] overflow-hidden" style={{ color: 'var(--accent)' }}>
+              <span className="relative block min-h-[60px] sm:min-h-[86px] md:min-h-[136px] overflow-hidden" style={{ color: 'var(--accent)' }}>
                 <AnimatePresence mode="wait">
                   <motion.span
                     key={roleIdx}
@@ -114,20 +116,20 @@ const Header = () => {
               </span>
             </h1>
 
-            <p className="mt-6 max-w-[460px] text-lg leading-relaxed" style={{ color: 'var(--fg-3)' }}>
+            <p className="mt-3 sm:mt-6 max-w-[460px] text-xs sm:text-base md:text-lg leading-relaxed" style={{ color: 'var(--fg-3)' }}>
               {t.header.paragraph}
             </p>
 
-            <div className="flex items-center gap-2 mt-5">
-              <span className="relative w-2 h-2 rounded-full bg-green-400">
+            <div className="flex items-center gap-2 mt-3 sm:mt-5">
+              <span className="relative w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-green-400">
                 <span className="absolute inset-0 rounded-full bg-green-400 animate-pulse-dot" />
               </span>
-              <span className="text-[12.5px]" style={{ color: 'var(--fg-3)' }}>
+              <span className="text-[10px] sm:text-[12.5px]" style={{ color: 'var(--fg-3)' }}>
                 {t.header.availability}
               </span>
             </div>
 
-            <div className="flex flex-wrap gap-3.5 mt-6">
+            <div className="flex flex-wrap gap-2 sm:gap-3.5 mt-3 sm:mt-6">
               <div
                 onMouseMove={handleMagnetMove}
                 onMouseLeave={() => setMagnet({ x: 0, y: 0 })}
@@ -136,35 +138,47 @@ const Header = () => {
                   color: 'var(--accent-text)',
                   transform: `translate(${magnet.x}px, ${magnet.y}px)`,
                 }}
-                className="glass-strong px-6 py-3.5 rounded-2xl font-semibold text-[15px] cursor-pointer transition-transform duration-150 ease-out"
+                className="glass-strong px-3.5 py-2 sm:px-6 sm:py-3.5 rounded-xl sm:rounded-2xl font-semibold text-xs sm:text-[15px] cursor-pointer transition-transform duration-150 ease-out"
               >
-                <a href="#projects" onClick={(e) => { e.preventDefault(); document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' }); }}>
+                <a href="#projects" onClick={(e) => { e.preventDefault(); track('cta-projects'); document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' }); }}>
                   {t.header.ctaProjects}
                 </a>
               </div>
               <button
                 type="button"
                 onClick={() => setRecruiterMode(true)}
-                className="glass px-6 py-3.5 rounded-2xl font-semibold text-[15px]"
+                className="glass px-3.5 py-2 sm:px-6 sm:py-3.5 rounded-xl sm:rounded-2xl font-semibold text-xs sm:text-[15px]"
               >
                 {t.header.ctaRecruiter}
               </button>
             </div>
-            <p className="mt-6 text-xs" style={{ color: 'var(--fg-4)' }}>
+            <p className="mt-3 sm:mt-6 text-[10px] sm:text-xs hidden sm:block" style={{ color: 'var(--fg-4)' }}>
               {t.header.cardStackHint}
             </p>
           </motion.div>
 
-          <CardStack />
+          <div>
+            <CardStack />
+          </div>
         </div>
       </div>
 
       <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 mx-6 md:mx-16" style={{ borderTop: '1px solid var(--border-1)' }}>
-        {t.header.stats.map((stat, i) => (
+        {t.header.stats.map((stat, i) => {
+          // Divider goes on the right of every item except the last overall
+          // (desktop, 4 cols) *and* the last of each pair (mobile, 2 cols) —
+          // without this, item 2 (top-right of row 1) keeps a stray border on
+          // narrow screens where it's no longer followed by another item.
+          const isLastOverall = i === t.header.stats.length - 1;
+          const isLastInMobileRow = i % 2 === 1;
+          let dividerClass = 'border-r';
+          if (isLastOverall) dividerClass = '';
+          else if (isLastInMobileRow) dividerClass = 'max-md:border-r-0 md:border-r';
+          return (
           <div
             key={stat.label}
-            className="py-6 px-4 md:px-6 flex gap-3.5 items-start"
-            style={i < t.header.stats.length - 1 ? { borderRight: '1px solid var(--border-1)' } : undefined}
+            className={`py-6 px-4 md:px-6 flex gap-3.5 items-start ${dividerClass}`}
+            style={{ borderColor: 'var(--border-1)' }}
           >
             <div>
               <div className="text-2xl md:text-[28px] font-extrabold" style={{ color: 'var(--accent)' }}>
@@ -176,7 +190,8 @@ const Header = () => {
               </div>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="relative z-10 flex justify-center py-6">
@@ -195,15 +210,17 @@ const Header = () => {
 
       {recruiterMode && (
         <div
-          className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 backdrop-blur-md px-6 py-16"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-md p-6 md:p-10"
           onClick={() => setRecruiterMode(false)}
         >
           <div
-            className="glass-strong w-full max-w-2xl rounded-[28px] p-10 md:p-12"
+            ref={recruiterDialogRef}
+            className="glass-strong w-full max-w-2xl max-h-full overflow-auto rounded-[28px] p-10 md:p-12"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
             aria-label={t.header.recruiterDialogAria}
+            data-print-target="recruiter-summary"
           >
             <div className="text-[11px] uppercase tracking-wider mb-3.5" style={{ color: 'var(--fg-4)' }}>
               {t.header.recruiterLabel}
@@ -222,7 +239,7 @@ const Header = () => {
                 </li>
               ))}
             </ul>
-            <div className="flex gap-3 items-center">
+            <div className="flex gap-3 items-center" data-print-hide>
               <a
                 href={`mailto:${RECRUITER_EMAIL}`}
                 className="px-6 py-3 rounded-xl font-semibold text-sm"

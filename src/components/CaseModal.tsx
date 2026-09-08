@@ -1,7 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useRef, useState } from 'react';
+import { motion, type PanInfo } from 'framer-motion';
 import { X, Github, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
 import { CuratedProject } from '@/data/curatedProjects';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useScrollLock } from '@/hooks/useScrollLock';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
+import ImageWithSkeleton from './ImageWithSkeleton';
+
+const SWIPE_THRESHOLD = 60; // px of drag offset that counts as a deliberate swipe
+const SWIPE_VELOCITY = 500; // px/s — a fast flick counts even if the offset is short
+
+/** -1/1 = advance to prev/next, 0 = snap back without changing image. */
+export function resolveSwipeDelta(offsetX: number, velocityX: number): -1 | 0 | 1 {
+  if (offsetX < -SWIPE_THRESHOLD || velocityX < -SWIPE_VELOCITY) return 1;
+  if (offsetX > SWIPE_THRESHOLD || velocityX > SWIPE_VELOCITY) return -1;
+  return 0;
+}
 
 interface CaseModalProps {
   project: CuratedProject;
@@ -13,18 +27,21 @@ const CaseModal = ({ project, onClose }: CaseModalProps) => {
   const { lang, t } = useLanguage();
   const [imgIdx, setImgIdx] = useState(0);
   const images = project.images.length > 0 ? project.images : [project.image];
+  const advance = (delta: number) => setImgIdx((prev) => (prev + delta + images.length) % images.length);
 
-  useEffect(() => {
-    const onKeydown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', onKeydown);
-    return () => window.removeEventListener('keydown', onKeydown);
-  }, [onClose]);
+  const handleDragEnd = (_: unknown, info: PanInfo) => {
+    const delta = resolveSwipeDelta(info.offset.x, info.velocity.x);
+    if (delta !== 0) advance(delta);
+  };
+
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useScrollLock(true);
+  useFocusTrap(true, dialogRef, onClose);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-md p-6 md:p-10" onClick={onClose}>
       <div
+        ref={dialogRef}
         className="glass-strong w-full max-w-3xl max-h-full overflow-auto rounded-3xl p-8 md:p-11"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
@@ -42,7 +59,7 @@ const CaseModal = ({ project, onClose }: CaseModalProps) => {
             type="button"
             aria-label={t.caseModal.closeAria}
             onClick={onClose}
-            className="glass w-8 h-8 rounded-lg flex items-center justify-center"
+            className="glass w-9 h-9 rounded-lg flex items-center justify-center"
           >
             <X className="w-3.5 h-3.5" />
           </button>
@@ -50,22 +67,40 @@ const CaseModal = ({ project, onClose }: CaseModalProps) => {
 
         {images.length > 0 && (
           <div className="relative rounded-2xl overflow-hidden mb-6 aspect-[16/9]" style={{ background: 'var(--surface-1)' }}>
-            <img src={images[imgIdx]} alt={t.caseModal.imageAlt(project.title, imgIdx + 1)} className="w-full h-full object-cover" loading="lazy" />
+            {images.length > 1 ? (
+              <motion.div
+                className="relative w-full h-full cursor-grab active:cursor-grabbing"
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.6}
+                onDragEnd={handleDragEnd}
+              >
+                <ImageWithSkeleton
+                  src={images[imgIdx]}
+                  alt={t.caseModal.imageAlt(project.title, imgIdx + 1)}
+                  className="w-full h-full object-cover pointer-events-none"
+                  loading="lazy"
+                  draggable={false}
+                />
+              </motion.div>
+            ) : (
+              <ImageWithSkeleton src={images[imgIdx]} alt={t.caseModal.imageAlt(project.title, imgIdx + 1)} className="w-full h-full object-cover" loading="lazy" />
+            )}
             {images.length > 1 && (
               <>
                 <button
                   type="button"
                   aria-label={t.caseModal.prevImageAria}
-                  onClick={() => setImgIdx((prev) => (prev - 1 + images.length) % images.length)}
-                  className="glass absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center"
+                  onClick={() => advance(-1)}
+                  className="glass absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
                   type="button"
                   aria-label={t.caseModal.nextImageAria}
-                  onClick={() => setImgIdx((prev) => (prev + 1) % images.length)}
-                  className="glass absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center"
+                  onClick={() => advance(1)}
+                  className="glass absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
