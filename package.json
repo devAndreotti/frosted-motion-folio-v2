@@ -14,7 +14,8 @@
     "test:coverage:ci": "vitest run --coverage",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "archify": "node C:/Users/ricar/.agents/skills/archify/bin/archify.mjs deliver architecture docs/spec-kit/folio-app.architecture.json docs/spec-kit/folio-app.architecture.html --quality showcase"
   },
   "dependencies": {
     "boneyard-js": "^1.10.0",
