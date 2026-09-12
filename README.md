@@ -1,4 +1,4 @@
-# ❄️ Frosted Motion Folio — Portfólio Interativo e Dinâmico!
+﻿# ❄️ Frosted Motion Folio — Portfólio Interativo e Dinâmico!
 <p align="center">
   <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/devAndreotti/frosted-motion-folio-v2?color=FFF&labelColor=336699&style=flat-square">
   <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/devAndreotti/frosted-motion-folio-v2?color=FFF&labelColor=336699&style=flat-square">
@@ -45,31 +45,15 @@ Construído com **React**, **TypeScript**, **Tailwind CSS** e **Framer Motion**.
 ## 📂 Estrutura do Projeto
 ```
 src/
-├── app/
-│   └── transactions/
-│       ├── layout.tsx
-│       └── page.tsx
-├── components/
-│   ├── charts/
-│   ├── layout/
-│   ├── shared/
-│   └── transactions/
-├── config/
-│   ├── charts.ts
-│   └── filters.ts
-├── constants/
-│   ├── app.ts
-│   └── messages.ts
-├── hooks/
-│   └── useFilteredTransactions.ts
-├── lib/
-│   ├── stores/
-│   ├── utils/
-│   └── validations/
-├── styles/
-│   └── globals.css
-├── types/
-└── middleware.ts
+├── bones/               # Skeletons e layouts estruturais (boneyard-js)
+├── components/          # Componentes interativos (Header, Radar, Projects, Terminal...)
+├── contexts/            # Provedores de estado (LanguageContext, ThemeContext)
+├── data/                # Dados estáticos (projetos, skills, dados pessoais)
+├── hooks/               # Custom React hooks (scroll, GitHub API, navegação por teclado)
+├── lib/                 # Utilitários, configurações de animação e i18n
+├── pages/               # Páginas da aplicação (Index, NotFound)
+├── App.tsx              # Componente raiz
+└── main.tsx             # Entrypoint da aplicação React
 ```
 
 ## 🚀 Como Rodar Localmente

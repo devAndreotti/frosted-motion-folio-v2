@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Frosted Motion Folio v2",
+    "subtitle": "Interactive React 18 SPA, Framer Motion, i18n, Dual Build Pipeline & GitHub API",
+    "output": "docs/spec-kit/folio-app.architecture.html",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "visitor-journey",
+        "label": "Visitor Experience",
+        "focus": ["visitor", "spa_shell", "sections_ui", "state_layer"],
+        "note": "User accesses the SPA, interacts with frosted glass sections and toggles language and theme."
+      },
+      {
+        "id": "telemetry-and-data",
+        "label": "Data & External Integrations",
+        "focus": ["sections_ui", "github_api", "vitals_service", "curated_data"],
+        "note": "Shows live GitHub activity feed, contribution heatmaps, and Web Vitals tracking."
+      },
+      {
+        "id": "delivery-pipeline",
+        "label": "Build & Deployment Targets",
+        "focus": ["vite_builder", "gh_pages", "vps_target"],
+        "note": "Dual-target build pipeline for GitHub Pages SPA and direct VPS distribution."
+      }
+    ]
+  },
+  "components": [
+    { "id": "visitor", "type": "external", "label": "Web Visitor", "sublabel": "Desktop / Mobile", "pos": [40, 240], "size": [120, 60] },
+    { "id": "spa_shell", "type": "frontend", "label": "SPA Shell", "sublabel": "React 18 / Vite", "pos": [230, 240], "size": [130, 60], "tag": "entrypoint" },
+    { "id": "state_layer", "type": "frontend", "label": "Context & State", "sublabel": "Theme & Language", "pos": [230, 100], "size": [130, 60], "tag": "i18n & Theme" },
+    { "id": "sections_ui", "type": "frontend", "label": "Interactive UI", "sublabel": "Framer Motion / Glass", "pos": [430, 240], "size": [140, 60], "tag": "Tailwind CSS" },
+    { "id": "curated_data", "type": "database", "label": "Static Catalog", "sublabel": "Projects & Skills TS", "pos": [430, 100], "size": [140, 60] },
+    { "id": "github_api", "type": "external", "label": "GitHub REST API", "sublabel": "Events & Heatmap", "pos": [650, 240], "size": [130, 60], "tag": "CORS / Live" },
+    { "id": "vitals_service", "type": "backend", "label": "Web Vitals", "sublabel": "Performance Monitor", "pos": [650, 370], "size": [130, 60] },
+    { "id": "vite_builder", "type": "cloud", "label": "Vite Builder", "sublabel": "TypeScript / Rollup", "pos": [230, 370], "size": [130, 60] },
+    { "id": "gh_pages", "type": "cloud", "label": "GitHub Pages", "sublabel": "Base /frosted-motion-folio-v2/", "pos": [430, 370], "size": [140, 60] },
+    { "id": "vps_target", "type": "cloud", "label": "VPS Host", "sublabel": "Base / (Root domain)", "pos": [430, 480], "size": [140, 60] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Client Runtime (Browser)", "wraps": ["spa_shell", "state_layer", "sections_ui", "curated_data"] },
+    { "kind": "region", "label": "Delivery & External Services", "wraps": ["vite_builder", "gh_pages", "vps_target", "github_api", "vitals_service"] }
+  ],
+  "connections": [
+    { "id": "visit-spa", "from": "visitor", "to": "spa_shell", "label": "HTTPS", "variant": "emphasis" },
+    { "id": "shell-to-state", "from": "spa_shell", "to": "state_layer", "label": "provides", "fromSide": "top", "toSide": "bottom" },
+    { "id": "shell-to-ui", "from": "spa_shell", "to": "sections_ui", "label": "renders" },
+    { "id": "data-to-ui", "from": "curated_data", "to": "sections_ui", "label": "imports", "fromSide": "bottom", "toSide": "top", "labelDy": 30 },
+    { "id": "ui-to-github", "from": "sections_ui", "to": "github_api", "label": "fetch events", "variant": "dashed" },
+    { "id": "ui-to-vitals", "from": "sections_ui", "to": "vitals_service", "label": "metrics", "variant": "dashed", "fromSide": "bottom", "toSide": "left" },
+    { "id": "build-to-gh", "from": "vite_builder", "to": "gh_pages", "label": "npm run build" },
+    { "id": "build-to-vps", "from": "vite_builder", "to": "vps_target", "label": "build:vps", "fromSide": "bottom", "toSide": "left" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Client Frontend", "items": ["React 18 SPA with fluid glassmorphism style", "Framer Motion transitions and gesture handling", "Lightweight custom i18n system in pure TS"] },
+    { "dot": "emerald", "title": "Data & Integrations", "items": ["Curated local projects and radar skill mapping", "Realtime GitHub activity feed and contributions heatmap", "Web Vitals telemetry for performance auditing"] },
+    { "dot": "violet", "title": "Dual Delivery", "items": ["GitHub Pages deployment with nested subpath", "Direct VPS container build with root path mapping"] }
+  ]
+}
