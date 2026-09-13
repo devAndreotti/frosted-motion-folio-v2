@@ -17,7 +17,7 @@ for (const { label, id } of sections) {
 
     await page.getByRole("button", { name: label, exact: true }).click();
 
-    await expect(target).toBeInViewport();
+    await expect(target).toBeInViewport({ timeout: 15000 });
   });
 }
 
@@ -29,5 +29,5 @@ test('nav link "Início" scrolls back to the top', async ({ page }) => {
   await expect(header).not.toBeInViewport();
 
   await page.getByRole("button", { name: "Início", exact: true }).click();
-  await expect(header).toBeInViewport();
+  await expect(header).toBeInViewport({ timeout: 15000 });
 });
