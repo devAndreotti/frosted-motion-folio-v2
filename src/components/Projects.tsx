@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 import { projects } from '@/data/projects';
 import { featuredProject, curatedProjects, CATEGORY_FILTERS, CuratedProject, ProjectCategory } from '@/data/curatedProjects';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -53,13 +53,6 @@ const Projects = () => {
 
         {/* featured case */}
         <div className="glass-strong relative rounded-[28px] p-8 md:p-11 grid md:grid-cols-2 gap-10 items-center mb-6 overflow-hidden">
-          <div
-            className="absolute top-6 -right-12 w-44 text-center rotate-45 py-1.5 text-[11px] font-extrabold uppercase tracking-wide"
-            style={{ background: 'var(--accent)', color: 'var(--accent-text)' }}
-          >
-            {t.projects.featuredBadge}
-          </div>
-
           <div>
             <span className="inline-block px-3.5 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wide mb-5" style={{ background: 'var(--surface-2)' }}>
               {t.projects.casePrincipalBadge}
@@ -68,6 +61,18 @@ const Projects = () => {
             <p className="text-[15px] leading-relaxed mb-6" style={{ color: 'var(--fg-2)' }}>
               {featuredProject.long[lang]}
             </p>
+            {/* What was actually built, up front -- it used to hide behind "Abrir case". */}
+            <div className="text-[11px] uppercase tracking-wider mb-2.5" style={{ color: 'var(--fg-4)' }}>
+              {t.caseModal.whatIDid}
+            </div>
+            <ul className="flex flex-col gap-2 mb-6">
+              {featuredProject.points[lang].map((point) => (
+                <li key={point} className="flex gap-2.5 text-[14px] leading-relaxed" style={{ color: 'var(--fg-2)' }}>
+                  <Check className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: 'var(--accent)' }} />
+                  {point}
+                </li>
+              ))}
+            </ul>
             <div className="flex gap-2 flex-wrap mb-7">
               {featuredProject.technologies.map((tech) => (
                 <span key={tech} className="text-xs px-3 py-1.5 rounded-full" style={{ background: 'var(--surface-2)', color: 'var(--fg-2)' }}>
@@ -106,10 +111,21 @@ const Projects = () => {
           <button
             type="button"
             onClick={() => openCase(featuredProject)}
-            className="glass relative rounded-2xl overflow-hidden text-left aspect-[4/3]"
+            className="glass relative rounded-2xl overflow-hidden text-left flex flex-col"
             aria-label={t.projects.viewDetailsAria(featuredProject.title)}
           >
-            <ImageWithSkeleton src={featuredProject.image} alt="" className="w-full h-full object-cover" loading="lazy" />
+            {/* Browser chrome so the screenshot reads as a live product, not a loose image. */}
+            <span className="flex items-center gap-1.5 h-9 px-3.5 flex-shrink-0" style={{ background: 'var(--surface-2)', borderBottom: '1px solid var(--border-1)' }}>
+              <span className="w-2.5 h-2.5 rounded-full" style={{ background: 'var(--border-2)' }} />
+              <span className="w-2.5 h-2.5 rounded-full" style={{ background: 'var(--border-2)' }} />
+              <span className="w-2.5 h-2.5 rounded-full" style={{ background: 'var(--border-2)' }} />
+              {featuredProject.liveUrl && (
+                <span className="mx-auto px-3 py-1 rounded-md text-[11px] font-mono truncate" style={{ background: 'var(--surface-1)', color: 'var(--fg-3)' }}>
+                  {new URL(featuredProject.liveUrl).host}
+                </span>
+              )}
+            </span>
+            <ImageWithSkeleton src={featuredProject.image} alt="" className="w-full aspect-[16/10] object-cover object-left-top" loading="lazy" />
           </button>
         </div>
 
@@ -120,7 +136,7 @@ const Projects = () => {
               key={project.id}
               type="button"
               onClick={() => openCase(project)}
-              className="w-full grid grid-cols-[40px_6px_1fr_auto_24px] items-center gap-4 md:gap-5 py-6 px-3 rounded-2xl text-left border-b border-[var(--border-1)] transition-all hover:translate-x-1 hover:border hover:border-[var(--border-2)] hover:bg-[var(--surface-2)] hover:shadow-[0_12px_28px_-16px_rgba(0,0,0,0.55)] active:translate-x-1 active:bg-[var(--surface-2)] group"
+              className="relative w-full grid grid-cols-[40px_6px_1fr_auto_24px] items-center gap-4 md:gap-5 py-6 px-3 rounded-2xl text-left border-b border-[var(--border-1)] transition-all hover:translate-x-1 hover:border hover:border-[var(--border-2)] hover:bg-[var(--surface-2)] hover:shadow-[0_12px_28px_-16px_rgba(0,0,0,0.55)] active:translate-x-1 active:bg-[var(--surface-2)] group"
             >
               <span className="text-2xl font-extrabold" style={{ color: 'var(--fg-4)' }}>
                 {String(i + 2).padStart(2, '0')}
@@ -137,7 +153,7 @@ const Projects = () => {
                   {project.description[lang]}
                 </span>
               </span>
-              <span className="hidden md:flex gap-1.5 flex-wrap justify-end max-w-[280px]">
+              <span className="hidden md:flex gap-1.5 flex-wrap justify-end max-w-[280px] transition-opacity [@media(hover:hover)]:group-hover:opacity-0">
                 {project.technologies.slice(0, 3).map((tech) => (
                   <span key={tech} className="text-[11px] px-2.5 py-1 rounded-full whitespace-nowrap" style={{ background: 'var(--surface-1)', color: 'var(--fg-3)' }}>
                     {tech}
@@ -145,6 +161,14 @@ const Projects = () => {
                 ))}
               </span>
               <ArrowRight className="w-[18px] h-[18px] opacity-35 transition-opacity group-hover:opacity-100 group-active:opacity-100" />
+              {/* Hover preview of the screenshot, where the tags were -- mouse only, never on touch. */}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute right-12 top-1/2 z-10 hidden w-[220px] aspect-[16/10] overflow-hidden rounded-xl opacity-0 shadow-[0_24px_48px_-18px_rgba(0,0,0,0.6)] transition-all duration-300 -translate-y-1/2 rotate-[-4deg] scale-90 [@media(hover:hover)]:md:block group-hover:opacity-100 group-hover:rotate-[-2deg] group-hover:scale-100"
+                style={{ border: '1px solid var(--border-2)' }}
+              >
+                <img src={project.image} alt="" loading="lazy" className="w-full h-full object-cover object-left-top" />
+              </span>
             </button>
           ))}
           {filtered.length === 0 && (

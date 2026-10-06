@@ -81,7 +81,6 @@ export const pt: Strings = {
     title: 'Projetos com contexto, decisão e entrega.',
     subtitle: 'A ordem segue complexidade e o quanto resolvem um problema real — do case mais completo às explorações menores.',
     categoryFilters: { all: 'Todos', web: 'Web', ia: 'IA', mobile: 'Mobile', tool: 'Ferramentas' },
-    featuredBadge: 'Destaque',
     casePrincipalBadge: 'Case principal',
     detailLabels: { tipo: 'Tipo', frente: 'Frente', duracao: 'Duração', status: 'Status' },
     openCase: 'Abrir case',

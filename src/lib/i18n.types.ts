@@ -73,7 +73,6 @@ export interface Strings {
     title: string;
     subtitle: string;
     categoryFilters: Record<'all' | 'web' | 'ia' | 'mobile' | 'tool', string>;
-    featuredBadge: string;
     casePrincipalBadge: string;
     detailLabels: { tipo: string; frente: string; duracao: string; status: string };
     openCase: string;

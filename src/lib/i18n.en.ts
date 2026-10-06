@@ -81,7 +81,6 @@ export const en: Strings = {
     title: 'Projects with context, decisions, and delivery.',
     subtitle: 'Ordered by complexity and how much of a real problem each one solves — from the most complete case to smaller explorations.',
     categoryFilters: { all: 'All', web: 'Web', ia: 'AI', mobile: 'Mobile', tool: 'Tools' },
-    featuredBadge: 'Featured',
     casePrincipalBadge: 'Main case',
     detailLabels: { tipo: 'Type', frente: 'Track', duracao: 'Duration', status: 'Status' },
     openCase: 'Open case',
