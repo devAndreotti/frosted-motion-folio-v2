@@ -20,6 +20,7 @@ describe("i18n dictionaries", () => {
     expect(t.footer.localTime("10:00")).toContain("10:00");
     expect(t.footer.copyright("Test Name")).toContain("Test Name");
     expect(t.colorPicker.hueLabel("Blue")).toContain("Blue");
+    expect(t.skills.projectsUnit(1)).not.toBe(t.skills.projectsUnit(2));
   });
 
   it.each(LANGS)("%s: heatmapTooltip pluralizes correctly for 0, 1, and many contributions", (lang) => {
@@ -30,6 +31,17 @@ describe("i18n dictionaries", () => {
     expect(t.activity.heatmapTooltip(5, "Jan 1")).toContain("5");
     // The zero-count and one-count phrasing must differ from the multi-count phrasing (singular/plural or "no contributions").
     expect(t.activity.heatmapTooltip(0, "Jan 1")).not.toBe(t.activity.heatmapTooltip(5, "Jan 1"));
+  });
+
+  it.each(LANGS)("%s: every rotating hero role completes the fixed lead into a real sentence", (lang) => {
+    const { lead1, lead2, roles } = strings[lang].header;
+    for (const role of roles) {
+      const sentence = `${lead1} ${lead2} ${role}`;
+      // Regression: the fixed part used to end in "com"/"with", so roles like
+      // "que resolvem problemas." read as "produtos com que resolvem problemas.".
+      expect(sentence).not.toMatch(/\b(com que|com bem|with that)\b/);
+      expect(role.endsWith(".")).toBe(true);
+    }
   });
 
   it("ACTIVITY_TEXT_EN covers every pt phrase mapEvent can produce", () => {

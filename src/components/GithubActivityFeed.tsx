@@ -40,8 +40,13 @@ const Card = ({ item, now, lang }: { item: GithubActivityItem; now: number; lang
       </div>
       <div>
         <div className="text-[13px] font-bold mb-1">{item.repo}</div>
-        <div className="text-[13.5px] font-semibold" style={{ color: 'var(--fg-2)' }}>
+        <div className="text-[13.5px] font-semibold flex items-center gap-1.5" style={{ color: 'var(--fg-2)' }}>
           {displayText}
+          {item.count && item.count > 1 && (
+            <span className="text-[11px] font-mono px-1.5 py-0.5 rounded-full" style={{ background: 'var(--surface-2)', color: 'var(--fg-1)' }}>
+              ×{item.count}
+            </span>
+          )}
         </div>
         {item.detail && (
           <div className="text-[12.5px] mt-1 line-clamp-2" style={{ color: 'var(--fg-3)' }}>

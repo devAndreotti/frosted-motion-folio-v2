@@ -18,6 +18,8 @@
     "archify": "node C:/Users/ricar/.agents/skills/archify/bin/archify.mjs deliver architecture docs/spec-kit/folio-app.architecture.json docs/spec-kit/folio-app.architecture.html --quality showcase"
   },
   "dependencies": {
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource-variable/geist-mono": "^5.3.0",
     "boneyard-js": "^1.10.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

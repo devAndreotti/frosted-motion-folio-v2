@@ -28,10 +28,10 @@ const Index = () => {
         <Navigation />
         <main>
           <Header />
-          <Marquee />
-          <GithubActivityFeed />
           <Projects />
+          <Marquee />
           <Skills />
+          <GithubActivityFeed />
           <Timeline />
           <Footer />
         </main>

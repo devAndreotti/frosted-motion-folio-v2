@@ -34,8 +34,11 @@ test("picking a color swatch updates the accent and persists across reload", asy
   await page.emulateMedia({ colorScheme: "dark" });
   await page.goto("");
 
+  // On desktop the swatches live in a popover behind the accent pill.
+  await page.getByRole("button", { name: "Escolher cor de destaque" }).click();
   const blueSwatch = page.getByRole("button", { name: "Cor de destaque: Azul" });
   await blueSwatch.click();
+  await expect(blueSwatch).not.toBeVisible();
 
   await expect
     .poll(() => page.evaluate(() => localStorage.getItem("hue")))

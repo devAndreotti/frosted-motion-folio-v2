@@ -52,6 +52,63 @@
   </head>
 
   <body>
+    <!-- Boot loader: plain HTML+CSS so it paints before the JS bundle arrives.
+         Colors come from src/lib/theme.ts via the bootPalette plugin in
+         vite.config.ts; src/lib/bootLoader.ts fades it out once React mounts. -->
+    <style>
+      #boot-loader{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;background:var(--bl-bg,#0a0a0a);color:var(--bl-fg,#f5f5f5);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;transition:opacity .55s ease,visibility 0s linear .6s}
+      #boot-loader[data-theme="light"]{--bl-fg:#131316;--bl-fg3:rgba(19,19,22,.62);--bl-line:rgba(19,19,22,.16)}
+      #boot-loader.is-out{opacity:0;visibility:hidden;pointer-events:none}
+      #boot-loader .bl-in{display:flex;flex-direction:column;align-items:center;gap:30px;transition:transform .55s cubic-bezier(.2,.8,.2,1)}
+      #boot-loader.is-out .bl-in{transform:translateY(-10px) scale(.98)}
+      #boot-loader .bl-stack{position:relative;width:76px;height:100px}
+      #boot-loader .bl-stack::before{content:"";position:absolute;inset:-40px;border-radius:50%;background:radial-gradient(closest-side,color-mix(in oklab,var(--bl-accent,#e4e4e7) 28%,transparent),transparent);filter:blur(10px)}
+      #boot-loader .bl-c{position:absolute;inset:0;display:grid;place-items:center;border-radius:15px;border:1px solid var(--bl-border,rgba(245,245,245,.36));background:var(--bl-glass,rgba(245,245,245,.19));backdrop-filter:blur(12px);box-shadow:0 18px 34px -14px rgba(0,0,0,.55);font:600 15px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.04em;animation:bl-shuffle 2.4s cubic-bezier(.65,0,.35,1) infinite}
+      #boot-loader .bl-c:nth-child(2){animation-delay:-.8s}
+      #boot-loader .bl-c:nth-child(3){animation-delay:-1.6s}
+      @keyframes bl-shuffle{0%{transform:translate(0,0) rotate(-3deg);z-index:3}12%{transform:translate(64px,-4px) rotate(12deg);z-index:3}22%{transform:translate(16px,-16px) rotate(7deg) scale(.9);z-index:1}33.3%{transform:translate(14px,-16px) rotate(7deg) scale(.9);z-index:1;opacity:.55}66.6%{transform:translate(7px,-8px) rotate(2deg) scale(.95);z-index:2;opacity:.8}100%{transform:translate(0,0) rotate(-3deg);z-index:3;opacity:1}}
+      #boot-loader .bl-name{font-size:18px;font-weight:600;letter-spacing:-.01em}
+      #boot-loader .bl-sub{margin-top:8px;font:500 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.04em;color:var(--bl-fg3,rgba(255,255,255,.56))}
+      #boot-loader .bl-bar{position:relative;width:160px;height:3px;border-radius:3px;background:var(--bl-line,rgba(255,255,255,.22));overflow:hidden}
+      #boot-loader .bl-bar i{position:absolute;inset:0 auto 0 0;width:40%;border-radius:3px;background:var(--bl-accent,#e4e4e7);animation:bl-bar 1.3s cubic-bezier(.65,0,.35,1) infinite}
+      @keyframes bl-bar{from{transform:translateX(-100%)}to{transform:translateX(250%)}}
+      @keyframes bl-pulse{0%,100%{opacity:.3}50%{opacity:1}}
+      @media (prefers-reduced-motion:reduce){#boot-loader .bl-c{animation:none}#boot-loader .bl-c:nth-child(1){z-index:3}#boot-loader .bl-c:nth-child(2){z-index:2;transform:translate(7px,-8px) rotate(2deg) scale(.95);opacity:.8}#boot-loader .bl-c:nth-child(3){z-index:1;transform:translate(14px,-16px) rotate(7deg) scale(.9);opacity:.55}#boot-loader .bl-bar i{width:100%;animation:bl-pulse 1.6s ease-in-out infinite}}
+    </style>
+    <div id="boot-loader" role="status" aria-label="Carregando portfólio">
+      <div class="bl-in">
+        <div class="bl-stack" aria-hidden="true"><span class="bl-c">RA</span><span class="bl-c">RA</span><span class="bl-c">RA</span></div>
+        <div style="text-align:center"><div class="bl-name">Ricardo Andreotti</div><div class="bl-sub">carregando portfólio…</div></div>
+        <div class="bl-bar" aria-hidden="true"><i></i></div>
+      </div>
+    </div>
+    <script>
+      (function () {
+        var el = document.getElementById('boot-loader');
+        if (!el) return;
+        try {
+          if (navigator.webdriver || sessionStorage.getItem('boot-loader-seen')) {
+            el.remove();
+            return;
+          }
+        } catch (e) {}
+        var palette = /*__BOOT_PALETTE__*/ null;
+        var theme = 'dark';
+        var hue = 'black';
+        try {
+          theme = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+          hue = localStorage.getItem('hue') || 'black';
+        } catch (e) {}
+        var tokens = palette && (palette[hue] || palette.black)[theme === 'light' ? 'light' : 'dark'];
+        el.setAttribute('data-theme', theme === 'light' ? 'light' : 'dark');
+        if (tokens) {
+          el.style.setProperty('--bl-bg', tokens.bg);
+          el.style.setProperty('--bl-accent', tokens.accent);
+          el.style.setProperty('--bl-glass', tokens.glass);
+          el.style.setProperty('--bl-border', tokens.border);
+        }
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

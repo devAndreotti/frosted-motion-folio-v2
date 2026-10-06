@@ -6,7 +6,7 @@ const LINKEDIN_URL = 'https://www.linkedin.com/in/ricardo-andreotti-gon%C3%A7alv
 
 /** GitHub + LinkedIn icon links — identical in the desktop bar and the mobile menu, just sized differently. */
 export const SocialLinks = ({ size = 'sm' }: { size?: 'sm' | 'md' }) => {
-  const dim = size === 'sm' ? 'w-9 h-9' : 'w-10 h-10';
+  const dim = size === 'sm' ? 'w-[34px] h-[34px]' : 'w-10 h-10';
   return (
     <>
       <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" aria-label="GitHub" onClick={() => track('click-github')} className={`glass ${dim} rounded-full flex items-center justify-center`}>
@@ -28,7 +28,8 @@ interface RepoBadgeProps {
 
 /** "N public repos" pill — same content in the desktop bar and the mobile menu, just different padding/width. */
 export const RepoBadge = ({ loading, count, label, compact }: RepoBadgeProps) => {
-  const pad = compact ? 'px-3 py-2' : 'px-3 py-1.5';
+  // Every pill in the desktop bar shares this 34 px height (the color, PT/EN, theme and social pills too).
+  const pad = compact ? 'px-3 py-2' : 'px-3 h-[34px]';
   if (loading) {
     return (
       <div className={`glass flex items-center gap-2 ${pad} rounded-full ${compact ? 'mb-1' : 'w-[124px]'}`}>
@@ -58,7 +59,7 @@ interface LangToggleButtonProps {
 
 /** PT/EN toggle — identical in the desktop bar and the mobile menu. */
 export const LangToggleButton = ({ lang, onClick, ariaLabel }: LangToggleButtonProps) => (
-  <button type="button" onClick={onClick} aria-label={ariaLabel} className="glass w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-bold uppercase">
+  <button type="button" onClick={onClick} aria-label={ariaLabel} className="glass w-[34px] h-[34px] rounded-full flex items-center justify-center text-[11px] font-bold uppercase">
     {lang === 'pt' ? 'EN' : 'PT'}
   </button>
 );

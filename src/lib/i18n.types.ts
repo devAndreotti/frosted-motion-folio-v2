@@ -38,6 +38,8 @@ export interface Strings {
     ctaProjects: string;
     ctaRecruiter: string;
     cardStackHint: string;
+    stackPrev: string;
+    stackNext: string;
     stats: { value: string; label: string; desc: string }[];
     scrollCueAria: string;
     recruiterLabel: string;
@@ -61,7 +63,10 @@ export interface Strings {
     radarTab: string;
     coreTitle: string;
     coreDesc: string;
-    learningBadge: string;
+    areaFilterLabel: string;
+    allAreas: string;
+    projectsUnit: (count: number) => string;
+    alsoKnown: string;
     radarTitle: string;
     radarDesc: string;
     radarSvgAria: string;
@@ -71,7 +76,6 @@ export interface Strings {
     title: string;
     subtitle: string;
     categoryFilters: Record<'all' | 'web' | 'ia' | 'mobile' | 'tool', string>;
-    featuredBadge: string;
     casePrincipalBadge: string;
     detailLabels: { tipo: string; frente: string; duracao: string; status: string };
     openCase: string;
@@ -125,6 +129,7 @@ export interface Strings {
   };
   colorPicker: {
     hueLabel: (label: string) => string;
+    trigger: string;
     hueNames: Record<'black' | 'blue' | 'purple' | 'orange' | 'red' | 'green' | 'yellow', string>;
   };
 }

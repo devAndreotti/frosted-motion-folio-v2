@@ -7,6 +7,7 @@ import { useGithubActivity } from '@/hooks/useGithubActivity';
 import { useEscapeKey } from '@/hooks/useEscapeKey';
 import { springPop } from '@/lib/motion';
 import ColorSwatchPicker from './ColorSwatchPicker';
+import ColorPickerPopover from './ColorPickerPopover';
 import SudoTerminal from './SudoTerminal';
 import { RepoBadge, SocialLinks, LangToggleButton } from './NavExtras';
 
@@ -173,17 +174,17 @@ const Navigation = () => {
               })}
             </div>
 
-            <div className="hidden md:flex items-center gap-3">
+            <div className="hidden md:flex items-center gap-2">
               <RepoBadge loading={reposLoading} count={publicRepos} label={t.nav.reposLabel} />
 
-              <ColorSwatchPicker />
+              <ColorPickerPopover />
 
               <LangToggleButton lang={lang} onClick={toggleLang} ariaLabel={t.nav.langToggleAria} />
 
               <motion.button
                 onClick={toggleTheme}
                 aria-label={t.nav.themeToggleAria}
-                className="glass w-9 h-9 rounded-full flex items-center justify-center"
+                className="glass w-[34px] h-[34px] rounded-full flex items-center justify-center"
                 whileHover={{ scale: 1.1, rotate: theme === 'light' ? 180 : -180 }}
                 whileTap={{ scale: 0.95 }}
                 transition={springPop(0)}
@@ -199,7 +200,7 @@ const Navigation = () => {
               <motion.button
                 onClick={toggleTheme}
                 aria-label={t.nav.themeToggleAria}
-                className="glass w-9 h-9 rounded-full flex items-center justify-center"
+                className="glass w-[34px] h-[34px] rounded-full flex items-center justify-center"
                 whileTap={{ scale: 0.95 }}
               >
                 {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
@@ -207,7 +208,7 @@ const Navigation = () => {
               <motion.button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 aria-label={isMobileMenuOpen ? t.nav.menuCloseAria : t.nav.menuOpenAria}
-                className="glass w-9 h-9 rounded-full flex items-center justify-center"
+                className="glass w-[34px] h-[34px] rounded-full flex items-center justify-center"
                 whileTap={{ scale: 0.95 }}
               >
                 {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { CORE_SKILLS, SKILL_CATEGORIES } from '@/data/skills';
+import { CORE_SKILLS } from '@/data/skills';
 import SkillsRadar from './SkillsRadar';
+import SkillsBento from './SkillsBento';
 import SegmentedControl from './SegmentedControl';
 
 type View = 'bento' | 'radar';
@@ -41,53 +42,7 @@ const Skills = () => {
         </div>
 
         {view === 'bento' ? (
-          <div>
-            {/* Core stack — one glance, no boxes: name, level and status all read in a single pill. */}
-            <div className="flex flex-wrap gap-3 mb-8">
-              {CORE_SKILLS.map((skill) => (
-                <div key={skill.name} className="glass flex items-center gap-3 pl-5 pr-4 py-3 rounded-2xl transition-all duration-300 hover:bg-[var(--surface-2)] hover:-translate-y-0.5">
-                  <span className="text-[15px] font-extrabold">{skill.name}</span>
-                  <div className="flex gap-1">
-                    {Array.from({ length: 5 }, (_, i) => (
-                      <span key={i} className="w-1.5 h-1.5 rounded-full" style={{ background: i < skill.level ? 'var(--accent)' : 'var(--border-1)' }} />
-                    ))}
-                  </div>
-                  {skill.learning && (
-                    <span className="flex items-center gap-1 pl-1.5 pr-2 py-0.5 rounded-full" style={{ background: 'var(--surface-2)' }}>
-                      <span className="relative w-1.5 h-1.5 rounded-full bg-green-400">
-                        <span className="absolute inset-0 rounded-full bg-green-400 animate-pulse-dot" />
-                      </span>
-                      <span className="text-[9px] font-bold uppercase tracking-wide text-green-400">{t.skills.learningBadge}</span>
-                    </span>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            {/* Categories — numbered rows, same ranking idiom as Projects, instead of a wall of competing cards. */}
-            <div style={{ borderTop: '1px solid var(--border-1)' }}>
-              {SKILL_CATEGORIES.map((cat, i) => (
-                <div
-                  key={cat.title.pt}
-                  className="flex flex-wrap items-center gap-4 md:gap-6 py-5 px-2 rounded-2xl transition-all hover:translate-x-1 hover:bg-[var(--surface-2)]"
-                  style={{ borderBottom: '1px solid var(--border-1)' }}
-                >
-                  <span className="text-2xl md:text-3xl font-extrabold w-10 flex-shrink-0" style={{ color: 'var(--fg-4)' }}>
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <span className="w-1.5 h-9 rounded-sm flex-shrink-0" style={{ background: cat.tint }} />
-                  <span className="text-[15px] md:text-[16px] font-extrabold w-full sm:w-[190px] flex-shrink-0">{cat.title[lang]}</span>
-                  <span className="flex flex-wrap gap-2 flex-1 justify-start sm:justify-end">
-                    {cat.skills.map((skill) => (
-                      <span key={skill} className="text-[11px] px-3 py-1.5 rounded-full whitespace-nowrap" style={{ background: 'var(--surface-1)', color: 'var(--fg-3)' }}>
-                        {skill}
-                      </span>
-                    ))}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <SkillsBento />
         ) : (
           <div className="glass rounded-3xl p-8 md:p-11 grid md:grid-cols-[auto_1fr] gap-12 items-center">
             <div className="flex justify-center">
