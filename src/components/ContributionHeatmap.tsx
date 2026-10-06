@@ -63,7 +63,12 @@ const ContributionHeatmap = () => {
         <div className="hm-scroll">
           <div className="hm-in">
             {monthLabels(weeks, lang).map((m) => (
-              <span key={m.week} className="hm-m" style={{ left: `${((m.week / YEAR_WEEKS) * 100).toFixed(2)}%` }}>
+              <span
+                key={m.week}
+                className="hm-m"
+                // The current month's label sits in the last columns: anchor it to the right edge so it isn't cut off.
+                style={m.week >= YEAR_WEEKS - 3 ? { right: 0 } : { left: `${((m.week / YEAR_WEEKS) * 100).toFixed(2)}%` }}
+              >
                 {m.label}
               </span>
             ))}
