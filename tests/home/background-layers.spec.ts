@@ -8,6 +8,8 @@ test("switching hue crossfades the background layer to the new gradient", async 
 
   const initialGradient = await layers.nth(0).evaluate((el) => getComputedStyle(el).backgroundImage);
 
+  // On desktop the swatches live in a popover behind the accent pill.
+  await page.getByRole("button", { name: "Escolher cor de destaque" }).click();
   await page.getByRole("button", { name: "Cor de destaque: Azul" }).click();
 
   // whichever layer settles at opacity 1 should now show a different
@@ -35,6 +37,8 @@ test("the 404 page picks up the selected theme instead of a hardcoded look", asy
   // color-scheme so this isn't coupled to the system-preference default.
   await page.emulateMedia({ colorScheme: "dark" });
   await page.goto("");
+  // On desktop the swatches live in a popover behind the accent pill.
+  await page.getByRole("button", { name: "Escolher cor de destaque" }).click();
   await page.getByRole("button", { name: "Cor de destaque: Azul" }).click();
   await page.waitForTimeout(300);
 
