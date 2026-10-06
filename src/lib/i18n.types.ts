@@ -38,6 +38,8 @@ export interface Strings {
     ctaProjects: string;
     ctaRecruiter: string;
     cardStackHint: string;
+    stackPrev: string;
+    stackNext: string;
     stats: { value: string; label: string; desc: string }[];
     scrollCueAria: string;
     recruiterLabel: string;

@@ -32,6 +32,17 @@ describe("i18n dictionaries", () => {
     expect(t.activity.heatmapTooltip(0, "Jan 1")).not.toBe(t.activity.heatmapTooltip(5, "Jan 1"));
   });
 
+  it.each(LANGS)("%s: every rotating hero role completes the fixed lead into a real sentence", (lang) => {
+    const { lead1, lead2, roles } = strings[lang].header;
+    for (const role of roles) {
+      const sentence = `${lead1} ${lead2} ${role}`;
+      // Regression: the fixed part used to end in "com"/"with", so roles like
+      // "que resolvem problemas." read as "produtos com que resolvem problemas.".
+      expect(sentence).not.toMatch(/\b(com que|com bem|with that)\b/);
+      expect(role.endsWith(".")).toBe(true);
+    }
+  });
+
   it("ACTIVITY_TEXT_EN covers every pt phrase mapEvent can produce", () => {
     const ptPhrases = ["Fez push", "Abriu um PR", "Fez merge de um PR", "Deu estrela", "Criou a branch", "Criou a tag", "Criou o repositório", "Abriu uma issue", "Fechou uma issue"];
     for (const phrase of ptPhrases) {

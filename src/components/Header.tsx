@@ -1,26 +1,21 @@
-import { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { track } from '@/lib/track';
 import { useScrollLock } from '@/hooks/useScrollLock';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import CardStack from './CardStack';
 import CopyEmailButton from './CopyEmailButton';
+import RotatingRole from './RotatingRole';
 
 const ROLE_INTERVAL_MS = 2600;
 const RECRUITER_EMAIL = 'OrlaEK@proton.me';
 
 const Header = () => {
   const { t } = useLanguage();
-  const [roleIdx, setRoleIdx] = useState(0);
   const [recruiterMode, setRecruiterMode] = useState(false);
   const [magnet, setMagnet] = useState({ x: 0, y: 0 });
   const [parallax, setParallax] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const timer = setInterval(() => setRoleIdx((prev) => (prev + 1) % t.header.roles.length), ROLE_INTERVAL_MS);
-    return () => clearInterval(timer);
-  }, [t.header.roles.length]);
 
   const recruiterDialogRef = useRef<HTMLDivElement>(null);
   useScrollLock(recruiterMode);
@@ -80,7 +75,7 @@ const Header = () => {
       />
 
       <div className="relative z-10 flex-1 flex items-center px-4 sm:px-6 md:px-16">
-        <div className="w-full grid grid-cols-[1fr_auto] gap-3 sm:gap-6 items-start md:grid-cols-[1.15fr_1fr] md:gap-12 md:items-center">
+        <div className="w-full grid grid-cols-[1fr_auto] gap-3 sm:gap-6 items-start md:grid-cols-[1.3fr_1fr] md:gap-12 md:items-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -95,25 +90,9 @@ const Header = () => {
               </span>
             </div>
 
-            <h1 className="text-2xl sm:text-4xl md:text-6xl font-extrabold leading-[1.08] md:leading-[1.03] tracking-tight">
-              {t.header.lead1}
-              <br />
-              {t.header.lead2}
-              <br />
-              <span className="relative block min-h-[60px] sm:min-h-[86px] md:min-h-[136px] overflow-hidden" style={{ color: 'var(--accent)' }}>
-                <AnimatePresence mode="wait">
-                  <motion.span
-                    key={roleIdx}
-                    initial={{ opacity: 0, y: 14 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -14 }}
-                    transition={{ duration: 0.4, ease: 'easeOut' }}
-                    className="absolute inset-x-0 top-0"
-                  >
-                    {t.header.roles[roleIdx]}
-                  </motion.span>
-                </AnimatePresence>
-              </span>
+            <h1 className="text-2xl sm:text-4xl md:text-[clamp(40px,4vw,60px)] font-extrabold leading-[1.08] md:leading-[1.03] tracking-[-0.035em]">
+              {t.header.lead1} {t.header.lead2}
+              <RotatingRole roles={t.header.roles} intervalMs={ROLE_INTERVAL_MS} />
             </h1>
 
             <p className="mt-3 sm:mt-6 max-w-[460px] text-xs sm:text-base md:text-lg leading-relaxed" style={{ color: 'var(--fg-3)' }}>
@@ -198,7 +177,7 @@ const Header = () => {
         <button
           type="button"
           aria-label={t.header.scrollCueAria}
-          onClick={() => document.getElementById('marquee')?.scrollIntoView({ behavior: 'smooth' })}
+          onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
           className="animate-bob glass w-9 h-9 rounded-full flex items-center justify-center hover:bg-[var(--surface-2)] transition-colors"
           style={{ color: 'var(--fg-4)' }}
         >
