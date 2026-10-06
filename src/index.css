@@ -108,8 +108,10 @@ html {
     transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
     background: var(--surface-1);
     border: 1px solid var(--border-1);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    /* 12px, not 20: backdrop blur cost grows with the radius and the
+       difference is invisible over the soft background gradient. */
+    backdrop-filter: blur(12px) saturate(160%);
+    -webkit-backdrop-filter: blur(12px) saturate(160%);
     box-shadow: 0 8px 32px var(--sh), inset 0 1px var(--hl);
   }
 
@@ -139,8 +141,8 @@ html {
     /* Lower saturation than .glass -- this variant covers big panels (modals,
        mobile menu) that can sit over detailed content like a photo, where
        180% turns whatever bleeds through into a distractingly vivid blob. */
-    backdrop-filter: blur(28px) saturate(140%);
-    -webkit-backdrop-filter: blur(28px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
     box-shadow: 0 16px 48px var(--sh), inset 0 1px var(--hl);
   }
 

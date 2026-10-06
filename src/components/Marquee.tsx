@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useInView } from '@/hooks/useInView';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useHorizontalDragScroll } from '@/hooks/useHorizontalDragScroll';
 
@@ -44,8 +45,11 @@ const Marquee = ({ boosted }: { boosted: boolean }) => {
   const boostedRef = useRef(boosted);
   boostedRef.current = boosted;
   const pausedRef = useRef(false);
+  const inView = useInView(containerRef);
 
   useEffect(() => {
+    // Off screen: no loop at all, not just an idle one.
+    if (!inView) return;
     let raf = 0;
     let last = performance.now();
 
@@ -67,7 +71,7 @@ const Marquee = ({ boosted }: { boosted: boolean }) => {
     return () => cancelAnimationFrame(raf);
     // containerRef/isInteracting are stable refs from the hook.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [inView]);
 
   return (
     <div

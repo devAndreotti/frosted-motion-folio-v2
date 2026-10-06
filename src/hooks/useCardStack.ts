@@ -26,9 +26,10 @@ function isAutomated(): boolean {
  * Order + flight state for the hero card stack. The pile shuffles itself
  * every `autoplayMs` until the visitor touches it (a card or the arrows),
  * then it's theirs. No autoplay under reduced motion, in a background tab,
- * or under browser automation (it would race E2E clicks).
+ * while `paused` (the stack is off screen), or under browser automation
+ * (it would race E2E clicks).
  */
-export function useCardStack(ids: string[], autoplayMs = 4200) {
+export function useCardStack(ids: string[], autoplayMs = 4200, paused = false) {
   const reduceMotion = useReducedMotion();
   const [order, setOrder] = useState(ids);
   const [flight, setFlight] = useState<StackFlight | null>(null);
@@ -36,6 +37,8 @@ export function useCardStack(ids: string[], autoplayMs = 4200) {
   const orderRef = useRef(order);
   const flightCount = useRef(0);
   const flightTimer = useRef<ReturnType<typeof setTimeout>>();
+  const pausedRef = useRef(paused);
+  pausedRef.current = paused;
 
   useLayoutEffect(() => {
     orderRef.current = order;
@@ -73,7 +76,7 @@ export function useCardStack(ids: string[], autoplayMs = 4200) {
   useEffect(() => {
     if (!auto || reduceMotion || isAutomated()) return;
     const timer = setInterval(() => {
-      if (!document.hidden) move(orderRef.current[0]);
+      if (!document.hidden && !pausedRef.current) move(orderRef.current[0]);
     }, autoplayMs);
     return () => clearInterval(timer);
   }, [auto, reduceMotion, autoplayMs, move]);

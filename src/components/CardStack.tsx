@@ -1,8 +1,10 @@
+import { useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { personalInfo } from '@/data/personal';
 import { featuredProject, curatedProjects, type CuratedProject } from '@/data/curatedProjects';
 import { stackDim, stackTransform } from '@/lib/cardStack';
 import { useCardStack } from '@/hooks/useCardStack';
+import { useInView } from '@/hooks/useInView';
 import { useLanguage } from '@/contexts/LanguageContext';
 import type { Lang } from '@/lib/i18n';
 
@@ -36,10 +38,12 @@ const ProjectFace = ({ project, lang, sub }: { project: CuratedProject; lang: La
  */
 const CardStack = () => {
   const { lang, t } = useLanguage();
-  const { order, flight, pick, next, prev } = useCardStack(CARD_IDS);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(rootRef);
+  const { order, flight, pick, next, prev } = useCardStack(CARD_IDS, undefined, !inView);
 
   return (
-    <div className="stk-w">
+    <div className="stk-w" ref={rootRef}>
       <div className="stk">
         {/* Fixed DOM order (z-index does the stacking) so a reorder never
             re-inserts nodes, which would cancel their CSS transitions. */}
