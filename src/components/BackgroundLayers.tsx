@@ -24,7 +24,9 @@ function prefersReducedMotion(): boolean {
 
 /**
  * Renders the page-wide gradient wash + ambient blobs behind everything.
- * Respects prefers-reduced-motion: skips crossfade and disables blob breathing.
+ * The blobs are static on purpose: everything glass on the page blurs this
+ * layer, so animating it made the browser re-blur every panel every frame.
+ * Respects prefers-reduced-motion: skips the hue/theme crossfade.
  */
 const BackgroundLayers = () => {
   const { hue, theme } = useTheme();
@@ -71,7 +73,7 @@ const BackgroundLayers = () => {
       style={{ opacity: visible ? 1 : 0, background: content.bg }}
     >
       <div
-        className="absolute inset-0 animate-blob-breathe"
+        className="absolute inset-0"
         style={{
           background: `radial-gradient(circle at 20% 80%, ${content.glow1} 0%, transparent 50%), radial-gradient(circle at 80% 20%, ${content.glow2} 0%, transparent 50%), radial-gradient(circle at 40% 40%, ${content.glow3} 0%, transparent 45%)`,
         }}

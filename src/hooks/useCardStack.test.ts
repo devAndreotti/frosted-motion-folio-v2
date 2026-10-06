@@ -44,6 +44,16 @@ describe('useCardStack', () => {
     expect(result.current.flight!.n).toBe(first + 1);
   });
 
+  it('holds the shuffle while paused (off screen) and resumes after', () => {
+    const { result, rerender } = renderHook(({ paused }) => useCardStack(IDS, 1000, paused), { initialProps: { paused: true } });
+    act(() => vi.advanceTimersByTime(3000));
+    expect(result.current.order).toEqual(IDS);
+
+    rerender({ paused: false });
+    act(() => vi.advanceTimersByTime(1000));
+    expect(result.current.order[0]).toBe('a');
+  });
+
   it('does not autoplay under browser automation', () => {
     vi.stubGlobal('navigator', { webdriver: true });
     const { result } = renderHook(() => useCardStack(IDS, 1000));
