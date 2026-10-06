@@ -3,7 +3,7 @@ import { HUE_THEMES } from '@/lib/theme';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 /** The 7-dot color picker — swaps the accent hue used across buttons, glows and highlights. */
-const ColorSwatchPicker = () => {
+const ColorSwatchPicker = ({ onPick }: { onPick?: () => void }) => {
   const { hue, setHue } = useTheme();
   const { t } = useLanguage();
 
@@ -13,7 +13,10 @@ const ColorSwatchPicker = () => {
         <button
           key={option}
           type="button"
-          onClick={() => setHue(option)}
+          onClick={() => {
+            setHue(option);
+            onPick?.();
+          }}
           aria-label={t.colorPicker.hueLabel(t.colorPicker.hueNames[option])}
           aria-pressed={hue === option}
           className="w-6 h-6 flex items-center justify-center flex-shrink-0"

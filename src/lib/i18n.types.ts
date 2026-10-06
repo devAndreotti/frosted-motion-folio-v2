@@ -127,6 +127,7 @@ export interface Strings {
   };
   colorPicker: {
     hueLabel: (label: string) => string;
+    trigger: string;
     hueNames: Record<'black' | 'blue' | 'purple' | 'orange' | 'red' | 'green' | 'yellow', string>;
   };
 }

@@ -140,6 +140,7 @@ export const en: Strings = {
   },
   colorPicker: {
     hueLabel: (label) => `Accent color: ${label}`,
+    trigger: 'Choose accent color',
     hueNames: { black: 'Black', blue: 'Blue', purple: 'Purple', orange: 'Orange', red: 'Red', green: 'Green', yellow: 'Yellow' },
   },
 };

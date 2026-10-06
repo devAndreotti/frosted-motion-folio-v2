@@ -140,6 +140,7 @@ export const pt: Strings = {
   },
   colorPicker: {
     hueLabel: (label) => `Cor de destaque: ${label}`,
+    trigger: 'Escolher cor de destaque',
     hueNames: { black: 'Preto', blue: 'Azul', purple: 'Roxo', orange: 'Laranja', red: 'Vermelho', green: 'Verde', yellow: 'Amarelo' },
   },
 };
