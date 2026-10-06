@@ -27,8 +27,9 @@ test("no section causes horizontal overflow at this viewport", async ({ page }) 
 // external APIs (see home/github-activity.spec.ts, which itself only asserts
 // "real cards OR the graceful fallback") -- a rate-limited 403 from those is
 // an expected, already-handled condition, not an app bug, so it's filtered
-// out here rather than failing the whole responsive suite on it.
-const IGNORED_CONSOLE_PATTERN = /Failed to load resource.*403|api\.github\.com|github-contributions-api/i;
+// out here rather than failing the whole responsive suite on it. The
+// contributions API answers a burst of CI page loads with 429 instead.
+const IGNORED_CONSOLE_PATTERN = /Failed to load resource.*\b(403|429)\b|api\.github\.com|github-contributions-api/i;
 
 test("no console or runtime errors during a full scroll through the page", async ({ page }) => {
   const errors: string[] = [];
