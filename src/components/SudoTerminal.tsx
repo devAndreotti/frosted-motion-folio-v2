@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { X, Terminal as TerminalIcon } from "lucide-react";
 import { useScrollLock } from "@/hooks/useScrollLock";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
-import { useTheme, type Hue } from "@/contexts/ThemeContext";
+import { HUE_ORDER, useTheme, type Hue } from "@/contexts/ThemeContext";
 
 interface CommandLog {
   id: string;
@@ -10,7 +10,9 @@ interface CommandLog {
   output: React.ReactNode;
 }
 
-const VALID_HUES: Hue[] = ["blue", "purple", "green", "orange", "rose", "cyan", "black"];
+// Same seven hues as the color picker -- "rose"/"cyan" used to be listed here
+// but don't exist in the theme, so `theme rose` crashed building its palette.
+const VALID_HUES: Hue[] = HUE_ORDER;
 
 export const SudoTerminal = () => {
   const [show, setShow] = useState(false);

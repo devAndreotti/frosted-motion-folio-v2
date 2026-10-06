@@ -1,178 +1,110 @@
 import { useEffect, useState } from 'react';
 import { Skeleton } from 'boneyard-js/react';
-import { ChevronLeft, ChevronRight, GitCommit, GitPullRequest, Star, GitBranch, CircleDot, ExternalLink } from 'lucide-react';
+import { ArrowUpRight, CircleDot, GitBranch, GitCommit, GitPullRequest, Star } from 'lucide-react';
 import { useGithubActivity, relativeTime, type ActivityKind, type GithubActivityItem } from '@/hooks/useGithubActivity';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { contact } from '@/data/personal';
 import { ACTIVITY_TEXT_EN } from '@/lib/i18n';
-import { useHorizontalDragScroll } from '@/hooks/useHorizontalDragScroll';
 import ContributionHeatmap from './ContributionHeatmap';
 
-const KIND_META: Record<ActivityKind, { icon: typeof GitCommit; tint: string }> = {
-  push: { icon: GitCommit, tint: '#3b82f6' },
-  pr: { icon: GitPullRequest, tint: '#a855f7' },
-  star: { icon: Star, tint: '#eab308' },
-  branch: { icon: GitBranch, tint: '#22c55e' },
-  issue: { icon: CircleDot, tint: '#ef4444' },
+const KIND_ICON: Record<ActivityKind, typeof GitCommit> = {
+  push: GitCommit,
+  pr: GitPullRequest,
+  star: Star,
+  branch: GitBranch,
+  issue: CircleDot,
 };
 
-const CARD_WIDTH = 280;
-const GAP = 20;
-const STEP = CARD_WIDTH + GAP;
-const EDGE_FADE = 24;
+const FEED_SIZE = 4;
+const OWNER_PREFIX = 'devAndreotti/';
+
+// My own repos read better by name alone; someone else's keep the owner.
+const repoLabel = (repo: string) => (repo.startsWith(OWNER_PREFIX) ? repo.slice(OWNER_PREFIX.length) : repo);
 
 const FIXTURE_ITEMS: GithubActivityItem[] = [
   { id: 'f1', kind: 'push', repo: 'devAndreotti/self-sync-daily', text: 'Fez push', detail: 'fix: corrige cálculo de energia semanal', time: new Date().toISOString() },
   { id: 'f2', kind: 'pr', repo: 'devAndreotti/ai-memory', text: 'Abriu um PR', detail: 'feat: add scoped queries', time: new Date().toISOString() },
   { id: 'f3', kind: 'star', repo: 'shadcn-ui/ui', text: 'Deu estrela', time: new Date().toISOString() },
+  { id: 'f4', kind: 'branch', repo: 'devAndreotti/quality-gate', text: 'Criou a branch', time: new Date().toISOString() },
 ];
 
-const Card = ({ item, now, lang }: { item: GithubActivityItem; now: number; lang: 'pt' | 'en' }) => {
-  const meta = KIND_META[item.kind];
-  const Icon = meta.icon;
-  const displayText = lang === 'pt' ? item.text : (ACTIVITY_TEXT_EN[item.text] ?? item.text);
+const Card = ({ item, now, lang, inRepo }: { item: GithubActivityItem; now: number; lang: 'pt' | 'en'; inRepo: string }) => {
+  const Icon = KIND_ICON[item.kind];
+  const text = lang === 'pt' ? item.text : (ACTIVITY_TEXT_EN[item.text] ?? item.text);
   return (
-    <div className="glass rounded-2xl p-5 flex flex-col gap-3" style={{ width: CARD_WIDTH, flexShrink: 0 }} data-testid="activity-card">
-      <div
-        className="w-9 h-9 rounded-[10px] flex items-center justify-center"
-        style={{ background: `linear-gradient(155deg, ${meta.tint}, ${meta.tint}99)` }}
-      >
-        <Icon className="w-4 h-4" color="#08080a" strokeWidth={2.5} />
-      </div>
-      <div>
-        <div className="text-[13px] font-bold mb-1">{item.repo}</div>
-        <div className="text-[13.5px] font-semibold flex items-center gap-1.5" style={{ color: 'var(--fg-2)' }}>
-          {displayText}
-          {item.count && item.count > 1 && (
-            <span className="text-[11px] font-mono px-1.5 py-0.5 rounded-full" style={{ background: 'var(--surface-2)', color: 'var(--fg-1)' }}>
-              ×{item.count}
-            </span>
-          )}
-        </div>
-        {item.detail && (
-          <div className="text-[12.5px] mt-1 line-clamp-2" style={{ color: 'var(--fg-3)' }}>
-            {item.detail}
-          </div>
-        )}
-      </div>
-      <div className="text-[11px] mt-auto" style={{ color: 'var(--fg-4)' }}>
-        {relativeTime(item.time, now, lang)}
-      </div>
+    <div className="fc glass" data-testid="activity-card">
+      <span className="fc-i">
+        <Icon className="ic s" />
+      </span>
+      <p className="fc-p">
+        {text} {inRepo} <span className="fc-r" title={item.repo}>
+          {repoLabel(item.repo)}
+        </span>
+        {item.count && item.count > 1 && <span className="fc-n">×{item.count}</span>}
+      </p>
+      {item.detail && <p className="fc-d">{item.detail}</p>}
+      <span className="fc-t">{relativeTime(item.time, now, lang)}</span>
     </div>
   );
 };
 
-/** Horizontal, arrow-navigable feed of recent real GitHub activity — pushes, PRs, stars, branches, issues — plus a contribution heatmap. */
+/** Real GitHub activity: last year's contributions at a glance, then the latest four things I did. */
 const GithubActivityFeed = () => {
   const { lang, t } = useLanguage();
   const { items, fetchedAt, loading } = useGithubActivity();
   const [now, setNow] = useState(() => Date.now());
-  const { containerRef, handlers } = useHorizontalDragScroll();
 
   useEffect(() => {
     const timer = setInterval(() => setNow(Date.now()), 30000);
     return () => clearInterval(timer);
   }, []);
 
-  const go = (delta: number) => containerRef.current?.scrollBy({ left: delta, behavior: 'smooth' });
-
   return (
-    <section id="github-activity" className="relative py-16 md:py-24 overflow-hidden">
-      <div
-        className="absolute top-1/3 -right-40 w-[480px] h-[480px] rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgb(var(--accent-rgb) / 0.06) 0%, transparent 70%)' }}
-      />
-
-      <div className="relative z-10 container mx-auto px-4 flex items-end justify-between mb-9 flex-wrap gap-4">
+    <section id="github-activity" className="wrap sec" aria-labelledby="h-act">
+      <div className="sh">
         <div>
-          <div className="flex items-center gap-2.5 mb-2">
-            <span className="w-7 h-0.5" style={{ background: 'var(--accent)' }} />
-            <span className="text-xs uppercase tracking-wider" style={{ color: 'var(--fg-4)' }}>
-              {t.activity.sectionLabel}
-            </span>
-          </div>
-          <h2 className="text-2xl md:text-[30px] font-extrabold">{t.activity.title}</h2>
+          <p className="lbl">{t.activity.sectionLabel}</p>
+          <h2 id="h-act" className="h2">
+            {t.activity.title}
+          </h2>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="sh-r">
           {fetchedAt && (
-            <span className="text-[11.5px]" style={{ color: 'var(--fg-4)' }}>
+            <span className="np fix">
+              <span className="dot" />
               {t.activity.updated(relativeTime(new Date(fetchedAt).toISOString(), now, lang))}
             </span>
           )}
-          <div className="flex gap-2">
-            <button
-              type="button"
-              aria-label={t.activity.prevAria}
-              onClick={() => go(-STEP)}
-              className="glass w-9 h-9 rounded-full flex items-center justify-center hover:bg-[var(--surface-2)] transition-colors"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-            <button
-              type="button"
-              aria-label={t.activity.nextAria}
-              onClick={() => go(STEP)}
-              className="glass w-9 h-9 rounded-full flex items-center justify-center hover:bg-[var(--surface-2)] transition-colors"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
+          <a className="np" href={contact.github} target="_blank" rel="noopener noreferrer">
+            {t.activity.viewProfile}
+            <ArrowUpRight className="ic" />
+          </a>
         </div>
       </div>
 
-      <div className="relative z-10 container mx-auto px-4">
-        <ContributionHeatmap />
-      </div>
+      <ContributionHeatmap />
 
-      <div
-        ref={containerRef}
-        {...handlers}
-        className="custom-scrollbar relative z-10 container mx-auto px-4 pt-2 pb-6 cursor-grab active:cursor-grabbing"
-        style={{
-          overflowX: 'auto',
-          overflowY: 'hidden',
-          touchAction: 'pan-y',
-          overscrollBehaviorX: 'contain',
-          maskImage: `linear-gradient(90deg, transparent 0, #000 ${EDGE_FADE}px, #000 calc(100% - ${EDGE_FADE}px), transparent 100%)`,
-          WebkitMaskImage: `linear-gradient(90deg, transparent 0, #000 ${EDGE_FADE}px, #000 calc(100% - ${EDGE_FADE}px), transparent 100%)`,
-        }}
+      <Skeleton
+        name="github-activity-feed"
+        loading={loading}
+        fixture={
+          <div className="feed">
+            {FIXTURE_ITEMS.map((item) => (
+              <Card key={item.id} item={item} now={Date.now()} lang={lang} inRepo={t.activity.inRepo} />
+            ))}
+          </div>
+        }
       >
-        <Skeleton
-          name="github-activity-feed"
-          loading={loading}
-          fixture={
-            <div className="flex gap-5">
-              {FIXTURE_ITEMS.map((item) => (
-                <Card key={item.id} item={item} now={Date.now()} lang={lang} />
-              ))}
-            </div>
-          }
-        >
-          {items.length > 0 ? (
-            <div className="flex gap-5">
-              {items.map((item) => (
-                <Card key={item.id} item={item} now={now} lang={lang} />
-              ))}
-            </div>
-          ) : (
-            <div className="glass rounded-2xl p-6 text-center text-[13.5px]" style={{ color: 'var(--fg-3)' }}>
-              {t.activity.emptyState}
-            </div>
-          )}
-        </Skeleton>
-      </div>
-
-      <div className="relative z-10 container mx-auto px-4 mt-8 text-center">
-        <a
-          href="https://github.com/devAndreotti"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="glass inline-flex items-center gap-2 px-6 py-3 rounded-full text-[13px]"
-          style={{ color: 'var(--fg-3)' }}
-        >
-          {t.activity.viewAllGithub}
-          <ExternalLink className="w-3.5 h-3.5" />
-        </a>
-      </div>
+        {items.length > 0 ? (
+          <div className="feed">
+            {items.slice(0, FEED_SIZE).map((item) => (
+              <Card key={item.id} item={item} now={now} lang={lang} inRepo={t.activity.inRepo} />
+            ))}
+          </div>
+        ) : (
+          <div className="feed-empty glass">{t.activity.emptyState}</div>
+        )}
+      </Skeleton>
     </section>
   );
 };

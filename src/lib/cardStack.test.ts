@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MAX_VISIBLE_DEPTH, moveKind, reorderStack, stackTransform } from "./cardStack";
+import { MAX_VISIBLE_DEPTH, moveKind, reorderStack, stackDim, stackTransform } from "./cardStack";
 
 describe("reorderStack", () => {
   it("sends the front card to the back when it's clicked", () => {
@@ -22,17 +22,25 @@ describe("reorderStack", () => {
 });
 
 describe("stackTransform", () => {
-  it("puts the front card in place, untilted", () => {
-    expect(stackTransform(0)).toBe("translate(calc(var(--fan-x) * 0), calc(var(--fan-y) * 0)) rotate(0deg)");
+  it("puts the front card in place, untilted and full size", () => {
+    expect(stackTransform(0)).toBe("translate(0px, 0px) rotate(0.0deg) scale(1.00)");
   });
 
-  it("alternates the tilt side to side as cards go deeper", () => {
-    expect(stackTransform(1)).toContain("rotate(-1.5deg)");
-    expect(stackTransform(2)).toContain("rotate(3deg)");
+  it("shifts, tilts and shrinks each card further back the same way", () => {
+    expect(stackTransform(1)).toBe("translate(14px, 10px) rotate(2.5deg) scale(0.96)");
+    expect(stackTransform(2)).toBe("translate(28px, 20px) rotate(5.0deg) scale(0.92)");
   });
 
   it("collapses everything past the last visible slot onto it", () => {
     expect(stackTransform(MAX_VISIBLE_DEPTH + 2)).toBe(stackTransform(MAX_VISIBLE_DEPTH));
+  });
+});
+
+describe("stackDim", () => {
+  it("darkens deeper cards and stops at the last visible slot", () => {
+    expect(stackDim(0)).toBe("brightness(1.00)");
+    expect(stackDim(1)).toBe("brightness(0.88)");
+    expect(stackDim(MAX_VISIBLE_DEPTH + 1)).toBe(stackDim(MAX_VISIBLE_DEPTH));
   });
 });
 

@@ -44,7 +44,7 @@ describe("GithubActivityFeed", () => {
     vi.unstubAllGlobals();
   });
 
-  it("renders the section header and nav controls", async () => {
+  it("renders the section header and the profile link", async () => {
     mockGithubApi([]);
     render(
       <ThemeProvider>
@@ -52,9 +52,8 @@ describe("GithubActivityFeed", () => {
       </ThemeProvider>
     );
     await waitFor(() => {
-      expect(screen.getByText("O que ando fazendo no GitHub")).toBeTruthy();
-      expect(screen.getByRole("button", { name: "Atividade anterior" })).toBeTruthy();
-      expect(screen.getByRole("button", { name: "Próxima atividade" })).toBeTruthy();
+      expect(screen.getByText("O que ando fazendo no GitHub.")).toBeTruthy();
+      expect(screen.getByRole("link", { name: /Ver perfil/ }).getAttribute("href")).toBe("https://github.com/devAndreotti");
     });
   });
 
@@ -70,7 +69,7 @@ describe("GithubActivityFeed", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("devAndreotti/self-sync-daily")).toBeTruthy();
+      expect(screen.getByText("self-sync-daily")).toBeTruthy();
       expect(screen.getByText("someone/their-repo")).toBeTruthy();
     });
   });
@@ -107,7 +106,7 @@ describe("GithubActivityFeed", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("devAndreotti/cached-repo")).toBeTruthy();
+      expect(screen.getByText("cached-repo")).toBeTruthy();
     });
     const activityApiCalls = fetchSpy.mock.calls.filter(([url]) => typeof url === "string" && url.includes("api.github.com"));
     expect(activityApiCalls).toHaveLength(0);

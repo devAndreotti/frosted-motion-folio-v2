@@ -22,14 +22,19 @@ export const MAX_VISIBLE_DEPTH = 3;
 export type StackMove = 'back' | 'front';
 
 /**
- * Resting transform for a card at `depth` (0 = front). Offsets read the
- * --fan-x/--fan-y custom properties the stack sets per breakpoint, so one
- * formula serves every screen size; the tilt alternates side to side.
+ * Resting transform for a card at `depth` (0 = front): each step back shifts
+ * down-right, tilts a little more and shrinks 4%, so the pile reads as one
+ * deck leaning the same way.
  */
 export function stackTransform(depth: number): string {
   const d = Math.max(0, Math.min(depth, MAX_VISIBLE_DEPTH));
-  const tilt = d === 0 ? 0 : (d % 2 === 0 ? 1 : -1) * d * 1.5;
-  return `translate(calc(var(--fan-x) * ${d}), calc(var(--fan-y) * ${d})) rotate(${tilt}deg)`;
+  return `translate(${d * 14}px, ${d * 10}px) rotate(${(d * 2.5).toFixed(1)}deg) scale(${(1 - d * 0.04).toFixed(2)})`;
+}
+
+/** Cards further back get darker, so the front one always reads first. */
+export function stackDim(depth: number): string {
+  const d = Math.max(0, Math.min(depth, MAX_VISIBLE_DEPTH));
+  return `brightness(${(1 - d * 0.12).toFixed(2)})`;
 }
 
 /** Which flight a click on `id` triggers: the front card flies to the back, any other comes forward. */

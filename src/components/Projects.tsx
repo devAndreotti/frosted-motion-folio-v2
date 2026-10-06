@@ -1,194 +1,96 @@
 import { useState } from 'react';
-import { ArrowRight, Check } from 'lucide-react';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { projects } from '@/data/projects';
-import { featuredProject, curatedProjects, CATEGORY_FILTERS, CuratedProject, ProjectCategory } from '@/data/curatedProjects';
+import { contact } from '@/data/personal';
+import { featuredProject, curatedProjects, CATEGORY_FILTERS, type CuratedProject, type ProjectCategory } from '@/data/curatedProjects';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { track } from '@/lib/track';
 import CaseModal from './CaseModal';
-import ImageWithSkeleton from './ImageWithSkeleton';
+import FeaturedCase from './FeaturedCase';
 import SegmentedControl from './SegmentedControl';
 
-const OTHERS_COUNT = projects.length - (curatedProjects.length + 1);
+const ALL_CURATED = [featuredProject, ...curatedProjects];
+export const OTHERS_COUNT = projects.length - ALL_CURATED.length;
+
+type Filter = ProjectCategory | 'all';
 
 const Projects = () => {
   const { lang, t } = useLanguage();
-  const [filter, setFilter] = useState<ProjectCategory | 'all'>('all');
+  const [filter, setFilter] = useState<Filter>('all');
   const [openProject, setOpenProject] = useState<CuratedProject | null>(null);
   const openCase = (project: CuratedProject) => {
     track(`project-open-${project.id}`);
     setOpenProject(project);
   };
 
-  const filtered = filter === 'all' ? curatedProjects : curatedProjects.filter((p) => p.cat === filter);
+  const inFilter = (p: CuratedProject) => filter === 'all' || p.cat === filter;
+  // Rows keep their rank number when a filter hides the ones around them.
+  const rows = curatedProjects.map((p, i) => ({ p, n: String(i + 2).padStart(2, '0') })).filter(({ p }) => inFilter(p));
+  const showFeatured = inFilter(featuredProject);
 
   return (
-    <section id="projects" className="relative py-16 md:py-24 overflow-hidden">
-      <div
-        className="absolute -top-40 right-0 w-[260px] h-[260px] sm:w-[380px] sm:h-[380px] md:w-[560px] md:h-[560px] rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgb(var(--accent-rgb) / 0.06) 0%, transparent 70%)' }}
-      />
-
-      <div className="relative z-10 container mx-auto px-4">
-        <div className="flex items-end justify-between gap-5 flex-wrap mb-3">
-          <div>
-            <div className="flex items-center gap-2.5 mb-2">
-              <span className="w-7 h-0.5" style={{ background: 'var(--accent)' }} />
-              <span className="text-xs uppercase tracking-wider" style={{ color: 'var(--fg-4)' }}>
-                {t.projects.sectionLabel}
-              </span>
-            </div>
-            <h2 className="text-[28px] md:text-[34px] font-extrabold max-w-2xl leading-tight">{t.projects.title}</h2>
-          </div>
-          <SegmentedControl
-            layoutId="projects-category-filter"
-            value={filter}
-            onChange={setFilter}
-            scrollable
-            options={CATEGORY_FILTERS.map((f) => ({ value: f.key, label: t.projects.categoryFilters[f.key] }))}
-          />
+    <section id="projects" className="wrap sec" aria-labelledby="h-proj">
+      <div className="sh">
+        <div>
+          <p className="lbl">{t.projects.sectionLabel}</p>
+          <h2 id="h-proj" className="h2">
+            {t.projects.title}
+          </h2>
+          <p className="sub">{t.projects.subtitle}</p>
         </div>
-        <p className="text-[14.5px] max-w-lg mb-10" style={{ color: 'var(--fg-4)' }}>
-          {t.projects.subtitle}
-        </p>
+        <SegmentedControl
+          layoutId="projects-category-filter"
+          ariaLabel={t.projects.filterAria}
+          value={filter}
+          onChange={(value) => setFilter(value)}
+          options={CATEGORY_FILTERS.map((f) => ({
+            value: f.key,
+            label: t.projects.categoryFilters[f.key],
+            count: f.key === 'all' ? ALL_CURATED.length : ALL_CURATED.filter((p) => p.cat === f.key).length,
+          }))}
+        />
+      </div>
 
-        {/* featured case */}
-        <div className="glass-strong relative rounded-[28px] p-8 md:p-11 grid md:grid-cols-2 gap-10 items-center mb-6 overflow-hidden">
-          <div>
-            <span className="inline-block px-3.5 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wide mb-5" style={{ background: 'var(--surface-2)' }}>
-              {t.projects.casePrincipalBadge}
+      {showFeatured && <FeaturedCase onOpen={() => openCase(featuredProject)} />}
+
+      <div className="rows">
+        {rows.map(({ p, n }) => (
+          <button key={p.id} type="button" className="row group" onClick={() => openCase(p)} aria-label={t.projects.viewDetailsAria(p.title)}>
+            <span className="rn">{n}</span>
+            <span className="min-w-0">
+              <span className="rt">
+                <span className="rt-t">{p.title}</span>
+                <span className="tc">
+                  <i style={{ background: p.tint }} />
+                  <span>{p.type[lang]}</span>
+                </span>
+              </span>
+              <span className="rd">{p.description[lang]}</span>
             </span>
-            <h3 className="text-[32px] md:text-[38px] font-extrabold mb-3.5">{featuredProject.title}</h3>
-            <p className="text-[15px] leading-relaxed mb-6" style={{ color: 'var(--fg-2)' }}>
-              {featuredProject.long[lang]}
-            </p>
-            {/* What was actually built, up front -- it used to hide behind "Abrir case". */}
-            <div className="text-[11px] uppercase tracking-wider mb-2.5" style={{ color: 'var(--fg-4)' }}>
-              {t.caseModal.whatIDid}
-            </div>
-            <ul className="flex flex-col gap-2 mb-6">
-              {featuredProject.points[lang].map((point) => (
-                <li key={point} className="flex gap-2.5 text-[14px] leading-relaxed" style={{ color: 'var(--fg-2)' }}>
-                  <Check className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: 'var(--accent)' }} />
-                  {point}
-                </li>
-              ))}
-            </ul>
-            <div className="flex gap-2 flex-wrap mb-7">
-              {featuredProject.technologies.map((tech) => (
-                <span key={tech} className="text-xs px-3 py-1.5 rounded-full" style={{ background: 'var(--surface-2)', color: 'var(--fg-2)' }}>
+            <span className="rtags">
+              {p.technologies.slice(0, 3).map((tech) => (
+                <span key={tech} className="tag">
                   {tech}
                 </span>
               ))}
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-5" style={{ borderTop: '1px solid var(--border-1)' }}>
-              {[
-                [t.projects.detailLabels.tipo, featuredProject.type[lang]],
-                [t.projects.detailLabels.frente, 'Full Stack'],
-                [t.projects.detailLabels.duracao, lang === 'pt' ? '3 meses' : '3 months'],
-                [t.projects.detailLabels.status, lang === 'pt' ? 'Em produção' : 'In production'],
-              ].map(([label, value]) => (
-                <div key={label}>
-                  <div className="text-[11px] uppercase tracking-wide mb-1" style={{ color: 'var(--fg-4)' }}>
-                    {label}
-                  </div>
-                  <div className="text-[13.5px] font-bold" style={{ color: label === t.projects.detailLabels.status ? 'var(--accent)' : undefined }}>
-                    {value}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <button
-              type="button"
-              onClick={() => openCase(featuredProject)}
-              className="mt-7 flex items-center gap-2 text-sm font-semibold"
-              style={{ color: 'var(--accent)' }}
-            >
-              {t.projects.openCase}
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => openCase(featuredProject)}
-            className="glass relative rounded-2xl overflow-hidden text-left flex flex-col"
-            aria-label={t.projects.viewDetailsAria(featuredProject.title)}
-          >
-            {/* Browser chrome so the screenshot reads as a live product, not a loose image. */}
-            <span className="flex items-center gap-1.5 h-9 px-3.5 flex-shrink-0" style={{ background: 'var(--surface-2)', borderBottom: '1px solid var(--border-1)' }}>
-              <span className="w-2.5 h-2.5 rounded-full" style={{ background: 'var(--border-2)' }} />
-              <span className="w-2.5 h-2.5 rounded-full" style={{ background: 'var(--border-2)' }} />
-              <span className="w-2.5 h-2.5 rounded-full" style={{ background: 'var(--border-2)' }} />
-              {featuredProject.liveUrl && (
-                <span className="mx-auto px-3 py-1 rounded-md text-[11px] font-mono truncate" style={{ background: 'var(--surface-1)', color: 'var(--fg-3)' }}>
-                  {new URL(featuredProject.liveUrl).host}
-                </span>
-              )}
             </span>
-            <ImageWithSkeleton src={featuredProject.image} alt="" className="w-full aspect-[16/10] object-cover object-left-top" loading="lazy" />
+            <span className="ra">
+              <ArrowRight className="ic s" />
+            </span>
+            {/* Hover preview of the screenshot, where the tags were -- mouse only, never on touch. */}
+            <span className="thumb" aria-hidden="true">
+              <img src={p.image} alt="" loading="lazy" />
+            </span>
           </button>
-        </div>
+        ))}
+        {rows.length === 0 && !showFeatured && <div className="empty">{t.projects.emptyCategory}</div>}
+      </div>
 
-        {/* ranked list */}
-        <div style={{ borderTop: '1px solid var(--border-1)' }}>
-          {filtered.map((project, i) => (
-            <button
-              key={project.id}
-              type="button"
-              onClick={() => openCase(project)}
-              className="relative w-full grid grid-cols-[40px_6px_1fr_auto_24px] items-center gap-4 md:gap-5 py-6 px-3 rounded-2xl text-left border-b border-[var(--border-1)] transition-all hover:translate-x-1 hover:border hover:border-[var(--border-2)] hover:bg-[var(--surface-2)] hover:shadow-[0_12px_28px_-16px_rgba(0,0,0,0.55)] active:translate-x-1 active:bg-[var(--surface-2)] group"
-            >
-              <span className="text-2xl font-extrabold" style={{ color: 'var(--fg-4)' }}>
-                {String(i + 2).padStart(2, '0')}
-              </span>
-              <span className="w-1.5 h-11 rounded-sm" style={{ background: project.tint }} />
-              <span className="min-w-0">
-                <span className="flex items-center gap-2.5 mb-2 flex-wrap">
-                  <span className="text-lg font-extrabold">{project.title}</span>
-                  <span className="text-[10.5px] px-2.5 py-0.5 rounded-full uppercase tracking-wide" style={{ background: 'var(--surface-2)', color: 'var(--fg-3)' }}>
-                    {project.type[lang]}
-                  </span>
-                </span>
-                <span className="block text-[13.5px] leading-relaxed max-w-xl" style={{ color: 'var(--fg-3)' }}>
-                  {project.description[lang]}
-                </span>
-              </span>
-              <span className="hidden md:flex gap-1.5 flex-wrap justify-end max-w-[280px] transition-opacity [@media(hover:hover)]:group-hover:opacity-0">
-                {project.technologies.slice(0, 3).map((tech) => (
-                  <span key={tech} className="text-[11px] px-2.5 py-1 rounded-full whitespace-nowrap" style={{ background: 'var(--surface-1)', color: 'var(--fg-3)' }}>
-                    {tech}
-                  </span>
-                ))}
-              </span>
-              <ArrowRight className="w-[18px] h-[18px] opacity-35 transition-opacity group-hover:opacity-100 group-active:opacity-100" />
-              {/* Hover preview of the screenshot, where the tags were -- mouse only, never on touch. */}
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute right-12 top-1/2 z-10 hidden w-[220px] aspect-[16/10] overflow-hidden rounded-xl opacity-0 shadow-[0_24px_48px_-18px_rgba(0,0,0,0.6)] transition-all duration-300 -translate-y-1/2 rotate-[-4deg] scale-90 [@media(hover:hover)]:md:block group-hover:opacity-100 group-hover:rotate-[-2deg] group-hover:scale-100"
-                style={{ border: '1px solid var(--border-2)' }}
-              >
-                <img src={project.image} alt="" loading="lazy" className="w-full h-full object-cover object-left-top" />
-              </span>
-            </button>
-          ))}
-          {filtered.length === 0 && (
-            <div className="py-10 text-center text-sm" style={{ color: 'var(--fg-4)' }}>
-              {t.projects.emptyCategory}
-            </div>
-          )}
-        </div>
-
-        <div className="mt-8 text-center">
-          <a
-            href="https://github.com/devAndreotti?tab=repositories"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="glass inline-block px-6 py-3 rounded-full text-[13px]"
-            style={{ color: 'var(--fg-3)' }}
-          >
-            {t.projects.moreProjects(OTHERS_COUNT)}
-          </a>
-        </div>
+      <div className="more">
+        <a className="btn btn-gh" href={contact.repos} target="_blank" rel="noopener noreferrer">
+          {t.projects.moreProjects(OTHERS_COUNT)}
+          <ArrowUpRight className="ic s" />
+        </a>
       </div>
 
       {openProject && <CaseModal project={openProject} onClose={() => setOpenProject(null)} />}

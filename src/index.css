@@ -34,6 +34,15 @@ html {
     --surface-1: rgba(19, 19, 22, 0.045);
     --surface-2: rgba(19, 19, 22, 0.07);
     --dot: rgba(19, 19, 22, 0.06);
+    /* Neutral hairlines and fills that must NOT pick up the hue tint the
+       --border and --surface glass tokens get from ThemeContext. */
+    --line: rgba(19, 19, 22, 0.1);
+    --line-2: rgba(19, 19, 22, 0.16);
+    --surf: rgba(19, 19, 22, 0.045);
+    --surf-2: rgba(19, 19, 22, 0.07);
+    --ok: #15803d;
+    --sh: rgba(40, 50, 70, 0.12);
+    --hl: rgba(255, 255, 255, 0.6);
 
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
@@ -44,13 +53,20 @@ html {
   .dark {
     --fg-1: #f5f5f5;
     --fg-2: rgba(255, 255, 255, 0.7);
-    --fg-3: rgba(255, 255, 255, 0.5);
+    --fg-3: rgba(255, 255, 255, 0.56);
     --fg-4: rgba(255, 255, 255, 0.48);
     --border-1: rgba(255, 255, 255, 0.14);
     --border-2: rgba(255, 255, 255, 0.22);
     --surface-1: rgba(255, 255, 255, 0.06);
     --surface-2: rgba(255, 255, 255, 0.1);
     --dot: rgba(255, 255, 255, 0.06);
+    --line: rgba(255, 255, 255, 0.14);
+    --line-2: rgba(255, 255, 255, 0.22);
+    --surf: rgba(255, 255, 255, 0.06);
+    --surf-2: rgba(255, 255, 255, 0.1);
+    --ok: #4ade80;
+    --sh: rgba(0, 0, 0, 0.28);
+    --hl: rgba(255, 255, 255, 0.16);
 
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
@@ -89,13 +105,12 @@ html {
      drop shadow so the panel visibly separates from the page (depth), and a
      thin inner top-light so the edge catches light like actual glass. */
   .glass {
-    @apply active:scale-[0.97];
     transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
     background: var(--surface-1);
     border: 1px solid var(--border-1);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25), inset 0 1px 0 0 rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px var(--sh), inset 0 1px var(--hl);
   }
 
   .glass-card {
@@ -118,7 +133,6 @@ html {
   }
 
   .glass-strong {
-    @apply active:scale-[0.97];
     transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
     background: var(--surface-2);
     border: 1px solid var(--border-2);
@@ -127,7 +141,7 @@ html {
        180% turns whatever bleeds through into a distractingly vivid blob. */
     backdrop-filter: blur(28px) saturate(140%);
     -webkit-backdrop-filter: blur(28px) saturate(140%);
-    box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.32), inset 0 1px 0 0 rgba(255, 255, 255, 0.22);
+    box-shadow: 0 16px 48px var(--sh), inset 0 1px var(--hl);
   }
 
   .glass-intense {
@@ -375,13 +389,13 @@ html {
 
 @keyframes stack-fly-back-a {
   0% { transform: var(--from); z-index: 130; }
-  38% { transform: translate(50%, -12%) rotate(15deg) scale(1.02); z-index: 130; }
+  38% { transform: translate(64%, -12%) rotate(16deg) scale(1.02); z-index: 130; }
   52% { z-index: 0; }
   100% { transform: var(--to); z-index: 0; }
 }
 @keyframes stack-fly-back-b {
   0% { transform: var(--from); z-index: 130; }
-  38% { transform: translate(50%, -12%) rotate(15deg) scale(1.02); z-index: 130; }
+  38% { transform: translate(64%, -12%) rotate(16deg) scale(1.02); z-index: 130; }
   52% { z-index: 0; }
   100% { transform: var(--to); z-index: 0; }
 }

@@ -6,11 +6,7 @@ import { useEscapeKey } from '@/hooks/useEscapeKey';
 import { HUE_THEMES } from '@/lib/theme';
 import ColorSwatchPicker from './ColorSwatchPicker';
 
-/**
- * Desktop nav entry for the accent picker: one 34 px pill showing the
- * current color, opening the 7 swatches in a popover -- the inline row of
- * dots used to be the widest thing in the bar.
- */
+/** Desktop accent picker: a pill showing the current color, opening the 7 swatches in a popover. */
 const ColorPickerPopover = () => {
   const { hue } = useTheme();
   const { t } = useLanguage();
@@ -29,22 +25,21 @@ const ColorPickerPopover = () => {
   }, [open]);
 
   return (
-    <div ref={rootRef} className="relative">
+    <div ref={rootRef} className="acc-w">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-label={t.colorPicker.trigger}
         aria-expanded={open}
         aria-haspopup="true"
-        className="glass h-[34px] pl-2.5 pr-2 rounded-full flex items-center gap-1.5 text-[11px] font-semibold"
-        style={{ color: 'var(--fg-3)' }}
+        className="np"
       >
-        <span className="w-3.5 h-3.5 rounded-full" style={{ background: HUE_THEMES[hue].swatch, boxShadow: '0 0 0 2px var(--border-2)' }} />
-        <span className="hidden lg:inline">{t.colorPicker.hueNames[hue]}</span>
-        <ChevronDown className={`w-3.5 h-3.5 transition-transform ${open ? 'rotate-180' : ''}`} />
+        <span className="acc-dot" style={{ background: HUE_THEMES[hue].swatch }} />
+        <span>{t.colorPicker.hueNames[hue]}</span>
+        <ChevronDown className="ic" style={{ transition: 'transform .2s', transform: open ? 'rotate(180deg)' : undefined }} />
       </button>
       {open && (
-        <div className="absolute right-0 top-[calc(100%+8px)] z-50">
+        <div className="pop glass-strong">
           <ColorSwatchPicker onPick={() => setOpen(false)} />
         </div>
       )}

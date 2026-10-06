@@ -1,240 +1,93 @@
-import { useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { ArrowDown, Briefcase } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useGithubActivity } from '@/hooks/useGithubActivity';
+import { useGithubContributions } from '@/hooks/useGithubContributions';
+import { useLocalClock } from '@/hooks/useLocalClock';
+import { lastYear, summarize } from '@/lib/contributions';
 import { track } from '@/lib/track';
-import { useScrollLock } from '@/hooks/useScrollLock';
-import { useFocusTrap } from '@/hooks/useFocusTrap';
 import CardStack from './CardStack';
-import CopyEmailButton from './CopyEmailButton';
 import RotatingRole from './RotatingRole';
+import RecruiterModal from './RecruiterModal';
+import { SocialButtons } from './NavExtras';
 
-const ROLE_INTERVAL_MS = 2600;
-const RECRUITER_EMAIL = 'OrlaEK@proton.me';
+const ROLE_INTERVAL_MS = 2750;
 
 const Header = () => {
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
   const [recruiterMode, setRecruiterMode] = useState(false);
-  const [magnet, setMagnet] = useState({ x: 0, y: 0 });
-  const [parallax, setParallax] = useState({ x: 0, y: 0 });
-
-  const recruiterDialogRef = useRef<HTMLDivElement>(null);
-  useScrollLock(recruiterMode);
-  useFocusTrap(recruiterMode, recruiterDialogRef, () => setRecruiterMode(false));
-
-  const handleHeroMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    setParallax({ x: x * 30, y: y * 30 });
-  };
-
-  const handleMagnetMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    setMagnet({ x: x * 14, y: y * 10 });
-  };
+  const clock = useLocalClock();
+  const { publicRepos } = useGithubActivity();
+  const { days } = useGithubContributions();
+  const contributions = days.length > 0 ? summarize(lastYear(days, new Date().toISOString().slice(0, 10))).total : null;
+  const fmt = new Intl.NumberFormat(lang === 'pt' ? 'pt-BR' : 'en-US');
+  const s = t.header.stats;
+  const stats = [
+    { value: s.projects.value, ...s.projects },
+    { value: publicRepos == null ? '—' : fmt.format(publicRepos), ...s.repos },
+    { value: contributions == null ? '—' : fmt.format(contributions), ...s.contributions },
+    { value: s.semester.value, ...s.semester },
+  ];
 
   return (
-    <header
-      id="header"
-      className="relative overflow-hidden pt-16 min-h-[960px] flex flex-col"
-      onMouseMove={handleHeroMove}
-    >
-      {/* dot-grid texture */}
-      <div
-        className="absolute inset-0 opacity-50 pointer-events-none"
-        style={{
-          backgroundImage: 'radial-gradient(var(--dot) 1px, transparent 1px)',
-          backgroundSize: '28px 28px',
-          maskImage: 'radial-gradient(ellipse 900px 600px at 70% 20%, #000 0%, transparent 75%)',
-        }}
-      />
-
-      {/* These stay subtle on purpose — <BackgroundLayers> already carries the
-          hue's color wash site-wide; a local orb this size only needs to add
-          a little emphasis behind the hero, not repeat the whole effect. */}
-      <div
-        className="absolute -top-24 -right-36 w-[280px] h-[280px] sm:w-[420px] sm:h-[420px] md:w-[640px] md:h-[640px] rounded-full pointer-events-none animate-orb-drift"
-        style={{ background: 'radial-gradient(circle, rgb(var(--accent-rgb) / 0.09) 0%, transparent 70%)' }}
-      />
-      <div
-        className="absolute -bottom-40 -left-28 w-[220px] h-[220px] sm:w-[340px] sm:h-[340px] md:w-[480px] md:h-[480px] rounded-full pointer-events-none animate-orb-drift-reverse"
-        style={{ background: 'radial-gradient(circle, rgb(var(--accent-rgb) / 0.05) 0%, transparent 70%)' }}
-      />
-      <div
-        className="absolute w-[360px] h-[360px] rounded-full pointer-events-none transition-transform duration-300 ease-out"
-        style={{
-          top: '38%',
-          left: '38%',
-          marginTop: -180,
-          marginLeft: -180,
-          background: 'radial-gradient(circle, rgb(var(--accent-rgb) / 0.05) 0%, transparent 70%)',
-          transform: `translate(${parallax.x}px, ${parallax.y}px)`,
-        }}
-      />
-
-      <div className="relative z-10 flex-1 flex items-center px-4 sm:px-6 md:px-16">
-        <div className="w-full grid grid-cols-[1fr_auto] gap-3 sm:gap-6 items-start md:grid-cols-[1.3fr_1fr] md:gap-12 md:items-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 mb-3 sm:mb-5">
-              <span className="glass px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full text-[10px] sm:text-xs uppercase tracking-wider" style={{ color: 'var(--fg-2)' }}>
-                {t.header.badge}
-              </span>
-              <span className="text-[11px] sm:text-[13px]" style={{ color: 'var(--fg-4)' }}>
-                Sorocaba, SP
-              </span>
-            </div>
-
-            <h1 className="text-2xl sm:text-4xl md:text-[clamp(40px,4vw,60px)] font-extrabold leading-[1.08] md:leading-[1.03] tracking-[-0.035em]">
+    <section id="header" className="wrap" aria-label={t.header.badge}>
+      <div className="hero">
+        <div>
+          <div className="eyebrow rv" style={{ '--d': '.05s' } as React.CSSProperties}>
+            <span className="chip">{t.header.badge}</span>
+            <span>
+              {t.header.location} · <span className="tabular-nums">{clock}</span>
+            </span>
+          </div>
+          <h1 className="h1 rv" style={{ '--d': '.12s' } as React.CSSProperties}>
+            <span>
               {t.header.lead1} {t.header.lead2}
-              <RotatingRole roles={t.header.roles} intervalMs={ROLE_INTERVAL_MS} />
-            </h1>
-
-            <p className="mt-3 sm:mt-6 max-w-[460px] text-xs sm:text-base md:text-lg leading-relaxed" style={{ color: 'var(--fg-3)' }}>
-              {t.header.paragraph}
-            </p>
-
-            <div className="flex items-center gap-2 mt-3 sm:mt-5">
-              <span className="relative w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-green-400">
-                <span className="absolute inset-0 rounded-full bg-green-400 animate-pulse-dot" />
-              </span>
-              <span className="text-[10px] sm:text-[12.5px]" style={{ color: 'var(--fg-3)' }}>
-                {t.header.availability}
-              </span>
-            </div>
-
-            <div className="flex flex-wrap gap-2 sm:gap-3.5 mt-3 sm:mt-6">
-              <div
-                onMouseMove={handleMagnetMove}
-                onMouseLeave={() => setMagnet({ x: 0, y: 0 })}
-                style={{
-                  background: 'var(--accent)',
-                  color: 'var(--accent-text)',
-                  transform: `translate(${magnet.x}px, ${magnet.y}px)`,
-                }}
-                className="glass-strong px-3.5 py-2 sm:px-6 sm:py-3.5 rounded-xl sm:rounded-2xl font-semibold text-xs sm:text-[15px] cursor-pointer transition-transform duration-150 ease-out"
-              >
-                <a href="#projects" onClick={(e) => { e.preventDefault(); track('cta-projects'); document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' }); }}>
-                  {t.header.ctaProjects}
-                </a>
-              </div>
-              <button
-                type="button"
-                onClick={() => setRecruiterMode(true)}
-                className="glass px-3.5 py-2 sm:px-6 sm:py-3.5 rounded-xl sm:rounded-2xl font-semibold text-xs sm:text-[15px]"
-              >
-                {t.header.ctaRecruiter}
-              </button>
-            </div>
-            <p className="mt-3 sm:mt-6 text-[10px] sm:text-xs hidden sm:block" style={{ color: 'var(--fg-4)' }}>
-              {t.header.cardStackHint}
-            </p>
-          </motion.div>
-
-          <div>
-            <CardStack />
+            </span>{' '}
+            <RotatingRole roles={t.header.roles} intervalMs={ROLE_INTERVAL_MS} />
+          </h1>
+          <p className="lead rv" style={{ '--d': '.2s' } as React.CSSProperties}>
+            {t.header.paragraph}
+          </p>
+          <p className="avail rv" style={{ '--d': '.26s' } as React.CSSProperties}>
+            <span className="pulse" />
+            {t.header.availability}
+          </p>
+          <div className="ctas rv" style={{ '--d': '.32s' } as React.CSSProperties}>
+            <a
+              className="btn btn-pri"
+              href="#projects"
+              onClick={(e) => {
+                e.preventDefault();
+                track('cta-projects');
+                document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              {t.header.ctaProjects}
+              <ArrowDown className="ic s" />
+            </a>
+            <button type="button" className="btn btn-gh" onClick={() => setRecruiterMode(true)}>
+              <Briefcase className="ic s" />
+              {t.header.ctaRecruiter}
+            </button>
+            <span className="vsep" />
+            <SocialButtons />
           </div>
         </div>
+        <CardStack />
       </div>
 
-      <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 mx-6 md:mx-16" style={{ borderTop: '1px solid var(--border-1)' }}>
-        {t.header.stats.map((stat, i) => {
-          // Divider goes on the right of every item except the last overall
-          // (desktop, 4 cols) *and* the last of each pair (mobile, 2 cols) —
-          // without this, item 2 (top-right of row 1) keeps a stray border on
-          // narrow screens where it's no longer followed by another item.
-          const isLastOverall = i === t.header.stats.length - 1;
-          const isLastInMobileRow = i % 2 === 1;
-          let dividerClass = 'border-r';
-          if (isLastOverall) dividerClass = '';
-          else if (isLastInMobileRow) dividerClass = 'max-md:border-r-0 md:border-r';
-          return (
-          <div
-            key={stat.label}
-            className={`py-6 px-4 md:px-6 flex gap-3.5 items-start ${dividerClass}`}
-            style={{ borderColor: 'var(--border-1)' }}
-          >
-            <div>
-              <div className="text-2xl md:text-[28px] font-extrabold" style={{ color: 'var(--accent)' }}>
-                {stat.value}
-              </div>
-              <div className="text-[13.5px] font-semibold mt-0.5">{stat.label}</div>
-              <div className="text-xs mt-1 leading-snug" style={{ color: 'var(--fg-4)' }}>
-                {stat.desc}
-              </div>
-            </div>
+      <div className="stats rv" style={{ '--d': '.4s' } as React.CSSProperties}>
+        {stats.map((stat) => (
+          <div key={stat.label} className="st">
+            <span className="st-v">{stat.value}</span>
+            <span className="st-l">{stat.label}</span>
+            <span className="st-d">{stat.desc}</span>
           </div>
-          );
-        })}
+        ))}
       </div>
 
-      <div className="relative z-10 flex justify-center py-6">
-        <button
-          type="button"
-          aria-label={t.header.scrollCueAria}
-          onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
-          className="animate-bob glass w-9 h-9 rounded-full flex items-center justify-center hover:bg-[var(--surface-2)] transition-colors"
-          style={{ color: 'var(--fg-4)' }}
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" fill="none">
-            <path d="M12 5v14M5 12l7 7 7-7" />
-          </svg>
-        </button>
-      </div>
-
-      {recruiterMode && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-md p-6 md:p-10"
-          onClick={() => setRecruiterMode(false)}
-        >
-          <div
-            ref={recruiterDialogRef}
-            className="glass-strong w-full max-w-2xl max-h-full overflow-auto rounded-[28px] p-10 md:p-12"
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-label={t.header.recruiterDialogAria}
-            data-print-target="recruiter-summary"
-          >
-            <div className="text-[11px] uppercase tracking-wider mb-3.5" style={{ color: 'var(--fg-4)' }}>
-              {t.header.recruiterLabel}
-            </div>
-            <div className="text-3xl md:text-[34px] font-extrabold mb-1.5">Ricardo A. Gonçalves</div>
-            <div className="text-[15.5px] mb-7" style={{ color: 'var(--fg-2)' }}>
-              {t.header.badge} — Sorocaba, SP
-            </div>
-            <ul className="flex flex-col gap-4 mb-8">
-              {t.header.recruiterBullets.map((bullet) => (
-                <li key={bullet} className="flex gap-2.5 items-start">
-                  <span className="w-1.5 h-1.5 mt-2 rounded-full flex-shrink-0" style={{ background: 'var(--accent)' }} />
-                  <span className="text-[14.5px] leading-relaxed" style={{ color: 'var(--fg-2)' }}>
-                    {bullet}
-                  </span>
-                </li>
-              ))}
-            </ul>
-            <div className="flex gap-3 items-center" data-print-hide>
-              <a
-                href={`mailto:${RECRUITER_EMAIL}`}
-                className="px-6 py-3 rounded-xl font-semibold text-sm"
-                style={{ background: 'var(--accent)', color: 'var(--accent-text)' }}
-              >
-                {t.common.sendEmail}
-              </a>
-              <CopyEmailButton email={RECRUITER_EMAIL} />
-              <button type="button" onClick={() => setRecruiterMode(false)} className="glass px-6 py-3 rounded-xl font-semibold text-sm">
-                {t.header.recruiterBack}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </header>
+      {recruiterMode && <RecruiterModal onClose={() => setRecruiterMode(false)} />}
+    </section>
   );
 };
 

@@ -47,6 +47,28 @@ function writeCache(days: ContributionDay[]) {
   }
 }
 
+// The hero stats and the heatmap both mount at once; share one request.
+let inflight: Promise<ContributionDay[]> | null = null;
+
+async function fetchContributions(): Promise<ContributionDay[]> {
+  const res = await fetch(`https://github-contributions-api.jogruber.de/v4/${GITHUB_USER}?y=all`);
+  if (!res.ok) throw new Error('contributions api error');
+  const data = await res.json();
+  const raw: ContributionDay[] = Array.isArray(data?.contributions) ? data.contributions : [];
+  const fetched = sortAndTrim(raw, MAX_DAYS);
+  writeCache(fetched);
+  return fetched;
+}
+
+function loadContributions(): Promise<ContributionDay[]> {
+  if (!inflight) {
+    inflight = fetchContributions().finally(() => {
+      inflight = null;
+    });
+  }
+  return inflight;
+}
+
 /** Last-year GitHub contribution calendar (day, count, 0-4 level) — same shape as the profile's heatmap. */
 export function useGithubContributions(): { days: ContributionDay[]; loading: boolean } {
   const [days, setDays] = useState<ContributionDay[]>([]);
@@ -61,26 +83,16 @@ export function useGithubContributions(): { days: ContributionDay[]; loading: bo
     }
 
     let cancelled = false;
-
-    async function load() {
-      try {
-        const res = await fetch(`https://github-contributions-api.jogruber.de/v4/${GITHUB_USER}?y=all`);
-        if (!res.ok) throw new Error('contributions api error');
-        const data = await res.json();
-        const raw: ContributionDay[] = Array.isArray(data?.contributions) ? data.contributions : [];
-        const fetched = sortAndTrim(raw, MAX_DAYS);
-        if (!cancelled) {
-          setDays(fetched);
-          writeCache(fetched);
-        }
-      } catch {
+    loadContributions()
+      .then((fetched) => {
+        if (!cancelled) setDays(fetched);
+      })
+      .catch(() => {
         // Network hiccup or the third-party API is down — heatmap just stays empty.
-      } finally {
+      })
+      .finally(() => {
         if (!cancelled) setLoading(false);
-      }
-    }
-
-    load();
+      });
     return () => {
       cancelled = true;
     };

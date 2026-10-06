@@ -1,15 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Moon, Sun, Menu, X } from 'lucide-react';
+import { ArrowRight, Menu, Moon, Sun, X } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useGithubActivity } from '@/hooks/useGithubActivity';
 import { useEscapeKey } from '@/hooks/useEscapeKey';
-import { springPop } from '@/lib/motion';
 import ColorSwatchPicker from './ColorSwatchPicker';
 import ColorPickerPopover from './ColorPickerPopover';
 import SudoTerminal from './SudoTerminal';
-import { RepoBadge, SocialLinks, LangToggleButton } from './NavExtras';
+import { LangSwitch, RepoPill } from './NavExtras';
 
 const GLITCH_CHARS = '#$%&01</>{}=+*';
 const GLITCH_TICKS = 10;
@@ -26,7 +24,7 @@ const NAME = 'Ricardo Andreotti';
 
 const Navigation = () => {
   const { theme, toggleTheme } = useTheme();
-  const { lang, toggleLang, t } = useLanguage();
+  const { lang, setLang, t } = useLanguage();
   const { publicRepos, loading: reposLoading } = useGithubActivity();
   const NAV_ITEMS = [
     { name: t.nav.home, id: 'header' },
@@ -35,23 +33,11 @@ const Navigation = () => {
     { name: t.nav.journey, id: 'timeline' },
     { name: t.nav.contact, id: 'contact' },
   ];
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [glitchText, setGlitchText] = useState<string | null>(null);
   const [activeId, setActiveId] = useState('header');
-
-  const [scrolled, setScrolled] = useState(false);
   const holdTimer = useRef<ReturnType<typeof setTimeout>>();
   const glitchInterval = useRef<ReturnType<typeof setInterval>>();
-
-  // Floats transparent over the hero, solidifies once the page actually
-  // scrolls -- same macOS/iOS nav-bar behavior, same listener pattern as
-  // ScrollProgress.tsx.
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
 
   useEffect(
     () => () => {
@@ -61,30 +47,26 @@ const Navigation = () => {
     []
   );
 
-  // Menus opened via disclosure (not a modal dialog) still get the
-  // conventional Escape-to-close keyboard behavior.
-  useEscapeKey(isMobileMenuOpen, () => setIsMobileMenuOpen(false));
+  useEscapeKey(menuOpen, () => setMenuOpen(false));
 
   // Scroll-spy: highlight whichever section currently sits in the vertical
   // "reading band" of the viewport, so the nav shows where you actually are.
   useEffect(() => {
     const sections = NAV_ITEMS.map((item) => document.getElementById(item.id)).filter((el): el is HTMLElement => el !== null);
     if (sections.length === 0) return;
-
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries.filter((entry) => entry.isIntersecting);
-        if (visible.length > 0) {
-          setActiveId(visible[0].target.id);
-        }
+        if (visible.length > 0) setActiveId(visible[0].target.id);
       },
       { rootMargin: '-40% 0px -55% 0px', threshold: 0 }
     );
-
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Holding the name for 3 s scrambles it -- the way into the sudo terminal.
   const startGlitch = () => {
     let ticks = 0;
     clearInterval(glitchInterval.current);
@@ -99,156 +81,81 @@ const Navigation = () => {
   };
 
   const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsMobileMenuOpen(false);
-    }
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+    setMenuOpen(false);
   };
 
   return (
     <>
-      {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-40 md:hidden" onClick={() => setIsMobileMenuOpen(false)} aria-hidden="true" />
-      )}
-      <motion.nav
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-        className="fixed top-0 left-0 right-0 z-50"
-      >
-        {/* Blur/background/border stay always-on here; only opacity crossfades
-            as the page scrolls -- animating backdrop-filter itself is janky
-            in most browsers, opacity isn't (same two-layer-crossfade idea as
-            BackgroundLayers.tsx, just one layer since "off" is just invisible). */}
-        <div
-          className="absolute inset-0 backdrop-blur-lg pointer-events-none transition-opacity duration-300 ease-out"
-          style={{
-            background: 'var(--surface-1)',
-            borderBottom: '1px solid var(--border-1)',
-            opacity: scrolled ? 1 : 0,
-          }}
-        />
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="flex items-center justify-between h-16 gap-4" data-testid="nav-bar">
+      {menuOpen && <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} aria-hidden="true" />}
+      <header className="nav">
+        <div className="nav-in" data-testid="nav-bar">
+          <button
+            type="button"
+            className="brand"
+            onMouseDown={() => {
+              holdTimer.current = setTimeout(startGlitch, GLITCH_HOLD_MS);
+            }}
+            onMouseUp={() => clearTimeout(holdTimer.current)}
+            onMouseLeave={() => clearTimeout(holdTimer.current)}
+            onClick={() => scrollToSection('header')}
+          >
+            <span className="mono-b">RA</span>
+            <span className="brand-name" style={glitchText ? { color: 'var(--accent)', fontFamily: 'var(--font-mono)' } : undefined}>
+              {glitchText ?? NAME}
+            </span>
+          </button>
+
+          <nav className="nav-links" aria-label={t.nav.home}>
+            {NAV_ITEMS.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => scrollToSection(item.id)}
+                aria-current={activeId === item.id ? 'true' : undefined}
+                className={`nl${activeId === item.id ? ' on' : ''}`}
+              >
+                {item.name}
+              </button>
+            ))}
+          </nav>
+
+          <div className="nav-r">
+            <RepoPill loading={reposLoading} count={publicRepos} label={t.nav.reposLabel} />
+            <ColorPickerPopover />
+            <LangSwitch lang={lang} onPick={setLang} ariaLabel={t.nav.langToggleAria} className="lang-d" />
+            <button type="button" onClick={toggleTheme} aria-label={t.nav.themeToggleAria} className="np sq">
+              {theme === 'light' ? <Moon className="ic" /> : <Sun className="ic" />}
+            </button>
             <button
               type="button"
-              onMouseDown={() => {
-                holdTimer.current = setTimeout(startGlitch, GLITCH_HOLD_MS);
-              }}
-              onMouseUp={() => clearTimeout(holdTimer.current)}
-              onMouseLeave={() => clearTimeout(holdTimer.current)}
-              onClick={() => scrollToSection('header')}
-              className="text-lg font-extrabold tracking-wide select-none whitespace-nowrap flex-shrink-0"
-              style={{ color: glitchText ? 'var(--accent)' : 'var(--fg-1)', fontFamily: glitchText ? 'monospace' : 'inherit' }}
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label={menuOpen ? t.nav.menuCloseAria : t.nav.menuOpenAria}
+              aria-expanded={menuOpen}
+              className="np sq nav-menu"
             >
-              {glitchText ?? (
-                <>
-                  Ricardo<span className="hidden xl:inline"> Andreotti</span>
-                </>
-              )}
+              {menuOpen ? <X className="ic" /> : <Menu className="ic" />}
             </button>
+          </div>
+        </div>
 
-            <div className="hidden md:flex items-center gap-6">
-              {NAV_ITEMS.map((item, index) => {
-                const isActive = activeId === item.id;
-                return (
-                  <motion.button
-                    key={item.id}
-                    onClick={() => scrollToSection(item.id)}
-                    aria-current={isActive ? 'true' : undefined}
-                    className="text-sm font-medium transition-colors duration-300 relative group"
-                    style={{ color: isActive ? 'var(--fg-1)' : 'var(--fg-2)', fontWeight: isActive ? 700 : 500 }}
-                    whileHover={{ scale: 1.05 }}
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                  >
-                    {item.name}
-                    <span
-                      className={`absolute -bottom-1 left-0 h-0.5 transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`}
-                      style={{ background: 'var(--accent)' }}
-                    />
-                  </motion.button>
-                );
-              })}
-            </div>
-
-            <div className="hidden md:flex items-center gap-2">
-              <RepoBadge loading={reposLoading} count={publicRepos} label={t.nav.reposLabel} />
-
-              <ColorPickerPopover />
-
-              <LangToggleButton lang={lang} onClick={toggleLang} ariaLabel={t.nav.langToggleAria} />
-
-              <motion.button
-                onClick={toggleTheme}
-                aria-label={t.nav.themeToggleAria}
-                className="glass w-[34px] h-[34px] rounded-full flex items-center justify-center"
-                whileHover={{ scale: 1.1, rotate: theme === 'light' ? 180 : -180 }}
-                whileTap={{ scale: 0.95 }}
-                transition={springPop(0)}
-              >
-                {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
-              </motion.button>
-
-              <SocialLinks />
-            </div>
-
-            <div className="md:hidden flex items-center gap-2">
-              <LangToggleButton lang={lang} onClick={toggleLang} ariaLabel={t.nav.langToggleAria} />
-              <motion.button
-                onClick={toggleTheme}
-                aria-label={t.nav.themeToggleAria}
-                className="glass w-[34px] h-[34px] rounded-full flex items-center justify-center"
-                whileTap={{ scale: 0.95 }}
-              >
-                {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
-              </motion.button>
-              <motion.button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                aria-label={isMobileMenuOpen ? t.nav.menuCloseAria : t.nav.menuOpenAria}
-                className="glass w-[34px] h-[34px] rounded-full flex items-center justify-center"
-                whileTap={{ scale: 0.95 }}
-              >
-                {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-              </motion.button>
+        {menuOpen && (
+          <div className="sheet relative z-50" data-testid="mobile-menu">
+            {NAV_ITEMS.map((item) => (
+              <button key={item.id} type="button" onClick={() => scrollToSection(item.id)} aria-current={activeId === item.id ? 'true' : undefined}>
+                <span>{item.name}</span>
+                <ArrowRight className="ic s" />
+              </button>
+            ))}
+            <div className="sheet-row">
+              <LangSwitch lang={lang} onPick={setLang} ariaLabel={t.nav.langToggleAria} />
+              <div className="sheet-sw">
+                <ColorSwatchPicker />
+              </div>
             </div>
           </div>
-
-          {isMobileMenuOpen && (
-            <motion.div className="md:hidden pb-4 pt-1 overflow-hidden" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} transition={{ duration: 0.4 }}>
-              <div className="glass-strong rounded-2xl p-3 flex flex-col gap-1" data-testid="mobile-menu">
-                <RepoBadge loading={reposLoading} count={publicRepos} label={t.nav.reposLabel} compact />
-
-                {NAV_ITEMS.map((item) => {
-                  const isActive = activeId === item.id;
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => scrollToSection(item.id)}
-                      aria-current={isActive ? 'true' : undefined}
-                      className="text-left px-3.5 py-3 rounded-xl text-[15px] font-semibold transition-colors hover:bg-[var(--surface-2)] active:bg-[var(--surface-2)]"
-                      style={{ color: isActive ? 'var(--accent)' : 'var(--fg-2)', background: isActive ? 'var(--surface-2)' : undefined }}
-                    >
-                      {item.name}
-                    </button>
-                  );
-                })}
-
-                <div className="h-px my-2 mx-1" style={{ background: 'var(--border-1)' }} />
-
-                <div className="flex items-center justify-between px-1 pb-1">
-                  <div className="flex items-center gap-2">
-                    <SocialLinks size="md" />
-                  </div>
-                  <ColorSwatchPicker />
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </div>
-      </motion.nav>
+        )}
+      </header>
 
       <SudoTerminal />
     </>

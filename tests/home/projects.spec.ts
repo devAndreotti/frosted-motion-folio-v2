@@ -4,6 +4,7 @@ import { featuredProject, curatedProjects, CATEGORY_FILTERS } from "../../src/da
 import { strings } from "../../src/lib/i18n";
 
 const OTHERS_COUNT = projects.length - (curatedProjects.length + 1);
+const FEATURED_CAT = featuredProject.cat;
 
 test("shows the featured case and every curated project in the ranked list", async ({ page }) => {
   await page.goto("");
@@ -52,9 +53,18 @@ test("opening a project from the ranked list shows its case study", async ({ pag
   await expect(dialog).not.toBeVisible();
 });
 
-test('"outros projetos no GitHub" link points at the real profile with the right count', async ({ page }) => {
+test("a filter that excludes the main case hides it too", async ({ page }) => {
   await page.goto("");
-  const link = page.locator("#projects").getByRole("link", { name: `+ ${OTHERS_COUNT} outros projetos no GitHub` });
+  const section = page.locator("#projects");
+  test.skip(FEATURED_CAT === "mobile", "the main case is itself mobile");
+
+  await section.getByRole("button", { name: "Mobile", exact: true }).click();
+  await expect(section.getByRole("heading", { name: featuredProject.title })).not.toBeVisible();
+});
+
+test('"Ver os outros N no GitHub" points at the real profile with the right count', async ({ page }) => {
+  await page.goto("");
+  const link = page.locator("#projects").getByRole("link", { name: `Ver os outros ${OTHERS_COUNT} no GitHub` });
 
   await expect(link).toHaveAttribute("href", "https://github.com/devAndreotti?tab=repositories");
 });

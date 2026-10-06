@@ -1,10 +1,10 @@
 import { test, expect } from "@playwright/test";
 
-// Anchors driven by Navigation.tsx's NAV_ITEMS (Início/Projetos/Skills/Trajetória/Contato),
+// Anchors driven by Navigation.tsx's NAV_ITEMS (Início/Projetos/Stack/Trajetória/Contato),
 // excluding "Início" which is covered separately below (it starts already in view).
 const sections = [
   { label: "Projetos", id: "projects" },
-  { label: "Skills", id: "skills" },
+  { label: "Stack", id: "skills" },
   { label: "Trajetória", id: "timeline" },
   { label: "Contato", id: "contact" },
 ];
