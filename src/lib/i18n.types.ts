@@ -63,7 +63,10 @@ export interface Strings {
     radarTab: string;
     coreTitle: string;
     coreDesc: string;
-    learningBadge: string;
+    areaFilterLabel: string;
+    allAreas: string;
+    projectsUnit: (count: number) => string;
+    alsoKnown: string;
     radarTitle: string;
     radarDesc: string;
     radarSvgAria: string;

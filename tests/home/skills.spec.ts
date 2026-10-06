@@ -1,15 +1,15 @@
 import { test, expect } from "@playwright/test";
-import { CORE_SKILLS, SKILL_CATEGORIES } from "../../src/data/skills";
+import { CORE_SKILLS, STACK_AREAS } from "../../src/data/skills";
 import { strings } from "../../src/lib/i18n";
 
 test("Bento/Radar toggle swaps the skills view", async ({ page }) => {
   await page.goto("");
   const section = page.locator("#skills");
-  // The bento view's ranked category rows (e.g. "Dados") are its only
-  // content that isn't also present in the radar view's legend, which
-  // reuses CORE_SKILLS names -- so they're what actually proves which
-  // view is showing, not the (no longer rendered) "Core stack" heading.
-  const bentoOnlyText = section.getByText(SKILL_CATEGORIES[0].title.pt, { exact: true });
+  // The bento view's area filter chips (e.g. "Dados") are its only content
+  // that isn't also present in the radar view's legend, which reuses
+  // CORE_SKILLS names -- so they're what actually proves which view is showing.
+  const dataArea = STACK_AREAS.find((a) => a.id === "data")!;
+  const bentoOnlyText = section.getByText(dataArea.label.pt, { exact: true });
 
   await expect(bentoOnlyText).toBeVisible();
 

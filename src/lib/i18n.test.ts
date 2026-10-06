@@ -20,6 +20,7 @@ describe("i18n dictionaries", () => {
     expect(t.footer.localTime("10:00")).toContain("10:00");
     expect(t.footer.copyright("Test Name")).toContain("Test Name");
     expect(t.colorPicker.hueLabel("Blue")).toContain("Blue");
+    expect(t.skills.projectsUnit(1)).not.toBe(t.skills.projectsUnit(2));
   });
 
   it.each(LANGS)("%s: heatmapTooltip pluralizes correctly for 0, 1, and many contributions", (lang) => {
