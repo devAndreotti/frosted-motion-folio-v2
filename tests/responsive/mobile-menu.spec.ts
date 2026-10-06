@@ -4,7 +4,7 @@ import { test, expect } from "@playwright/test";
 // only the desktop nav row (home/navigation.spec.ts) was tested.
 test("mobile hamburger menu opens, navigates to a section, and closes itself", async ({ page }) => {
   const viewport = page.viewportSize();
-  test.skip(!viewport || viewport.width >= 768, "hamburger menu only renders below md");
+  test.skip(!viewport || viewport.width > 960, "hamburger menu only renders at 960px and below");
 
   await page.goto("");
   const menu = page.getByTestId("mobile-menu");

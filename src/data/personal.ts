@@ -23,3 +23,14 @@ export const personalInfo = {
   avatar: "/placeholder.svg",
   location: "São Paulo, Brasil"
 };
+
+/** Where every contact link on the page points -- one place to change them. */
+export const contact = {
+  email: 'OrlaEK@proton.me',
+  github: 'https://github.com/devAndreotti',
+  githubHandle: '@devAndreotti',
+  repos: 'https://github.com/devAndreotti?tab=repositories',
+  linkedin: 'https://www.linkedin.com/in/ricardo-andreotti-gon%C3%A7alves-0b5785283/',
+  linkedinHandle: '/in/ricardo-andreotti',
+  resume: './resume.pdf',
+};

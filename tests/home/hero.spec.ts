@@ -28,13 +28,23 @@ test("clicking the front card of the stack sends it to the back", async ({ page 
     .not.toBe(zBefore);
 });
 
-test('"Modo recrutador" swaps in a condensed resume view and back', async ({ page }) => {
+test('"Modo recrutador" opens a one-screen summary that closes again', async ({ page }) => {
   await page.goto("");
   const hero = page.locator("#header");
 
   await hero.getByRole("button", { name: "Modo recrutador" }).click();
-  await expect(hero.getByText("Resumo rápido")).toBeVisible();
+  const dialog = page.getByRole("dialog", { name: "Resumo rápido para recrutadores" });
+  await expect(dialog.getByText("Resumo rápido")).toBeVisible();
+  await expect(dialog.getByRole("link", { name: /Self-Sync Daily/ })).toBeVisible();
 
-  await hero.getByRole("button", { name: "Voltar ao normal" }).click();
-  await expect(hero.getByRole("heading", { level: 1 })).toBeVisible();
+  await dialog.getByRole("button", { name: "Fechar" }).click();
+  await expect(dialog).not.toBeVisible();
+});
+
+test("the stats row shows projects, repositories, contributions and semester", async ({ page }) => {
+  await page.goto("");
+  const hero = page.locator("#header");
+  for (const label of ["Projetos", "Repositórios", "Contribuições", "Semestre"]) {
+    await expect(hero.getByText(label, { exact: true })).toBeVisible();
+  }
 });

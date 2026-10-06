@@ -1,6 +1,20 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { useState } from "react";
 import Marquee from "./Marquee";
+
+// The boost toggle lives in the Skills section header; this harness stands in for it.
+const Harness = () => {
+  const [boosted, setBoosted] = useState(false);
+  return (
+    <>
+      <button type="button" onClick={() => setBoosted(true)}>
+        clique pra acelerar
+      </button>
+      <Marquee boosted={boosted} />
+    </>
+  );
+};
 
 function readX(el: HTMLElement): number {
   return el.scrollLeft;
@@ -21,7 +35,7 @@ describe("Marquee", () => {
   });
 
   it("boosts speed without jumping — position right after the click is continuous with where it already was", async () => {
-    render(<Marquee />);
+    render(<Harness />);
     const track = screen.getAllByTestId("marquee-track")[0];
 
     await waitFor(() => expect(readX(track)).not.toBe(0));
@@ -45,7 +59,7 @@ describe("Marquee", () => {
     await new Promise((r) => setTimeout(r, 20));
     const justAfterClick = readX(track);
     const elapsedS = (performance.now() - clickTime) / 1000;
-    const maxBoostedSpeed = 600 / 7; // half-width (scrollWidth/2 = 1200/2) / BOOST_DURATION_S
+    const maxBoostedSpeed = 600 / 14; // half-width (scrollWidth/2 = 1200/2) / BOOST_DURATION_S
     // Generous multiplier + constant: real elapsed time already absorbs a slow
     // test runner, this only needs extra room for measurement/rounding jitter
     // around the boundary — a real jump bug overshoots this by 10x or more.

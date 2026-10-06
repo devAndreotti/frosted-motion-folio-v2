@@ -12,6 +12,8 @@ export function hexToRgbTriplet(hex: string): string {
 export interface ModeTokens {
   /** Full CSS gradient for the page background — never a flat color. */
   bg: string;
+  /** First gradient stop as a flat color -- the opaque base under stacked glass cards and dialogs. */
+  solid: string;
   /** Three ambient blob colors (page-behind-the-glass "aurora" glow), reusing the same gradient stops. */
   glow1: string;
   glow2: string;
@@ -121,6 +123,7 @@ function buildModeTokens(hue: Hue, mode: Mode): ModeTokens {
 
   return {
     bg: gradientBg(stops, mode),
+    solid: stops[0],
     // Ambient "aurora" blobs behind the glass panels — soft, not eye-catching.
     glow1: glowColor(electric, mode === 'light' ? 0.3 : 0.22),
     glow2: glowColor(cyan, mode === 'light' ? 0.3 : 0.22),

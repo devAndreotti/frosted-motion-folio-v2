@@ -5,10 +5,7 @@ import { test, expect } from "@playwright/test";
 // used to activate at the same width the surname re-expanded, with no
 // flex-wrap/min-w-0 guard -- risking the row wrapping to 2 lines inside its
 // fixed h-16 bar. Only meaningful once the desktop row is shown (>= md).
-test("desktop nav bar never wraps to more than one line", async ({ page }) => {
-  const viewport = page.viewportSize();
-  test.skip(!viewport || viewport.width < 768, "desktop nav row only renders at md and above");
-
+test("the nav bar never wraps to more than one line, at any width", async ({ page }) => {
   await page.goto("");
   const navBar = page.getByTestId("nav-bar");
   const box = await navBar.boundingBox();

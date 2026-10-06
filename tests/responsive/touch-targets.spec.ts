@@ -27,7 +27,7 @@ test("CaseModal close/gallery buttons meet the minimum touch-target size", async
 
 test("color swatch picker dots meet the minimum touch-target size in the mobile menu", async ({ page }) => {
   const viewport = page.viewportSize();
-  test.skip(!viewport || viewport.width >= 768, "mobile hamburger menu only renders below md");
+  test.skip(!viewport || viewport.width > 960, "mobile hamburger menu only renders at 960px and below");
 
   await page.goto("");
   await page.getByRole("button", { name: "Abrir menu" }).click();

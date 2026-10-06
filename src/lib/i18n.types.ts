@@ -9,12 +9,18 @@ export function pick<T>(value: Localized<T>, lang: Lang): T {
   return value[lang];
 }
 
+interface Stat {
+  label: string;
+  desc: string;
+}
+
 export interface Strings {
   common: {
     sendEmail: string;
     copyEmail: string;
     emailCopied: string;
     skipToContent: string;
+    close: string;
   };
   nav: {
     home: string;
@@ -33,18 +39,23 @@ export interface Strings {
     lead1: string;
     lead2: string;
     badge: string;
+    location: string;
     paragraph: string;
     availability: string;
     ctaProjects: string;
     ctaRecruiter: string;
-    cardStackHint: string;
     stackPrev: string;
     stackNext: string;
-    stats: { value: string; label: string; desc: string }[];
-    scrollCueAria: string;
+    stats: {
+      projects: Stat & { value: string };
+      repos: Stat;
+      contributions: Stat;
+      semester: Stat & { value: string };
+    };
     recruiterLabel: string;
+    recruiterRole: string;
     recruiterBullets: string[];
-    recruiterBack: string;
+    recruiterQuick: string;
     recruiterDialogAria: string;
     photoAlt: (name: string) => string;
     projectAlt: (title: string) => string;
@@ -52,33 +63,31 @@ export interface Strings {
   marquee: {
     sectionLabel: string;
     title: string;
+    subtitle: string;
     boostBtn: string;
+    boostOff: string;
     ariaLabel: string;
     catLabels: Record<'lang' | 'frontend' | 'backend' | 'data' | 'tool' | 'automation', string>;
   };
   skills: {
-    sectionLabel: string;
-    title: string;
-    bentoTab: string;
-    radarTab: string;
-    coreTitle: string;
-    coreDesc: string;
     areaFilterLabel: string;
     allAreas: string;
     projectsUnit: (count: number) => string;
+    reposUnit: string;
     alsoKnown: string;
-    radarTitle: string;
-    radarDesc: string;
-    radarSvgAria: string;
   };
   projects: {
     sectionLabel: string;
     title: string;
     subtitle: string;
     categoryFilters: Record<'all' | 'web' | 'ia' | 'mobile' | 'tool', string>;
+    filterAria: string;
     casePrincipalBadge: string;
     detailLabels: { tipo: string; frente: string; duracao: string; status: string };
+    featuredMeta: { frente: string; duracao: string; status: string };
     openCase: string;
+    demo: string;
+    code: string;
     emptyCategory: string;
     moreProjects: (count: number) => string;
     viewDetailsAria: (title: string) => string;
@@ -96,32 +105,31 @@ export interface Strings {
   timeline: {
     sectionLabel: string;
     title: string;
-    prevAria: string;
-    nextAria: string;
     stops: { year: string; title: string; desc: string }[];
   };
   activity: {
     sectionLabel: string;
     title: string;
     updated: (time: string) => string;
-    prevAria: string;
-    nextAria: string;
+    viewProfile: string;
+    inRepo: string;
     emptyState: string;
-    viewAllGithub: string;
+    summary: { contributions: string; activeDays: string; streak: string; streakValue: (days: number) => string };
+    heatmapAria: (total: string) => string;
     heatmapLess: string;
     heatmapMore: string;
     heatmapTooltip: (count: number, date: string) => string;
   };
   footer: {
     localTime: (time: string) => string;
-    heading1: string;
-    heading2: string;
+    heading: string;
     paragraph: string;
     resume: string;
     directLabel: string;
-    quickLinks: { github: string; linkedin: string; projects: string; skills: string };
+    quickLinks: { github: string; linkedin: string; email: string; projects: string };
+    projectsHandle: (cases: number, others: number) => string;
     copyright: (name: string) => string;
-    backToTopAria: string;
+    backToTop: string;
   };
   notFound: {
     message: string;

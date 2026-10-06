@@ -14,7 +14,12 @@ describe("Timeline", () => {
       </LanguageProvider>
     );
 
-    expect(screen.getByText("Como cheguei até aqui")).toBeTruthy();
+    expect(screen.getByText("Como cheguei até aqui.")).toBeTruthy();
     expect(screen.getByText("Trajetória")).toBeTruthy();
+    // The last stop is "now" and gets the accent ring.
+    const nodes = document.querySelectorAll(".tn");
+    expect(nodes).toHaveLength(4);
+    expect(nodes[3].className).toContain("now");
+    expect(nodes[0].className).not.toContain("now");
   });
 });

@@ -1,150 +1,105 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useGithubContributions, type ContributionDay } from '@/hooks/useGithubContributions';
+import { lastYear, summarize, toWeeks, YEAR_WEEKS } from '@/lib/contributions';
 
-const CELL = 11;
-const GAP = 3;
-const MIN_DAYS = 84; // ~12 weeks — floor so the strip never shrinks to near-nothing on tiny screens
-const LEVEL_ALPHA = [0, 0.3, 0.5, 0.75, 1];
-
-function levelColor(level: number): string {
-  return level === 0 ? 'var(--surface-2)' : `rgb(var(--accent-rgb) / ${LEVEL_ALPHA[level]})`;
+interface MonthLabel {
+  week: number;
+  label: string;
 }
 
-function chunkIntoWeeks(days: ContributionDay[]): (ContributionDay | null)[][] {
-  if (days.length === 0) return [];
-  const weeks: (ContributionDay | null)[][] = [];
-  let current: (ContributionDay | null)[] = [];
-  const firstDow = new Date(days[0].date).getDay();
-  for (let i = 0; i < firstDow; i++) current.push(null);
-  for (const day of days) {
-    current.push(day);
-    if (current.length === 7) {
-      weeks.push(current);
-      current = [];
-    }
-  }
-  if (current.length > 0) weeks.push(current);
-  return weeks;
+/** A label at the first week of each month, the year added on January; skips one that would crowd the previous. */
+export function monthLabels(weeks: (ContributionDay | null)[][], lang: 'pt' | 'en'): MonthLabel[] {
+  const fmt = new Intl.DateTimeFormat(lang === 'pt' ? 'pt-BR' : 'en-US', { month: 'short', timeZone: 'UTC' });
+  const out: MonthLabel[] = [];
+  let lastMonth = -1;
+  weeks.forEach((week, w) => {
+    const first = week.find((d): d is ContributionDay => d !== null);
+    if (!first) return;
+    const date = new Date(`${first.date}T00:00:00Z`);
+    const month = date.getUTCMonth();
+    if (month === lastMonth) return;
+    lastMonth = month;
+    if (out.length > 0 && w - out[out.length - 1].week < 3) return;
+    const name = fmt.format(date).replace('.', '');
+    out.push({ week: w, label: month === 0 ? `${name} ${String(date.getUTCFullYear()).slice(2)}` : name });
+  });
+  return out;
 }
 
-/** Calendar-style contribution heatmap (up to ~2 years) — the volume/consistency companion to the activity cards above it. */
+/** Last 12 months of contributions: three headline numbers, then a GitHub-style calendar that stretches to the box. */
 const ContributionHeatmap = () => {
   const { lang, t } = useLanguage();
   const { days, loading } = useGithubContributions();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [visibleDays, setVisibleDays] = useState(0);
-  const [hovered, setHovered] = useState<{ day: ContributionDay; wi: number; di: number } | null>(null);
+  const [hovered, setHovered] = useState<{ day: ContributionDay; w: number; d: number } | null>(null);
 
-  useLayoutEffect(() => {
-    // Show as much history as fits the available width — more than a year
-    // when there's room, fewer weeks on a narrow screen — instead of a fixed
-    // span the container has to scroll to see.
-    const el = containerRef.current;
-    if (!el) return;
-    const compute = () => {
-      const weeksFit = Math.floor(el.clientWidth / (CELL + GAP));
-      setVisibleDays(Math.min(days.length, Math.max(MIN_DAYS, weeksFit * 7)));
-    };
-    compute();
-    const ro = new ResizeObserver(compute);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [days.length]);
-
-  if (loading) {
-    return <div className="shimmer rounded-xl mb-9" style={{ height: 7 * CELL + 6 * GAP + 34 }} />;
-  }
+  if (loading) return <div className="shimmer" style={{ height: 260, borderRadius: 24, marginTop: 36 }} />;
   if (days.length === 0) return null;
 
-  const shown = visibleDays > 0 ? days.slice(-visibleDays) : days;
-  const weeks = chunkIntoWeeks(shown);
-  const monthFmt = new Intl.DateTimeFormat(lang === 'pt' ? 'pt-BR' : 'en-US', { month: 'short' });
-  const dateFmt = new Intl.DateTimeFormat(lang === 'pt' ? 'pt-BR' : 'en-US', { day: 'numeric', month: 'short' });
-  let lastMonth = -1;
-  let lastYear = -1;
-  const monthLabels = weeks.map((week) => {
-    const firstDay = week.find((d): d is ContributionDay => d !== null);
-    if (!firstDay) return '';
-    const date = new Date(firstDay.date);
-    const month = date.getMonth();
-    const year = date.getFullYear();
-    if (month === lastMonth && year === lastYear) return '';
-    // More than a year of history can repeat month names -- disambiguate by
-    // showing the year on the very first label and at every year boundary,
-    // not on every column (that would be redundant noise the rest of the time).
-    const showYear = year !== lastYear;
-    lastMonth = month;
-    lastYear = year;
-    return showYear ? `${monthFmt.format(date)} '${String(year).slice(2)}` : monthFmt.format(date);
-  });
+  const year = lastYear(days, new Date().toISOString().slice(0, 10));
+  const weeks = toWeeks(year);
+  const { total, activeDays, longestStreak } = summarize(year);
+  const num = new Intl.NumberFormat(lang === 'pt' ? 'pt-BR' : 'en-US');
+  const dateFmt = new Intl.DateTimeFormat(lang === 'pt' ? 'pt-BR' : 'en-US', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+  const tip = (day: ContributionDay) => t.activity.heatmapTooltip(day.count, dateFmt.format(new Date(`${day.date}T00:00:00Z`)));
 
   return (
-    <div className="mb-9" data-testid="contribution-heatmap">
-      <div ref={containerRef} className="overflow-hidden pb-2">
-        <div className="inline-flex flex-col gap-1.5">
-          <div style={{ display: 'grid', gridAutoFlow: 'column', gridAutoColumns: `${CELL + GAP}px` }}>
-            {monthLabels.map((label, i) => (
-              <span key={i} className="text-[9.5px]" style={{ color: 'var(--fg-4)' }}>
-                {label}
-              </span>
-            ))}
-          </div>
-          <div style={{ position: 'relative', display: 'grid', gridTemplateRows: `repeat(7, ${CELL}px)`, gridAutoFlow: 'column', gridAutoColumns: `${CELL}px`, gap: GAP }}>
-            {weeks.flatMap((week, wi) =>
-              week.map((day, di) => (
-                <div
-                  key={`${wi}-${di}`}
-                  data-testid={day ? 'contribution-day' : undefined}
-                  aria-label={day ? t.activity.heatmapTooltip(day.count, dateFmt.format(new Date(day.date))) : undefined}
-                  onMouseEnter={() => day && setHovered({ day, wi, di })}
-                  onMouseLeave={() => setHovered(null)}
-                  style={{
-                    width: CELL,
-                    height: CELL,
-                    borderRadius: 2,
-                    background: day ? levelColor(day.level) : 'transparent',
-                    outline: hovered?.day === day ? '1.5px solid var(--fg-1)' : undefined,
-                    outlineOffset: 1,
-                  }}
-                />
-              ))
-            )}
-            {hovered && (
-              <div
-                className="glass"
-                style={{
-                  position: 'absolute',
-                  left: hovered.wi * (CELL + GAP) + CELL / 2,
-                  top: hovered.di * (CELL + GAP) - 10,
-                  transform: 'translate(-50%, -100%)',
-                  padding: '6px 11px',
-                  borderRadius: 8,
-                  fontSize: 11,
-                  fontWeight: 600,
-                  whiteSpace: 'nowrap',
-                  pointerEvents: 'none',
-                  zIndex: 20,
-                }}
-              >
-                {t.activity.heatmapTooltip(hovered.day.count, dateFmt.format(new Date(hovered.day.date)))}
-              </div>
-            )}
-          </div>
+    <>
+      <div className="hsum">
+        <div>
+          <span className="hsum-v">{num.format(total)}</span>
+          <span className="hsum-l">{t.activity.summary.contributions}</span>
+        </div>
+        <div>
+          <span className="hsum-v">{num.format(activeDays)}</span>
+          <span className="hsum-l">{t.activity.summary.activeDays}</span>
+        </div>
+        <div>
+          <span className="hsum-v">{t.activity.summary.streakValue(longestStreak)}</span>
+          <span className="hsum-l">{t.activity.summary.streak}</span>
         </div>
       </div>
-      <div className="flex items-center gap-1.5 mt-1.5">
-        <span className="text-[9.5px]" style={{ color: 'var(--fg-4)' }}>
+      <div className="hm-box glass" data-testid="contribution-heatmap">
+        <div className="hm-scroll">
+          <div className="hm-in">
+            {monthLabels(weeks, lang).map((m) => (
+              <span key={m.week} className="hm-m" style={{ left: `${((m.week / YEAR_WEEKS) * 100).toFixed(2)}%` }}>
+                {m.label}
+              </span>
+            ))}
+            <div className="hm-grid" role="img" aria-label={t.activity.heatmapAria(num.format(total))} onMouseLeave={() => setHovered(null)}>
+              {weeks.map((week, w) => (
+                <div key={w} className="hm-col">
+                  {week.map((day, d) => (
+                    <i
+                      key={d}
+                      className={`hm ${day ? `l${day.level}` : 'lx'}`}
+                      data-testid={day ? 'contribution-day' : undefined}
+                      title={day ? tip(day) : undefined}
+                      onMouseEnter={() => setHovered(day ? { day, w, d } : null)}
+                    />
+                  ))}
+                </div>
+              ))}
+              {hovered && (
+                <span className="hm-tip glass-strong" style={{ left: `${((hovered.w + 0.5) / YEAR_WEEKS) * 100}%`, top: `calc(${(hovered.d / 7) * 100}% - 8px)` }}>
+                  {tip(hovered.day)}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="hm-leg">
           {t.activity.heatmapLess}
-        </span>
-        {LEVEL_ALPHA.map((_, level) => (
-          <div key={level} style={{ width: CELL, height: CELL, borderRadius: 2, background: levelColor(level) }} />
-        ))}
-        <span className="text-[9.5px]" style={{ color: 'var(--fg-4)' }}>
+          <i className="hm-gap" />
+          {[0, 1, 2, 3, 4].map((level) => (
+            <i key={level} className={`hm l${level}`} />
+          ))}
+          <i className="hm-gap" />
           {t.activity.heatmapMore}
-        </span>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

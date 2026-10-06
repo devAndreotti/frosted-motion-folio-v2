@@ -14,6 +14,7 @@ const FAKE_PROJECT: CuratedProject = {
   cat: "web",
   tint: "#000",
   description: { pt: "desc", en: "desc" },
+  tagline: { pt: "linha", en: "line" },
   long: { pt: "long pt", en: "long en" },
   points: { pt: ["ponto"], en: ["point"] },
 };

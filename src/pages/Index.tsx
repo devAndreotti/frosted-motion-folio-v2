@@ -1,6 +1,5 @@
 import Navigation from '@/components/Navigation';
 import Header from '@/components/Header';
-import Marquee from '@/components/Marquee';
 import GithubActivityFeed from '@/components/GithubActivityFeed';
 import Projects from '@/components/Projects';
 import Skills from '@/components/Skills';
@@ -24,12 +23,14 @@ const Index = () => {
       >
         {t.common.skipToContent}
       </a>
-      <div className="min-h-screen relative">
+      {/* clip, not hidden: trims the hero glow and the cards' flight at the
+          viewport edge without becoming a scroll container (that would
+          break the sticky nav). */}
+      <div className="min-h-screen relative [overflow-x:clip]">
         <Navigation />
         <main>
           <Header />
           <Projects />
-          <Marquee />
           <Skills />
           <GithubActivityFeed />
           <Timeline />

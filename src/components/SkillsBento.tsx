@@ -2,78 +2,65 @@ import { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { projects } from '@/data/projects';
 import { ALSO_KNOWN, STACK_AREAS, STACK_TIERS, type StackArea, type StackTier, type TierTool } from '@/data/skills';
-import { countProjectsUsing, inArea } from '@/lib/stackCounts';
+import { inArea, projectsUsing } from '@/lib/stackCounts';
 
 const ALL_TOOLS = STACK_TIERS.flatMap((tier) => tier.tools);
 
-const Mono = ({ tool, large }: { tool: TierTool; large?: boolean }) => (
-  <span
-    className={`${large ? 'w-9 h-9 text-[13px] rounded-[10px]' : 'w-8 h-8 text-[11px] rounded-[9px]'} flex items-center justify-center font-extrabold flex-shrink-0`}
-    style={{ background: `linear-gradient(155deg, ${tool.tint}, ${tool.tint}99)`, boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.3)' }}
-  >
+const Badge = ({ tool }: { tool: TierTool }) => (
+  <span className="bdg" style={{ background: tool.tint }}>
     {tool.mono}
   </span>
 );
 
-/** Three rising bars, `level` of them lit -- how much a tier gets used, at a glance. */
-const LevelMeter = ({ level }: { level: number }) => (
-  <span className="flex items-end gap-[3px] h-5 pt-0.5 flex-shrink-0" aria-hidden="true">
-    {[8, 12, 16].map((h, i) => (
-      <span key={h} className="block w-[5px] rounded-sm" style={{ height: h, background: i < level ? 'var(--accent)' : 'var(--border-2)' }} />
-    ))}
-  </span>
-);
-
-const TierCard = ({ tier, className = '', children }: { tier: StackTier; className?: string; children: React.ReactNode }) => {
+const TierHead = ({ tier }: { tier: StackTier }) => {
   const { lang } = useLanguage();
   return (
-    <div className={`glass rounded-3xl p-5 md:p-6 flex flex-col gap-4 ${className}`}>
-      <div className="flex items-start gap-3.5">
-        <LevelMeter level={tier.level} />
-        <div>
-          <div className="text-[17px] font-extrabold leading-tight">{tier.title[lang]}</div>
-          <div className="text-[13px] mt-1" style={{ color: 'var(--fg-4)' }}>
-            {tier.desc[lang]}
-          </div>
-        </div>
+    <div className="sk-h">
+      <span className={`tm m${tier.level}`} aria-hidden="true">
+        <i />
+        <i />
+        <i />
+      </span>
+      <div>
+        <span className="sk-t">{tier.title[lang]}</span>
+        <span className="sk-s">{tier.desc[lang]}</span>
       </div>
-      {children}
     </div>
   );
 };
 
 /**
  * The stack grouped by how much each tool gets used: daily drivers as big
- * tiles with the number of portfolio projects that use them, the rest as
- * chips. The area filter fades out whatever doesn't belong to it.
+ * tiles with how many portfolio projects use them (Git: public repos), the
+ * rest as chips. The area filter fades out whatever doesn't belong to it.
  */
-const SkillsBento = () => {
+const SkillsBento = ({ repoCount = null }: { repoCount?: number | null }) => {
   const { lang, t } = useLanguage();
   const [area, setArea] = useState<StackArea | 'all'>('all');
   const [daily, comfortable, learning] = STACK_TIERS;
 
-  const fade = (tool: TierTool) => (inArea(tool, area) ? '' : ' opacity-20 grayscale');
-  const meta = (tool: TierTool) => {
-    const count = tool.matches ? countProjectsUsing(projects, tool.matches) : 0;
-    return count > 0 ? { count, label: t.skills.projectsUnit(count) } : { count: null, label: tool.note?.[lang] ?? '' };
+  const off = (tool: TierTool) => (inArea(tool, area) ? '' : ' off');
+  // A number + unit when there's something to count, otherwise the tool's note.
+  const metric = (tool: TierTool): { num: number | null; unit: string } => {
+    if (tool.repos && repoCount != null) return { num: repoCount, unit: t.skills.reposUnit };
+    const used = tool.matches ? projectsUsing(projects, tool.matches) : [];
+    if (used.length > 0) return { num: used.length, unit: t.skills.projectsUnit(used.length) };
+    return { num: null, unit: tool.note?.[lang] ?? '' };
   };
-  const metaText = (tool: TierTool) => {
-    const m = meta(tool);
-    return m.count == null ? m.label : `${m.count} ${m.label}`;
+  // Chips name the project when only one uses the tool ("Chef AI"), count otherwise.
+  const chipMeta = (tool: TierTool) => {
+    const used = tool.matches ? projectsUsing(projects, tool.matches) : [];
+    if (used.length === 1) return used[0].title;
+    if (used.length > 1) return `${used.length} ${t.skills.projectsUnit(used.length)}`;
+    return tool.note?.[lang] ?? '';
   };
 
-  const chip = (tool: TierTool, dashed: boolean) => (
-    <div
-      key={tool.name}
-      className={`flex-auto flex items-center gap-2.5 h-[46px] pl-1.5 pr-3.5 rounded-2xl transition-all duration-300${fade(tool)}`}
-      style={{ border: `1px ${dashed ? 'dashed' : 'solid'} var(--border-1)`, background: dashed ? 'transparent' : 'var(--surface-1)' }}
-    >
-      <Mono tool={tool} />
+  const chip = (tool: TierTool) => (
+    <div key={tool.name} className={`chp${off(tool)}`}>
+      <Badge tool={tool} />
       <span>
-        <span className="block text-[14px] font-bold leading-tight">{tool.name}</span>
-        <span className="block text-[10.5px] font-mono mt-0.5" style={{ color: 'var(--fg-4)' }}>
-          {metaText(tool)}
-        </span>
+        <span className="chp-n">{tool.name}</span>
+        <span className="chp-m">{chipMeta(tool)}</span>
       </span>
     </div>
   );
@@ -84,12 +71,10 @@ const SkillsBento = () => {
   ];
 
   return (
-    <div>
-      <div className="flex flex-wrap items-center gap-3 mb-4">
-        <span className="text-[11px] uppercase tracking-wider" style={{ color: 'var(--fg-4)' }}>
-          {t.skills.areaFilterLabel}
-        </span>
-        <div className="flex flex-wrap gap-2" role="group" aria-label={t.skills.areaFilterLabel}>
+    <>
+      <div className="sk-bar">
+        <p className="k">{t.skills.areaFilterLabel}</p>
+        <div className="af" role="group" aria-label={t.skills.areaFilterLabel}>
           {filters.map((f) => {
             const active = area === f.id;
             const count = f.id === 'all' ? ALL_TOOLS.length : ALL_TOOLS.filter((tool) => inArea(tool, f.id)).length;
@@ -99,63 +84,52 @@ const SkillsBento = () => {
                 type="button"
                 aria-pressed={active}
                 onClick={() => setArea(active && f.id !== 'all' ? 'all' : f.id)}
-                className="glass h-[34px] px-3 rounded-full flex items-center gap-1.5 text-[12px] font-semibold"
-                style={active ? { background: 'var(--accent)', color: 'var(--accent-text)', borderColor: 'transparent' } : { color: 'var(--fg-2)' }}
+                className={`np${active ? ' on' : ''}`}
               >
-                {f.tint && <span className="w-2 h-2 rounded-full" style={{ background: f.tint }} />}
+                {f.tint && <i className="np-dot" style={{ background: f.tint }} />}
                 <span>{f.label}</span>
-                <span className="font-mono text-[11px] opacity-60">{count}</span>
+                <span className="np-n">{count}</span>
               </button>
             );
           })}
         </div>
       </div>
 
-      <div className="grid md:grid-cols-[1.15fr_1fr] gap-3.5">
-        <TierCard tier={daily} className="md:row-span-2">
-          <div className="grid grid-cols-2 gap-2.5 flex-1">
+      <div className="sk-grid">
+        <article className="sk-card sk-main glass">
+          <TierHead tier={daily} />
+          <div className="tiles">
             {daily.tools.map((tool, i) => {
-              const m = meta(tool);
+              const m = metric(tool);
               const wide = i === daily.tools.length - 1 && daily.tools.length % 2 === 1;
               return (
-                <div
-                  key={tool.name}
-                  className={`flex ${wide ? 'col-span-2 flex-row items-center justify-between' : 'flex-col justify-between'} gap-5 p-4 rounded-2xl transition-all duration-300 hover:-translate-y-0.5${fade(tool)}`}
-                  style={{ border: '1px solid var(--border-1)', background: 'var(--surface-1)' }}
-                >
-                  <span className="flex items-center gap-3">
-                    <Mono tool={tool} large />
-                    <span className="text-[15px] font-bold">{tool.name}</span>
-                  </span>
-                  <span className="flex items-baseline gap-2">
-                    {m.count != null && (
-                      <span className="text-[30px] md:text-[34px] font-extrabold leading-none tracking-tight" style={{ color: 'var(--accent)' }}>
-                        {m.count}
-                      </span>
-                    )}
-                    <span className="text-[11.5px] font-mono" style={{ color: 'var(--fg-4)' }}>
-                      {m.label}
-                    </span>
-                  </span>
+                <div key={tool.name} className={`tile${wide ? ' wide' : ''}${off(tool)}`} data-tool={tool.name}>
+                  <div className="tile-top">
+                    <Badge tool={tool} />
+                    <span className="tile-n">{tool.name}</span>
+                  </div>
+                  <div className="tile-v">
+                    {m.num != null && <span className="tile-num">{m.num}</span>}
+                    <span className="tile-u">{m.unit}</span>
+                  </div>
                 </div>
               );
             })}
           </div>
-        </TierCard>
-
-        <TierCard tier={comfortable}>
-          <div className="flex flex-wrap gap-2">{comfortable.tools.map((tool) => chip(tool, false))}</div>
-        </TierCard>
-
-        <TierCard tier={learning}>
-          <div className="flex flex-wrap gap-2">{learning.tools.map((tool) => chip(tool, true))}</div>
-        </TierCard>
+        </article>
+        <article className="sk-card glass">
+          <TierHead tier={comfortable} />
+          <div className="chips">{comfortable.tools.map(chip)}</div>
+        </article>
+        <article className="sk-card sk-learn glass">
+          <TierHead tier={learning} />
+          <div className="chips">{learning.tools.map(chip)}</div>
+        </article>
       </div>
-
-      <p className="mt-4 text-[12px] font-mono" style={{ color: 'var(--fg-4)' }}>
-        {t.skills.alsoKnown}: <span style={{ color: 'var(--fg-2)' }}>{ALSO_KNOWN.join(' · ')}</span>
+      <p className="sk-foot">
+        {t.skills.alsoKnown}: <span className="sk-foot-b">{ALSO_KNOWN.join(' · ')}</span>
       </p>
-    </div>
+    </>
   );
 };
 

@@ -5,7 +5,7 @@ import { test, expect } from "@playwright/test";
 // this only asserts what's guaranteed regardless of live quota: the section
 // renders and resolves to either real activity cards or the graceful
 // fallback, never stays stuck loading or throws.
-test("resolves to either real activity cards or the graceful fallback, and prev/next don't throw", async ({ page }) => {
+test("resolves to either real activity cards or the graceful fallback", async ({ page }) => {
   await page.goto("");
   const section = page.locator("#github-activity");
 
@@ -25,10 +25,5 @@ test("resolves to either real activity cards or the graceful fallback, and prev/
     )
     .toBe(true);
 
-  const next = section.getByRole("button", { name: "Próxima atividade" });
-  await next.click();
-  await section.getByRole("button", { name: "Atividade anterior" }).click();
-  await expect(section.getByRole("heading", { name: "O que ando fazendo no GitHub" })).toBeVisible();
-
-  await expect(section.getByRole("link", { name: "Ver tudo no GitHub" })).toHaveAttribute("href", "https://github.com/devAndreotti");
+  await expect(section.getByRole("link", { name: /Ver perfil/ })).toHaveAttribute("href", "https://github.com/devAndreotti");
 });

@@ -27,6 +27,7 @@ export const useTheme = () => useContext(ThemeContext);
 // else (accent, glass surface/border) is still read as var(...) throughout
 // the component tree, so those stay as CSS custom properties.
 const CSS_VAR_BY_TOKEN = {
+  solid: '--solid',
   accent: '--accent',
   accentText: '--accent-text',
   glassSurface: '--surface-1',

@@ -1,65 +1,59 @@
 import { Github, Linkedin } from 'lucide-react';
+import { contact } from '@/data/personal';
 import { track } from '@/lib/track';
+import type { Lang } from '@/lib/i18n';
 
-const GITHUB_URL = 'https://github.com/devAndreotti';
-const LINKEDIN_URL = 'https://www.linkedin.com/in/ricardo-andreotti-gon%C3%A7alves-0b5785283/';
+/** GitHub + LinkedIn as the round 48 px buttons that close the hero's CTA row. */
+export const SocialButtons = () => (
+  <>
+    <a href={contact.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub" onClick={() => track('click-github')} className="ibtn">
+      <Github className="ic" />
+    </a>
+    <a href={contact.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" onClick={() => track('click-linkedin')} className="ibtn">
+      <Linkedin className="ic" />
+    </a>
+  </>
+);
 
-/** GitHub + LinkedIn icon links — identical in the desktop bar and the mobile menu, just sized differently. */
-export const SocialLinks = ({ size = 'sm' }: { size?: 'sm' | 'md' }) => {
-  const dim = size === 'sm' ? 'w-[34px] h-[34px]' : 'w-10 h-10';
-  return (
-    <>
-      <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" aria-label="GitHub" onClick={() => track('click-github')} className={`glass ${dim} rounded-full flex items-center justify-center`}>
-        <Github className="w-4 h-4" />
-      </a>
-      <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" onClick={() => track('click-linkedin')} className={`glass ${dim} rounded-full flex items-center justify-center`}>
-        <Linkedin className="w-4 h-4" />
-      </a>
-    </>
-  );
-};
-
-interface RepoBadgeProps {
+interface RepoPillProps {
   loading: boolean;
   count: number | null;
   label: (count: number) => string;
-  compact?: boolean;
 }
 
-/** "N public repos" pill — same content in the desktop bar and the mobile menu, just different padding/width. */
-export const RepoBadge = ({ loading, count, label, compact }: RepoBadgeProps) => {
-  // Every pill in the desktop bar shares this 34 px height (the color, PT/EN, theme and social pills too).
-  const pad = compact ? 'px-3 py-2' : 'px-3 h-[34px]';
+/** "N repositórios" pill in the nav bar -- hidden until the GitHub count is known. */
+export const RepoPill = ({ loading, count, label }: RepoPillProps) => {
   if (loading) {
     return (
-      <div className={`glass flex items-center gap-2 ${pad} rounded-full ${compact ? 'mb-1' : 'w-[124px]'}`}>
-        <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 shimmer" />
-        <span className={`h-2.5 rounded shimmer ${compact ? 'w-32' : 'flex-1'}`} />
-      </div>
+      <span className="np fix nav-pill" aria-hidden="true">
+        <span className="dot shimmer" />
+        <span className="shimmer" style={{ width: 92, height: 10, borderRadius: 4 }} />
+      </span>
     );
   }
   if (count == null) return null;
   return (
-    <div className={`glass flex items-center gap-2 ${pad} rounded-full ${compact ? 'mb-1' : 'min-w-0 max-w-[220px]'}`}>
-      <span className="relative w-1.5 h-1.5 rounded-full bg-green-400 flex-shrink-0">
-        <span className="absolute inset-0 rounded-full bg-green-400 animate-pulse-dot" />
-      </span>
-      <span className={compact ? 'text-[12px]' : 'text-[11px] truncate'} style={{ color: 'var(--fg-3)' }}>
-        {label(count)}
-      </span>
-    </div>
+    <a className="np nav-pill" href={contact.repos} target="_blank" rel="noopener noreferrer">
+      <span className="dot" />
+      {label(count)}
+    </a>
   );
 };
 
-interface LangToggleButtonProps {
-  lang: 'pt' | 'en';
-  onClick: () => void;
+interface LangSwitchProps {
+  lang: Lang;
+  onPick: (lang: Lang) => void;
   ariaLabel: string;
+  className?: string;
 }
 
-/** PT/EN toggle — identical in the desktop bar and the mobile menu. */
-export const LangToggleButton = ({ lang, onClick, ariaLabel }: LangToggleButtonProps) => (
-  <button type="button" onClick={onClick} aria-label={ariaLabel} className="glass w-[34px] h-[34px] rounded-full flex items-center justify-center text-[11px] font-bold uppercase">
-    {lang === 'pt' ? 'EN' : 'PT'}
-  </button>
+/** PT | EN segmented pill -- the active language sits on the accent. */
+export const LangSwitch = ({ lang, onPick, ariaLabel, className = '' }: LangSwitchProps) => (
+  <div className={`np lang ${className}`} role="group" aria-label={ariaLabel}>
+    {(['pt', 'en'] as const).map((option) => (
+      <button key={option} type="button" aria-pressed={lang === option} className={`lg${lang === option ? ' on' : ''}`} onClick={() => onPick(option)}>
+        {option.toUpperCase()}
+      </button>
+    ))}
+  </div>
 );

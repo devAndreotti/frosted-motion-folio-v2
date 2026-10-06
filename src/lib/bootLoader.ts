@@ -1,5 +1,7 @@
 export const BOOT_LOADER_ID = 'boot-loader';
 export const BOOT_SEEN_KEY = 'boot-loader-seen';
+/** Set on <html> by the inline script while the loader is up; holds the hero's entrance animation. */
+export const BOOTING_CLASS = 'booting';
 const FADE_MS = 600;
 
 interface DismissOptions {
@@ -32,7 +34,10 @@ export async function dismissBootLoader({
   elapsed = typeof performance !== 'undefined' ? performance.now() : 0,
 }: DismissOptions = {}): Promise<void> {
   const el = doc.getElementById(BOOT_LOADER_ID);
-  if (!el) return;
+  if (!el) {
+    doc.documentElement.classList.remove(BOOTING_CLASS);
+    return;
+  }
 
   const ready = waitFor.then(
     () => undefined,
@@ -43,6 +48,7 @@ export async function dismissBootLoader({
 
   el.classList.add('is-out');
   el.setAttribute('aria-hidden', 'true');
+  doc.documentElement.classList.remove(BOOTING_CLASS);
   try {
     sessionStorage.setItem(BOOT_SEEN_KEY, '1');
   } catch {
