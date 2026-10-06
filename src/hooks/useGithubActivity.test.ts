@@ -1,5 +1,6 @@
-import { describe, expect, it } from "vitest";
-import { mapEvent, relativeTime } from "./useGithubActivity";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { renderHook, waitFor } from "@testing-library/react";
+import { groupActivity, mapEvent, relativeTime, useGithubActivity } from "./useGithubActivity";
 
 describe("relativeTime", () => {
   const now = new Date("2026-01-01T12:00:00Z").getTime();
@@ -81,5 +82,52 @@ describe("mapEvent", () => {
   it("returns null for a malformed event", () => {
     expect(mapEvent({ type: "PushEvent" })).toBeNull();
     expect(mapEvent(null)).toBeNull();
+  });
+});
+
+describe("groupActivity", () => {
+  const item = (id: string, repo: string, text: string) => ({ id, kind: "pr" as const, repo, text, time: "2026-09-12T00:00:00Z" });
+
+  it("folds consecutive identical actions on the same repo into one counted item", () => {
+    const grouped = groupActivity([item("1", "a/x", "Abriu um PR"), item("2", "a/x", "Abriu um PR"), item("3", "a/x", "Abriu um PR")]);
+    expect(grouped).toHaveLength(1);
+    expect(grouped[0]).toMatchObject({ id: "1", count: 3 });
+  });
+
+  it("keeps different actions, repos and non-adjacent repeats apart", () => {
+    const grouped = groupActivity([
+      item("1", "a/x", "Abriu um PR"),
+      item("2", "a/x", "Fez merge de um PR"),
+      item("3", "a/y", "Fez merge de um PR"),
+      item("4", "a/x", "Abriu um PR"),
+    ]);
+    expect(grouped.map((g) => g.id)).toEqual(["1", "2", "3", "4"]);
+    expect(grouped.every((g) => g.count === undefined)).toBe(true);
+  });
+});
+
+describe("useGithubActivity", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    sessionStorage.clear();
+  });
+
+  it("two mounted consumers share one round of API calls", async () => {
+    const fetchMock = vi.fn((url: string) =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(url.includes("/events/") ? [] : { public_repos: 69 }),
+      })
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    const a = renderHook(() => useGithubActivity());
+    const b = renderHook(() => useGithubActivity());
+    await waitFor(() => expect(a.result.current.loading).toBe(false));
+    await waitFor(() => expect(b.result.current.loading).toBe(false));
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(a.result.current.publicRepos).toBe(69);
+    expect(b.result.current.publicRepos).toBe(69);
   });
 });

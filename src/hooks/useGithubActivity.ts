@@ -14,6 +14,8 @@ export interface GithubActivityItem {
   text: string;
   detail?: string;
   time: string;
+  /** How many identical actions in a row this item stands for (see groupActivity). */
+  count?: number;
 }
 
 interface GithubActivityState {
@@ -111,6 +113,24 @@ function readCache(): CachedPayload | null {
   }
 }
 
+/**
+ * Folds runs of the same action on the same repo -- four "Fez merge de um PR"
+ * in a row on one repo used to fill four identical cards -- into one item
+ * with a count, keeping the newest one's detail and time.
+ */
+export function groupActivity(items: GithubActivityItem[]): GithubActivityItem[] {
+  const grouped: GithubActivityItem[] = [];
+  for (const item of items) {
+    const last = grouped[grouped.length - 1];
+    if (last && last.repo === item.repo && last.text === item.text) {
+      grouped[grouped.length - 1] = { ...last, count: (last.count ?? 1) + 1 };
+    } else {
+      grouped.push(item);
+    }
+  }
+  return grouped;
+}
+
 function writeCache(payload: Omit<CachedPayload, 'fetchedAt'>): number {
   const fetchedAt = Date.now();
   try {
@@ -119,6 +139,38 @@ function writeCache(payload: Omit<CachedPayload, 'fetchedAt'>): number {
     // sessionStorage unavailable (private mode, etc.) — fine to skip caching
   }
   return fetchedAt;
+}
+
+// The nav badge and the activity section both use this hook; sharing one
+// in-flight request keeps a cold page load at 2 API calls instead of 4
+// (the unauthenticated limit is 60/hour per IP).
+let inflight: Promise<CachedPayload | null> | null = null;
+
+async function fetchActivity(): Promise<CachedPayload | null> {
+  const [userRes, eventsRes] = await Promise.all([
+    fetch(`https://api.github.com/users/${GITHUB_USER}`),
+    fetch(`https://api.github.com/users/${GITHUB_USER}/events/public?per_page=100`),
+  ]);
+  if (!userRes.ok || !eventsRes.ok) throw new Error('github api error');
+
+  const user = await userRes.json();
+  const events = await eventsRes.json();
+  const mapped = (Array.isArray(events) ? events : []).map(mapEvent).filter((item): item is GithubActivityItem => item !== null);
+  const items = groupActivity(mapped).slice(0, FEED_LIMIT);
+  const publicRepos = user.public_repos ?? null;
+  return { publicRepos, items, fetchedAt: writeCache({ publicRepos, items }) };
+}
+
+function loadActivity(): Promise<CachedPayload | null> {
+  if (!inflight) {
+    // Network hiccup or rate limit -- resolve to null and let the UI fall back to its static copy.
+    inflight = fetchActivity()
+      .catch(() => null)
+      .finally(() => {
+        inflight = null;
+      });
+  }
+  return inflight;
 }
 
 /** Live public-repo count + a typed feed of recent activity, straight from the GitHub REST API — session-cached to stay well inside the unauthenticated rate limit. */
@@ -139,35 +191,15 @@ export function useGithubActivity(): GithubActivityState {
     }
 
     let cancelled = false;
-
-    async function load() {
-      try {
-        const [userRes, eventsRes] = await Promise.all([
-          fetch(`https://api.github.com/users/${GITHUB_USER}`),
-          fetch(`https://api.github.com/users/${GITHUB_USER}/events/public?per_page=30`),
-        ]);
-        if (!userRes.ok || !eventsRes.ok) throw new Error('github api error');
-
-        const user = await userRes.json();
-        const events = await eventsRes.json();
-        const feed = (Array.isArray(events) ? events : [])
-          .map(mapEvent)
-          .filter((item): item is GithubActivityItem => item !== null)
-          .slice(0, FEED_LIMIT);
-
-        if (!cancelled) {
-          setPublicRepos(user.public_repos ?? null);
-          setItems(feed);
-          setFetchedAt(writeCache({ publicRepos: user.public_repos ?? null, items: feed }));
-        }
-      } catch {
-        // Network hiccup or rate limit — the UI falls back to its static copy, nothing to show.
-      } finally {
-        if (!cancelled) setLoading(false);
+    loadActivity().then((payload) => {
+      if (cancelled) return;
+      if (payload) {
+        setPublicRepos(payload.publicRepos);
+        setItems(payload.items);
+        setFetchedAt(payload.fetchedAt);
       }
-    }
-
-    load();
+      setLoading(false);
+    });
     return () => {
       cancelled = true;
     };

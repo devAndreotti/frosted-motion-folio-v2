@@ -23,7 +23,7 @@ const SWAY_PHASES = [0.85, 1.15, 0.95, 1.1, 0.9, 1.05];
 // ...and a resting tilt of its own, all sagging the same way (pinned at one
 // corner, drooping under its own weight) so the row reads as unevenly hung
 // before you ever touch it, not just during a drag.
-const BASE_TILT_DEG = [4, 7, 5, 8, 4.5, 6.5];
+const BASE_TILT_DEG = [1.5, 2.5, 2, 3, 1.5, 2.5];
 // The pin sits inset from the card's edge -- flush with the corner it looks
 // like it's floating off the rounded curve instead of resting on the card.
 const PIN_INSET_X = 20; // px, matches the card's own p-5 so it lines up with the year label

@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <img src="./public/home.png" alt="Captura de tela do Frosted Motion Folio">
+  <img src="./docs/screenshots/home.png" alt="Captura de tela do Frosted Motion Folio">
 </p>
 
 ## 📋 Sobre o Projeto
@@ -23,11 +23,11 @@ Construído com **React**, **TypeScript**, **Tailwind CSS** e **Framer Motion**.
 - 🌗 **Tema Claro/Escuro**: Alternância automática ou manual de tema.
 
 <p align="center">
-  <img src="./public/dark.png" alt="Captura de tela - Tema Escuro">
+  <img src="./docs/screenshots/dark.png" alt="Captura de tela - Tema Escuro">
 </p>
 
 <p align="center">
-  <img src="./public/light.png" alt="Captura de tela - Tema Claro">
+  <img src="./docs/screenshots/light.png" alt="Captura de tela - Tema Claro">
 </p>
 
 ## 🌐 Acesse o Projeto
