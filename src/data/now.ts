@@ -90,6 +90,9 @@ export interface AlsoItem {
 
 export const NOW_ALSO: AlsoItem[] = [
   { name: 'Orbitaly', note: { pt: 'catálogo desktop de skills e MCP servers', en: 'desktop catalog of skills and MCP servers' } },
+  { name: 'Scriply', note: { pt: 'app desktop pra gerenciar, editar e agendar scripts de automação', en: 'desktop app to manage, edit and schedule automation scripts' } },
+  { name: 'Feed Dispatch', note: { pt: 'curadoria de conteúdo técnico com LLM, revisão e publicação', en: 'LLM-assisted tech content curation, review and publishing' } },
+  { name: 'Ambiente Hyprland', note: { pt: 'meu Linux com barra e widgets próprios em QML', en: 'my Linux setup with a custom bar and widgets in QML' } },
   { name: 'ollama-rtx-4gb', note: { pt: 'LLMs locais numa GPU de 4 GB, com benchmarks', en: 'local LLMs on a 4 GB GPU, with benchmarks' }, href: 'https://github.com/devAndreotti/ollama-rtx-4gb' },
 ];
 
