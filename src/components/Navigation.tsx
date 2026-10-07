@@ -28,6 +28,7 @@ const Navigation = () => {
   const { publicRepos, loading: reposLoading } = useGithubActivity();
   const NAV_ITEMS = [
     { name: t.nav.home, id: 'header' },
+    { name: t.nav.now, id: 'now' },
     { name: t.nav.projects, id: 'projects' },
     { name: t.nav.skills, id: 'skills' },
     { name: t.nav.journey, id: 'timeline' },

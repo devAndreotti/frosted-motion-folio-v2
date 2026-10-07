@@ -10,6 +10,7 @@ export const en: Strings = {
   },
   nav: {
     home: 'Home',
+    now: 'Now',
     projects: 'Projects',
     skills: 'Stack',
     journey: 'Journey',
@@ -73,6 +74,23 @@ export const en: Strings = {
     projectsUnit: (count) => (count === 1 ? 'project' : 'projects'),
     reposUnit: 'repositories on GitHub',
     alsoKnown: 'Also in the toolbox',
+  },
+  now: {
+    sectionLabel: 'Now',
+    title: "What I'm working on right now.",
+    subtitle: "What's busiest on my GitHub. Some repos are still private: those link to the project's site.",
+    aboutLabel: 'About me',
+    aboutBody:
+      "I'm Ricardo: an IT technician in my 7th semester of Computer Science at UNIP, in Sorocaba, Brazil. I learn by building things I use myself: tools to code better, AI automation running on my own infrastructure and, lately, a horror game.",
+    facts: [
+      { label: 'Based in', value: 'Sorocaba, Brazil' },
+      { label: 'Studying', value: 'Computer Science · UNIP' },
+      { label: 'Into', value: 'applied AI, DX and games' },
+    ],
+    privateCode: 'private code',
+    alsoLabel: 'Also in the oven',
+    privateTag: 'private',
+    openLink: (name) => `Open ${name}`,
   },
   projects: {
     sectionLabel: 'Projects',

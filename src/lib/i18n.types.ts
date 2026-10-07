@@ -24,6 +24,7 @@ export interface Strings {
   };
   nav: {
     home: string;
+    now: string;
     projects: string;
     skills: string;
     journey: string;
@@ -75,6 +76,18 @@ export interface Strings {
     projectsUnit: (count: number) => string;
     reposUnit: string;
     alsoKnown: string;
+  };
+  now: {
+    sectionLabel: string;
+    title: string;
+    subtitle: string;
+    aboutLabel: string;
+    aboutBody: string;
+    facts: { label: string; value: string }[];
+    privateCode: string;
+    alsoLabel: string;
+    privateTag: string;
+    openLink: (name: string) => string;
   };
   projects: {
     sectionLabel: string;

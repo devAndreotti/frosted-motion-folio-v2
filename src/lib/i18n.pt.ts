@@ -10,6 +10,7 @@ export const pt: Strings = {
   },
   nav: {
     home: 'Início',
+    now: 'Agora',
     projects: 'Projetos',
     skills: 'Stack',
     journey: 'Trajetória',
@@ -73,6 +74,23 @@ export const pt: Strings = {
     projectsUnit: (count) => (count === 1 ? 'projeto' : 'projetos'),
     reposUnit: 'repositórios no GitHub',
     alsoKnown: 'Também na bagagem',
+  },
+  now: {
+    sectionLabel: 'Agora',
+    title: 'No que estou trabalhando agora.',
+    subtitle: 'O que anda mais movimentado no meu GitHub. Alguns repositórios ainda são privados: esses levam pro site do projeto.',
+    aboutLabel: 'Sobre mim',
+    aboutBody:
+      'Sou o Ricardo: técnico em informática e no 7º semestre de Ciência da Computação na UNIP, em Sorocaba. Aprendo construindo coisas que eu mesmo uso: ferramentas pra programar melhor, automação com IA rodando na minha própria infraestrutura e, ultimamente, um jogo de terror.',
+    facts: [
+      { label: 'Base', value: 'Sorocaba, SP' },
+      { label: 'Formação', value: 'Ciência da Computação · UNIP' },
+      { label: 'Interesses', value: 'IA aplicada, DX e jogos' },
+    ],
+    privateCode: 'código privado',
+    alsoLabel: 'Também no forno',
+    privateTag: 'privado',
+    openLink: (name) => `Abrir ${name}`,
   },
   projects: {
     sectionLabel: 'Projetos',
