@@ -1,5 +1,6 @@
 import Navigation from '@/components/Navigation';
 import Header from '@/components/Header';
+import NowSection from '@/components/NowSection';
 import GithubActivityFeed from '@/components/GithubActivityFeed';
 import Projects from '@/components/Projects';
 import Skills from '@/components/Skills';
@@ -30,6 +31,7 @@ const Index = () => {
         <Navigation />
         <main>
           <Header />
+          <NowSection />
           <Projects />
           <Skills />
           <GithubActivityFeed />

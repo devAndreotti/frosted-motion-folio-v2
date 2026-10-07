@@ -4,7 +4,7 @@ import { test, expect, type Page } from "@playwright/test";
 // src/pages/Index.tsx -- walking all of them catches overflow that only
 // shows up once a section's own content/animation has mounted, not just
 // on initial load.
-const SECTION_IDS = ["header", "projects", "skills", "github-activity", "timeline", "contact"];
+const SECTION_IDS = ["header", "now", "projects", "skills", "github-activity", "timeline", "contact"];
 
 async function hasHorizontalOverflow(page: Page): Promise<boolean> {
   // +1px tolerance for sub-pixel rounding from the responsive layout math
