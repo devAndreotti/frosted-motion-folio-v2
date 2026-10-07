@@ -91,8 +91,6 @@ export interface AlsoItem {
 export const NOW_ALSO: AlsoItem[] = [
   { name: 'Orbitaly', note: { pt: 'catálogo desktop de skills e MCP servers', en: 'desktop catalog of skills and MCP servers' } },
   { name: 'ollama-rtx-4gb', note: { pt: 'LLMs locais numa GPU de 4 GB, com benchmarks', en: 'local LLMs on a 4 GB GPU, with benchmarks' }, href: 'https://github.com/devAndreotti/ollama-rtx-4gb' },
-  { name: 'lenis-mcp-server', note: { pt: 'MCP server de smooth scroll', en: 'smooth-scroll MCP server' }, href: 'https://github.com/devAndreotti/lenis-mcp-server' },
-  { name: 'ai-memory', note: { pt: 'grafo interativo da memória de agentes (fork)', en: 'interactive graph for agent memory (fork)' }, href: 'https://github.com/devAndreotti/ai-memory' },
 ];
 
 /** The checks this very repo runs on every PR -- drawn as the Quality Gate card's visual. */
