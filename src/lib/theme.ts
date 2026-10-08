@@ -24,6 +24,8 @@ export interface ModeTokens {
   glassBorder: string;
   glassStrongSurface: string;
   glassStrongBorder: string;
+  /** Stand-in for the backdrop saturate() on glass that skips the backdrop blur: a wash of the hue, dark mode only. */
+  glassLift: string;
 }
 
 export interface HueTheme {
@@ -137,6 +139,8 @@ function buildModeTokens(hue: Hue, mode: Mode): ModeTokens {
     glassBorder: hsla(hueAngle, sat, 96, mode === 'light' ? 0.4 : 0.28),
     glassStrongSurface: hsla(hueAngle, sat, 96, mode === 'light' ? 0.32 : 0.19),
     glassStrongBorder: hsla(hueAngle, sat, 96, mode === 'light' ? 0.5 : 0.36),
+    // Over the light pastels and over black, saturate() barely changes anything, so there's nothing to stand in for.
+    glassLift: hue === 'black' || mode === 'light' ? 'transparent' : hsla(hueAngle, 100, 45, 0.28),
   };
 }
 

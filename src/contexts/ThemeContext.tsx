@@ -34,6 +34,7 @@ const CSS_VAR_BY_TOKEN = {
   glassBorder: '--border-1',
   glassStrongSurface: '--surface-2',
   glassStrongBorder: '--border-2',
+  glassLift: '--glass-lift',
 } as const;
 
 function prefersLight(): boolean {
