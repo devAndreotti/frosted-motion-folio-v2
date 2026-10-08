@@ -38,7 +38,14 @@ describe("buildHueTheme", () => {
       expect(stops.length).toBeGreaterThan(0);
       for (const stop of stops) expect(stop).toBe("hsl(0 0%");
       expect(theme[mode].glassSurface).toMatch(/^hsl\(0 0%/);
+      expect(theme[mode].glassLift).toBe("transparent");
     }
+  });
+
+  it("lifts the saturation of unblurred glass only in dark mode", () => {
+    const red = buildHueTheme("red");
+    expect(red.dark.glassLift).toMatch(/^hsl\(\d+ 100% 45% \/ 0\.28\)$/);
+    expect(red.light.glassLift).toBe("transparent");
   });
 
   it("gives every non-black hue a distinct, non-zero hue angle", () => {

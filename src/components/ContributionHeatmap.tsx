@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useGithubContributions, type ContributionDay } from '@/hooks/useGithubContributions';
 import { lastYear, summarize, toWeeks, YEAR_WEEKS } from '@/lib/contributions';
@@ -31,7 +31,8 @@ export function monthLabels(weeks: (ContributionDay | null)[][], lang: 'pt' | 'e
 const ContributionHeatmap = () => {
   const { lang, t } = useLanguage();
   const { days, loading } = useGithubContributions();
-  const [hovered, setHovered] = useState<{ day: ContributionDay; w: number; d: number } | null>(null);
+  const [hovered, setHovered] = useState<{ day: ContributionDay; x: number; y: number } | null>(null);
+  const boxRef = useRef<HTMLDivElement>(null);
 
   if (loading) return <div className="shimmer" style={{ height: 260, borderRadius: 24, marginTop: 36 }} />;
   if (days.length === 0) return null;
@@ -42,6 +43,14 @@ const ContributionHeatmap = () => {
   const num = new Intl.NumberFormat(lang === 'pt' ? 'pt-BR' : 'en-US');
   const dateFmt = new Intl.DateTimeFormat(lang === 'pt' ? 'pt-BR' : 'en-US', { day: 'numeric', month: 'short', timeZone: 'UTC' });
   const tip = (day: ContributionDay) => t.activity.heatmapTooltip(day.count, dateFmt.format(new Date(`${day.date}T00:00:00Z`)));
+  // The tooltip lives in the box, outside the scrolling strip, so the top rows' tooltips aren't clipped.
+  const hover = (day: ContributionDay | null, cell: HTMLElement) => {
+    const box = boxRef.current?.getBoundingClientRect();
+    if (!day || !box) return setHovered(null);
+    const r = cell.getBoundingClientRect();
+    const x = Math.min(Math.max(r.left - box.left + r.width / 2, 96), box.width - 96);
+    setHovered({ day, x, y: r.top - box.top });
+  };
 
   return (
     <>
@@ -59,7 +68,7 @@ const ContributionHeatmap = () => {
           <span className="hsum-l">{t.activity.summary.streak}</span>
         </div>
       </div>
-      <div className="hm-box glass" data-testid="contribution-heatmap">
+      <div ref={boxRef} className="hm-box glass" data-testid="contribution-heatmap" onMouseLeave={() => setHovered(null)}>
         <div className="hm-scroll">
           <div className="hm-in">
             {monthLabels(weeks, lang).map((m) => (
@@ -72,7 +81,7 @@ const ContributionHeatmap = () => {
                 {m.label}
               </span>
             ))}
-            <div className="hm-grid" role="img" aria-label={t.activity.heatmapAria(num.format(total))} onMouseLeave={() => setHovered(null)}>
+            <div className="hm-grid" role="img" aria-label={t.activity.heatmapAria(num.format(total))}>
               {weeks.map((week, w) => (
                 <div key={w} className="hm-col">
                   {week.map((day, d) => (
@@ -80,20 +89,19 @@ const ContributionHeatmap = () => {
                       key={d}
                       className={`hm ${day ? `l${day.level}` : 'lx'}`}
                       data-testid={day ? 'contribution-day' : undefined}
-                      title={day ? tip(day) : undefined}
-                      onMouseEnter={() => setHovered(day ? { day, w, d } : null)}
+                      onMouseEnter={(e) => hover(day, e.currentTarget)}
                     />
                   ))}
                 </div>
               ))}
-              {hovered && (
-                <span className="hm-tip glass-strong" style={{ left: `${((hovered.w + 0.5) / YEAR_WEEKS) * 100}%`, top: `calc(${(hovered.d / 7) * 100}% - 8px)` }}>
-                  {tip(hovered.day)}
-                </span>
-              )}
             </div>
           </div>
         </div>
+        {hovered && (
+          <span className="hm-tip glass-strong" style={{ left: hovered.x, top: hovered.y - 8 }}>
+            {tip(hovered.day)}
+          </span>
+        )}
         <div className="hm-leg">
           {t.activity.heatmapLess}
           <i className="hm-gap" />

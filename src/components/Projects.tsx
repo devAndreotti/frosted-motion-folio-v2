@@ -79,7 +79,15 @@ const Projects = () => {
             </span>
             {/* Hover preview of the screenshot, where the tags were -- mouse only, never on touch. */}
             <span className="thumb" aria-hidden="true">
-              <img src={p.image} alt="" loading="lazy" />
+              <span className="thumb-bar">
+                <i />
+                <i />
+                <i />
+                <span>{p.liveUrl ? new URL(p.liveUrl).host : 'github.com/devAndreotti'}</span>
+              </span>
+              <span className="thumb-shot">
+                <img src={p.image} alt="" loading="lazy" />
+              </span>
             </span>
           </button>
         ))}

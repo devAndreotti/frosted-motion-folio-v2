@@ -80,7 +80,7 @@ const NowSection = () => {
         </div>
       </div>
 
-      <div className="now">
+      <div className="now-layout">
         <article className="about glass">
           <img className="about-ph" src="./profile.webp" alt="" loading="lazy" />
           <p className="k">{t.now.aboutLabel}</p>
