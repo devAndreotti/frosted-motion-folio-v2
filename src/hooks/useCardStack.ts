@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
 import { moveKind, reorderStack, stackTransform, type StackMove } from '@/lib/cardStack';
+import { useAutoAdvance } from './useAutoAdvance';
 
-/** Matches the flight keyframes in index.css (plus a small buffer). */
+/** Matches the flight keyframes in hero-cards.css (plus a small buffer). */
 export const FLY_MS = 1100;
+/** One turn of the deck; the progress bar under it fills over the same time. */
+export const DECK_STEP_MS = 3600;
 
 export interface StackFlight {
   id: string;
@@ -14,31 +17,22 @@ export interface StackFlight {
   n: number;
 }
 
-function isAutomated(): boolean {
-  try {
-    return navigator.webdriver === true;
-  } catch {
-    return false;
-  }
-}
-
 /**
- * Order + flight state for the hero card stack. The pile shuffles itself
- * every `autoplayMs` until the visitor touches it (a card or the arrows),
- * then it's theirs. No autoplay under reduced motion, in a background tab,
- * while `paused` (the stack is off screen), or under browser automation
- * (it would race E2E clicks).
+ * Order + flight state for the hero card deck (narrow screens). The pile
+ * shuffles itself every `autoplayMs` until the visitor touches it (a card or
+ * the arrows), then it's theirs. No autoplay under reduced motion, in a
+ * background tab, while `paused` (the deck is off screen), or under browser
+ * automation (it would race E2E clicks).
  */
-export function useCardStack(ids: string[], autoplayMs = 4200, paused = false) {
+export function useCardStack(ids: string[], autoplayMs = DECK_STEP_MS, paused = false) {
   const reduceMotion = useReducedMotion();
   const [order, setOrder] = useState(ids);
   const [flight, setFlight] = useState<StackFlight | null>(null);
+  const [moves, setMoves] = useState(0);
   const [auto, setAuto] = useState(true);
   const orderRef = useRef(order);
   const flightCount = useRef(0);
   const flightTimer = useRef<ReturnType<typeof setTimeout>>();
-  const pausedRef = useRef(paused);
-  pausedRef.current = paused;
 
   useLayoutEffect(() => {
     orderRef.current = order;
@@ -50,6 +44,7 @@ export function useCardStack(ids: string[], autoplayMs = 4200, paused = false) {
       const depth = current.indexOf(id);
       if (depth === -1) return;
       flightCount.current += 1;
+      setMoves(flightCount.current);
       setFlight(reduceMotion ? null : { id, kind: moveKind(current, id), from: stackTransform(depth), n: flightCount.current });
       const next = reorderStack(current, id);
       orderRef.current = next;
@@ -73,15 +68,9 @@ export function useCardStack(ids: string[], autoplayMs = 4200, paused = false) {
     move(orderRef.current[orderRef.current.length - 1]);
   };
 
-  useEffect(() => {
-    if (!auto || reduceMotion || isAutomated()) return;
-    const timer = setInterval(() => {
-      if (!document.hidden && !pausedRef.current) move(orderRef.current[0]);
-    }, autoplayMs);
-    return () => clearInterval(timer);
-  }, [auto, reduceMotion, autoplayMs, move]);
+  const playing = useAutoAdvance(() => move(orderRef.current[0]), autoplayMs, auto && !reduceMotion, paused);
 
   useEffect(() => () => clearTimeout(flightTimer.current), []);
 
-  return { order, flight, pick, next, prev };
+  return { order, flight, moves, playing, pick, next, prev };
 }

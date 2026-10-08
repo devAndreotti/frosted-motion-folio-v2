@@ -6,6 +6,7 @@ import '@fontsource-variable/geist'
 import '@fontsource-variable/geist-mono'
 import './index.css'
 import './styles/v2.css'
+import './styles/hero-cards.css'
 import './bones/registry'
 
 createRoot(document.getElementById("root")!).render(<App />);

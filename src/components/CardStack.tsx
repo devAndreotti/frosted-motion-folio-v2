@@ -1,106 +1,49 @@
-import { useRef } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { personalInfo } from '@/data/personal';
-import { featuredProject, curatedProjects, type CuratedProject } from '@/data/curatedProjects';
-import { stackDim, stackTransform } from '@/lib/cardStack';
-import { useCardStack } from '@/hooks/useCardStack';
-import { useInView } from '@/hooks/useInView';
+import { featuredProject, curatedProjects } from '@/data/curatedProjects';
 import { useLanguage } from '@/contexts/LanguageContext';
-import type { Lang } from '@/lib/i18n';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+import type { HeroCard } from './HeroCardParts';
+import HeroDeck from './HeroDeck';
+import HeroFan from './HeroFan';
 
 // The photo plus four real projects -- the same curation as the projects
 // section, so the hero and the list below tell one story.
 const STACK_PROJECT_IDS = [26, 9, 2, 30];
 const ALL_CURATED = [featuredProject, ...curatedProjects];
 const STACK_PROJECTS = STACK_PROJECT_IDS.map((id) => ALL_CURATED.find((p) => p.id === id)!);
-const CARD_IDS = ['photo', ...STACK_PROJECT_IDS.map(String)];
 
-const ProjectFace = ({ project, lang, sub }: { project: CuratedProject; lang: Lang; sub: string }) => (
-  <>
-    <span className="pj-img">
-      <img src={project.image} alt="" loading="lazy" draggable={false} />
-    </span>
-    <span className="pj-b">
-      <span className="tc">
-        <i style={{ background: project.tint }} />
-        <span>{sub}</span>
-      </span>
-      <span className="pj-t">{project.title}</span>
-      <span className="pj-d">{project.tagline[lang]}</span>
-    </span>
-  </>
-);
+/** The fan needs the hero's second column; once the hero stacks into one column (v2.css, 960px) the deck takes over. */
+export const FAN_QUERY = '(min-width: 961px)';
 
-/**
- * Clickable deck of glass cards -- click the front one to send it flying to
- * the back, click any other to bring it forward. Shuffles itself until the
- * visitor touches it; the arrows below drive it the same way.
- */
+/** The hero's cards: a fan on wide screens, a deck on narrow ones. */
 const CardStack = () => {
   const { lang, t } = useLanguage();
-  const rootRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(rootRef);
-  const { order, flight, pick, next, prev } = useCardStack(CARD_IDS, undefined, !inView);
+  const wide = useMediaQuery(FAN_QUERY, true);
 
-  return (
-    <div className="stk-w" ref={rootRef}>
-      <div className="stk">
-        {/* Fixed DOM order (z-index does the stacking) so a reorder never
-            re-inserts nodes, which would cancel their CSS transitions. */}
-        {CARD_IDS.map((id, i) => {
-          const depth = order.indexOf(id);
-          const transform = stackTransform(depth);
-          const flying = flight?.id === id ? ` fly-${flight.kind}-${flight.n % 2 ? 'a' : 'b'}` : '';
-          const project = i === 0 ? null : STACK_PROJECTS[i - 1];
-          const style = {
-            transform,
-            '--from': flight?.id === id ? flight.from : transform,
-            '--to': transform,
-            zIndex: 100 - depth,
-            filter: stackDim(depth),
-          } as React.CSSProperties;
+  const cards: HeroCard[] = [
+    {
+      id: 'photo',
+      me: true,
+      img: './profile.webp',
+      title: personalInfo.name,
+      line: personalInfo.title[lang],
+      type: '',
+      tint: '',
+      label: t.header.photoAlt(personalInfo.name),
+    },
+    ...STACK_PROJECTS.map((p) => ({
+      id: String(p.id),
+      me: false,
+      img: p.image,
+      title: p.title,
+      line: p.tagline[lang],
+      type: p.id === featuredProject.id ? t.projects.casePrincipalBadge : p.type[lang],
+      tint: p.tint,
+      label: t.header.projectAlt(p.title),
+    })),
+  ];
 
-          return (
-            <button
-              key={id}
-              type="button"
-              onClick={() => pick(id)}
-              aria-label={project ? t.header.projectAlt(project.title) : t.header.photoAlt(personalInfo.name)}
-              className={`card stack-card${flying}`}
-              style={style}
-            >
-              {project ? (
-                <ProjectFace project={project} lang={lang} sub={project.id === featuredProject.id ? t.projects.casePrincipalBadge : project.type[lang]} />
-              ) : (
-                <>
-                  <img className="card-ph" src="./profile.webp" alt="" draggable={false} />
-                  <span className="scrim" />
-                  <span className="ct">
-                    <span className="ct-t">{personalInfo.name}</span>
-                    <span className="ct-s">{personalInfo.title[lang]}</span>
-                  </span>
-                </>
-              )}
-            </button>
-          );
-        })}
-      </div>
-
-      <div className="stk-nav">
-        <button type="button" onClick={prev} aria-label={t.header.stackPrev} className="np sq">
-          <ChevronLeft className="ic" />
-        </button>
-        <span className="dots" aria-hidden="true">
-          {CARD_IDS.map((id) => (
-            <i key={id} className={order[0] === id ? 'on' : undefined} />
-          ))}
-        </span>
-        <button type="button" onClick={next} aria-label={t.header.stackNext} className="np sq">
-          <ChevronRight className="ic" />
-        </button>
-      </div>
-    </div>
-  );
+  return wide ? <HeroFan cards={cards} /> : <HeroDeck cards={cards} />;
 };
 
 export default CardStack;

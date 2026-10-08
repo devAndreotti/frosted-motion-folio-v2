@@ -75,27 +75,8 @@
 html.booting .rv { animation-play-state: paused; }
 @keyframes v2-rv { from { opacity: 0; transform: translateY(16px); } }
 
-/* ---------- card stack ---------- */
-.stk-w { position: relative; display: flex; flex-direction: column; align-items: center; gap: 26px; }
-.stk-w::before { content: ''; position: absolute; inset: -4% -20% 10%; background: radial-gradient(closest-side, color-mix(in oklab, var(--accent) 22%, transparent), transparent); filter: blur(24px); pointer-events: none; }
-.stk { position: relative; width: 370px; height: 430px; isolation: isolate; }
-.card { position: absolute; left: 0; top: 0; width: 280px; height: 372px; padding: 0; border-radius: 24px; overflow: hidden; border: 1px solid var(--border-2); background: linear-gradient(var(--surface-2), var(--surface-2)), var(--solid, #0a0a0a); color: var(--fg-1); text-align: left; cursor: pointer; transform-origin: 30% 100%; box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.6), inset 0 1px var(--hl); transition: transform 0.65s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.45s; }
-.card-ph { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.scrim { position: absolute; left: 0; right: 0; bottom: 0; height: 52%; background: linear-gradient(to top, rgba(0, 0, 0, 0.86), rgba(0, 0, 0, 0)); }
-.ct { position: absolute; left: 20px; right: 20px; bottom: 18px; color: #fff; }
-.ct-t { display: block; font: 600 19px/1.25 var(--font-sans); letter-spacing: -0.01em; }
-.ct-s { display: block; margin-top: 4px; font: 500 13px/1.4 var(--font-sans); color: rgba(255, 255, 255, 0.8); }
-.pj-img { display: block; height: 55%; overflow: hidden; border-bottom: 1px solid var(--border-1); }
-.pj-img img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 0 0; }
-.pj-b { display: flex; flex-direction: column; gap: 9px; padding: 18px 20px; }
-.pj-t { display: block; font: 600 19px/1.2 var(--font-sans); letter-spacing: -0.01em; }
-.pj-d { display: block; font: 400 14px/1.45 var(--font-sans); color: var(--fg-2); }
 .tc { display: inline-flex; align-items: center; gap: 7px; font: 500 11px/1 var(--font-mono); letter-spacing: 0.07em; text-transform: uppercase; color: var(--fg-2); }
 .tc i { width: 8px; height: 8px; border-radius: 3px; display: block; }
-.stk-nav { position: relative; display: flex; align-items: center; gap: 14px; }
-.dots { display: flex; align-items: center; gap: 6px; }
-.dots i { display: block; width: 6px; height: 6px; border-radius: 99px; background: var(--line-2); transition: width 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.35s; }
-.dots i.on { width: 22px; background: var(--accent); }
 
 .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 72px; border-top: 1px solid var(--line); }
 .st { padding: 28px 24px 6px; border-left: 1px solid var(--line); }
@@ -365,8 +346,6 @@ a.also-i:hover { border-color: var(--border-2); }
   .lead { font-size: 17px; }
   .ctas .btn { flex: 1 1 auto; }
   .vsep { display: none; }
-  .stk { width: 300px; height: 360px; }
-  .card { width: 230px; height: 306px; }
   .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 56px; }
   .st { padding: 22px 16px 18px; }
   .st:nth-child(odd) { border-left: 0; padding-left: 0; }
@@ -422,5 +401,4 @@ a.also-i:hover { border-color: var(--border-2); }
   .row:hover .thumb-shot img { transform: none; }
   .rv { animation: none; }
   .pulse::after { animation: none; }
-  .card { transition: none; }
 }

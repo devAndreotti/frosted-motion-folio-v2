@@ -23,18 +23,18 @@ export type StackMove = 'back' | 'front';
 
 /**
  * Resting transform for a card at `depth` (0 = front): each step back shifts
- * down-right, tilts a little more and shrinks 4%, so the pile reads as one
+ * down-right, tilts a little more and shrinks 4.5%, so the pile reads as one
  * deck leaning the same way.
  */
 export function stackTransform(depth: number): string {
   const d = Math.max(0, Math.min(depth, MAX_VISIBLE_DEPTH));
-  return `translate(${d * 14}px, ${d * 10}px) rotate(${(d * 2.5).toFixed(1)}deg) scale(${(1 - d * 0.04).toFixed(2)})`;
+  return `translate(${d * 18}px, ${d * 12}px) rotate(${(d * 3).toFixed(1)}deg) scale(${(1 - d * 0.045).toFixed(3)})`;
 }
 
 /** Cards further back get darker, so the front one always reads first. */
 export function stackDim(depth: number): string {
   const d = Math.max(0, Math.min(depth, MAX_VISIBLE_DEPTH));
-  return `brightness(${(1 - d * 0.12).toFixed(2)})`;
+  return `brightness(${(1 - d * 0.14).toFixed(2)})`;
 }
 
 /** Which flight a click on `id` triggers: the front card flies to the back, any other comes forward. */

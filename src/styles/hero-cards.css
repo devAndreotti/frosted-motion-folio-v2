@@ -1,0 +1,107 @@
+/* ---------- hero cards: fan on wide screens (HeroFan), deck on narrow ones (HeroDeck) ---------- */
+.hc-w { position: relative; display: flex; flex-direction: column; align-items: center; gap: 26px; }
+.hc-w::before { content: ''; position: absolute; inset: -4% -20% 10%; background: radial-gradient(closest-side, color-mix(in oklab, var(--accent) 22%, transparent), transparent); filter: blur(24px); pointer-events: none; }
+.hc-t { display: block; font: 600 19px/1.2 var(--font-sans); letter-spacing: -0.015em; }
+.hc-s { display: block; font: 400 13.5px/1.45 var(--font-sans); color: var(--fg-2); }
+.hc-nav { position: relative; display: flex; align-items: center; gap: 14px; }
+.dots { display: flex; align-items: center; gap: 6px; }
+.dots i { display: block; width: 6px; height: 6px; border-radius: 99px; background: var(--line-2); transition: width 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.35s; }
+.dots i.on { width: 22px; background: var(--accent); }
+/* a sweep of light across the card that just took the spotlight */
+.sheen { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, 0.24) 50%, transparent 62%); transform: translateX(-130%); }
+@keyframes hc-sheen-a { to { transform: translateX(130%); } }
+@keyframes hc-sheen-b { to { transform: translateX(130%); } }
+
+/* ---------- fan ----------
+   HeroFan sets --o/--a (offset on the arc and its absolute value) and --o0/--a0 (the same before the
+   last turn); the transforms are built here so each breakpoint can size the arc. Every move is a
+   keyframe from --tf0 to --tf, with -a/-b twins so back-to-back turns restart. */
+.fan { --cw: 196px; --ch: 284px; --step: 7.5deg; --drop: 11px; --lift: 18px; position: relative; isolation: isolate; width: 100%; height: calc(var(--ch) * 1.22 + 16px); }
+.fan-card {
+  --tf: rotate(calc(var(--o) * var(--step))) translateY(calc(var(--a) * var(--drop))) scale(calc(1 - var(--a) * 0.07));
+  --tf0: rotate(calc(var(--o0) * var(--step))) translateY(calc(var(--a0) * var(--drop))) scale(calc(1 - var(--a0) * 0.07));
+  position: absolute; left: calc(50% - var(--cw) / 2); top: 16px; width: var(--cw); height: var(--ch); display: flex; flex-direction: column; padding: 0; border-radius: 22px; overflow: hidden; border: 1px solid var(--border-2); background: linear-gradient(var(--surface-2), var(--surface-2)), var(--solid, #0a0a0a); color: var(--fg-1); text-align: left; cursor: pointer;
+  transform: var(--tf); transform-origin: 50% 165%; box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.7), inset 0 1px var(--hl); transition: filter 0.6s, box-shadow 0.6s, opacity 0.6s;
+}
+.fan-card.on { box-shadow: 0 0 0 1px color-mix(in oklab, var(--accent) 55%, transparent), 0 40px 80px -30px color-mix(in oklab, var(--accent) 45%, rgba(0, 0, 0, 0.7)), inset 0 1px var(--hl); }
+.fan-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.fan-img { position: relative; display: block; flex: none; height: 58%; overflow: hidden; border-bottom: 1px solid var(--border-1); }
+.fan-img img { display: block; width: 112%; max-width: none; height: 100%; margin-left: -6%; object-fit: cover; object-position: 0 0; }
+.fan-b { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding: 16px 18px; }
+.fan-card.me .fan-img { height: 100%; border-bottom: 0; }
+.fan-card.me .fan-img img { object-position: center 18%; }
+.fan-card.me .fan-b { position: absolute; left: 0; right: 0; bottom: 0; padding: 18px; background: linear-gradient(to top, rgba(6, 6, 10, 0.9), rgba(6, 6, 10, 0)); color: #fff; }
+.fan-card.me .hc-s { color: rgba(255, 255, 255, 0.8); }
+
+.fan-card.mv-a { animation: fan-mv-a 0.8s cubic-bezier(0.22, 0.8, 0.2, 1) both; }
+.fan-card.mv-b { animation: fan-mv-b 0.8s cubic-bezier(0.22, 0.8, 0.2, 1) both; }
+@keyframes fan-mv-a { from { transform: var(--tf0); } to { transform: var(--tf); } }
+@keyframes fan-mv-b { from { transform: var(--tf0); } to { transform: var(--tf); } }
+/* arriving at the centre: lifts past its spot and settles, the image pans with the turn, light sweeps across */
+.fan-card.in-a { animation: fan-in-a 0.95s cubic-bezier(0.22, 0.8, 0.2, 1) both; }
+.fan-card.in-b { animation: fan-in-b 0.95s cubic-bezier(0.22, 0.8, 0.2, 1) both; }
+@keyframes fan-in-a { 0% { transform: var(--tf0); } 58% { transform: rotate(0deg) translateY(calc(var(--lift) * -1)) scale(1.04); } 100% { transform: var(--tf); } }
+@keyframes fan-in-b { 0% { transform: var(--tf0); } 58% { transform: rotate(0deg) translateY(calc(var(--lift) * -1)) scale(1.04); } 100% { transform: var(--tf); } }
+.fan-card.in-a .sheen { animation: hc-sheen-a 0.9s 0.35s cubic-bezier(0.3, 0.6, 0.2, 1) both; }
+.fan-card.in-b .sheen { animation: hc-sheen-b 0.9s 0.35s cubic-bezier(0.3, 0.6, 0.2, 1) both; }
+.fan-card.in-a .fan-img img { animation: fan-pan-a 0.95s cubic-bezier(0.22, 0.8, 0.2, 1) both; }
+.fan-card.in-b .fan-img img { animation: fan-pan-b 0.95s cubic-bezier(0.22, 0.8, 0.2, 1) both; }
+@keyframes fan-pan-a { from { transform: translateX(var(--pan)); } }
+@keyframes fan-pan-b { from { transform: translateX(var(--pan)); } }
+/* leaving the centre: swings a little past its new angle, then settles */
+.fan-card.out-a { animation: fan-out-a 0.9s cubic-bezier(0.22, 0.8, 0.2, 1) both; }
+.fan-card.out-b { animation: fan-out-b 0.9s cubic-bezier(0.22, 0.8, 0.2, 1) both; }
+@keyframes fan-out-a { 0% { transform: var(--tf0); } 55% { transform: rotate(calc(var(--o) * var(--step) + var(--sw))) translateY(calc(var(--a) * var(--drop))) scale(calc(1 - var(--a) * 0.07)); } 100% { transform: var(--tf); } }
+@keyframes fan-out-b { 0% { transform: var(--tf0); } 55% { transform: rotate(calc(var(--o) * var(--step) + var(--sw))) translateY(calc(var(--a) * var(--drop))) scale(calc(1 - var(--a) * 0.07)); } 100% { transform: var(--tf); } }
+/* changing ends: drops below the fan, fades, comes up on the other side instead of crossing it */
+.fan-card.wr-a { animation: fan-wr-a 0.9s cubic-bezier(0.4, 0, 0.2, 1) both; }
+.fan-card.wr-b { animation: fan-wr-b 0.9s cubic-bezier(0.4, 0, 0.2, 1) both; }
+@keyframes fan-wr-a { 0% { transform: var(--tf0); opacity: var(--op0); } 38% { transform: var(--tf0) translateY(70px) scale(0.82); opacity: 0; } 62% { transform: var(--tf) translateY(70px) scale(0.82); opacity: 0; } 100% { transform: var(--tf); opacity: var(--op1); } }
+@keyframes fan-wr-b { 0% { transform: var(--tf0); opacity: var(--op0); } 38% { transform: var(--tf0) translateY(70px) scale(0.82); opacity: 0; } 62% { transform: var(--tf) translateY(70px) scale(0.82); opacity: 0; } 100% { transform: var(--tf); opacity: var(--op1); } }
+@media (min-width: 1200px) { .fan { --cw: 238px; --ch: 342px; --step: 9deg; --lift: 20px; } }
+@media (min-width: 1400px) { .fan { --cw: 264px; --ch: 380px; --step: 11deg; --drop: 14px; --lift: 22px; } }
+
+/* ---------- deck ---------- */
+.dk { position: relative; isolation: isolate; width: 360px; height: 450px; }
+.dk-card { position: absolute; left: 0; top: 0; width: 280px; height: 384px; padding: 0; border-radius: 26px; overflow: hidden; border: 1px solid var(--border-2); background: var(--solid, #0a0a0a); color: #fff; text-align: left; cursor: pointer; transform-origin: 30% 100%; box-shadow: 0 34px 70px -30px rgba(0, 0, 0, 0.7), inset 0 1px var(--hl); transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.5s; }
+.dk-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.dk-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 0 0; transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.dk-card.me .dk-img { object-position: center 18%; }
+@media (hover: hover) { .dk-card:hover .dk-img { transform: scale(1.04); } }
+.dk-scrim { position: absolute; left: 0; right: 0; bottom: 0; height: 62%; background: linear-gradient(to top, rgba(6, 6, 10, 0.92), rgba(6, 6, 10, 0.35) 55%, rgba(6, 6, 10, 0)); }
+.dk-cap { position: absolute; left: 12px; right: 12px; bottom: 12px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 14px 16px 15px; border-radius: 18px; border: 1px solid rgba(255, 255, 255, 0.16); background: rgba(12, 12, 16, 0.34); backdrop-filter: blur(14px) saturate(150%); -webkit-backdrop-filter: blur(14px) saturate(150%); }
+.dk-cap .tc, .dk-cap .hc-s { color: rgba(255, 255, 255, 0.78); }
+.dk-cap .hc-t { font-size: 20px; }
+.dk-card.arrive-a .sheen { animation: hc-sheen-a 0.95s 0.3s cubic-bezier(0.3, 0.6, 0.2, 1) both; }
+.dk-card.arrive-b .sheen { animation: hc-sheen-b 0.95s 0.3s cubic-bezier(0.3, 0.6, 0.2, 1) both; }
+/* the front card flies out to the left and slides in behind; a card picked from the back loops out to the right and lands in front */
+.dk-card.fly-back-a { animation: dk-back-a 1.05s cubic-bezier(0.32, 0.72, 0.2, 1) both; }
+.dk-card.fly-back-b { animation: dk-back-b 1.05s cubic-bezier(0.32, 0.72, 0.2, 1) both; }
+.dk-card.fly-front-a { animation: dk-front-a 1.05s cubic-bezier(0.32, 0.72, 0.2, 1) both; }
+.dk-card.fly-front-b { animation: dk-front-b 1.05s cubic-bezier(0.32, 0.72, 0.2, 1) both; }
+@keyframes dk-back-a { 0% { transform: var(--from); z-index: 130; } 36% { transform: translate(-62%, 5%) rotate(-13deg) scale(0.97); z-index: 130; } 52% { z-index: 0; } 100% { transform: var(--to); z-index: 0; } }
+@keyframes dk-back-b { 0% { transform: var(--from); z-index: 130; } 36% { transform: translate(-62%, 5%) rotate(-13deg) scale(0.97); z-index: 130; } 52% { z-index: 0; } 100% { transform: var(--to); z-index: 0; } }
+@keyframes dk-front-a { 0% { transform: var(--from); z-index: 0; } 40% { transform: translate(56%, -7%) rotate(11deg); z-index: 0; } 52% { z-index: 130; } 100% { transform: var(--to); z-index: 130; } }
+@keyframes dk-front-b { 0% { transform: var(--from); z-index: 0; } 40% { transform: translate(56%, -7%) rotate(11deg); z-index: 0; } 52% { z-index: 130; } 100% { transform: var(--to); z-index: 130; } }
+/* one bar per card; the front card's fills up until the next turn */
+.prog { display: flex; gap: 6px; }
+.prog-s { position: relative; width: 30px; height: 3px; border-radius: 3px; background: var(--line-2); overflow: hidden; }
+.prog-s i { position: absolute; inset: 0; border-radius: 3px; background: var(--accent); transform: scaleX(0); transform-origin: left; }
+.prog-s.done i { transform: none; }
+.prog-s.run-a i { animation: hc-fill-a var(--dur) linear both; }
+.prog-s.run-b i { animation: hc-fill-b var(--dur) linear both; }
+@keyframes hc-fill-a { to { transform: none; } }
+@keyframes hc-fill-b { to { transform: none; } }
+@media (max-width: 720px) {
+  .dk { width: 300px; height: 384px; }
+  .dk-card { width: 236px; height: 324px; border-radius: 22px; }
+  .dk-cap { left: 10px; right: 10px; bottom: 10px; padding: 12px 14px 13px; border-radius: 15px; }
+  .dk-cap .hc-t { font-size: 17px; }
+  .dk-cap .hc-s { font-size: 13px; }
+  .prog-s { width: 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fan-card, .fan-card .fan-img img, .dk-card, .sheen, .prog-s i { animation: none !important; }
+  .dk-card, .dk-img { transition: none; }
+}
