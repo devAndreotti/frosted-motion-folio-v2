@@ -1,9 +1,8 @@
 // Cloudflare Worker for devandreotti.com: serves the static build (dist-vps) and
 // only steps in for what a static host can't do.
 //   - http:// and www. -> 301 to https://devandreotti.com (same path and query)
-//   - /e/<event>       -> 204: the click beacons from src/lib/track.ts. On the
-//     ostg01 copy nginx logs them for goaccess; here Umami records the clicks
-//     (when configured), so the beacon only needs a quiet answer.
+//   - /e/<event>       -> 204: the click beacons from src/lib/track.ts. Umami
+//     records the clicks (when configured), so the beacon only needs a quiet answer.
 // Static files (assets/, images, robots, sitemap) never reach this code: see
 // run_worker_first in wrangler.jsonc.
 

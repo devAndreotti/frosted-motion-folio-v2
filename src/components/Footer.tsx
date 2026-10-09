@@ -44,10 +44,12 @@ const Footer = () => {
               {t.common.sendEmail}
             </a>
             <CopyEmailButton email={contact.email} />
-            <a className="btn btn-gh" href={contact.resume} target="_blank" rel="noopener noreferrer" onClick={() => track('click-resume')}>
-              <FileText className="ic s" />
-              {t.footer.resume}
-            </a>
+            {contact.resume && (
+              <a className="btn btn-gh" href={contact.resume} target="_blank" rel="noopener noreferrer" onClick={() => track('click-resume')}>
+                <FileText className="ic s" />
+                {t.footer.resume}
+              </a>
+            )}
           </div>
         </div>
         <div>

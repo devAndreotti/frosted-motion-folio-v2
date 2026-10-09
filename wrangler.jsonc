@@ -7,7 +7,7 @@
   "workers_dev": false,
   "preview_urls": true,
   "assets": {
-    // npm run build:vps -- the same base=/ build the ostg01 copy serves
+    // npm run build:vps -- the build with base=/ (GitHub Pages uses the /frosted-motion-folio-v2/ one)
     "directory": "./dist-vps",
     "binding": "ASSETS",
     // one-page app: unknown paths get index.html and the React 404 page

@@ -36,6 +36,8 @@
 .acc-w { position: relative; }
 .acc-dot { width: 14px; height: 14px; border-radius: 99px; box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent) 30%, transparent); }
 .np.lang { padding: 3px; gap: 2px; cursor: default; }
+/* the group is not a button: its tap-area extension would sit on top of PT/EN and swallow the clicks */
+.np.lang::before { content: none; }
 .lg { height: 26px; min-width: 30px; padding: 0 8px; border: 0; border-radius: 999px; background: transparent; color: var(--fg-2); font: 600 11.5px/1 var(--font-mono); cursor: pointer; }
 .lg.on { background: var(--accent); color: var(--accent-text); }
 .pop { position: absolute; right: 0; top: 46px; z-index: 5; display: flex; gap: 7px; padding: 7px; border-radius: 999px; animation: v2-popin 0.25s cubic-bezier(0.2, 0.8, 0.2, 1); }

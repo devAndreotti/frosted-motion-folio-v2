@@ -6,8 +6,6 @@ declare global {
 
 /**
  * Fire-and-forget click telemetry, for whichever host serves the site:
- * - ostg01 (nginx): the beacon path lands in the access log and goaccess
- *   reads it alongside real page views;
  * - Cloudflare (devandreotti.com): the Worker answers the beacon with 204 and
  *   Umami records the click, when the build loaded it (loadUmami);
  * - GitHub Pages: no such route, the beacon 404s silently.
