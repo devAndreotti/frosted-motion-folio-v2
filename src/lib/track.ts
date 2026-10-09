@@ -1,15 +1,33 @@
+declare global {
+  interface Window {
+    umami?: { track: (event: string) => void };
+  }
+}
+
 /**
- * Fire-and-forget click telemetry. No backend, no database: the VPS nginx
- * config logs whatever path this hits and returns 204, so goaccess reads it
- * straight from the access log alongside real page views. On GitHub Pages
- * (served under a sub-path, no such route) the beacon just 404s silently --
- * sendBeacon never surfaces errors to JS, so this is safe on both deploys
- * without an environment check.
+ * Fire-and-forget click telemetry, for whichever host serves the site:
+ * - ostg01 (nginx): the beacon path lands in the access log and goaccess
+ *   reads it alongside real page views;
+ * - Cloudflare (devandreotti.com): the Worker answers the beacon with 204 and
+ *   Umami records the click, when the build loaded it (loadUmami);
+ * - GitHub Pages: no such route, the beacon 404s silently.
+ * sendBeacon never surfaces errors to JS, so no environment check is needed.
  */
 export function track(event: string): void {
   try {
     navigator.sendBeacon?.(`./e/${event}`);
+    window.umami?.track(event);
   } catch {
     // telemetry must never break the UI
   }
+}
+
+/** Adds the Umami tracker (cookieless) when the build is given both its script URL and the site's id. */
+export function loadUmami(src: string | undefined, websiteId: string | undefined): void {
+  if (!src || !websiteId) return;
+  const script = document.createElement('script');
+  script.defer = true;
+  script.src = src;
+  script.dataset.websiteId = websiteId;
+  document.head.appendChild(script);
 }
