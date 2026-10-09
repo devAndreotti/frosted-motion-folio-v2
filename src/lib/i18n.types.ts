@@ -139,7 +139,7 @@ export interface Strings {
     paragraph: string;
     resume: string;
     directLabel: string;
-    quickLinks: { github: string; linkedin: string; email: string; projects: string };
+    quickLinks: { github: string; linkedin: string; instagram: string; x: string; email: string; projects: string };
     projectsHandle: (cases: number, others: number) => string;
     copyright: (name: string) => string;
     backToTop: string;

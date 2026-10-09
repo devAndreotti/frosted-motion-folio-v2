@@ -1,10 +1,11 @@
-import { ArrowRight, ArrowUp, ArrowUpRight, Clock, FileText, Github, Linkedin, Mail } from 'lucide-react';
+import { ArrowRight, ArrowUp, ArrowUpRight, Clock, FileText, Github, Instagram, Linkedin, Mail } from 'lucide-react';
 import { contact, personalInfo } from '@/data/personal';
 import { projects } from '@/data/projects';
 import { curatedProjects } from '@/data/curatedProjects';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { track } from '@/lib/track';
 import CopyEmailButton from './CopyEmailButton';
+import XLogo from './XLogo';
 import { useLocalClock } from '@/hooks/useLocalClock';
 
 const CASES = curatedProjects.length + 1;
@@ -16,6 +17,8 @@ const Footer = () => {
   const links = [
     { label: t.footer.quickLinks.github, handle: contact.githubHandle, href: contact.github, icon: Github, event: 'click-github' },
     { label: t.footer.quickLinks.linkedin, handle: contact.linkedinHandle, href: contact.linkedin, icon: Linkedin, event: 'click-linkedin' },
+    { label: t.footer.quickLinks.instagram, handle: contact.instagramHandle, href: contact.instagram, icon: Instagram, event: 'click-instagram' },
+    { label: t.footer.quickLinks.x, handle: contact.xHandle, href: contact.x, icon: XLogo, event: 'click-x' },
     { label: t.footer.quickLinks.email, handle: contact.email, href: `mailto:${contact.email}`, icon: Mail, event: 'click-send-email' },
     { label: t.footer.quickLinks.projects, handle: t.footer.projectsHandle(CASES, projects.length - CASES), href: '#projects', icon: ArrowRight },
   ];
