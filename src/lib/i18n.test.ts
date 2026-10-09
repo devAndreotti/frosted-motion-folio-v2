@@ -9,10 +9,7 @@ describe("i18n dictionaries", () => {
     const t = strings[lang];
 
     expect(t.nav.reposLabel(42)).toContain("42");
-    expect(t.header.photoAlt("Test Name")).toContain("Test Name");
-    expect(t.header.projectAlt("Test Project")).toContain("Test Project");
     expect(t.projects.moreProjects(7)).toContain("7");
-    expect(t.projects.viewDetailsAria("Some Project")).toContain("Some Project");
     expect(t.caseModal.dialogAria("Some Project")).toContain("Some Project");
     expect(t.caseModal.imageAlt("Some Project", 2)).toContain("Some Project");
     expect(t.caseModal.imageAlt("Some Project", 2)).toContain("2");

@@ -49,8 +49,6 @@ export const pt: Strings = {
     ],
     recruiterQuick: 'Pra olhar primeiro',
     recruiterDialogAria: 'Resumo rápido para recrutadores',
-    photoAlt: (name) => `Foto de ${name}`,
-    projectAlt: (title) => `Projeto: ${title}`,
   },
   marquee: {
     sectionLabel: 'Stack & skills',
@@ -90,7 +88,6 @@ export const pt: Strings = {
     privateCode: 'código privado',
     alsoLabel: 'Também no forno',
     privateTag: 'privado',
-    openLink: (name) => `Abrir ${name}`,
   },
   projects: {
     sectionLabel: 'Projetos',
@@ -106,7 +103,6 @@ export const pt: Strings = {
     code: 'Código',
     emptyCategory: 'Nenhum projeto nessa categoria ainda.',
     moreProjects: (count) => `Ver os outros ${count} no GitHub`,
-    viewDetailsAria: (title) => `Abrir case: ${title}`,
   },
   caseModal: {
     whatIDid: 'O que eu fiz',

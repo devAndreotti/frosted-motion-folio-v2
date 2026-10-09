@@ -23,7 +23,7 @@ test("category filters narrow the ranked list", async ({ page }) => {
   const nonMobile = curatedProjects.filter((p) => p.cat !== "mobile");
   test.skip(mobileOnly.length === 0, "no curated project is tagged mobile");
 
-  await section.getByRole("button", { name: "Mobile", exact: true }).click();
+  await section.getByRole("button", { name: /^Mobile/ }).click();
 
   for (const project of mobileOnly) {
     await expect(section.getByText(project.title, { exact: true })).toBeVisible();
@@ -32,7 +32,7 @@ test("category filters narrow the ranked list", async ({ page }) => {
     await expect(section.getByText(project.title, { exact: true })).not.toBeVisible();
   }
 
-  await section.getByRole("button", { name: strings.pt.projects.categoryFilters[CATEGORY_FILTERS[0].key], exact: true }).click();
+  await section.getByRole("button", { name: new RegExp(`^${strings.pt.projects.categoryFilters[CATEGORY_FILTERS[0].key]}`) }).click();
   for (const project of curatedProjects) {
     await expect(section.getByText(project.title, { exact: true })).toBeVisible();
   }
@@ -58,7 +58,7 @@ test("a filter that excludes the main case hides it too", async ({ page }) => {
   const section = page.locator("#projects");
   test.skip(FEATURED_CAT === "mobile", "the main case is itself mobile");
 
-  await section.getByRole("button", { name: "Mobile", exact: true }).click();
+  await section.getByRole("button", { name: /^Mobile/ }).click();
   await expect(section.getByRole("heading", { name: featuredProject.title })).not.toBeVisible();
 });
 

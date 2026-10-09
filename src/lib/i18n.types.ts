@@ -58,8 +58,6 @@ export interface Strings {
     recruiterBullets: string[];
     recruiterQuick: string;
     recruiterDialogAria: string;
-    photoAlt: (name: string) => string;
-    projectAlt: (title: string) => string;
   };
   marquee: {
     sectionLabel: string;
@@ -87,7 +85,6 @@ export interface Strings {
     privateCode: string;
     alsoLabel: string;
     privateTag: string;
-    openLink: (name: string) => string;
   };
   projects: {
     sectionLabel: string;
@@ -103,7 +100,6 @@ export interface Strings {
     code: string;
     emptyCategory: string;
     moreProjects: (count: number) => string;
-    viewDetailsAria: (title: string) => string;
   };
   caseModal: {
     whatIDid: string;

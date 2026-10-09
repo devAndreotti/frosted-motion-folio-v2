@@ -49,8 +49,6 @@ export const en: Strings = {
     ],
     recruiterQuick: 'Look at these first',
     recruiterDialogAria: 'Quick summary for recruiters',
-    photoAlt: (name) => `Photo of ${name}`,
-    projectAlt: (title) => `Project: ${title}`,
   },
   marquee: {
     sectionLabel: 'Stack & skills',
@@ -90,7 +88,6 @@ export const en: Strings = {
     privateCode: 'private code',
     alsoLabel: 'Also in the oven',
     privateTag: 'private',
-    openLink: (name) => `Open ${name}`,
   },
   projects: {
     sectionLabel: 'Projects',
@@ -106,7 +103,6 @@ export const en: Strings = {
     code: 'Code',
     emptyCategory: 'No projects in this category yet.',
     moreProjects: (count) => `See the other ${count} on GitHub`,
-    viewDetailsAria: (title) => `Open case: ${title}`,
   },
   caseModal: {
     whatIDid: 'What I did',

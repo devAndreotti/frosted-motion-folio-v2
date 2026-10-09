@@ -89,6 +89,15 @@ html {
     transition: color 0.4s ease;
   }
 
+  /* The fallback above is the dark page, but a first-time visitor on a light
+     OS gets the light theme (ThemeContext). Match it here so the fallback the
+     contrast checks read agrees with the light --fg tokens. */
+  @media (prefers-color-scheme: light) {
+    body {
+      background: #f4f4f5;
+    }
+  }
+
   #root {
     position: relative;
     z-index: 1;

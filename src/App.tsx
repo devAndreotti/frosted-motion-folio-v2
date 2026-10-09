@@ -1,9 +1,12 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import BackgroundLayers from "@/components/BackgroundLayers";
 import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
+
+// Only reached by unknown paths, so it is split out of the first screen's bundle.
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 const App = () => (
   <LanguageProvider>
@@ -13,7 +16,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<Suspense fallback={null}><NotFound /></Suspense>} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

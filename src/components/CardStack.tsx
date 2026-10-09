@@ -29,7 +29,6 @@ const CardStack = () => {
       line: personalInfo.title[lang],
       type: '',
       tint: '',
-      label: t.header.photoAlt(personalInfo.name),
     },
     ...STACK_PROJECTS.map((p) => ({
       id: String(p.id),
@@ -39,7 +38,6 @@ const CardStack = () => {
       line: p.tagline[lang],
       type: p.id === featuredProject.id ? t.projects.casePrincipalBadge : p.type[lang],
       tint: p.tint,
-      label: t.header.projectAlt(p.title),
     })),
   ];
 

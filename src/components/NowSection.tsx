@@ -25,7 +25,6 @@ const ProjectCard = ({ p, lang }: { p: NowProject; lang: Lang }) => {
       href={p.href}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={`${t.now.openLink(p.title)} (${p.linkLabel})`}
       onClick={() => track(`now-open-${p.id}`)}
     >
       {p.image ? (

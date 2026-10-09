@@ -65,7 +65,7 @@ describe("Header", () => {
     renderHeader();
     fireEvent.click(screen.getByRole("button", { name: /Modo recrutador/ }));
 
-    const dialog = screen.getByRole("dialog", { name: "Resumo rápido para recrutadores" });
+    const dialog = await screen.findByRole("dialog", { name: "Resumo rápido para recrutadores" });
     expect(within(dialog).getByText("Pra olhar primeiro")).toBeTruthy();
     expect(within(dialog).getByRole("link", { name: /Self-Sync Daily/ }).getAttribute("href")).toContain("lovable.app");
 

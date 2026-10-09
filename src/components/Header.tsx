@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { ArrowDown, Briefcase } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useGithubActivity } from '@/hooks/useGithubActivity';
@@ -8,8 +8,10 @@ import { lastYear, summarize } from '@/lib/contributions';
 import { track } from '@/lib/track';
 import CardStack from './CardStack';
 import RotatingRole from './RotatingRole';
-import RecruiterModal from './RecruiterModal';
 import { SocialButtons } from './NavExtras';
+
+// Only opened from the recruiter CTA, so it is split out of the first screen's bundle.
+const RecruiterModal = lazy(() => import('./RecruiterModal'));
 
 const ROLE_INTERVAL_MS = 2750;
 
@@ -86,7 +88,11 @@ const Header = () => {
         ))}
       </div>
 
-      {recruiterMode && <RecruiterModal onClose={() => setRecruiterMode(false)} />}
+      {recruiterMode && (
+        <Suspense fallback={null}>
+          <RecruiterModal onClose={() => setRecruiterMode(false)} />
+        </Suspense>
+      )}
     </section>
   );
 };
