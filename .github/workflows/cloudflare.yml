@@ -40,7 +40,13 @@ jobs:
       - name: Preview version (pull request)
         if: github.event_name == 'pull_request' && env.CLOUDFLARE_API_TOKEN != ''
         run: |
-          npx --yes wrangler@4.148.0 versions upload --message "PR #${{ github.event.number }}"
+          if out=$(npx --yes wrangler@4.148.0 versions upload --message "PR #${{ github.event.number }}" 2>&1); then
+            echo "$out"
+          elif grep -q "does not yet exist" <<< "$out"; then
+            echo "::notice::No production Worker yet: the first merge to main creates it, previews work after that."
+          else
+            echo "$out"; exit 1
+          fi
       - name: No Cloudflare token yet
         if: env.CLOUDFLARE_API_TOKEN == ''
         run: echo "::notice::Built; deploy skipped until CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID are set."
