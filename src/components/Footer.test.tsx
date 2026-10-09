@@ -16,4 +16,18 @@ describe("Footer", () => {
 
     expect(screen.getByText(/Ricardo A. Gonçalves/i)).toBeTruthy();
   });
+
+  it("lists Instagram and X with the other direct contacts", () => {
+    render(
+      <LanguageProvider>
+        <ThemeProvider>
+          <Footer />
+        </ThemeProvider>
+      </LanguageProvider>
+    );
+
+    const byHref = (href: string) => screen.getAllByRole("link").find((a) => a.getAttribute("href") === href);
+    expect(byHref("https://www.instagram.com/ricardo.agonc")?.textContent).toContain("@ricardo.agonc");
+    expect(byHref("https://x.com/devAndreotti")?.textContent).toContain("@devAndreotti");
+  });
 });

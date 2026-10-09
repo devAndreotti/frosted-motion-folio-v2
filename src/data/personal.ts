@@ -32,6 +32,10 @@ export const contact = {
   repos: 'https://github.com/devAndreotti?tab=repositories',
   linkedin: 'https://www.linkedin.com/in/ricardo-andreotti-gon%C3%A7alves-0b5785283/',
   linkedinHandle: '/in/ricardo-andreotti',
+  instagram: 'https://www.instagram.com/ricardo.agonc',
+  instagramHandle: '@ricardo.agonc',
+  x: 'https://x.com/devAndreotti',
+  xHandle: '@devAndreotti',
   // Path of the résumé PDF in public/ (e.g. './resume.pdf'). Empty hides the résumé buttons --
   // a missing file would open the home page instead (the hosts fall back to index.html).
   resume: '',

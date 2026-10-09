@@ -152,7 +152,7 @@ export const pt: Strings = {
     paragraph: 'Sempre aberto a novas oportunidades, freelas e ideias fora do comum.',
     resume: 'Currículo (PDF)',
     directLabel: 'Direto ao ponto',
-    quickLinks: { github: 'GitHub', linkedin: 'LinkedIn', email: 'E-mail', projects: 'Projetos' },
+    quickLinks: { github: 'GitHub', linkedin: 'LinkedIn', instagram: 'Instagram', x: 'X', email: 'E-mail', projects: 'Projetos' },
     projectsHandle: (cases, others) => `${cases} cases + ${others} no GitHub`,
     copyright: (name) => `© 2026 ${name} — feito com React, Tailwind CSS e muito café.`,
     backToTop: 'Voltar ao topo',
