@@ -39,7 +39,8 @@ jobs:
         run: npx --yes wrangler@4.148.0 deploy
       - name: Preview version (pull request)
         if: github.event_name == 'pull_request' && env.CLOUDFLARE_API_TOKEN != ''
-        run: npx --yes wrangler@4.148.0 versions upload --message "PR #${{ github.event.number }}"
+        run: |
+          npx --yes wrangler@4.148.0 versions upload --message "PR #${{ github.event.number }}"
       - name: No Cloudflare token yet
         if: env.CLOUDFLARE_API_TOKEN == ''
         run: echo "::notice::Built; deploy skipped until CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID are set."
