@@ -14,7 +14,8 @@ test("hero shows the rotating headline and the photo card", async ({ page }) => 
 test("clicking the front card of the stack sends it to the back", async ({ page }) => {
   await page.goto("");
   const hero = page.locator("#header");
-  const photoCard = hero.getByRole("button", { name: `Foto de ${personalInfo.name}` });
+  // The card's accessible name is its visible text (name + title), so match on the name.
+  const photoCard = hero.getByRole("button", { name: new RegExp(personalInfo.name) });
 
   await expect(photoCard).toBeVisible();
   const zBefore = await photoCard.evaluate((el) => window.getComputedStyle(el).zIndex);
