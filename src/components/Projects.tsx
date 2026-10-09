@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { projects } from '@/data/projects';
 import { contact } from '@/data/personal';
 import { featuredProject, curatedProjects, CATEGORY_FILTERS, type CuratedProject, type ProjectCategory } from '@/data/curatedProjects';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { track } from '@/lib/track';
-import CaseModal from './CaseModal';
 import FeaturedCase from './FeaturedCase';
 import SegmentedControl from './SegmentedControl';
+
+// Only opened on click, so its code stays out of the first screen's bundle.
+const CaseModal = lazy(() => import('./CaseModal'));
 
 const ALL_CURATED = [featuredProject, ...curatedProjects];
 export const OTHERS_COUNT = projects.length - ALL_CURATED.length;
@@ -55,7 +57,7 @@ const Projects = () => {
 
       <div className="rows">
         {rows.map(({ p, n }) => (
-          <button key={p.id} type="button" className="row group" onClick={() => openCase(p)} aria-label={t.projects.viewDetailsAria(p.title)}>
+          <button key={p.id} type="button" className="row group" onClick={() => openCase(p)}>
             <span className="rn">{n}</span>
             <span className="min-w-0">
               <span className="rt">
@@ -101,7 +103,11 @@ const Projects = () => {
         </a>
       </div>
 
-      {openProject && <CaseModal project={openProject} onClose={() => setOpenProject(null)} />}
+      {openProject && (
+        <Suspense fallback={null}>
+          <CaseModal project={openProject} onClose={() => setOpenProject(null)} />
+        </Suspense>
+      )}
     </section>
   );
 };

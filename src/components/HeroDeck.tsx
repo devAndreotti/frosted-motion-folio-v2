@@ -43,11 +43,10 @@ const HeroDeck = ({ cards }: { cards: HeroCard[] }) => {
               key={card.id}
               type="button"
               onClick={() => pick(card.id)}
-              aria-label={card.label}
               className={`dk-card${card.me ? ' me' : ''}${flying}${arrive}`}
               style={style}
             >
-              <img className="dk-img" src={card.img} alt="" draggable={false} loading={card.me ? undefined : 'lazy'} />
+              <img className="dk-img" src={card.img} alt="" draggable={false} />
               <span className="dk-scrim" />
               <span className="dk-cap">
                 <CardText card={card} />
