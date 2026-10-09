@@ -9,6 +9,8 @@ export default tseslint.config(
   {
     ignores: [
       "dist",
+      "dist-vps",
+      ".wrangler",
       "coverage",
       "scripts/**",
       ".quality-gate/**",

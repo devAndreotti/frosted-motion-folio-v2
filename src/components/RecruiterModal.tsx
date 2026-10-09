@@ -60,9 +60,11 @@ const RecruiterModal = ({ onClose }: { onClose: () => void }) => {
             {t.common.sendEmail}
           </a>
           <CopyEmailButton email={contact.email} className="btn btn-gh btn-sm" withIcon={false} />
-          <a className="btn btn-gh btn-sm" href={contact.resume} target="_blank" rel="noopener noreferrer">
-            {t.footer.resume}
-          </a>
+          {contact.resume && (
+            <a className="btn btn-gh btn-sm" href={contact.resume} target="_blank" rel="noopener noreferrer">
+              {t.footer.resume}
+            </a>
+          )}
         </div>
       </div>
     </div>

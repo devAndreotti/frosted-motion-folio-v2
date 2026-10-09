@@ -28,6 +28,8 @@ export default defineConfig({
   reporter: [["list"], ["html", { open: "never" }]],
   use: {
     baseURL: "http://localhost:8080/frosted-motion-folio-v2/",
+    // the site follows the browser language when nothing was picked; the specs read the Portuguese copy
+    locale: "pt-BR",
     trace: "on-first-retry",
     screenshot: "only-on-failure",
   },

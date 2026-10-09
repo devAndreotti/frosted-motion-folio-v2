@@ -21,6 +21,7 @@ Construído com **React**, **TypeScript**, **Tailwind CSS** e **Framer Motion**.
 - 📱 **Design Responsivo**: Compatível com todos os tamanhos de tela.
 - ❄️ **Efeito Frosted Glass**: Visual elegante e moderno.
 - 🌗 **Tema Claro/Escuro**: Alternância automática ou manual de tema.
+- 🌐 **Bilíngue**: Abre em português ou inglês conforme o idioma do navegador, com troca manual PT | EN.
 
 <p align="center">
   <img src="./docs/screenshots/dark.png" alt="Captura de tela - Tema Escuro">
@@ -31,7 +32,9 @@ Construído com **React**, **TypeScript**, **Tailwind CSS** e **Framer Motion**.
 </p>
 
 ## 🌐 Acesse o Projeto
-👉 [**Frosted Motion Folio - Deploy no GitHub Pages**](https://devandreotti.github.io/frosted-motion-folio-v2/)
+👉 [**devandreotti.com**](https://devandreotti.com): publicado na Cloudflare a cada merge na `main`.
+
+Cópia espelho no [GitHub Pages](https://devandreotti.github.io/frosted-motion-folio-v2/).
 
 ## 🛠 Tecnologias Utilizadas
 - **[React](https://react.dev/)** — Biblioteca JavaScript para interfaces declarativas.
