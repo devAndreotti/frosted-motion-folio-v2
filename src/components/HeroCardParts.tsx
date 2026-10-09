@@ -12,7 +12,6 @@ export interface HeroCard {
   line: string;
   type: string;
   tint: string;
-  label: string;
 }
 
 export const CardText = ({ card }: { card: HeroCard }) => (

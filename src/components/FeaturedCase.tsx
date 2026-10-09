@@ -72,7 +72,7 @@ const FeaturedCase = ({ onOpen }: { onOpen: () => void }) => {
       </div>
 
       {/* Browser chrome so the screenshot reads as a live product, not a loose image. */}
-      <button type="button" className="bf" onClick={onOpen} aria-label={t.projects.viewDetailsAria(p.title)}>
+      <button type="button" className="bf" onClick={onOpen}>
         <span className="bf-bar">
           <i />
           <i />

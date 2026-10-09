@@ -27,7 +27,6 @@ const SegmentedControl = <T extends string>({ options, value, onChange, layoutId
           type="button"
           onClick={() => onChange(option.value)}
           aria-pressed={active}
-          aria-label={option.label}
           className={active ? 'on' : undefined}
         >
           {active && <motion.span layoutId={layoutId} className="seg-hl" transition={{ type: 'spring', stiffness: 300, damping: 30 }} />}
