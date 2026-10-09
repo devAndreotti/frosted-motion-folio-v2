@@ -1,0 +1,24 @@
+{
+  "$schema": "https://unpkg.com/wrangler@4.148.0/config-schema.json",
+  "name": "devandreotti-portfolio",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-09-15",
+  // production answers only on the custom domain; PR versions still get a preview URL on devandreotti.workers.dev
+  "workers_dev": false,
+  "preview_urls": true,
+  "assets": {
+    // npm run build:vps -- the same base=/ build the ostg01 copy serves
+    "directory": "./dist-vps",
+    "binding": "ASSETS",
+    // one-page app: unknown paths get index.html and the React 404 page
+    "not_found_handling": "single-page-application",
+    // pages and /e/ beacons go through the Worker (www/http redirects); static files skip it and stay free
+    "run_worker_first": ["/*", "!/assets/*", "!/projects/*", "!/now/*", "!/favicon.ico", "!/og-image.png", "!/profile.*", "!/placeholder.svg", "!/robots.txt", "!/sitemap.xml"]
+  },
+  // the zone devandreotti.com is on Cloudflare (nameservers moved from Hostinger); www answers too and redirects to the apex
+  "routes": [
+    { "pattern": "devandreotti.com", "custom_domain": true },
+    { "pattern": "www.devandreotti.com", "custom_domain": true }
+  ],
+  "observability": { "enabled": true }
+}

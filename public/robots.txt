@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://devandreotti.github.io/frosted-motion-folio-v2/sitemap.xml
+Sitemap: https://devandreotti.com/sitemap.xml
