@@ -35,7 +35,8 @@ test("no console or runtime errors during a full scroll through the page", async
   const errors: string[] = [];
   page.on("pageerror", (err) => errors.push(err.message));
   page.on("console", (msg) => {
-    if (msg.type() === "error" && !IGNORED_CONSOLE_PATTERN.test(msg.text())) errors.push(msg.text());
+    // /api/gh/* is the Worker proxy; hosts without a Worker (GitHub Pages, CI preview) answer 404 and the client falls back to GitHub
+    if (msg.type() === "error" && !IGNORED_CONSOLE_PATTERN.test(msg.text()) && !msg.location().url.includes("/api/gh/")) errors.push(msg.text());
   });
 
   await page.goto("");

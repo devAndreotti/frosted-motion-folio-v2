@@ -12,7 +12,7 @@ const Skills = () => {
   const [boosted, setBoosted] = useState(false);
 
   return (
-    <section id="skills" className="sec" aria-labelledby="h-stack">
+    <section className="sec" aria-labelledby="h-stack">
       <div className="wrap">
         <div className="sh">
           <div>

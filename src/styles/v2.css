@@ -88,6 +88,8 @@ html.booting .rv { animation-play-state: paused; }
 .st-d { display: block; margin-top: 4px; font: 400 13px/1.45 var(--font-sans); color: var(--fg-3); }
 
 /* ---------- section scaffolding ---------- */
+/* lazy sections sit in a wrapper that carries the anchor id; same scroll landing as .sec */
+.sec-anchor { scroll-margin-top: 60px; }
 .sec { padding-top: 120px; scroll-margin-top: 60px; }
 .sh { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
 .lbl { display: flex; align-items: center; gap: 12px; margin: 0; color: var(--fg-3); font: 500 12px/1 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; }

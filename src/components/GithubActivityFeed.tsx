@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Skeleton } from 'boneyard-js/react';
+import '@/bones/registry';
 import { ArrowUpRight, CircleDot, GitBranch, GitCommit, GitPullRequest, Star } from 'lucide-react';
 import { useGithubActivity, relativeTime, type ActivityKind, type GithubActivityItem } from '@/hooks/useGithubActivity';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -60,7 +61,7 @@ const GithubActivityFeed = () => {
   }, []);
 
   return (
-    <section id="github-activity" className="wrap sec" aria-labelledby="h-act">
+    <section className="wrap sec" aria-labelledby="h-act">
       <div className="sh">
         <div>
           <p className="lbl">{t.activity.sectionLabel}</p>

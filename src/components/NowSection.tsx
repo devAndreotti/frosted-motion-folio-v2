@@ -68,7 +68,7 @@ const NowSection = () => {
   const { lang, t } = useLanguage();
 
   return (
-    <section id="now" className="wrap sec" aria-labelledby="h-now">
+    <section className="wrap sec" aria-labelledby="h-now">
       <div className="sh">
         <div>
           <p className="lbl">{t.now.sectionLabel}</p>

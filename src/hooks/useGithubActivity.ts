@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { fetchJsonWithFallback } from '@/lib/githubFetch';
 
 const GITHUB_USER = 'devAndreotti';
 const CACHE_KEY = 'github-activity-feed-cache-v2';
@@ -147,14 +148,10 @@ function writeCache(payload: Omit<CachedPayload, 'fetchedAt'>): number {
 let inflight: Promise<CachedPayload | null> | null = null;
 
 async function fetchActivity(): Promise<CachedPayload | null> {
-  const [userRes, eventsRes] = await Promise.all([
-    fetch(`https://api.github.com/users/${GITHUB_USER}`),
-    fetch(`https://api.github.com/users/${GITHUB_USER}/events/public?per_page=100`),
+  const [user, events] = await Promise.all([
+    fetchJsonWithFallback<{ public_repos?: number }>('/api/gh/user', `https://api.github.com/users/${GITHUB_USER}`),
+    fetchJsonWithFallback<unknown>('/api/gh/events', `https://api.github.com/users/${GITHUB_USER}/events/public?per_page=100`),
   ]);
-  if (!userRes.ok || !eventsRes.ok) throw new Error('github api error');
-
-  const user = await userRes.json();
-  const events = await eventsRes.json();
   const mapped = (Array.isArray(events) ? events : []).map(mapEvent).filter((item): item is GithubActivityItem => item !== null);
   const items = groupActivity(mapped).slice(0, FEED_LIMIT);
   const publicRepos = user.public_repos ?? null;

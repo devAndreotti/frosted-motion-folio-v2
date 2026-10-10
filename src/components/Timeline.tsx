@@ -6,7 +6,7 @@ const Timeline = () => {
   const stops = t.timeline.stops;
 
   return (
-    <section id="timeline" className="wrap sec" aria-labelledby="h-tl">
+    <section className="wrap sec" aria-labelledby="h-tl">
       <p className="lbl">{t.timeline.sectionLabel}</p>
       <h2 id="h-tl" className="h2">
         {t.timeline.title}

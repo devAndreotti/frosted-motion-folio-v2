@@ -1,15 +1,18 @@
 // Cloudflare Worker for devandreotti.com: serves the static build (dist-vps) and
 // only steps in for what a static host can't do.
 //   - http:// and www. -> 301 to https://devandreotti.com (same path and query)
+//   - /api/gh/*        -> cached GitHub lookups for the browser (see github.js)
 //   - /e/<event>       -> 204: the click beacons from src/lib/track.ts. Umami
 //     records the clicks (when configured), so the beacon only needs a quiet answer.
 // Static files (assets/, images, robots, sitemap) never reach this code: see
 // run_worker_first in wrangler.jsonc.
 
+import { handleGithubApi } from './github.js';
+
 const APEX = 'devandreotti.com';
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const onPreview = url.hostname.endsWith('.workers.dev');
     if (!onPreview && (url.protocol === 'http:' || url.hostname !== APEX)) {
@@ -17,6 +20,7 @@ export default {
       url.hostname = APEX;
       return Response.redirect(url.toString(), 301);
     }
+    if (url.pathname.startsWith('/api/')) return handleGithubApi(request, env, ctx);
     if (url.pathname.startsWith('/e/')) {
       return new Response(null, { status: 204, headers: { 'cache-control': 'no-store' } });
     }
