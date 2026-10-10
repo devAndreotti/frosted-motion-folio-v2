@@ -3,16 +3,16 @@ import { contact } from '@/data/personal';
 import { track } from '@/lib/track';
 import type { Lang } from '@/lib/i18n';
 
-/** GitHub + LinkedIn as the round 48 px buttons that close the hero's CTA row. */
+/** GitHub + LinkedIn as the round 48 px buttons that close the hero's CTA row -- kept together when the row wraps. */
 export const SocialButtons = () => (
-  <>
+  <span className="soc">
     <a href={contact.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub" onClick={() => track('click-github')} className="ibtn">
       <Github className="ic" />
     </a>
     <a href={contact.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" onClick={() => track('click-linkedin')} className="ibtn">
       <Linkedin className="ic" />
     </a>
-  </>
+  </span>
 );
 
 interface RepoPillProps {

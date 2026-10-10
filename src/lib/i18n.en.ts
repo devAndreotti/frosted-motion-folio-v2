@@ -88,6 +88,8 @@ export const en: Strings = {
     privateCode: 'private code',
     alsoLabel: 'Also in the oven',
     privateTag: 'private',
+    alsoMore: 'See more',
+    alsoMoreNote: 'the other repositories on GitHub',
   },
   projects: {
     sectionLabel: 'Projects',
@@ -150,7 +152,8 @@ export const en: Strings = {
     directLabel: 'Straight to the point',
     quickLinks: { github: 'GitHub', linkedin: 'LinkedIn', instagram: 'Instagram', x: 'X', email: 'Email', projects: 'Projects' },
     projectsHandle: (cases, others) => `${cases} cases + ${others} on GitHub`,
-    copyright: (name) => `© 2026 ${name} — built with React, Tailwind CSS, and a lot of coffee.`,
+    copyright: (name) => `© 2026 ${name}`,
+    builtWith: 'built with React, Tailwind CSS, and a lot of coffee.',
     backToTop: 'Back to top',
   },
   notFound: {

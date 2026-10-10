@@ -15,6 +15,8 @@ describe("Footer", () => {
     );
 
     expect(screen.getByText(/Ricardo A. Gonçalves/i)).toBeTruthy();
+    // its own element, so phones can put it on a line of its own
+    expect(screen.getByText("feito com React, Tailwind CSS e muito café.").className).toBe("ft-b");
   });
 
   it("lists Instagram and X with the other direct contacts", () => {

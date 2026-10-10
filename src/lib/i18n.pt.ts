@@ -88,6 +88,8 @@ export const pt: Strings = {
     privateCode: 'código privado',
     alsoLabel: 'Também no forno',
     privateTag: 'privado',
+    alsoMore: 'Ver mais',
+    alsoMoreNote: 'os outros repositórios no GitHub',
   },
   projects: {
     sectionLabel: 'Projetos',
@@ -150,7 +152,8 @@ export const pt: Strings = {
     directLabel: 'Direto ao ponto',
     quickLinks: { github: 'GitHub', linkedin: 'LinkedIn', instagram: 'Instagram', x: 'X', email: 'E-mail', projects: 'Projetos' },
     projectsHandle: (cases, others) => `${cases} cases + ${others} no GitHub`,
-    copyright: (name) => `© 2026 ${name} — feito com React, Tailwind CSS e muito café.`,
+    copyright: (name) => `© 2026 ${name}`,
+    builtWith: 'feito com React, Tailwind CSS e muito café.',
     backToTop: 'Voltar ao topo',
   },
   notFound: {

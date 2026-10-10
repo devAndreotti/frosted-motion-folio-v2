@@ -83,7 +83,13 @@ const Footer = () => {
         </div>
       </div>
       <footer className="ft">
-        <span>{t.footer.copyright(personalInfo.name)}</span>
+        <span className="ft-c">
+          <span>{t.footer.copyright(personalInfo.name)}</span>
+          <span className="ft-sep" aria-hidden="true">
+            {' — '}
+          </span>
+          <span className="ft-b">{t.footer.builtWith}</span>
+        </span>
         <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           {t.footer.backToTop}
           <ArrowUp className="ic s" />

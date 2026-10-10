@@ -1,6 +1,7 @@
-import { ArrowUpRight, Check, Lock } from 'lucide-react';
+import { ArrowUpRight, Check, Ellipsis, Lock } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { GATE_CHECKS, NOW_ALSO, NOW_PROJECTS, type NowProject } from '@/data/now';
+import { contact } from '@/data/personal';
 import { track } from '@/lib/track';
 import type { Lang } from '@/lib/i18n';
 
@@ -124,6 +125,17 @@ const NowSection = () => {
               )}
             </li>
           ))}
+          {/* fills the last row's gap; the CSS hides it where it would open a row of its own */}
+          <li className="also-more">
+            <a className="also-i" href={contact.repos} target="_blank" rel="noopener noreferrer" onClick={() => track('now-more-github')}>
+              <span className="also-dots" aria-hidden="true">
+                <Ellipsis className="ic" />
+              </span>
+              <span className="also-n">{t.now.alsoMore}</span>
+              <span className="also-d">{t.now.alsoMoreNote}</span>
+              <ArrowUpRight className="ic s" />
+            </a>
+          </li>
         </ul>
       </div>
     </section>

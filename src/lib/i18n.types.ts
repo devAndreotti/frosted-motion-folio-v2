@@ -85,6 +85,9 @@ export interface Strings {
     privateCode: string;
     alsoLabel: string;
     privateTag: string;
+    /** Closing card of "also in the oven": out to the rest of the repositories. */
+    alsoMore: string;
+    alsoMoreNote: string;
   };
   projects: {
     sectionLabel: string;
@@ -138,6 +141,8 @@ export interface Strings {
     quickLinks: { github: string; linkedin: string; instagram: string; x: string; email: string; projects: string };
     projectsHandle: (cases: number, others: number) => string;
     copyright: (name: string) => string;
+    /** Second half of the copyright line; its own line on phones. */
+    builtWith: string;
     backToTop: string;
   };
   notFound: {
