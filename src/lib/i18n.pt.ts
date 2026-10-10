@@ -88,6 +88,8 @@ export const pt: Strings = {
     privateCode: 'código privado',
     alsoLabel: 'Também no forno',
     privateTag: 'privado',
+    alsoMore: 'Ver mais',
+    alsoMoreNote: 'os outros repositórios no GitHub',
   },
   projects: {
     sectionLabel: 'Projetos',
@@ -118,11 +120,15 @@ export const pt: Strings = {
     sectionLabel: 'Trajetória',
     title: 'Como cheguei até aqui.',
     stops: [
-      { year: '2021', title: 'Curso técnico', desc: 'Primeiro contato com programação, HTML e CSS.' },
-      { year: '2023', title: 'Faculdade', desc: 'Início em Ciência da Computação — UNIP.' },
-      { year: '2024', title: 'Primeiros projetos reais', desc: 'Freelas, vibe coding e os primeiros repositórios publicados.' },
-      { year: 'Hoje', title: 'Full Stack & IA aplicada', desc: 'React, Node.js, automação e produtos com propósito real.' },
+      { year: '2021', kind: 'Estudo', title: 'Curso técnico', desc: 'Primeiro contato com programação, HTML e CSS.' },
+      { year: '2023', kind: 'Formação', title: 'Faculdade', desc: 'Início em Ciência da Computação — UNIP.' },
+      { year: '2024', kind: 'Mercado', title: 'Primeiros projetos reais', desc: 'Freelas, vibe coding e os primeiros repositórios publicados.' },
+      { year: 'Hoje', kind: 'Agora', title: 'Full Stack & IA aplicada', desc: 'React, Node.js, automação e produtos com propósito real.' },
     ],
+    chapter: (n) => `Cap. ${String(n).padStart(2, '0')}`,
+    youAreHere: 'você está aqui',
+    pastLabel: 'Capítulos anteriores',
+    nowTags: ['React', 'Node.js', 'IA aplicada', 'Automação'],
   },
   activity: {
     sectionLabel: 'Atividade',
@@ -150,7 +156,8 @@ export const pt: Strings = {
     directLabel: 'Direto ao ponto',
     quickLinks: { github: 'GitHub', linkedin: 'LinkedIn', instagram: 'Instagram', x: 'X', email: 'E-mail', projects: 'Projetos' },
     projectsHandle: (cases, others) => `${cases} cases + ${others} no GitHub`,
-    copyright: (name) => `© 2026 ${name} — feito com React, Tailwind CSS e muito café.`,
+    copyright: (name) => `© 2026 ${name}`,
+    builtWith: 'feito com React, Tailwind CSS e muito café.',
     backToTop: 'Voltar ao topo',
   },
   notFound: {

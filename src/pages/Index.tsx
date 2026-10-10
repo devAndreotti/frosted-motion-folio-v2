@@ -55,7 +55,7 @@ const Index = () => {
           <LazySection id="github-activity" minHeight={700}>
             <GithubActivityFeed />
           </LazySection>
-          <LazySection id="timeline" minHeight={430}>
+          <LazySection id="timeline" minHeight={630}>
             <Timeline />
           </LazySection>
           <LazySection id="contact" minHeight={750}>

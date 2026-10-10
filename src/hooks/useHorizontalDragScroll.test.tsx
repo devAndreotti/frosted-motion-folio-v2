@@ -2,8 +2,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { useHorizontalDragScroll } from "./useHorizontalDragScroll";
 
-function Harness() {
-  const { containerRef, handlers } = useHorizontalDragScroll();
+function Harness({ options }: { options?: Parameters<typeof useHorizontalDragScroll>[0] }) {
+  const { containerRef, handlers } = useHorizontalDragScroll(options);
   return (
     <div ref={containerRef} data-testid="rail" {...handlers} style={{ overflowX: "auto", width: 300 }}>
       <button type="button" data-testid="card-btn" onClick={() => window.dispatchEvent(new CustomEvent("card-clicked"))}>
@@ -96,5 +96,20 @@ describe("useHorizontalDragScroll", () => {
     fireEvent.pointerUp(rail, { pointerId: 5, clientX: 280, clientY: 220 });
 
     expect(rail.scrollLeft).toBe(0);
+  });
+
+  it("with dragFactor 1 and no inertia, the rail follows the pointer and stops on release", () => {
+    const raf = vi.spyOn(window, "requestAnimationFrame");
+    render(<Harness options={{ dragFactor: 1, inertia: false }} />);
+    const rail = screen.getByTestId("rail");
+
+    fireEvent.pointerDown(rail, { pointerId: 6, clientX: 300, clientY: 100, button: 0 });
+    fireEvent.pointerMove(rail, { pointerId: 6, clientX: 260, clientY: 100 });
+    fireEvent.pointerMove(rail, { pointerId: 6, clientX: 220, clientY: 100 });
+    fireEvent.pointerUp(rail, { pointerId: 6, clientX: 220, clientY: 100 });
+
+    expect(rail.scrollLeft).toBe(80);
+    expect(raf).not.toHaveBeenCalled();
+    raf.mockRestore();
   });
 });

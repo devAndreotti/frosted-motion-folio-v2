@@ -85,6 +85,9 @@ export interface Strings {
     privateCode: string;
     alsoLabel: string;
     privateTag: string;
+    /** Closing card of "also in the oven": out to the rest of the repositories. */
+    alsoMore: string;
+    alsoMoreNote: string;
   };
   projects: {
     sectionLabel: string;
@@ -114,7 +117,13 @@ export interface Strings {
   timeline: {
     sectionLabel: string;
     title: string;
-    stops: { year: string; title: string; desc: string }[];
+    /** Oldest first; the last one is "now" (its `year` reads "Hoje"/"Today"). */
+    stops: { year: string; kind: string; title: string; desc: string }[];
+    chapter: (n: number) => string;
+    youAreHere: string;
+    /** Accessible name of the scrollable list of earlier chapters. */
+    pastLabel: string;
+    nowTags: string[];
   };
   activity: {
     sectionLabel: string;
@@ -138,6 +147,8 @@ export interface Strings {
     quickLinks: { github: string; linkedin: string; instagram: string; x: string; email: string; projects: string };
     projectsHandle: (cases: number, others: number) => string;
     copyright: (name: string) => string;
+    /** Second half of the copyright line; its own line on phones. */
+    builtWith: string;
     backToTop: string;
   };
   notFound: {

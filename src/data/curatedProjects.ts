@@ -161,5 +161,7 @@ function merge(meta: CurationMeta): CuratedProject {
 
 export const featuredProject: CuratedProject = merge(FEATURED_META);
 export const curatedProjects: CuratedProject[] = LIST_META.map(merge);
+/** Featured case + the ranked list: the "N cases" the footer and the timeline quote. */
+export const CASE_COUNT = curatedProjects.length + 1;
 
 export const CATEGORY_FILTERS: { key: ProjectCategory | 'all' }[] = [{ key: 'all' }, { key: 'web' }, { key: 'ia' }, { key: 'mobile' }, { key: 'tool' }];

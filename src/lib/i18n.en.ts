@@ -88,6 +88,8 @@ export const en: Strings = {
     privateCode: 'private code',
     alsoLabel: 'Also in the oven',
     privateTag: 'private',
+    alsoMore: 'See more',
+    alsoMoreNote: 'the other repositories on GitHub',
   },
   projects: {
     sectionLabel: 'Projects',
@@ -118,11 +120,15 @@ export const en: Strings = {
     sectionLabel: 'Journey',
     title: 'How I got here.',
     stops: [
-      { year: '2021', title: 'Technical course', desc: 'First contact with programming, HTML, and CSS.' },
-      { year: '2023', title: 'University', desc: 'Started Computer Science — UNIP.' },
-      { year: '2024', title: 'First real projects', desc: 'Freelance work, vibe coding, and the first published repositories.' },
-      { year: 'Today', title: 'Full Stack & applied AI', desc: 'React, Node.js, automation, and products with real purpose.' },
+      { year: '2021', kind: 'Study', title: 'Technical course', desc: 'First contact with programming, HTML, and CSS.' },
+      { year: '2023', kind: 'Education', title: 'University', desc: 'Started Computer Science — UNIP.' },
+      { year: '2024', kind: 'Work', title: 'First real projects', desc: 'Freelance work, vibe coding, and the first published repositories.' },
+      { year: 'Today', kind: 'Now', title: 'Full Stack & applied AI', desc: 'React, Node.js, automation, and products with real purpose.' },
     ],
+    chapter: (n) => `Ch. ${String(n).padStart(2, '0')}`,
+    youAreHere: 'you are here',
+    pastLabel: 'Earlier chapters',
+    nowTags: ['React', 'Node.js', 'Applied AI', 'Automation'],
   },
   activity: {
     sectionLabel: 'Activity',
@@ -150,7 +156,8 @@ export const en: Strings = {
     directLabel: 'Straight to the point',
     quickLinks: { github: 'GitHub', linkedin: 'LinkedIn', instagram: 'Instagram', x: 'X', email: 'Email', projects: 'Projects' },
     projectsHandle: (cases, others) => `${cases} cases + ${others} on GitHub`,
-    copyright: (name) => `© 2026 ${name} — built with React, Tailwind CSS, and a lot of coffee.`,
+    copyright: (name) => `© 2026 ${name}`,
+    builtWith: 'built with React, Tailwind CSS, and a lot of coffee.',
     backToTop: 'Back to top',
   },
   notFound: {

@@ -26,12 +26,15 @@ interface DragScrollHandlers {
  * its own. Pass false when something else needs the wheel (an infinite
  * ticker that should keep letting the page scroll normally under the mouse).
  *
+ * `inertia` (default true) keeps the rail moving after release. Turn it off for a row with
+ * CSS scroll snap: the snap settles it on a card instead, and the two would fight.
+ *
  * `isInteracting()` lets a caller that ALSO writes to `scrollLeft` on its own
  * (e.g. an auto-scrolling ticker) check whether a drag or its release
  * inertia is currently in control, so the two don't fight over the same
  * property.
  */
-export function useHorizontalDragScroll(options?: { redirectWheel?: boolean; dragFactor?: number }): {
+export function useHorizontalDragScroll(options?: { redirectWheel?: boolean; dragFactor?: number; inertia?: boolean }): {
   containerRef: React.RefObject<HTMLDivElement | null>;
   isDragging: boolean;
   handlers: DragScrollHandlers;
@@ -39,6 +42,7 @@ export function useHorizontalDragScroll(options?: { redirectWheel?: boolean; dra
 } {
   const redirectWheel = options?.redirectWheel ?? true;
   const dragScrollFactor = options?.dragFactor ?? DEFAULT_DRAG_SCROLL_FACTOR;
+  const inertia = options?.inertia ?? true;
   const containerRef = useRef<HTMLDivElement | null>(null);
   const inertiaFrameRef = useRef<number | null>(null);
   const suppressClickRef = useRef(false);
@@ -214,7 +218,7 @@ export function useHorizontalDragScroll(options?: { redirectWheel?: boolean; dra
   };
 
   const finishDrag = (): void => {
-    if (dragStateRef.current.dragging && dragStateRef.current.moved) {
+    if (inertia && dragStateRef.current.dragging && dragStateRef.current.moved) {
       startInertia();
     }
 

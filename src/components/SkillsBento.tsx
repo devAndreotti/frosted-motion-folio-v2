@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { edgeFadeProps, useScrollEdges } from '@/hooks/useScrollEdges';
 import { projects } from '@/data/projects';
 import { ALSO_KNOWN, STACK_AREAS, STACK_TIERS, type StackArea, type StackTier, type TierTool } from '@/data/skills';
 import { inArea, projectsUsing } from '@/lib/stackCounts';
@@ -37,6 +38,7 @@ const TierHead = ({ tier }: { tier: StackTier }) => {
 const SkillsBento = ({ repoCount = null }: { repoCount?: number | null }) => {
   const { lang, t } = useLanguage();
   const [area, setArea] = useState<StackArea | 'all'>('all');
+  const filterRow = useScrollEdges<HTMLDivElement>();
   const [daily, comfortable, learning] = STACK_TIERS;
 
   const off = (tool: TierTool) => (inArea(tool, area) ? '' : ' off');
@@ -74,7 +76,7 @@ const SkillsBento = ({ repoCount = null }: { repoCount?: number | null }) => {
     <>
       <div className="sk-bar">
         <p className="k">{t.skills.areaFilterLabel}</p>
-        <div className="af" role="group" aria-label={t.skills.areaFilterLabel}>
+        <div ref={filterRow.ref} className="af edge-fade" role="group" aria-label={t.skills.areaFilterLabel} {...edgeFadeProps(filterRow.edges)}>
           {filters.map((f) => {
             const active = area === f.id;
             const count = f.id === 'all' ? ALL_TOOLS.length : ALL_TOOLS.filter((tool) => inArea(tool, f.id)).length;

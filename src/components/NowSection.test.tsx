@@ -41,4 +41,11 @@ describe("NowSection", () => {
       expect(Boolean(name.closest("a"))).toBe(Boolean(item.href));
     }
   });
+
+  it("closes the side projects with a link out to the rest of the repositories", () => {
+    renderNow();
+    const more = screen.getByRole("link", { name: /Ver mais/ });
+    expect(more.getAttribute("href")).toBe("https://github.com/devAndreotti?tab=repositories");
+    expect(more.closest("li")?.className).toBe("also-more");
+  });
 });

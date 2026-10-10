@@ -67,12 +67,15 @@ const Header = () => {
               {t.header.ctaProjects}
               <ArrowDown className="ic s" />
             </a>
-            <button type="button" className="btn btn-gh" onClick={() => setRecruiterMode(true)}>
-              <Briefcase className="ic s" />
-              {t.header.ctaRecruiter}
-            </button>
-            <span className="vsep" />
-            <SocialButtons />
+            {/* recruiter + the round icons wrap as one unit: an icon never drops to a line by itself */}
+            <div className="ctas-g">
+              <button type="button" className="btn btn-gh" onClick={() => setRecruiterMode(true)}>
+                <Briefcase className="ic s" />
+                {t.header.ctaRecruiter}
+              </button>
+              <span className="vsep" />
+              <SocialButtons />
+            </div>
           </div>
         </div>
         <CardStack />
