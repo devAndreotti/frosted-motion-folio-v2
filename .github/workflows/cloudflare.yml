@@ -37,6 +37,14 @@ jobs:
       - name: Deploy (main)
         if: github.event_name != 'pull_request' && env.CLOUDFLARE_API_TOKEN != ''
         run: npx --yes wrangler@4.148.0 deploy
+      # Optional: a read-only GitHub token for the /api/gh proxy (Cloudflare's shared IPs run out of the
+      # unauthenticated quota). Repository secret GH_READ_TOKEN -> Worker secret GITHUB_TOKEN.
+      - name: Worker secret GITHUB_TOKEN (main)
+        if: github.event_name != 'pull_request' && env.CLOUDFLARE_API_TOKEN != ''
+        env:
+          GH_READ_TOKEN: ${{ secrets.GH_READ_TOKEN }}
+        run: |
+          if [ -n "$GH_READ_TOKEN" ]; then printf '%s' "$GH_READ_TOKEN" | npx --yes wrangler@4.148.0 secret put GITHUB_TOKEN; fi
       - name: Preview version (pull request)
         if: github.event_name == 'pull_request' && env.CLOUDFLARE_API_TOKEN != ''
         run: |
