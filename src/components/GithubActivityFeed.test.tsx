@@ -7,7 +7,7 @@ function mockGithubApi(events: unknown[]) {
   vi.stubGlobal(
     "fetch",
     vi.fn((url: string) => {
-      if (url.includes("/events/public")) {
+      if (url.includes("events")) {
         return Promise.resolve({ ok: true, json: () => Promise.resolve(events) });
       }
       return Promise.resolve({ ok: true, json: () => Promise.resolve({ public_repos: 30 }) });
@@ -108,7 +108,7 @@ describe("GithubActivityFeed", () => {
     await waitFor(() => {
       expect(screen.getByText("cached-repo")).toBeTruthy();
     });
-    const activityApiCalls = fetchSpy.mock.calls.filter(([url]) => typeof url === "string" && url.includes("api.github.com"));
+    const activityApiCalls = fetchSpy.mock.calls.filter(([url]) => typeof url === "string" && (url.includes("api.github.com") || /\/api\/gh\/(user|events)/.test(url)));
     expect(activityApiCalls).toHaveLength(0);
   });
 

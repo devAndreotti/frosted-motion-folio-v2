@@ -116,7 +116,7 @@ describe("useGithubActivity", () => {
     const fetchMock = vi.fn((url: string) =>
       Promise.resolve({
         ok: true,
-        json: () => Promise.resolve(url.includes("/events/") ? [] : { public_repos: 69 }),
+        json: () => Promise.resolve(url.includes("events") ? [] : { public_repos: 69 }),
       })
     );
     vi.stubGlobal("fetch", fetchMock);

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { fetchJsonWithFallback } from '@/lib/githubFetch';
 
 const GITHUB_USER = 'devAndreotti';
 const CACHE_KEY = 'github-contributions-cache-v2';
@@ -51,9 +52,10 @@ function writeCache(days: ContributionDay[]) {
 let inflight: Promise<ContributionDay[]> | null = null;
 
 async function fetchContributions(): Promise<ContributionDay[]> {
-  const res = await fetch(`https://github-contributions-api.jogruber.de/v4/${GITHUB_USER}?y=all`);
-  if (!res.ok) throw new Error('contributions api error');
-  const data = await res.json();
+  const data = await fetchJsonWithFallback<{ contributions?: ContributionDay[] }>(
+    '/api/gh/contributions',
+    `https://github-contributions-api.jogruber.de/v4/${GITHUB_USER}?y=all`,
+  );
   const raw: ContributionDay[] = Array.isArray(data?.contributions) ? data.contributions : [];
   const fetched = sortAndTrim(raw, MAX_DAYS);
   writeCache(fetched);

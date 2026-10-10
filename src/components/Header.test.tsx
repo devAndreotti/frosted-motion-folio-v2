@@ -11,10 +11,10 @@ function stubApis() {
   vi.stubGlobal(
     "fetch",
     vi.fn((url: string) => {
-      if (url.includes("github-contributions-api")) {
+      if (url.includes("contributions")) {
         return Promise.resolve({ ok: true, json: () => Promise.resolve({ contributions: [{ date: today, count: 1234, level: 4 }] }) });
       }
-      if (url.includes("/events/public")) return Promise.resolve({ ok: true, json: () => Promise.resolve([]) });
+      if (url.includes("events")) return Promise.resolve({ ok: true, json: () => Promise.resolve([]) });
       return Promise.resolve({ ok: true, json: () => Promise.resolve({ public_repos: 69 }) });
     })
   );

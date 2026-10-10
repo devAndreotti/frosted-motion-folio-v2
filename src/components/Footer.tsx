@@ -24,7 +24,7 @@ const Footer = () => {
   ];
 
   return (
-    <section id="contact" className="wrap sec" aria-labelledby="h-ct">
+    <section className="wrap sec" aria-labelledby="h-ct">
       <div className="ctc glass">
         <div>
           <div className="eyebrow">
