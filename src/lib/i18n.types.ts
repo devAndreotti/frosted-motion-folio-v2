@@ -117,7 +117,13 @@ export interface Strings {
   timeline: {
     sectionLabel: string;
     title: string;
-    stops: { year: string; title: string; desc: string }[];
+    /** Oldest first; the last one is "now" (its `year` reads "Hoje"/"Today"). */
+    stops: { year: string; kind: string; title: string; desc: string }[];
+    chapter: (n: number) => string;
+    youAreHere: string;
+    /** Accessible name of the scrollable list of earlier chapters. */
+    pastLabel: string;
+    nowTags: string[];
   };
   activity: {
     sectionLabel: string;

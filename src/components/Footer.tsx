@@ -1,14 +1,12 @@
 import { ArrowRight, ArrowUp, ArrowUpRight, Clock, FileText, Github, Instagram, Linkedin, Mail } from 'lucide-react';
 import { contact, personalInfo } from '@/data/personal';
 import { projects } from '@/data/projects';
-import { curatedProjects } from '@/data/curatedProjects';
+import { CASE_COUNT } from '@/data/curatedProjects';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { track } from '@/lib/track';
 import CopyEmailButton from './CopyEmailButton';
 import XLogo from './XLogo';
 import { useLocalClock } from '@/hooks/useLocalClock';
-
-const CASES = curatedProjects.length + 1;
 
 const Footer = () => {
   const { t } = useLanguage();
@@ -20,7 +18,7 @@ const Footer = () => {
     { label: t.footer.quickLinks.instagram, handle: contact.instagramHandle, href: contact.instagram, icon: Instagram, event: 'click-instagram' },
     { label: t.footer.quickLinks.x, handle: contact.xHandle, href: contact.x, icon: XLogo, event: 'click-x' },
     { label: t.footer.quickLinks.email, handle: contact.email, href: `mailto:${contact.email}`, icon: Mail, event: 'click-send-email' },
-    { label: t.footer.quickLinks.projects, handle: t.footer.projectsHandle(CASES, projects.length - CASES), href: '#projects', icon: ArrowRight },
+    { label: t.footer.quickLinks.projects, handle: t.footer.projectsHandle(CASE_COUNT, projects.length - CASE_COUNT), href: '#projects', icon: ArrowRight },
   ];
 
   return (

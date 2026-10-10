@@ -106,7 +106,7 @@ html.booting .rv { animation-play-state: paused; }
 .seg-hl { position: absolute; inset: 0; border-radius: 999px; background: var(--accent); z-index: -1; }
 .seg-n { font: 500 11px/1 var(--font-mono); opacity: 0.65; }
 /* Horizontal scrollers fade only on a side that still hides items (useScrollEdges sets the attributes). */
-.edge-fade[data-fade-start], .edge-fade[data-fade-end] { --fs: #000; --fe: #000; -webkit-mask-image: linear-gradient(90deg, var(--fs), #000 15%, #000 85%, var(--fe)); mask-image: linear-gradient(90deg, var(--fs), #000 15%, #000 85%, var(--fe)); }
+.edge-fade[data-fade-start], .edge-fade[data-fade-end] { --fs: #000; --fe: #000; --fl: var(--fade-len, 15%); -webkit-mask-image: linear-gradient(var(--fade-dir, 90deg), var(--fs), #000 var(--fl), #000 calc(100% - var(--fl)), var(--fe)); mask-image: linear-gradient(var(--fade-dir, 90deg), var(--fs), #000 var(--fl), #000 calc(100% - var(--fl)), var(--fe)); }
 .edge-fade[data-fade-start] { --fs: transparent; }
 .edge-fade[data-fade-end] { --fe: transparent; }
 .k { margin: 26px 0 10px; color: var(--fg-3); font: 500 11px/1 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; }
@@ -275,7 +275,7 @@ a.also-i:hover { border-color: var(--border-2); }
    bright streak across the top of the activity cards (a backdrop sampled from the wrong place);
    the blur itself is invisible over this background, so --glass-lift puts back the extra
    saturation the filter gave instead. */
-.fc.glass, .tcard.glass { backdrop-filter: none; -webkit-backdrop-filter: none; background: linear-gradient(var(--surface-1), var(--surface-1)), var(--glass-lift, transparent); }
+.fc.glass { backdrop-filter: none; -webkit-backdrop-filter: none; background: linear-gradient(var(--surface-1), var(--surface-1)), var(--glass-lift, transparent); }
 .fc-i { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; background: var(--surf-2); color: var(--accent-ink); }
 .fc-p { margin: 0; font: 500 14px/1.45 var(--font-sans); }
 .fc-r { font: 500 12.5px/1.4 var(--font-mono); color: var(--fg-2); word-break: break-word; }
@@ -285,17 +285,31 @@ a.also-i:hover { border-color: var(--border-2); }
 .feed-empty { margin-top: 14px; padding: 24px; border-radius: 20px; text-align: center; font: 400 14px/1.5 var(--font-sans); color: var(--fg-3); }
 
 /* ---------- timeline ---------- */
-.tl { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; margin: 44px 0 0; padding: 0; list-style: none; }
-.tl::before { content: ''; position: absolute; left: 0; right: 0; top: 9px; height: 1px; background: var(--line-2); }
-.ts { position: relative; }
-.tn { position: relative; width: 19px; height: 19px; border-radius: 99px; border: 1px solid var(--border-2); background: var(--solid, #0a0a0a); display: grid; place-items: center; }
-.tn::after { content: ''; width: 7px; height: 7px; border-radius: 99px; background: var(--fg-3); }
-.tn.now { border-color: color-mix(in oklab, var(--accent) 60%, transparent); }
-.tn.now::after { background: var(--accent); box-shadow: 0 0 0 6px color-mix(in oklab, var(--accent) 24%, transparent); }
-.tcard { margin-top: 20px; padding: 20px; border-radius: 20px; }
-.tcard-y { font: 500 12px/1 var(--font-mono); color: var(--fg-3); letter-spacing: 0.06em; text-transform: uppercase; }
-.tcard-t { display: block; margin-top: 12px; font: 600 18px/1.25 var(--font-sans); letter-spacing: -0.01em; }
-.tcard-d { margin: 8px 0 0; font: 400 14px/1.55 var(--font-sans); color: var(--fg-2); }
+/* Earlier chapters on the left -- about three show, more scroll inside the column -- the current one
+   as the big card beside them, and a ruler under both whose segments last as long as each chapter. */
+.tl { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: 14px; margin-top: 40px; }
+.tl-past { max-height: 460px; overflow-x: hidden; overflow-y: auto; border-radius: 18px; scrollbar-width: thin; scrollbar-color: var(--line-2) transparent; --fade-dir: 180deg; --fade-len: 48px; }
+.tl-list { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.tl-ch { padding: 18px 20px; border-radius: 18px; border: 1px solid var(--line); background: var(--surf); transition: border-color 0.2s; }
+.tl-ch:hover { border-color: var(--border-2); }
+.tl-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 12px; color: var(--fg-3); font: 500 12px/1 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+.tl-kind { font-size: 11px; letter-spacing: 0.08em; }
+.tl-t { margin: 10px 0 0; font: 600 17px/1.25 var(--font-sans); letter-spacing: -0.01em; }
+.tl-d { margin: 4px 0 0; font: 400 14px/1.5 var(--font-sans); color: var(--fg-2); }
+.tl-now { display: flex; flex-direction: column; padding: 28px 32px; border-radius: 24px; border: 1px solid color-mix(in oklab, var(--accent) 45%, var(--border-1)); background: linear-gradient(150deg, color-mix(in oklab, var(--accent) 18%, var(--surface-1)), var(--surface-1) 70%); box-shadow: inset 0 1px var(--hl), 0 30px 60px -34px color-mix(in oklab, var(--accent) 60%, transparent); }
+.tl-here { color: var(--accent-ink); font-weight: 600; letter-spacing: 0.1em; }
+.tl-av { display: inline-flex; align-items: center; gap: 10px; color: var(--fg-2); font: 500 13px/1.3 var(--font-sans); letter-spacing: 0; text-transform: none; }
+.tl-y { display: block; margin-top: 20px; font: 600 72px/0.95 var(--font-sans); letter-spacing: -0.05em; color: var(--accent); }
+.tl-nt { margin: 14px 0 0; font: 600 28px/1.15 var(--font-sans); letter-spacing: -0.03em; }
+.tl-nd { margin: 10px 0 0; max-width: 46ch; font: 400 16px/1.6 var(--font-sans); color: var(--fg-2); }
+.tl-f { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 22px; }
+.tl-facts { font: 500 12px/1.3 var(--font-mono); color: var(--fg-3); }
+.tl-rule { display: flex; gap: 4px; margin-top: 28px; }
+.tl-seg { flex: 1 1 0; min-width: 0; }
+.tl-seg i { display: block; height: 8px; border-radius: 99px; background: color-mix(in oklab, var(--accent) var(--p), transparent); }
+.tl-seg:last-child i { box-shadow: 0 0 18px color-mix(in oklab, var(--accent) 55%, transparent); }
+.tl-seg span { display: flex; justify-content: space-between; gap: 8px; margin-top: 10px; font: 500 11px/1 var(--font-mono); color: var(--fg-3); }
+.tl-seg b { font-weight: 500; color: var(--accent-ink); }
 
 /* ---------- contact ---------- */
 .ctc { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 56px; padding: 48px; border-radius: 28px; }
@@ -352,10 +366,13 @@ a.also-i:hover { border-color: var(--border-2); }
   .sk-grid { grid-template-columns: 1fr; }
   .sk-main { grid-row: auto; }
   .ctc { grid-template-columns: 1fr; gap: 36px; }
-  .tl { grid-template-columns: 1fr; gap: 16px; }
-  .tl::before { left: 9px; right: auto; top: 0; bottom: 0; width: 1px; height: auto; }
-  .ts { display: grid; grid-template-columns: 19px minmax(0, 1fr); gap: 16px; }
-  .tcard { margin-top: 0; }
+  /* earlier chapters become a row to swipe (or drag), the next card peeking at the edge; "now" below */
+  .tl { grid-template-columns: 1fr; }
+  .tl-past { max-height: none; overflow-x: auto; overflow-y: hidden; cursor: grab; scroll-snap-type: x mandatory; scroll-padding-left: 28px; scrollbar-width: none; --fade-dir: 90deg; --fade-len: 28px; }
+  .tl-past::-webkit-scrollbar { display: none; }
+  .tl-past.drag { scroll-snap-type: none; cursor: grabbing; }
+  .tl-list { flex-direction: row; }
+  .tl-ch { flex: 0 0 min(78%, 320px); scroll-snap-align: start; }
 }
 @media (max-width: 720px) {
   .wrap, .nav-in { padding: 0 20px; }
@@ -396,6 +413,10 @@ a.also-i:hover { border-color: var(--border-2); }
   .hm-box { padding: 18px 16px 14px; }
   .ctc { padding: 28px 20px; }
   .ct-h { font-size: 38px; }
+  .tl-now { padding: 22px 20px; border-radius: 22px; }
+  .tl-y { margin-top: 16px; font-size: 52px; }
+  .tl-nt { font-size: 22px; }
+  .tl-nd { font-size: 15px; }
   .dlg { padding: 20px; }
   .dlg h3 { font-size: 28px; }
   /* copyright: name on one line, "built with..." on the next, instead of a stray last word */

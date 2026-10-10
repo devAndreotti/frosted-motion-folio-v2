@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { act, fireEvent, render, screen } from "@testing-library/react";
+import { useRef } from "react";
 import { edgeFadeProps, useScrollEdges } from "./useScrollEdges";
 
 const Probe = () => {
@@ -58,6 +59,35 @@ describe("useScrollEdges", () => {
 
     unmount();
     expect(disconnect).toHaveBeenCalled();
+  });
+
+  it("follows a column that scrolls down instead of sideways", () => {
+    const Column = () => {
+      const { ref, edges } = useScrollEdges<HTMLDivElement>();
+      return <div ref={ref} data-testid="col" style={{ overflowX: "hidden", overflowY: "auto" }} {...edgeFadeProps(edges)} />;
+    };
+    const col = render(<Column />).getByTestId("col");
+    Object.defineProperty(col, "scrollHeight", { value: 700, configurable: true });
+    Object.defineProperty(col, "clientHeight", { value: 460, configurable: true });
+    fireEvent.scroll(col);
+    expect(col.getAttribute("data-fade-end")).toBe("true");
+    col.scrollTop = 240;
+    fireEvent.scroll(col);
+    expect(col.getAttribute("data-fade-start")).toBe("true");
+    expect(col.hasAttribute("data-fade-end")).toBe(false);
+  });
+
+  it("uses a ref another hook owns", () => {
+    const Shared = () => {
+      const own = useRef<HTMLDivElement>(null);
+      const { ref, edges } = useScrollEdges(own);
+      return <div ref={own} data-testid="shared" data-same={String(ref === own)} style={{ overflowX: "auto" }} {...edgeFadeProps(edges)} />;
+    };
+    const row = render(<Shared />).getByTestId("shared");
+    expect(row.dataset.same).toBe("true");
+    size(row, 500, 300);
+    fireEvent.scroll(row);
+    expect(row.getAttribute("data-fade-end")).toBe("true");
   });
 
   it("ignores overflow on a row that wraps instead of scrolling", () => {
