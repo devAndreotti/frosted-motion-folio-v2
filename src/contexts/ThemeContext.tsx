@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { buildHueTheme, hexToRgbTriplet, HUE_ORDER, type Hue } from '@/lib/theme';
+import { applyFavicon } from '@/lib/favicon';
 
 export type { Hue };
 export { HUE_ORDER, hexToRgbTriplet };
@@ -74,6 +75,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
       root.setProperty(CSS_VAR_BY_TOKEN[key], tokens[key]);
     });
     root.setProperty('--accent-rgb', hexToRgbTriplet(tokens.accent));
+    applyFavicon({ bg: tokens.solid, fg: tokens.accent });
   }, [hue, theme]);
 
   const toggleTheme = () => setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
