@@ -156,12 +156,10 @@ html:not(.dark) .also-i { --mix: 55%; }
 button.also-i { cursor: pointer; }
 :is(a, button).also-i:hover, :is(a, button).also-i:focus-visible { border-color: color-mix(in oklab, var(--b) 65%, transparent); background: color-mix(in oklab, var(--b) 9%, var(--surf)); box-shadow: 0 18px 44px -24px color-mix(in oklab, var(--b) 80%, transparent); transform: translateY(-2px); }
 .also-i > .ic { position: absolute; top: 14px; right: 14px; color: var(--fg-3); transition: color 0.25s; }
-.also-ic, .also-g { width: 36px; height: 36px; margin-bottom: 6px; border-radius: 10px; flex: none; }
+.also-ic { width: 36px; height: 36px; margin-bottom: 6px; border-radius: 10px; flex: none; }
 .also-ic { filter: grayscale(1); opacity: 0.75; transition: filter 0.3s, opacity 0.3s; }
-.also-g { display: grid; place-items: center; border: 1px solid var(--line); color: var(--fg-3); transition: color 0.25s, border-color 0.25s, background 0.25s; }
 .also-n { padding-right: 20px; font: 600 14px/1.3 var(--font-sans); transition: color 0.25s; }
 :is(a, button).also-i:is(:hover, :focus-visible) .also-ic { filter: none; opacity: 1; }
-:is(a, button).also-i:is(:hover, :focus-visible) .also-g { color: var(--b); border-color: color-mix(in oklab, var(--b) 55%, transparent); background: color-mix(in oklab, var(--b) 14%, transparent); }
 :is(a, button).also-i:is(:hover, :focus-visible) :is(.also-n, .also-open),
 :is(a, button).also-i:is(:hover, :focus-visible) > .ic { color: color-mix(in oklab, var(--b) var(--mix), var(--fg-1)); }
 .also-d { font: 400 12.5px/1.45 var(--font-sans); color: var(--fg-3); }
@@ -182,10 +180,8 @@ button.also-i { cursor: pointer; }
 .oc-x { position: absolute; top: 20px; right: 20px; border-color: color-mix(in oklab, var(--p-fg) 16%, transparent); background: transparent; color: var(--p-fg); }
 .oc-x:hover { border-color: var(--p-ac); color: var(--p-ink); }
 .oc-top { display: flex; align-items: center; gap: 16px; padding-right: 48px; }
-.oc .also-ic, .oc .also-g { width: 64px; height: 64px; margin: 0; border-radius: 17px; }
+.oc .also-ic { width: 64px; height: 64px; margin: 0; border-radius: 17px; }
 .oc .also-ic { filter: none; opacity: 1; }
-.oc .also-g { border-color: color-mix(in oklab, var(--p-ac) 50%, transparent); background: color-mix(in oklab, var(--p-ac) 14%, transparent); color: var(--p-ac); }
-.oc .also-g .ic { width: 28px; height: 28px; }
 .dlg.oc h3 { margin: 0; font-size: 28px; }
 .oc-sig { margin: 7px 0 0; color: var(--p-ink); font: 500 12px/1.3 var(--font-mono); }
 .oc-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 20px; }
@@ -198,6 +194,8 @@ button.also-i { cursor: pointer; }
 .oc-f li span { flex: none; width: 14px; color: var(--p-ink); font-family: var(--font-mono); }
 .oc .tag { border-color: color-mix(in oklab, var(--p-ac) 32%, transparent); background: transparent; color: var(--p-fg2); font-family: var(--font-mono); }
 .oc-foot { display: flex; align-items: center; gap: 8px; margin: 22px 0 0; padding-top: 16px; border-top: 1px solid color-mix(in oklab, var(--p-fg) 12%, transparent); color: var(--p-mu); font: 500 12px/1.4 var(--font-mono); }
+.oc-gh { color: var(--p-ink); font-weight: 600; transition: gap 0.2s; }
+.oc-gh:hover { gap: 11px; }
 
 /* ---------- projects ---------- */
 .feat { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 44px; padding: 36px; margin-top: 40px; border-radius: 28px; }

@@ -1,4 +1,3 @@
-import { Cpu, LayoutDashboard, Rss, type LucideIcon } from 'lucide-react';
 import type { Localized } from '@/lib/i18n';
 
 export interface NowProject {
@@ -102,14 +101,13 @@ export interface AlsoDetails {
 export interface AlsoItem {
   name: string;
   note: Localized<string>;
-  /** Missing for private work without a public page. */
+  /** The public repo; private work has none. */
   href?: string;
   /** The project's own color: the card takes it on hover. */
   color?: string;
-  /** App icon (public/now/icons); without one the card draws `glyph`. */
+  /** App icon in public/now/icons, grey until hover. */
   icon?: string;
-  glyph?: LucideIcon;
-  /** Private work with no public page opens this card instead of a link. */
+  /** Opens a card in the project's own style instead of linking out; a public one links to `href` from inside the card. */
   details?: AlsoDetails;
 }
 
@@ -140,8 +138,8 @@ export const NOW_ALSO: AlsoItem[] = [
   {
     name: 'Feed Dispatch',
     note: { pt: 'curadoria de conteúdo técnico com LLM, revisão e publicação', en: 'LLM-assisted tech content curation, review and publishing' },
-    color: '#d46f33',
-    glyph: Rss,
+    color: '#e37a4d',
+    icon: './now/icons/feed-dispatch.webp',
     details: {
       sig: { pt: 'coletar → gerar → revisar → publicar', en: 'collect → draft → review → publish' },
       status: { pt: 'Em uso', en: 'In use' },
@@ -155,8 +153,8 @@ export const NOW_ALSO: AlsoItem[] = [
         en: ['Collection by topic, preset or hype ranking, stored in Postgres', 'Posts, threads, comments and replies drafted with OpenRouter or Gemini', 'Editorial queue: approve, reject, edit and regenerate', 'Web panel with history, queue and background jobs', 'Per-platform publishing with dry-run and an email summary'],
       },
       stack: ['Python', 'Flask', 'PostgreSQL', 'Redis', 'Playwright', 'Textual'],
-      // the panel's own light theme: cream paper, orange accent, Palatino titles
-      palette: { bg: '#f7f0e4', fg: '#1f2834', fg2: '#3d4450', muted: '#6f665b', ink: '#a8501c' },
+      // the panel's own light theme: cream paper, the icon's coral, Palatino titles
+      palette: { bg: '#f7f0e4', fg: '#1f2834', fg2: '#3d4450', muted: '#6f665b', ink: '#a24a2e' },
       face: 'editorial',
       mark: '+',
     },
@@ -205,8 +203,52 @@ export const NOW_ALSO: AlsoItem[] = [
       mark: '✓',
     },
   },
-  { name: 'Ambiente Hyprland', note: { pt: 'meu Linux com barra e widgets próprios em QML', en: 'my Linux setup with a custom bar and widgets in QML' }, glyph: LayoutDashboard },
-  { name: 'ollama-rtx-4gb', note: { pt: 'LLMs locais numa GPU de 4 GB, com benchmarks', en: 'local LLMs on a 4 GB GPU, with benchmarks' }, href: 'https://github.com/devAndreotti/ollama-rtx-4gb', glyph: Cpu },
+  {
+    name: 'Ambiente Hyprland',
+    note: { pt: 'meu Linux com barra e widgets próprios em QML', en: 'my Linux setup with a custom bar and widgets in QML' },
+    color: '#1cb6d4',
+    icon: './now/icons/hyprland.webp',
+    details: {
+      sig: { pt: 'arch · hyprland · quickshell', en: 'arch · hyprland · quickshell' },
+      status: { pt: 'Em uso', en: 'In use' },
+      meta: { pt: 'meu desktop do dia a dia', en: 'my daily desktop' },
+      pitch: {
+        pt: 'Meu desktop Linux com Hyprland e uma interface feita do zero em Quickshell/QML: barra superior, popups para cada widget e cores tiradas do papel de parede.',
+        en: 'My Linux desktop on Hyprland with an interface built from scratch in Quickshell/QML: a top bar, a popup per widget and colors taken from the wallpaper.',
+      },
+      features: {
+        pt: ['Barra superior por monitor, com popups flutuantes', 'Widgets de bateria, rede, volume, música, notificações, área de transferência e calendário', 'Tema gerado do papel de parede pelo matugen', 'Tela de bloqueio, launcher de apps e painel de ações rápidas', 'Dispatcher IPC central e um watchdog que reinicia o Quickshell'],
+        en: ['Per-monitor top bar with floating popups', 'Battery, network, volume, music, notifications, clipboard and calendar widgets', 'Theme generated from the wallpaper by matugen', 'Lock screen, app launcher and quick-actions panel', 'Central IPC dispatcher and a watchdog that restarts Quickshell'],
+      },
+      stack: ['Hyprland', 'Quickshell', 'QML', 'Bash', 'Python', 'matugen'],
+      palette: { bg: '#071824', fg: '#dcf6fb', fg2: '#a9d3df', muted: '#6f9aab' },
+      mark: '▸',
+    },
+  },
+  {
+    name: 'local-llm-rtx-4gb',
+    note: { pt: 'LLMs locais numa GPU de 4 GB, com benchmarks', en: 'local LLMs on a 4 GB GPU, with benchmarks' },
+    href: 'https://github.com/devAndreotti/local-llm-rtx-4gb',
+    color: '#b9c0c6',
+    icon: './now/icons/local-llm.webp',
+    details: {
+      sig: { pt: 'RTX 2050 · 4 GB VRAM · 100% GPU', en: 'RTX 2050 · 4 GB VRAM · 100% GPU' },
+      status: { pt: 'Open source', en: 'Open source' },
+      meta: { pt: 'benchmarks de 2026', en: '2026 benchmarks' },
+      pitch: {
+        pt: 'Modelos de linguagem locais num notebook com RTX 2050 de 4 GB: configurações ajustadas para caber inteiro na GPU, atalhos para abrir cada modelo e uma suíte de benchmark que mede velocidade, lógica e tool calling.',
+        en: 'Local language models on a laptop with a 4 GB RTX 2050: configs tuned to fit entirely on the GPU, shortcuts to launch each model and a benchmark suite that measures speed, logic and tool calling.',
+      },
+      features: {
+        pt: ['Qwen 2.5 3B e Coder 3B a ~45 tok/s, 100% na GPU', 'DeepSeek R1 1.5B a ~80 tok/s; o 7B cai para 3–5 tok/s dividindo CPU e GPU', 'Tool calling nativo no Qwen 2.5; R1 e Gemma não servem para chamar ferramentas', 'Variantes customizadas (qcode, qchat, r1fast, Gemma) com launchers', 'Suíte de benchmark em promptfoo: lógica, código e tool calling'],
+        en: ['Qwen 2.5 3B and Coder 3B at ~45 tok/s, fully on the GPU', 'DeepSeek R1 1.5B at ~80 tok/s; the 7B drops to 3–5 tok/s split across CPU and GPU', 'Native tool calling on Qwen 2.5; R1 and Gemma are no good for tool dispatch', 'Custom variants (qcode, qchat, r1fast, Gemma) with launchers', 'promptfoo benchmark suite: logic, code and tool calling'],
+      },
+      stack: ['Ollama', 'promptfoo', 'Qwen 2.5', 'DeepSeek-R1', 'Gemma', 'CUDA'],
+      palette: { bg: '#16191b', fg: '#e4e7e9', fg2: '#b8bec3', muted: '#878e94' },
+      face: 'mono',
+      mark: '›',
+    },
+  },
 ];
 
 /** The checks this very repo runs on every PR -- drawn as the Quality Gate card's visual. */

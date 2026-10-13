@@ -68,18 +68,10 @@ const ProjectCard = ({ p, lang }: { p: NowProject; lang: Lang }) => {
   );
 };
 
-/** The item's app icon (grey until hover) or, without one, its glyph. */
-const AlsoIcon = ({ item, big }: { item: AlsoItem; big?: boolean }) => {
-  const Glyph = item.glyph;
-  if (item.icon) return <img className={`also-ic${big ? ' big' : ''}`} src={item.icon} alt="" loading="lazy" />;
-  return Glyph ? (
-    <span className={`also-g${big ? ' big' : ''}`} aria-hidden="true">
-      <Glyph className="ic" />
-    </span>
-  ) : null;
-};
+/** The item's app icon, grey until hover. */
+const AlsoIcon = ({ item }: { item: AlsoItem }) => (item.icon ? <img className="also-ic" src={item.icon} alt="" loading="lazy" /> : null);
 
-/** One "also in the oven" item: a link when public, a button to its card when private with details, plain text otherwise. */
+/** One "also in the oven" item: a button to its card when it has details, else a link when public, plain text otherwise. */
 const AlsoEntry = ({ item, onOpen }: { item: AlsoItem; onOpen: () => void }) => {
   const { lang, t } = useLanguage();
   const body = (
@@ -90,14 +82,6 @@ const AlsoEntry = ({ item, onOpen }: { item: AlsoItem; onOpen: () => void }) => 
     </>
   );
 
-  if (item.href) {
-    return (
-      <a className="also-i" href={item.href} target="_blank" rel="noopener noreferrer">
-        {body}
-        <ArrowUpRight className="ic s" />
-      </a>
-    );
-  }
   if (item.details) {
     return (
       <button
@@ -111,10 +95,17 @@ const AlsoEntry = ({ item, onOpen }: { item: AlsoItem; onOpen: () => void }) => 
       >
         {body}
         <span className="nc-priv">
-          <Lock className="ic s" />
-          {t.now.privateTag} · <span className="also-open">{t.now.alsoOpen}</span>
+          {item.href ? 'GitHub' : <><Lock className="ic s" />{t.now.privateTag}</>} · <span className="also-open">{t.now.alsoOpen}</span>
         </span>
       </button>
+    );
+  }
+  if (item.href) {
+    return (
+      <a className="also-i" href={item.href} target="_blank" rel="noopener noreferrer">
+        {body}
+        <ArrowUpRight className="ic s" />
+      </a>
     );
   }
   return (
@@ -128,7 +119,7 @@ const AlsoEntry = ({ item, onOpen }: { item: AlsoItem; onOpen: () => void }) => 
   );
 };
 
-/** A private project's card, set in the project's own palette instead of the site's. */
+/** A side project's card, set in the project's own palette instead of the site's. */
 const AlsoCard = ({ item, details: d, onClose }: { item: AlsoItem; details: AlsoDetails; onClose: () => void }) => {
   const { lang, t } = useLanguage();
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -144,7 +135,7 @@ const AlsoCard = ({ item, details: d, onClose }: { item: AlsoItem; details: Also
           <X className="ic" />
         </button>
         <div className="oc-top">
-          <AlsoIcon item={item} big />
+          <AlsoIcon item={item} />
           <div>
             <h3 id="oc-t">{item.name}</h3>
             <p className="oc-sig">{d.sig[lang]}</p>
@@ -172,10 +163,17 @@ const AlsoCard = ({ item, details: d, onClose }: { item: AlsoItem; details: Also
             </span>
           ))}
         </div>
-        <p className="oc-foot">
-          <Lock className="ic s" />
-          {t.now.alsoPrivateFoot}
-        </p>
+        {item.href ? (
+          <a className="oc-foot oc-gh" href={item.href} target="_blank" rel="noopener noreferrer">
+            {t.now.alsoGithub}
+            <ArrowUpRight className="ic s" />
+          </a>
+        ) : (
+          <p className="oc-foot">
+            <Lock className="ic s" />
+            {t.now.alsoPrivateFoot}
+          </p>
+        )}
       </div>
     </div>
   );

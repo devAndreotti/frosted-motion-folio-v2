@@ -92,6 +92,7 @@ export interface Strings {
     alsoOpen: string;
     alsoWhat: string;
     alsoPrivateFoot: string;
+    alsoGithub: string;
   };
   projects: {
     sectionLabel: string;
