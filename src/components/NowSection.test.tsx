@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import { NOW_ALSO, NOW_PROJECTS } from "@/data/now";
 import NowSection from "./NowSection";
 
@@ -40,6 +41,34 @@ describe("NowSection", () => {
       const name = screen.getByText(item.name);
       expect(Boolean(name.closest("a"))).toBe(Boolean(item.href));
     }
+  });
+
+  it("gives each side project its own hover color and opens private ones as a card in their palette", () => {
+    renderNow();
+    const kali = NOW_ALSO.find((x) => x.name === "Kali Layer")!;
+    const button = screen.getByRole("button", { name: /Kali Layer/ });
+    expect(button.closest("li")?.style.getPropertyValue("--brand")).toBe(kali.color);
+
+    fireEvent.click(button);
+    const card = screen.getByRole("dialog", { name: "Kali Layer" });
+    expect(card.style.getPropertyValue("--p-ac")).toBe(kali.color);
+    expect(within(card).getByText(kali.details!.features.pt[0])).toBeTruthy();
+
+    fireEvent.click(within(card).getByRole("button", { name: "Fechar" }));
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("shows the portrait for the saved site color", () => {
+    localStorage.setItem("hue", "red");
+    const { container } = render(
+      <ThemeProvider>
+        <LanguageProvider>
+          <NowSection />
+        </LanguageProvider>
+      </ThemeProvider>
+    );
+    expect(container.querySelector(".about-ph")?.getAttribute("src")).toBe("./profile/red.webp");
+    localStorage.clear();
   });
 
   it("closes the side projects with a link out to the rest of the repositories", () => {

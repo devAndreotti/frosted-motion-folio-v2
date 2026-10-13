@@ -1,3 +1,4 @@
+import { Cpu, LayoutDashboard, Rss, type LucideIcon } from 'lucide-react';
 import type { Localized } from '@/lib/i18n';
 
 export interface NowProject {
@@ -81,19 +82,131 @@ export const NOW_PROJECTS: NowProject[] = [
   },
 ];
 
+/** What a private project's card says, drawn in the project's own colors so it reads like the app itself. */
+export interface AlsoDetails {
+  /** One line in the project's own voice, under the name. */
+  sig: Localized<string>;
+  status: Localized<string>;
+  meta: Localized<string>;
+  pitch: Localized<string>;
+  features: Localized<string[]>;
+  stack: string[];
+  /** The app's own palette; the accent is the item's `color`, `ink` a darker one for small text where the accent is too light on `bg`. */
+  palette: { bg: string; fg: string; fg2: string; muted: string; ink?: string };
+  /** Type like the app: mono for the terminal tools, serif titles for the editorial panel. */
+  face?: 'mono' | 'editorial';
+  /** Bullet for the feature list. */
+  mark: string;
+}
+
 export interface AlsoItem {
   name: string;
   note: Localized<string>;
   /** Missing for private work without a public page. */
   href?: string;
+  /** The project's own color: the card takes it on hover. */
+  color?: string;
+  /** App icon (public/now/icons); without one the card draws `glyph`. */
+  icon?: string;
+  glyph?: LucideIcon;
+  /** Private work with no public page opens this card instead of a link. */
+  details?: AlsoDetails;
 }
 
 export const NOW_ALSO: AlsoItem[] = [
-  { name: 'Orbitaly', note: { pt: 'catálogo desktop de skills e MCP servers', en: 'desktop catalog of skills and MCP servers' } },
-  { name: 'Scriply', note: { pt: 'app desktop pra gerenciar, editar e agendar scripts de automação', en: 'desktop app to manage, edit and schedule automation scripts' } },
-  { name: 'Feed Dispatch', note: { pt: 'curadoria de conteúdo técnico com LLM, revisão e publicação', en: 'LLM-assisted tech content curation, review and publishing' } },
-  { name: 'Ambiente Hyprland', note: { pt: 'meu Linux com barra e widgets próprios em QML', en: 'my Linux setup with a custom bar and widgets in QML' } },
-  { name: 'ollama-rtx-4gb', note: { pt: 'LLMs locais numa GPU de 4 GB, com benchmarks', en: 'local LLMs on a 4 GB GPU, with benchmarks' }, href: 'https://github.com/devAndreotti/ollama-rtx-4gb' },
+  {
+    name: 'Kali Layer',
+    note: { pt: 'meu lab de bug bounty numa VM Kali, com helpers e menus próprios', en: 'my bug bounty lab on a Kali VM, with custom helpers and menus' },
+    color: '#e05561',
+    icon: './now/icons/kali.webp',
+    details: {
+      sig: { pt: 'kali@lab:~$ hh', en: 'kali@lab:~$ hh' },
+      status: { pt: 'Em desenvolvimento', en: 'In development' },
+      meta: { pt: 'sem repositório público', en: 'no public repository' },
+      pitch: {
+        pt: 'Camada entre o Windows e uma VM Kali que transforma o lab num posto de recon: um menu central com o estado da máquina, workspaces por alvo, notas e achados, e a exportação das evidências de volta para o Windows.',
+        en: 'A layer between Windows and a Kali VM that turns the lab into a recon station: one menu with the machine state, per-target workspaces, notes and findings, and evidence exported back to Windows.',
+      },
+      features: {
+        pt: ['Hub hh com uptime, RAM, alvo ativo e IP do Tailscale', 'Atalhos de recon e web: httpx, nuclei, ffuf, gobuster e feroxbuster', 'Kit de OSINT instalado e atualizado pelo ext (holehe, maigret, h8mail…)', 'Workspace por alvo, com notas e achados', 'Exportação para o Windows via Samba e rotas por Tor/proxychains'],
+        en: ['hh hub with uptime, RAM, active target and Tailscale IP', 'Recon and web shortcuts: httpx, nuclei, ffuf, gobuster and feroxbuster', 'OSINT kit installed and kept up to date by ext (holehe, maigret, h8mail…)', 'Per-target workspace with notes and findings', 'Export to Windows over Samba, plus Tor/proxychains routes'],
+      },
+      stack: ['PowerShell', 'zsh', 'Gum + fzf', 'Python', 'tmux', 'Tailscale'],
+      palette: { bg: '#0f0a0d', fg: '#cdd6f4', fg2: '#b4bcd6', muted: '#8a8fa8' },
+      face: 'mono',
+      mark: '›',
+    },
+  },
+  {
+    name: 'Feed Dispatch',
+    note: { pt: 'curadoria de conteúdo técnico com LLM, revisão e publicação', en: 'LLM-assisted tech content curation, review and publishing' },
+    color: '#d46f33',
+    glyph: Rss,
+    details: {
+      sig: { pt: 'coletar → gerar → revisar → publicar', en: 'collect → draft → review → publish' },
+      status: { pt: 'Em uso', en: 'In use' },
+      meta: { pt: 'roda na minha VPS', en: 'runs on my VPS' },
+      pitch: {
+        pt: 'Pipeline de curadoria editorial: coleta posts de Reddit, X, LinkedIn e GitHub, usa LLM para rascunhar o post de cada plataforma e deixa tudo numa fila para eu revisar e aprovar num painel web antes de publicar.',
+        en: 'An editorial curation pipeline: it collects posts from Reddit, X, LinkedIn and GitHub, has an LLM draft a post for each platform and queues everything for me to review and approve in a web panel before publishing.',
+      },
+      features: {
+        pt: ['Coleta por tema, preset ou ranking de hype, guardada em Postgres', 'Posts, threads, comentários e respostas gerados com OpenRouter ou Gemini', 'Fila editorial: aprovar, rejeitar, editar e gerar de novo', 'Painel web com histórico, fila e jobs em segundo plano', 'Publicação por plataforma com dry-run e resumo por e-mail'],
+        en: ['Collection by topic, preset or hype ranking, stored in Postgres', 'Posts, threads, comments and replies drafted with OpenRouter or Gemini', 'Editorial queue: approve, reject, edit and regenerate', 'Web panel with history, queue and background jobs', 'Per-platform publishing with dry-run and an email summary'],
+      },
+      stack: ['Python', 'Flask', 'PostgreSQL', 'Redis', 'Playwright', 'Textual'],
+      // the panel's own light theme: cream paper, orange accent, Palatino titles
+      palette: { bg: '#f7f0e4', fg: '#1f2834', fg2: '#3d4450', muted: '#6f665b', ink: '#a8501c' },
+      face: 'editorial',
+      mark: '+',
+    },
+  },
+  {
+    name: 'Orbitaly',
+    note: { pt: 'catálogo desktop de skills e MCP servers', en: 'desktop catalog of skills and MCP servers' },
+    color: '#a3ff12',
+    icon: './now/icons/orbitaly.webp',
+    details: {
+      sig: { pt: 'skills · workflows · MCP · workspaces', en: 'skills · workflows · MCP · workspaces' },
+      status: { pt: 'Beta', en: 'Beta' },
+      meta: { pt: 'v0.1.0 · Windows primeiro', en: 'v0.1.0 · Windows first' },
+      pitch: {
+        pt: 'Catálogo desktop para descobrir, organizar e preparar os assets de IA que ficam espalhados em pastas ocultas: skills, workflows, servidores MCP e workspaces.',
+        en: 'A desktop catalog to discover, curate and stage the AI assets scattered across hidden folders: skills, workflows, MCP servers and workspaces.',
+      },
+      features: {
+        pt: ['Busca por tarefa, taxonomia e intenção, com sugestões opcionais de IA', 'Pastas virtuais que agrupam assets sem mover arquivos', 'Gera o prompt do projeto a partir dos assets escolhidos', 'Monitor de saúde dos servidores MCP', 'API local opcional, desligada por padrão'],
+        en: ['Search by task, taxonomy and intent, with optional AI suggestions', 'Virtual folders that group assets without moving files', 'Builds the project prompt from the chosen assets', 'MCP server health monitor', 'Optional local API, off by default'],
+      },
+      stack: ['Electron', 'React 19', 'TypeScript', 'SQLite', 'MCP SDK', 'Tailwind 4'],
+      palette: { bg: '#080b10', fg: '#e2e8f0', fg2: '#b8c2d1', muted: '#7c8798' },
+      mark: '◦',
+    },
+  },
+  {
+    name: 'Scriply',
+    note: { pt: 'app desktop pra gerenciar, editar e agendar scripts de automação', en: 'desktop app to manage, edit and schedule automation scripts' },
+    color: '#a78bfa',
+    icon: './now/icons/scriply.webp',
+    details: {
+      sig: { pt: 'PowerShell · Batch · agendador', en: 'PowerShell · Batch · scheduler' },
+      status: { pt: 'Em desenvolvimento', en: 'In development' },
+      meta: { pt: 'v0.1.0', en: 'v0.1.0' },
+      pitch: {
+        pt: 'App desktop para quem guarda scripts PowerShell e Batch em pastas soltas e roda tudo na mão: encontra, executa, edita e acompanha cada script num lugar só.',
+        en: 'A desktop app for people who keep PowerShell and Batch scripts in loose folders and run them by hand: find, run, edit and track every script in one place.',
+      },
+      features: {
+        pt: ['Catálogo a partir de pastas observadas, com busca e layouts', 'Editor Monaco e terminal integrado com painéis divididos', 'Cofre de segredos local, criptografado com safeStorage', 'Dashboard e logs em SQLite', 'Agendamento pelo Agendador de Tarefas do Windows'],
+        en: ['Catalog built from watched folders, with search and layouts', 'Monaco editor and a built-in terminal with split panes', 'Local secret vault, encrypted with safeStorage', 'Dashboard and logs in SQLite', 'Scheduling through Windows Task Scheduler'],
+      },
+      stack: ['Electron', 'React 19', 'TypeScript', 'node-pty', 'SQLite', 'Tailwind 4'],
+      palette: { bg: '#100b1b', fg: '#ece6ff', fg2: '#c9bfe6', muted: '#9488b3' },
+      mark: '✓',
+    },
+  },
+  { name: 'Ambiente Hyprland', note: { pt: 'meu Linux com barra e widgets próprios em QML', en: 'my Linux setup with a custom bar and widgets in QML' }, glyph: LayoutDashboard },
+  { name: 'ollama-rtx-4gb', note: { pt: 'LLMs locais numa GPU de 4 GB, com benchmarks', en: 'local LLMs on a 4 GB GPU, with benchmarks' }, href: 'https://github.com/devAndreotti/ollama-rtx-4gb', glyph: Cpu },
 ];
 
 /** The checks this very repo runs on every PR -- drawn as the Quality Gate card's visual. */
