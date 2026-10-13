@@ -91,10 +91,10 @@ export interface AlsoDetails {
   pitch: Localized<string>;
   features: Localized<string[]>;
   stack: string[];
-  /** The app's own dark palette; the accent is the item's `color`. */
-  palette: { bg: string; fg: string; fg2: string; muted: string };
-  /** Terminal-flavored projects set the card in mono. */
-  mono?: boolean;
+  /** The app's own palette; the accent is the item's `color`, `ink` a darker one for small text where the accent is too light on `bg`. */
+  palette: { bg: string; fg: string; fg2: string; muted: string; ink?: string };
+  /** Type like the app: mono for the terminal tools, serif titles for the editorial panel. */
+  face?: 'mono' | 'editorial';
   /** Bullet for the feature list. */
   mark: string;
 }
@@ -133,14 +133,14 @@ export const NOW_ALSO: AlsoItem[] = [
       },
       stack: ['PowerShell', 'zsh', 'Gum + fzf', 'Python', 'tmux', 'Tailscale'],
       palette: { bg: '#0f0a0d', fg: '#cdd6f4', fg2: '#b4bcd6', muted: '#8a8fa8' },
-      mono: true,
+      face: 'mono',
       mark: '›',
     },
   },
   {
     name: 'Feed Dispatch',
     note: { pt: 'curadoria de conteúdo técnico com LLM, revisão e publicação', en: 'LLM-assisted tech content curation, review and publishing' },
-    color: '#3bff3b',
+    color: '#d46f33',
     glyph: Rss,
     details: {
       sig: { pt: 'coletar → gerar → revisar → publicar', en: 'collect → draft → review → publish' },
@@ -155,8 +155,9 @@ export const NOW_ALSO: AlsoItem[] = [
         en: ['Collection by topic, preset or hype ranking, stored in Postgres', 'Posts, threads, comments and replies drafted with OpenRouter or Gemini', 'Editorial queue: approve, reject, edit and regenerate', 'Web panel with history, queue and background jobs', 'Per-platform publishing with dry-run and an email summary'],
       },
       stack: ['Python', 'Flask', 'PostgreSQL', 'Redis', 'Playwright', 'Textual'],
-      palette: { bg: '#070f09', fg: '#dcf5df', fg2: '#b3d4b8', muted: '#7f9c85' },
-      mono: true,
+      // the panel's own light theme: cream paper, orange accent, Palatino titles
+      palette: { bg: '#f7f0e4', fg: '#1f2834', fg2: '#3d4450', muted: '#6f665b', ink: '#a8501c' },
+      face: 'editorial',
       mark: '+',
     },
   },

@@ -177,23 +177,25 @@ button.also-i { cursor: pointer; }
 /* a private project's card: the project's own palette (--p-*), not the site's hue */
 .dlg.oc { border-color: color-mix(in oklab, var(--p-ac) 35%, transparent); background: var(--p-bg); color: var(--p-fg); box-shadow: 0 40px 100px -40px color-mix(in oklab, var(--p-ac) 55%, transparent), 0 30px 80px -20px rgba(0, 0, 0, 0.7); }
 .oc.mono, .oc.mono h3, .oc.mono .dlg-p { font-family: var(--font-mono); }
+.oc.editorial, .oc.editorial .dlg-p { font-family: 'Trebuchet MS', 'Segoe UI', sans-serif; }
+.oc.editorial h3 { font-family: 'Palatino Linotype', Palatino, Georgia, serif; letter-spacing: 0; }
 .oc-x { position: absolute; top: 20px; right: 20px; border-color: color-mix(in oklab, var(--p-fg) 16%, transparent); background: transparent; color: var(--p-fg); }
-.oc-x:hover { border-color: var(--p-ac); color: var(--p-ac); }
+.oc-x:hover { border-color: var(--p-ac); color: var(--p-ink); }
 .oc-top { display: flex; align-items: center; gap: 16px; padding-right: 48px; }
 .oc .also-ic, .oc .also-g { width: 64px; height: 64px; margin: 0; border-radius: 17px; }
 .oc .also-ic { filter: none; opacity: 1; }
 .oc .also-g { border-color: color-mix(in oklab, var(--p-ac) 50%, transparent); background: color-mix(in oklab, var(--p-ac) 14%, transparent); color: var(--p-ac); }
 .oc .also-g .ic { width: 28px; height: 28px; }
 .dlg.oc h3 { margin: 0; font-size: 28px; }
-.oc-sig { margin: 7px 0 0; color: var(--p-ac); font: 500 12px/1.3 var(--font-mono); }
+.oc-sig { margin: 7px 0 0; color: var(--p-ink); font: 500 12px/1.3 var(--font-mono); }
 .oc-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 20px; }
-.oc .nc-st { background: color-mix(in oklab, var(--p-ac) 18%, transparent); color: var(--p-ac); }
+.oc .nc-st { background: color-mix(in oklab, var(--p-ac) 18%, transparent); color: var(--p-ink); }
 .oc-meta { color: var(--p-mu); font: 500 11.5px/1.3 var(--font-mono); }
 .oc .dlg-p { margin-top: 18px; font-size: 15px; color: var(--p-fg2); }
 .oc .k { margin-top: 22px; color: var(--p-mu); }
 .oc-f { display: grid; gap: 9px; margin: 0; padding: 0; list-style: none; }
 .oc-f li { display: flex; gap: 10px; font-size: 14px; line-height: 1.5; }
-.oc-f li span { flex: none; width: 14px; color: var(--p-ac); font-family: var(--font-mono); }
+.oc-f li span { flex: none; width: 14px; color: var(--p-ink); font-family: var(--font-mono); }
 .oc .tag { border-color: color-mix(in oklab, var(--p-ac) 32%, transparent); background: transparent; color: var(--p-fg2); font-family: var(--font-mono); }
 .oc-foot { display: flex; align-items: center; gap: 8px; margin: 22px 0 0; padding-top: 16px; border-top: 1px solid color-mix(in oklab, var(--p-fg) 12%, transparent); color: var(--p-mu); font: 500 12px/1.4 var(--font-mono); }
 

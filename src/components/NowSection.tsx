@@ -134,11 +134,12 @@ const AlsoCard = ({ item, details: d, onClose }: { item: AlsoItem; details: Also
   const dialogRef = useRef<HTMLDivElement>(null);
   useScrollLock(true);
   useFocusTrap(true, dialogRef, onClose);
-  const palette = { '--p-bg': d.palette.bg, '--p-fg': d.palette.fg, '--p-fg2': d.palette.fg2, '--p-mu': d.palette.muted, '--p-ac': item.color } as CSSProperties;
+  const { bg, fg, fg2, muted, ink = item.color } = d.palette;
+  const palette = { '--p-bg': bg, '--p-fg': fg, '--p-fg2': fg2, '--p-mu': muted, '--p-ac': item.color, '--p-ink': ink } as CSSProperties;
 
   return (
     <div className="ov" onClick={onClose}>
-      <div ref={dialogRef} className={`dlg sm oc${d.mono ? ' mono' : ''}`} style={palette} onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="oc-t">
+      <div ref={dialogRef} className={`dlg sm oc${d.face ? ` ${d.face}` : ''}`} style={palette} onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="oc-t">
         <button type="button" className="np sq oc-x" aria-label={t.caseModal.closeAria} onClick={onClose}>
           <X className="ic" />
         </button>
