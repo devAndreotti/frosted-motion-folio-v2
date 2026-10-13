@@ -1,6 +1,7 @@
 import { personalInfo } from '@/data/personal';
 import { featuredProject, curatedProjects } from '@/data/curatedProjects';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import type { HeroCard } from './HeroCardParts';
 import HeroDeck from './HeroDeck';
@@ -18,13 +19,15 @@ export const FAN_QUERY = '(min-width: 961px)';
 /** The hero's cards: a fan on wide screens, a deck on narrow ones. */
 const CardStack = () => {
   const { lang, t } = useLanguage();
+  const { hue } = useTheme();
   const wide = useMediaQuery(FAN_QUERY, true);
 
   const cards: HeroCard[] = [
     {
       id: 'photo',
       me: true,
-      img: './profile.webp',
+      // one portrait per site color (public/profile/<hue>.webp), swapped with the theme
+      img: `./profile/${hue}.webp`,
       title: personalInfo.name,
       line: personalInfo.title[lang],
       type: '',

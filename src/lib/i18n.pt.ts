@@ -90,6 +90,9 @@ export const pt: Strings = {
     privateTag: 'privado',
     alsoMore: 'Ver mais',
     alsoMoreNote: 'os outros repositórios no GitHub',
+    alsoOpen: 'ver detalhes',
+    alsoWhat: 'O que faz',
+    alsoPrivateFoot: 'Código privado: ainda sem página pública.',
   },
   projects: {
     sectionLabel: 'Projetos',

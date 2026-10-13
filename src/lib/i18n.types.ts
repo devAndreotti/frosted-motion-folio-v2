@@ -88,6 +88,10 @@ export interface Strings {
     /** Closing card of "also in the oven": out to the rest of the repositories. */
     alsoMore: string;
     alsoMoreNote: string;
+    /** Private projects open a card: the cue on the item, and the card's labels. */
+    alsoOpen: string;
+    alsoWhat: string;
+    alsoPrivateFoot: string;
   };
   projects: {
     sectionLabel: string;

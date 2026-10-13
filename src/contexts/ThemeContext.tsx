@@ -38,6 +38,12 @@ const CSS_VAR_BY_TOKEN = {
   glassLift: '--glass-lift',
 } as const;
 
+/** The color a previous visit picked, or black. Read before the first render: the hero photo is per hue, and starting on black would fetch two photos. */
+export function savedHue(): Hue {
+  const saved = localStorage.getItem('hue') as Hue | null;
+  return saved && HUE_ORDER.includes(saved) ? saved : 'black';
+}
+
 function prefersLight(): boolean {
   try {
     return window.matchMedia('(prefers-color-scheme: light)').matches;
@@ -52,14 +58,12 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   // now gets their OS's light/dark choice instead — anyone who already
   // toggled a theme keeps exactly what they picked, untouched.
   const [theme, setTheme] = useState<Theme>('dark');
-  const [hue, setHueState] = useState<Hue>('black');
+  const [hue, setHueState] = useState<Hue>(savedHue);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as Theme | null;
-    const savedHue = localStorage.getItem('hue') as Hue | null;
     if (savedTheme) setTheme(savedTheme);
     else if (prefersLight()) setTheme('light');
-    if (savedHue && HUE_ORDER.includes(savedHue)) setHueState(savedHue);
   }, []);
 
   useEffect(() => {
