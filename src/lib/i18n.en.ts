@@ -165,8 +165,22 @@ export const en: Strings = {
     backToTop: 'Back to top',
   },
   notFound: {
-    message: "This page doesn't exist.",
+    badge: 'Error 404',
+    kicker: 'route not found',
+    title: 'This page',
+    titleAccent: "doesn't exist.",
+    body: 'The link may be broken, or the page moved when the portfolio got its new look. The rest of the site is still here.',
+    tried: 'You tried to open',
+    code: "HTTP 404 · this route doesn't exist on this portfolio",
     backHome: 'Back to home',
+    seeProjects: 'See projects',
+    suggest: 'Maybe you were looking for',
+    sections: {
+      projects: { title: 'Projects', note: 'Case studies with context, decisions and delivery.' },
+      now: { title: 'Now', note: "What I'm working on right now." },
+      contact: { title: 'Contact', note: 'Email, LinkedIn and GitHub, all in one place.' },
+    },
+    broken: 'Found a broken link of mine?',
   },
   colorPicker: {
     hueLabel: (label) => `Accent color: ${label}`,

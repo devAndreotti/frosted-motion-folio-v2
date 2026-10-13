@@ -157,8 +157,19 @@ export interface Strings {
     backToTop: string;
   };
   notFound: {
-    message: string;
+    badge: string;
+    kicker: string;
+    /** The headline in two parts: the second one takes the accent color on its own line. */
+    title: string;
+    titleAccent: string;
+    body: string;
+    tried: string;
+    code: string;
     backHome: string;
+    seeProjects: string;
+    suggest: string;
+    sections: Record<'projects' | 'now' | 'contact', { title: string; note: string }>;
+    broken: string;
   };
   colorPicker: {
     hueLabel: (label: string) => string;

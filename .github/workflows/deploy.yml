@@ -32,6 +32,10 @@ jobs:
       - name: Build
         run: npm run build
 
+      # Pages answers unknown paths with 404.html: the app shell, so the router shows the React 404 page
+      - name: 404 page
+        run: cp dist/index.html dist/404.html
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5 # <- ATUALIZAÇÃO AQUI
         with:

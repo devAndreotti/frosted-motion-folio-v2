@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Já volto · Ricardo Andreotti</title>
+<!-- Served by the Worker with a 503 in maintenance mode or when the site fails (worker/index.js).
+     Self-contained on purpose: no bundle, no fonts, nothing that could be down with the site. -->
+<style>
+:root{--ac:#e4e4e7;--act:#0a0a0a;--bg:#0a0a0b;--fg1:#fafafa;--fg2:#d4d4d8;--fg3:#a1a1aa;--surf:rgba(255,255,255,.045);--bd:rgba(255,255,255,.1);--line:rgba(255,255,255,.07);--hl:rgba(255,255,255,.06);--down:#ef4444;--up:#22c55e;--warn:#f59e0b;--ink:color-mix(in oklab,var(--ac) 75%,var(--fg1));--sans:'Geist Variable',Geist,ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'Geist Mono Variable','Geist Mono',ui-monospace,SFMono-Regular,Consolas,monospace;color-scheme:dark}
+:root.light{--bg:#f4f4f5;--fg1:#18181b;--fg2:#3f3f46;--fg3:#5f5f68;--surf:rgba(255,255,255,.72);--bd:rgba(0,0,0,.1);--line:rgba(0,0,0,.08);--hl:rgba(255,255,255,.85);--down:#dc2626;--up:#15803d;--warn:#b45309;color-scheme:light}
+*{box-sizing:border-box}
+body{position:relative;display:flex;flex-direction:column;min-height:100vh;margin:0;overflow-x:hidden;background:var(--bg);color:var(--fg1);font-family:var(--sans)}
+a{color:inherit}
+.glow{position:absolute;z-index:0;border-radius:50%;background:var(--ac);filter:blur(110px);pointer-events:none}
+.g1{width:680px;height:680px;right:-140px;top:-240px;opacity:.18}
+.g2{width:460px;height:460px;left:-180px;bottom:-220px;opacity:.08}
+header,main,footer{position:relative;z-index:1}
+.top{display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 32px;border-bottom:1px solid var(--line)}
+.brand{display:inline-flex;align-items:center;gap:12px;font:600 16px/1 var(--sans);letter-spacing:-.01em;text-decoration:none}
+.mb{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;border:1px solid var(--bd);background:var(--surf);box-shadow:inset 0 1px var(--hl);font:600 12px/1 var(--mono)}
+.glass{background:var(--surf);border:1px solid var(--bd);box-shadow:inset 0 1px var(--hl);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.chip{display:inline-flex;align-items:center;gap:8px;height:30px;padding:0 12px;border-radius:999px;border:1px solid var(--bd);background:var(--surf);color:var(--fg2);font:500 12px/1 var(--mono);letter-spacing:.07em;text-transform:uppercase;white-space:nowrap}
+.dot{position:relative;flex:none;width:7px;height:7px;border-radius:99px;background:var(--dc,var(--ac));color:var(--dc,var(--ac))}
+.pulse::after{content:'';position:absolute;inset:-4px;border-radius:99px;border:1px solid currentColor;animation:pulse 1.8s ease-out infinite}
+@keyframes pulse{from{opacity:.9;transform:scale(.6)}to{opacity:0;transform:scale(1.8)}}
+@media (prefers-reduced-motion:reduce){.pulse::after{animation:none}}
+.main{flex:1;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:80px;align-items:center;width:100%;max-width:1240px;margin:0 auto;padding:64px 32px}
+.eyebrow{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:0;color:var(--fg3);font:500 13px/1 var(--mono)}
+h1{margin:26px 0 0;font:600 clamp(40px,5.4vw,76px)/1.02 var(--sans);letter-spacing:-.045em}
+h1 .ac{display:block;color:var(--ink)}
+.lead{max-width:48ch;margin:26px 0 0;font:400 18px/1.6 var(--sans);color:var(--fg2)}
+.cts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-width:640px;margin-top:28px}
+.ct{display:flex;flex-direction:column;gap:6px;padding:18px;border-radius:18px;text-decoration:none;transition:transform .25s,border-color .25s,background .25s}
+.ct:hover,.ct:focus-visible{transform:translateY(-3px);border-color:color-mix(in oklab,var(--ac) 60%,transparent);background:color-mix(in oklab,var(--ac) 8%,var(--surf))}
+.ct-i{display:grid;place-items:center;width:38px;height:38px;margin-bottom:6px;border-radius:11px;border:1px solid var(--bd);color:var(--ink)}
+.ct-t{font:600 15px/1.2 var(--sans)}
+.ct-h{font:500 12px/1.3 var(--mono);color:var(--fg3);overflow-wrap:anywhere}
+.acts{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin-top:30px}
+.btn{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 22px;border:0;border-radius:999px;background:var(--ac);color:var(--act);font:600 15px/1 var(--sans);cursor:pointer;box-shadow:0 16px 36px -16px var(--ac)}
+.hint{font:500 12px/1.4 var(--mono);color:var(--fg3)}
+.side{position:relative;justify-self:end;width:380px}
+.photo{position:relative;height:470px;margin:0;border-radius:28px;overflow:hidden;transform:rotate(2deg)}
+.photo img{display:block;width:100%;height:100%;object-fit:cover}
+.photo figcaption{position:absolute;left:0;right:0;bottom:0;padding:22px;background:linear-gradient(transparent,rgba(0,0,0,.72));color:#fafafa}
+.who{display:block;font:600 22px/1.2 var(--sans)}
+.role{display:block;margin-top:4px;font:400 14px/1.4 var(--sans);color:#d4d4d8}
+.status{position:absolute;left:-150px;top:56px;display:flex;flex-direction:column;gap:14px;width:300px;padding:18px 20px;border-radius:20px;background:color-mix(in oklab,var(--bg) 84%,transparent)}
+.k{margin:0;color:var(--fg3);font:500 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.st-h{display:flex;align-items:center;justify-content:space-between;font:500 11px/1 var(--mono);color:var(--fg3)}
+.st{display:flex;align-items:center;gap:10px;font:500 13px/1 var(--mono)}
+.st span:last-child{margin-left:auto;color:var(--fg3)}
+.st-t{padding-top:12px;border-top:1px solid var(--line);font:500 11px/1 var(--mono);color:var(--fg3)}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 24px;padding:20px 32px;border-top:1px solid var(--line);font:500 12px/1.5 var(--mono);color:var(--fg3)}
+@media (max-width:900px){
+  .main{grid-template-columns:1fr;gap:28px;padding:28px 20px 40px}
+  .side{order:-1;justify-self:start;width:auto}
+  .photo{display:flex;align-items:center;gap:14px;height:auto;border-radius:0;overflow:visible;transform:none;background:none;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+  .photo img{width:72px;height:72px;border-radius:20px;border:1px solid var(--bd)}
+  .photo figcaption{position:static;padding:0;background:none;color:var(--fg1)}
+  .who{font-size:16px}.role{font-size:13px;color:var(--fg3)}
+  .status{display:none}
+  .cts{grid-template-columns:1fr}
+  .ct{flex-direction:row;align-items:center;gap:12px;padding:8px 14px}
+  .ct-i{margin:0}.ct-h{margin-left:auto}
+  .btn{width:100%;justify-content:center}
+  .top,.foot{padding-left:20px;padding-right:20px}
+}
+</style>
+<script>
+// Same keys as the site (ThemeContext / LanguageContext), read before paint.
+(function () {
+  var A = { black: [['#e4e4e7', '#0a0a0a'], ['#18181b', '#fafafa']], blue: [['#3b82f6', '#ffffff'], ['#2563eb', '#ffffff']], purple: [['#a855f7', '#ffffff'], ['#9333ea', '#ffffff']], orange: [['#f97316', '#1a0f00'], ['#ea580c', '#fff7ed']], red: [['#ef4444', '#ffffff'], ['#dc2626', '#ffffff']], green: [['#22c55e', '#052e16'], ['#16a34a', '#f0fdf4']], yellow: [['#eab308', '#1a1400'], ['#ca8a04', '#1a1400']] };
+  var hue = 'black', theme = null, lang = null;
+  try { hue = localStorage.getItem('hue') || 'black'; theme = localStorage.getItem('theme'); lang = localStorage.getItem('lang'); } catch (e) {}
+  if (!A[hue]) hue = 'black';
+  var light = theme ? theme === 'light' : window.matchMedia('(prefers-color-scheme: light)').matches;
+  var pair = A[hue][light ? 1 : 0], root = document.documentElement;
+  root.classList.toggle('light', light);
+  root.style.setProperty('--ac', pair[0]);
+  root.style.setProperty('--act', pair[1]);
+  window.__offline = { hue: hue, lang: new URLSearchParams(location.search).get('lang') || lang || 'pt' };
+})();
+</script>
+</head>
+<body>
+<div class="glow g1" aria-hidden="true"></div>
+<div class="glow g2" aria-hidden="true"></div>
+
+<header class="top">
+  <a class="brand" href="/" data-home><span class="mb">RA</span><span>Ricardo Andreotti</span></a>
+  <span class="chip" style="--dc:var(--down)"><span class="dot pulse"></span><span data-t="down">fora do ar</span></span>
+</header>
+
+<main class="main">
+  <div>
+    <p class="eyebrow"><span class="chip" style="--dc:var(--warn)"><span class="dot"></span><span data-t="badge">Manutenção</span></span><span data-t="kicker">volto em instantes</span></p>
+    <h1><span data-t="title">Saí do ar</span> <span class="ac" data-t="title2">por um instante.</span></h1>
+    <p class="lead" data-t="body">Pode ser um deploy em andamento ou uma instabilidade no servidor. Enquanto o site não volta, você me encontra por aqui:</p>
+    <div class="cts">
+      <a class="ct glass" href="https://github.com/devAndreotti"><span class="ct-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg></span><span class="ct-t">GitHub</span><span class="ct-h">@devAndreotti</span></a>
+      <a class="ct glass" href="https://www.linkedin.com/in/ricardo-andreotti-gon%C3%A7alves-0b5785283/"><span class="ct-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg></span><span class="ct-t">LinkedIn</span><span class="ct-h">/in/ricardo-andreotti</span></a>
+      <a class="ct glass" href="mailto:OrlaEK@proton.me"><span class="ct-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span><span class="ct-t" data-t="email">E-mail</span><span class="ct-h">OrlaEK@proton.me</span></a>
+    </div>
+    <div class="acts">
+      <button type="button" class="btn" id="retry"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg><span data-t="retry">Tentar de novo</span></button>
+      <span class="hint" id="hint" aria-live="polite"></span>
+    </div>
+  </div>
+
+  <aside class="side">
+    <figure class="photo glass">
+      <img id="photo" alt="" width="380" height="470">
+      <figcaption><span class="who">Ricardo A. Gonçalves</span><span class="role" data-t="role">Desenvolvedor Full Stack</span></figcaption>
+    </figure>
+    <div class="status glass">
+      <div class="st-h"><p class="k" data-t="status">Status</p><span>devandreotti.com</span></div>
+      <div class="st" style="--dc:var(--down)"><span class="dot pulse"></span><span data-t="portfolio">Portfólio</span><span data-t="down">fora do ar</span></div>
+      <div class="st" style="--dc:var(--up)"><span class="dot"></span><span>GitHub</span><span data-t="up">no ar</span></div>
+      <div class="st" style="--dc:var(--up)"><span class="dot"></span><span data-t="email">E-mail</span><span data-t="replying">respondendo</span></div>
+      <div class="st-t" id="checked"></div>
+    </div>
+  </aside>
+</main>
+
+<footer class="foot">
+  <span>© <span id="year">2026</span> Ricardo A. Gonçalves</span>
+  <span data-t="code">erro 503 · serviço temporariamente indisponível</span>
+</footer>
+
+<script>
+(function () {
+  var T = {
+    pt: { doc: 'Já volto · Ricardo Andreotti', down: 'fora do ar', badge: 'Manutenção', kicker: 'volto em instantes', title: 'Saí do ar', title2: 'por um instante.', body: 'Pode ser um deploy em andamento ou uma instabilidade no servidor. Enquanto o site não volta, você me encontra por aqui:', email: 'E-mail', retry: 'Tentar de novo', role: 'Desenvolvedor Full Stack', status: 'Status', portfolio: 'Portfólio', up: 'no ar', replying: 'respondendo', code: 'erro 503 · serviço temporariamente indisponível', hint: 'tento de novo sozinho em {s} s', checked: 'última tentativa às {t}', alt: 'Retrato de Ricardo A. Gonçalves' },
+    en: { doc: 'Back soon · Ricardo Andreotti', down: 'down', badge: 'Maintenance', kicker: 'back in a moment', title: "I'm offline", title2: 'for a moment.', body: 'It may be a deploy in progress or a hiccup on the server. While the site is down, you can find me here:', email: 'Email', retry: 'Try again', role: 'Full Stack Developer', status: 'Status', portfolio: 'Portfolio', up: 'up', replying: 'answering', code: 'error 503 · service temporarily unavailable', hint: 'trying again on my own in {s} s', checked: 'last try at {t}', alt: 'Portrait of Ricardo A. Gonçalves' }
+  };
+  var o = window.__offline, t = T[o.lang] || T.pt;
+  // "/" on devandreotti.com, "/frosted-motion-folio-v2/" on GitHub Pages
+  var base = location.pathname.indexOf('/frosted-motion-folio-v2/') === 0 ? '/frosted-motion-folio-v2/' : '/';
+  document.documentElement.lang = o.lang === 'en' ? 'en' : 'pt-BR';
+  document.title = t.doc;
+  document.querySelectorAll('[data-t]').forEach(function (el) { if (t[el.dataset.t]) el.textContent = t[el.dataset.t]; });
+  document.querySelector('[data-home]').href = base;
+  var img = document.getElementById('photo');
+  img.alt = t.alt;
+  img.onerror = function () { img.hidden = true; };
+  img.src = base + 'profile/' + o.hue + '.webp';
+  document.getElementById('year').textContent = new Date().getFullYear();
+  document.getElementById('checked').textContent = t.checked.replace('{t}', new Date().toLocaleTimeString(o.lang === 'en' ? 'en-US' : 'pt-BR', { hour: '2-digit', minute: '2-digit' }));
+  // in maintenance any URL shows this page, so retrying means asking for that same URL again;
+  // opened directly (/offline), it means going back to the home page
+  var retry = function () { /\/offline(\.html)?$/.test(location.pathname) ? location.assign(base) : location.reload(); };
+  document.getElementById('retry').onclick = retry;
+  var left = 30, hint = document.getElementById('hint');
+  (function tick() {
+    hint.textContent = t.hint.replace('{s}', left);
+    if (left-- <= 0) return retry();
+    setTimeout(tick, 1000);
+  })();
+})();
+</script>
+</body>
+</html>

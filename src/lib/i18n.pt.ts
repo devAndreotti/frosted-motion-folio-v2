@@ -165,8 +165,22 @@ export const pt: Strings = {
     backToTop: 'Voltar ao topo',
   },
   notFound: {
-    message: 'Essa página não existe.',
+    badge: 'Erro 404',
+    kicker: 'rota não encontrada',
+    title: 'Essa página',
+    titleAccent: 'não existe.',
+    body: 'O link pode estar quebrado, ou a página mudou de lugar quando o portfólio ganhou cara nova. O resto do site continua aqui.',
+    tried: 'Você tentou abrir',
+    code: 'HTTP 404 · essa rota não existe neste portfólio',
     backHome: 'Voltar ao início',
+    seeProjects: 'Ver projetos',
+    suggest: 'Talvez você procurasse',
+    sections: {
+      projects: { title: 'Projetos', note: 'Casos com contexto, decisões e entrega.' },
+      now: { title: 'Agora', note: 'No que estou trabalhando neste momento.' },
+      contact: { title: 'Contato', note: 'E-mail, LinkedIn e GitHub, tudo num lugar.' },
+    },
+    broken: 'Achou um link quebrado meu?',
   },
   colorPicker: {
     hueLabel: (label) => `Cor de destaque: ${label}`,
