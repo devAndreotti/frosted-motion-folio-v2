@@ -93,6 +93,7 @@ export const pt: Strings = {
     alsoOpen: 'ver detalhes',
     alsoWhat: 'O que faz',
     alsoPrivateFoot: 'Código privado: ainda sem página pública.',
+    alsoGithub: 'Ver o código no GitHub',
   },
   projects: {
     sectionLabel: 'Projetos',

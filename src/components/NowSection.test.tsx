@@ -35,12 +35,16 @@ describe("NowSection", () => {
     expect(card.querySelector("img")).toBeNull();
   });
 
-  it("lists side projects; the private one has no link", () => {
+  it("lists side projects; each with details opens a card, the public one links to its repo from inside", () => {
     renderNow();
     for (const item of NOW_ALSO) {
       const name = screen.getByText(item.name);
-      expect(Boolean(name.closest("a"))).toBe(Boolean(item.href));
+      expect(Boolean(name.closest("button"))).toBe(Boolean(item.details));
     }
+    const repo = NOW_ALSO.find((x) => x.href && x.details)!;
+    fireEvent.click(screen.getByRole("button", { name: new RegExp(repo.name) }));
+    const link = within(screen.getByRole("dialog")).getByRole("link", { name: /GitHub/ });
+    expect(link.getAttribute("href")).toBe(repo.href);
   });
 
   it("gives each side project its own hover color and opens private ones as a card in their palette", () => {
