@@ -36,6 +36,22 @@ Construído com **React**, **TypeScript**, **Tailwind CSS** e **Framer Motion**.
 
 Cópia espelho no [GitHub Pages](https://devandreotti.github.io/frosted-motion-folio-v2/).
 
+## ✍️ Publicar um post
+Cada post é um arquivo Markdown em [`src/content/posts/`](./src/content/posts). Publicar é fazer commit na `main`: o build gera a página, o RSS e o sitemap.
+
+**Pelo navegador (sem instalar nada):** [**➕ criar um post novo no GitHub**](https://github.com/devAndreotti/frosted-motion-folio-v2/new/main?filename=src/content/posts/AAAA-MM-DD-meu-post.md&value=---%0Atitle%3A%20Meu%20post%0Adate%3A%20AAAA-MM-DD%0Adescription%3A%20Uma%20frase%20para%20o%20card%20e%20o%20buscador.%0Atags%3A%20%5Bblog%5D%0Adraft%3A%20false%0A---%0A%0AEscreva%20aqui.%0A). O arquivo já abre com o cabeçalho pronto: troque `AAAA-MM-DD` (no nome do arquivo e em `date`), escreva o texto e clique em *Commit changes*.
+
+**Pelo terminal:**
+```bash
+npm run novo-post -- "Título do post"            # cria o rascunho (draft: true)
+npm run novo-post -- "Título do post" --publicar # já publicado (draft: false)
+git add -A && git commit -m "post: título" && git push
+```
+
+- O endereço do post é o nome do arquivo sem a data: `2026-10-15-meu-post.md` vira `/blog/meu-post/`.
+- `draft: true` só aparece no `npm run dev`; o build não publica nada do rascunho.
+- Curtidas: usam o banco D1 da Cloudflare (`wrangler.jsonc`, bloco `d1_databases`). Sem ele o botão fica escondido.
+
 ## 🛠 Tecnologias Utilizadas
 - **[React](https://react.dev/)** — Biblioteca JavaScript para interfaces declarativas.
 - **[TypeScript](https://www.typescriptlang.org/)** — Tipagem estática para maior robustez.
