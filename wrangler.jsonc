@@ -13,7 +13,7 @@
     // one-page app: unknown paths get index.html and the React 404 page
     "not_found_handling": "single-page-application",
     // pages and /e/ beacons go through the Worker (www/http redirects); static files skip it and stay free
-    "run_worker_first": ["/*", "!/assets/*", "!/projects/*", "!/now/*", "!/favicon.ico", "!/og-image.png", "!/profile.*", "!/profile/*", "!/placeholder.svg", "!/robots.txt", "!/sitemap.xml"]
+    "run_worker_first": ["/*", "!/assets/*", "!/projects/*", "!/now/*", "!/favicon.ico", "!/og-image.png", "!/profile.*", "!/profile/*", "!/placeholder.svg", "!/robots.txt", "!/sitemap.xml", "!/blog/rss.xml", "!/blog/index.json"]
   },
   // "1" turns every page into public/offline.html with a 503 (worker/index.js). Flip it in the dashboard
   // (Workers > devandreotti-portfolio > Settings > Variables) without a deploy; the next deploy resets it to "0".
@@ -23,5 +23,13 @@
     { "pattern": "devandreotti.com", "custom_domain": true },
     { "pattern": "www.devandreotti.com", "custom_domain": true }
   ],
+  // Likes on blog posts (worker/likes.js) need a D1 database. Until this block is uncommented the
+  // like button stays hidden. One-time setup (from the repository root):
+  //   npx wrangler d1 create devandreotti-likes          -> put the database_id it prints below, uncomment
+  //   npx wrangler d1 migrations apply devandreotti-likes --remote   (creates the likes table)
+  //   npx wrangler secret put LIKES_SALT                  -> any long random string (optional, recommended)
+  // "d1_databases": [
+  //   { "binding": "DB", "database_name": "devandreotti-likes", "database_id": "<id>", "migrations_dir": "worker/migrations" }
+  // ],
   "observability": { "enabled": true }
 }

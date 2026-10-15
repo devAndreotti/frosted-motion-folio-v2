@@ -7,6 +7,9 @@ import Index from "./pages/Index";
 
 // Only reached by unknown paths, so it is split out of the first screen's bundle.
 const NotFound = lazy(() => import("./pages/NotFound"));
+// The blog is its own pages (prerendered at build time, see vite-plugins/blog.ts); its chunks load on demand.
+const Blog = lazy(() => import("./pages/Blog"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
 
 const App = () => (
   <LanguageProvider>
@@ -15,6 +18,8 @@ const App = () => (
       <BrowserRouter basename={import.meta.env.BASE_URL}>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/blog" element={<Suspense fallback={null}><Blog /></Suspense>} />
+          <Route path="/blog/:slug" element={<Suspense fallback={null}><BlogPost /></Suspense>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<Suspense fallback={null}><NotFound /></Suspense>} />
         </Routes>

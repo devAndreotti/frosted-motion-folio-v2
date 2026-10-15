@@ -2,6 +2,9 @@ import { lazy, Suspense, type ReactNode } from 'react';
 import Navigation from '@/components/Navigation';
 import Header from '@/components/Header';
 import Projects from '@/components/Projects';
+// Not lazy: the post list is a few KB, and a section that arrives late with no
+// reserved height would push everything below it (nav jumps would miss their target).
+import BlogTeaser from '@/components/BlogTeaser';
 import ScrollProgress from '@/components/ScrollProgress';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useSectionKeyboardNav } from '@/hooks/useSectionKeyboardNav';
@@ -49,6 +52,9 @@ const Index = () => {
             <NowSection />
           </LazySection>
           <Projects />
+          <div id="blog" className="sec-anchor">
+            <BlogTeaser />
+          </div>
           <LazySection id="skills" minHeight={920}>
             <Skills />
           </LazySection>

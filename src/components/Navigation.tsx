@@ -21,6 +21,8 @@ export function scrambled(text: string): string {
 }
 
 const NAME = 'Ricardo Andreotti';
+// A page of its own, not a section: a plain link (the prerendered /blog/ page loads in full).
+const BLOG_HREF = `${import.meta.env.BASE_URL}blog/`;
 
 const Navigation = () => {
   const { theme, toggleTheme } = useTheme();
@@ -119,6 +121,9 @@ const Navigation = () => {
                 {item.name}
               </button>
             ))}
+            <a href={BLOG_HREF} className="nl">
+              {t.nav.blog}
+            </a>
           </nav>
 
           <div className="nav-r">
@@ -148,6 +153,10 @@ const Navigation = () => {
                 <ArrowRight className="ic s" />
               </button>
             ))}
+            <a href={BLOG_HREF}>
+              <span>{t.nav.blog}</span>
+              <ArrowRight className="ic s" />
+            </a>
             <div className="sheet-row">
               <LangSwitch lang={lang} onPick={setLang} ariaLabel={t.nav.langToggleAria} />
               <div className="sheet-sw">

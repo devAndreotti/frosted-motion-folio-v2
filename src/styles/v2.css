@@ -46,7 +46,7 @@
 .sw.on { box-shadow: 0 0 0 2px var(--solid, #0a0a0a), 0 0 0 4px var(--fg-1); }
 .nav-menu { display: none; }
 .sheet { border-top: 1px solid var(--line); padding: 8px 20px 20px; display: flex; flex-direction: column; animation: v2-popin 0.25s ease; }
-.sheet > button { display: flex; align-items: center; justify-content: space-between; height: 52px; border-bottom: 1px solid var(--line); font: 500 17px/1 var(--font-sans); color: var(--fg-1); text-align: left; }
+.sheet > button, .sheet > a { display: flex; align-items: center; justify-content: space-between; height: 52px; border-bottom: 1px solid var(--line); font: 500 17px/1 var(--font-sans); color: var(--fg-1); text-align: left; }
 .sheet > button[aria-current] { color: var(--accent-ink); }
 .sheet-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-top: 18px; }
 .sheet-sw { display: flex; gap: 10px; flex-wrap: wrap; }

@@ -2,19 +2,29 @@
 // only steps in for what a static host can't do.
 //   - http:// and www. -> 301 to https://devandreotti.com (same path and query)
 //   - /api/gh/*        -> cached GitHub lookups for the browser (see github.js)
+//   - /api/likes/*     -> likes on blog posts, one per visitor (see likes.js)
 //   - /e/<event>       -> 204: the click beacons from src/lib/track.ts. Umami
 //     records the clicks (when configured), so the beacon only needs a quiet answer.
 //   - MAINTENANCE=1, or the static files failing -> 503 with public/offline.html
-//   - unknown paths     -> the app shell (its React 404 page) with a real 404 status
+//   - unknown paths     -> the app shell (its React 404 page) with a real 404 status;
+//     /blog/ and /blog/<slug>/ are pages when the build published that post (blog/index.json)
 // Static files (assets/, images, robots, sitemap) never reach this code: see
 // run_worker_first in wrangler.jsonc.
 
 import { handleGithubApi } from './github.js';
+import { handleLikes, publishedSlugs } from './likes.js';
 
 const APEX = 'devandreotti.com';
 // The only paths that are pages; any other HTML is the one-page app's fallback for an unknown route.
 // (Assets serve offline.html at /offline: html_handling drops the extension.)
-const PAGES = new Set(['/', '/offline']);
+const PAGES = new Set(['/', '/offline', '/blog/']);
+const POST_PAGE = /^\/blog\/([a-z0-9-]+)\/$/;
+
+async function isPage(request, env, pathname) {
+  if (PAGES.has(pathname)) return true;
+  const post = POST_PAGE.exec(pathname);
+  return post !== null && (await publishedSlugs(request, env)).has(post[1]);
+}
 
 /** The "back soon" page with a 503, so crawlers and caches know it is temporary. */
 async function offlinePage(request, env) {
@@ -41,6 +51,7 @@ export default {
       url.hostname = APEX;
       return Response.redirect(url.toString(), 301);
     }
+    if (url.pathname.startsWith('/api/likes/')) return handleLikes(request, env);
     if (url.pathname.startsWith('/api/')) return handleGithubApi(request, env, ctx);
     if (url.pathname.startsWith('/e/')) {
       return new Response(null, { status: 204, headers: { 'cache-control': 'no-store' } });
@@ -55,7 +66,7 @@ export default {
     }
     if (res.status >= 500) return offlinePage(request, env);
     const html = (res.headers.get('content-type') || '').includes('text/html');
-    if (res.status === 200 && html && !PAGES.has(url.pathname)) {
+    if (res.status === 200 && html && !(await isPage(request, env, url.pathname))) {
       return new Response(res.body, { status: 404, headers: res.headers });
     }
     return res;
