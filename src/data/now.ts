@@ -240,8 +240,8 @@ export const NOW_ALSO: AlsoItem[] = [
         en: 'Local language models on a laptop with a 4 GB RTX 2050: configs tuned to fit entirely on the GPU, shortcuts to launch each model and a benchmark suite that measures speed, logic and tool calling.',
       },
       features: {
-        pt: ['Qwen 2.5 3B e Coder 3B a ~45 tok/s, 100% na GPU', 'DeepSeek R1 1.5B a ~80 tok/s; o 7B cai para 3–5 tok/s dividindo CPU e GPU', 'Tool calling nativo no Qwen 2.5; R1 e Gemma não servem para chamar ferramentas', 'Variantes customizadas (qcode, qchat, r1fast, Gemma) com launchers', 'Suíte de benchmark em promptfoo: lógica, código e tool calling'],
-        en: ['Qwen 2.5 3B and Coder 3B at ~45 tok/s, fully on the GPU', 'DeepSeek R1 1.5B at ~80 tok/s; the 7B drops to 3–5 tok/s split across CPU and GPU', 'Native tool calling on Qwen 2.5; R1 and Gemma are no good for tool dispatch', 'Custom variants (qcode, qchat, r1fast, Gemma) with launchers', 'promptfoo benchmark suite: logic, code and tool calling'],
+        pt: ['Qwen 2.5 Coder 3B a ~47 tok/s e Qwen 2.5 3B a ~45 tok/s, 100% na GPU', 'DeepSeek R1 1.5B a ~80 tok/s; o 7B cai para 3–5 tok/s dividindo CPU e GPU', 'Tool calling nativo no Qwen 2.5; R1 e Gemma não servem para chamar ferramentas', 'Variantes customizadas (qcode, qchat, r1fast, Gemma) com launchers', 'Suíte de benchmark em promptfoo: lógica, código e tool calling'],
+        en: ['Qwen 2.5 Coder 3B at ~47 tok/s and Qwen 2.5 3B at ~45 tok/s, fully on the GPU', 'DeepSeek R1 1.5B at ~80 tok/s; the 7B drops to 3–5 tok/s split across CPU and GPU', 'Native tool calling on Qwen 2.5; R1 and Gemma are no good for tool dispatch', 'Custom variants (qcode, qchat, r1fast, Gemma) with launchers', 'promptfoo benchmark suite: logic, code and tool calling'],
       },
       stack: ['Ollama', 'promptfoo', 'Qwen 2.5', 'DeepSeek-R1', 'Gemma', 'CUDA'],
       palette: { bg: '#16191b', fg: '#e4e7e9', fg2: '#b8bec3', muted: '#878e94' },
