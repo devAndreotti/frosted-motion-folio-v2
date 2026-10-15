@@ -50,6 +50,6 @@ describe('LikeBar', () => {
   it('answers by email with the post in the subject', () => {
     vi.stubGlobal('fetch', vi.fn(() => Promise.reject(new Error('no worker'))));
     renderBar();
-    expect(screen.getByRole('link', { name: /Responder por e-mail/ }).getAttribute('href')).toBe('mailto:OrlaEK@proton.me?subject=Meu%20post');
+    expect(screen.getByRole('link', { name: /Responder por e-mail/ }).getAttribute('href')).toBe('mailto:devandreotti@gmail.com?subject=Meu%20post');
   });
 });

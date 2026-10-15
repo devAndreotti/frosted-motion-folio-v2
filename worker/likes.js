@@ -2,14 +2,20 @@
 //   GET    -> { count, liked }      liked = this visitor already liked it
 //   POST   -> like    (idempotent: the (slug, voter) primary key takes one row, ever)
 //   DELETE -> unlike  (only the visitor's own row)
-// A visitor is SHA-256(IP + User-Agent + LIKES_SALT): no IP is stored and no cookie is set.
+// A visitor is SHA-256(network + User-Agent + LIKES_SALT): no IP is stored and no cookie is set.
+// The network is the IPv4 address, or the IPv6 /64 -- one connection gets a whole /64, so
+// counting single IPv6 addresses would hand out free likes to anyone rotating inside it.
 // Guards: only slugs the build published (blog/index.json), writes only from this
-// site's own pages (Origin), and at most RATE_LIMIT new likes per visitor a minute.
+// site's own pages (Origin), at most RATE_LIMIT new likes per visitor a minute, and at most
+// POST_HOURLY_CAP new likes per post an hour from everyone together -- what bounds someone
+// switching IPs (VPN, proxies): each switch is a new visitor, but the post's hour still fills.
 // Without the D1 binding (DB) every call answers 503 and the page hides the button.
 
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 export const RATE_LIMIT = 10;
 const RATE_WINDOW_MS = 60_000;
+export const POST_HOURLY_CAP = 100;
+const HOUR_MS = 3_600_000;
 const SLUGS_TTL_MS = 60_000;
 
 let published = { at: 0, slugs: new Set() };
@@ -39,8 +45,18 @@ export function resetPublishedCache() {
   published = { at: 0, slugs: new Set() };
 }
 
+/** 203.0.113.7 -> itself; 2001:db8:1:2:aaaa::1 -> 2001:db8:1:2::/64 (expanding a :: first). */
+export function network(ip) {
+  if (!ip.includes(':')) return ip;
+  const [head, tail = ''] = ip.toLowerCase().split('::');
+  const left = head ? head.split(':') : [];
+  const right = tail ? tail.split(':') : [];
+  const groups = ip.includes('::') ? [...left, ...Array(8 - left.length - right.length).fill('0'), ...right] : left;
+  return `${groups.slice(0, 4).map((g) => g.replace(/^0+(?=.)/, '')).join(':')}::/64`;
+}
+
 export async function voterId(request, env) {
-  const ip = request.headers.get('cf-connecting-ip') ?? '';
+  const ip = network(request.headers.get('cf-connecting-ip') ?? '');
   const ua = request.headers.get('user-agent') ?? '';
   const data = new TextEncoder().encode(`${ip}\n${ua}\n${env.LIKES_SALT ?? 'devandreotti-likes'}`);
   const digest = await crypto.subtle.digest('SHA-256', data);
@@ -79,6 +95,10 @@ export async function handleLikes(request, env, now = Date.now()) {
       .bind(voter, now - RATE_WINDOW_MS)
       .first();
     if (Number(recent?.n ?? 0) >= RATE_LIMIT) return json({ error: 'too many likes, slow down' }, 429, { 'retry-after': '60' });
+    const hour = await env.DB.prepare('SELECT COUNT(*) AS n FROM likes WHERE slug = ?1 AND at > ?2')
+      .bind(slug, now - HOUR_MS)
+      .first();
+    if (Number(hour?.n ?? 0) >= POST_HOURLY_CAP) return json({ error: 'this post is taking a break from likes' }, 429, { 'retry-after': '3600' });
     await env.DB.prepare('INSERT OR IGNORE INTO likes (slug, voter, at) VALUES (?1, ?2, ?3)').bind(slug, voter, now).run();
   } else if (request.method === 'DELETE') {
     await env.DB.prepare('DELETE FROM likes WHERE slug = ?1 AND voter = ?2').bind(slug, voter).run();

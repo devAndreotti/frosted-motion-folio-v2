@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import worker from './index.js';
-import { RATE_LIMIT, publishedSlugs, resetPublishedCache, voterId } from './likes.js';
+import { POST_HOURLY_CAP, RATE_LIMIT, network, publishedSlugs, resetPublishedCache, voterId } from './likes.js';
 
 // An in-memory stand-in for the D1 binding that answers the queries likes.js sends.
 function fakeD1() {
@@ -18,8 +18,9 @@ function fakeD1() {
       return null;
     }
     if (sql.includes('AS n')) {
-      const [voter, since] = args;
-      return { n: rows.filter((r) => r.voter === voter && r.at > since).length };
+      const [key, since] = args;
+      const field = sql.includes('WHERE slug') ? 'slug' : 'voter';
+      return { n: rows.filter((r) => r[field] === key && r.at > since).length };
     }
     const [voter, slug] = args;
     const mine = rows.filter((r) => r.slug === slug);
@@ -99,6 +100,27 @@ describe('likes', () => {
     const res = await worker.fetch(call('POST', `/api/likes/p${RATE_LIMIT}`), env);
     expect(res.status).toBe(429);
     expect(res.headers.get('retry-after')).toBe('60');
+  });
+
+  it('counts a whole IPv6 /64 as one visitor, so rotating addresses inside it gives nothing', async () => {
+    expect(network('203.0.113.7')).toBe('203.0.113.7');
+    expect(network('2001:db8:1:2:aaaa:bbbb:cccc:dddd')).toBe('2001:db8:1:2::/64');
+    expect(network('2001:DB8:0001::1')).toBe('2001:db8:1:0::/64');
+    expect(network('::1')).toBe('0:0:0:0::/64');
+    await worker.fetch(call('POST', undefined, { 'cf-connecting-ip': '2001:db8:1:2::a' }), env);
+    const again = await worker.fetch(call('POST', undefined, { 'cf-connecting-ip': '2001:db8:1:2:ffff::b' }), env);
+    expect(await again.json()).toEqual({ count: 1, liked: true });
+  });
+
+  it('caps a post at POST_HOURLY_CAP new likes an hour, whatever IPs they come from', async () => {
+    const t0 = 5_000_000_000;
+    for (let i = 0; i < POST_HOURLY_CAP; i++) env.DB.rows.push({ slug: 'meu-post', voter: `v${i}`, at: t0 - 1000 });
+    const { handleLikes } = await import('./likes.js');
+    const res = await handleLikes(call('POST', undefined, { 'cf-connecting-ip': '198.51.100.200' }), env, t0);
+    expect(res.status).toBe(429);
+    expect(res.headers.get('retry-after')).toBe('3600');
+    // an hour later the post takes likes again
+    expect((await handleLikes(call('POST', undefined, { 'cf-connecting-ip': '198.51.100.200' }), env, t0 + 3_600_000)).status).toBe(200);
   });
 
   it('answers 503 where no database is bound', async () => {

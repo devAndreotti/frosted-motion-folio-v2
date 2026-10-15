@@ -11,7 +11,7 @@ export const socialLinks = [
   },
   {
     name: "Email",
-    url: "mailto:OrlaEK@proton.me",
+    url: "mailto:devandreotti@gmail.com",
     icon: "mail"
   }
 ];
@@ -26,7 +26,7 @@ export const personalInfo = {
 
 /** Where every contact link on the page points -- one place to change them. */
 export const contact = {
-  email: 'OrlaEK@proton.me',
+  email: 'devandreotti@gmail.com',
   github: 'https://github.com/devAndreotti',
   githubHandle: '@devAndreotti',
   repos: 'https://github.com/devAndreotti?tab=repositories',
