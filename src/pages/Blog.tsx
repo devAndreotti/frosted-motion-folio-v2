@@ -2,7 +2,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { ArrowRight, Search } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import BlogShell from '@/components/blog/BlogShell';
-import { posts } from '@/lib/blog/catalog';
+import { localize, posts as originals } from '@/lib/blog/catalog';
 import { collectTags, filterByTag, formatDay, groupByYear } from '@/lib/blog/list';
 import { BLOG_TITLE } from '@/lib/blog/page';
 import type { PostMeta } from '@/lib/blog/types';
@@ -36,6 +36,7 @@ const Blog = () => {
   const { lang, t } = useLanguage();
   const b = t.blog;
   const [params, setParams] = useSearchParams();
+  const posts = originals.map((post) => localize(post, lang));
   const tags = collectTags(posts);
   const tag = tags.includes(params.get('tag') ?? '') ? params.get('tag') : null;
   const shown = filterByTag(posts, tag);

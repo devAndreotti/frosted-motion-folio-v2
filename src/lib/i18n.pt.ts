@@ -191,6 +191,8 @@ export const pt: Strings = {
     pageTitle: 'Escritos',
     pageLead: 'Sobre front-end, infraestrutura pequena e as decisões por trás deste site.',
     langNote: '',
+    translatedNote: '',
+    ptOnly: '',
     searchLabel: 'Buscar nos posts',
     searchPlaceholder: 'Buscar nos posts…',
     searchButton: 'Buscar',

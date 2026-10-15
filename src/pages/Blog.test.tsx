@@ -20,11 +20,20 @@ const POSTS = vi.hoisted(() => {
   return [meta('novo', '2026-10-15', ['css', 'react']), meta('meio', '2026-03-01', ['react']), meta('velho', '2025-05-20', ['css'])];
 });
 
+// only 'novo' has an English version
 vi.mock('@/lib/blog/catalog', () => ({
   posts: POSTS,
   findPost: (slug: string) => POSTS.find((post) => post.slug === slug),
-  loadPostBody: (slug: string) =>
-    slug === 'meio' ? Promise.reject(new Error('chunk failed')) : Promise.resolve({ html: '<h2 id="a">A</h2><p>Corpo do post.</p>', toc: [{ id: 'a', text: 'A' }, { id: 'b', text: 'B' }] }),
+  hasTranslation: (slug: string) => slug === 'novo',
+  localize: (post: PostMeta, lang: string) => (lang === 'en' && post.slug === 'novo' ? { ...post, title: 'Post novo (EN)', minutes: 2 } : post),
+  loadPostBody: (slug: string, lang = 'pt') =>
+    slug === 'meio'
+      ? Promise.reject(new Error('chunk failed'))
+      : Promise.resolve({
+          html: lang === 'en' && slug === 'novo' ? '<p>English body.</p>' : '<h2 id="a">A</h2><p>Corpo do post.</p>',
+          toc: [{ id: 'a', text: 'A' }, { id: 'b', text: 'B' }],
+          lang: lang === 'en' && slug === 'novo' ? 'en' : 'pt',
+        }),
 }));
 
 const renderAt = (path: string) =>
@@ -70,6 +79,29 @@ describe('blog pages', () => {
     expect(screen.getByText('Post velho')).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: 'todos' }));
     expect(screen.getByText('Post meio')).toBeTruthy();
+  });
+
+  it('shows the English version to an English visitor, and says so', async () => {
+    localStorage.setItem('lang.picked', 'en');
+    renderAt('/blog/novo/');
+    expect(screen.getByRole('heading', { level: 1, name: 'Post novo (EN)' })).toBeTruthy();
+    expect(await screen.findByText('English body.')).toBeTruthy();
+    expect(screen.getByText('Translated from Portuguese by AI.')).toBeTruthy();
+    expect(document.querySelector('article')?.getAttribute('lang')).toBe('en');
+  });
+
+  it('tells an English visitor when a post only exists in Portuguese', async () => {
+    localStorage.setItem('lang.picked', 'en');
+    renderAt('/blog/velho/');
+    expect(await screen.findByText('This post is only available in Portuguese.')).toBeTruthy();
+    expect(document.querySelector('article')?.getAttribute('lang')).toBe('pt-BR');
+  });
+
+  it('lists the English titles for an English visitor', () => {
+    localStorage.setItem('lang.picked', 'en');
+    renderAt('/blog/');
+    expect(screen.getAllByText('Post novo (EN)').length).toBeGreaterThan(0);
+    expect(screen.getByText('Post velho')).toBeTruthy();
   });
 
   it('opens a post: text, table of contents, neighbours, and no like button without a Worker', async () => {

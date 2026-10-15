@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parsePost, readingMinutes, slugFromPath, splitFrontmatter } from './parse';
+import { isTranslationFile, parsePost, readingMinutes, slugFromPath, splitFrontmatter } from './parse';
 
 const post = (front: string, body = 'Texto do post.') => `---\n${front}\n---\n${body}`;
 
@@ -19,6 +19,12 @@ describe('slugFromPath', () => {
   it('drops the folder, the extension and the date prefix', () => {
     expect(slugFromPath('src/content/posts/2026-10-15-meu-post.md')).toBe('meu-post');
     expect(slugFromPath('C:\\posts\\sem-data.md')).toBe('sem-data');
+  });
+
+  it('gives an English version the slug of its original', () => {
+    expect(slugFromPath('2026-10-15-meu-post.en.md')).toBe('meu-post');
+    expect(isTranslationFile('2026-10-15-meu-post.en.md')).toBe(true);
+    expect(isTranslationFile('2026-10-15-meu-post.md')).toBe(false);
   });
 });
 
