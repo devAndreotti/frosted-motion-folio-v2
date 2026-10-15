@@ -1,14 +1,16 @@
 // Newsletter sign-up: /api/newsletter/*
-//   GET  /status        -> { enabled: true }         (404/503 where there is no database or no mail: the form hides)
-//   POST /subscribe     -> { ok: true }              body { email, lang, website } (website = honeypot)
+//   GET  /status        -> { enabled: true, turnstileSiteKey }   (503 where there is no database or no mail: the form hides)
+//   POST /subscribe     -> { ok: true }              body { email, lang, website, turnstile } (website = honeypot)
 //   GET  /confirm?t=&l= -> page                      the link in the confirmation e-mail (double opt-in)
 //   GET  /unsubscribe?t=&l= -> page with a button    (a mail scanner opening the link must not unsubscribe anyone)
 //   POST /unsubscribe?t=&l= -> page, or 200 for the one-click header (RFC 8058: List-Unsubscribe-Post)
 // The answer to /subscribe is the same for a new, a pending, an active and a removed address, so the
 // form can't be used to find out who is on the list. A confirmation goes out only once every
 // RESEND_MS per address and RATE_LIMIT attempts an hour per visitor, so it can't be used to flood
-// someone's inbox either. Without the DB binding or the SMTP secrets everything answers 503.
-import { renderConfirmation } from '../scripts/newsletter/template.mjs';
+// someone's inbox either. With TURNSTILE_SECRET set, a Turnstile token is required too.
+// Nothing is kept about who left: unsubscribing deletes the row, and a sign-up nobody confirmed is
+// deleted after PENDING_TTL_MS. Without the DB binding or the SMTP secrets everything answers 503.
+import { REPLY_TO, renderConfirmation } from '../scripts/newsletter/template.mjs';
 import { sendMail as smtpSend } from './smtp.js';
 
 const EMAIL = /^[^\s@<>()[\]\\,;:"]+@[^\s@<>()[\]\\,;:"]+\.[^\s@<>()[\]\\,;:"]{2,}$/;
@@ -16,6 +18,8 @@ const TOKEN = /^[A-Za-z0-9_-]{20,64}$/;
 export const RATE_LIMIT = 5;
 export const GLOBAL_HOURLY_CAP = 300;
 export const RESEND_MS = 10 * 60_000;
+export const PENDING_TTL_MS = 7 * 24 * 3_600_000;
+const MAX_BODY = 2048;
 const HOUR_MS = 3_600_000;
 const FROM = 'ricardo@devandreotti.com';
 
@@ -85,23 +89,42 @@ const configured = (env) => Boolean(env.DB && env.SMTP_USER && env.SMTP_PASS);
 async function confirmationMail(origin, row) {
   const confirmUrl = `${origin}/api/newsletter/confirm?t=${row.confirm_token}&l=${row.lang}`;
   const { html, text, subject } = renderConfirmation({ lang: row.lang, confirmUrl });
-  return { from: FROM, fromName: 'Ricardo A. Gonçalves', to: row.email, subject, text, html };
+  return { from: FROM, fromName: 'Ricardo A. Gonçalves', to: row.email, subject, text, html, headers: { 'Reply-To': REPLY_TO } };
+}
+
+/** Cloudflare Turnstile: true when the token is real (or when this host doesn't use it). Fails closed on any error. */
+async function turnstileOk(env, token, ip, verify = fetch) {
+  if (!env.TURNSTILE_SECRET) return true;
+  if (typeof token !== 'string' || !token || token.length > 2048) return false;
+  try {
+    const form = new URLSearchParams({ secret: env.TURNSTILE_SECRET, response: token });
+    if (ip) form.set('remoteip', ip);
+    const res = await verify('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body: form, signal: AbortSignal.timeout(5000) });
+    return res.ok && (await res.json()).success === true;
+  } catch {
+    return false;
+  }
 }
 
 async function subscribe(request, env, now, deps) {
   const url = new URL(request.url);
   if (request.headers.get('origin') !== url.origin) return json({ error: 'forbidden' }, 403);
+  if (Number(request.headers.get('content-length') ?? 0) > MAX_BODY) return json({ error: 'too large' }, 413);
+  const raw = await request.text();
+  if (raw.length > MAX_BODY) return json({ error: 'too large' }, 413);
   let body;
   try {
-    body = await request.json();
+    body = JSON.parse(raw);
   } catch {
     return json({ error: 'bad request' }, 400);
   }
+  if (body === null || typeof body !== 'object' || Array.isArray(body)) return json({ error: 'bad request' }, 400);
   // a hidden field no person fills: a bot that does gets the same "ok" and nothing happens
   if (typeof body?.website === 'string' && body.website !== '') return json({ ok: true });
   const email = typeof body?.email === 'string' ? body.email.trim().toLowerCase() : '';
   if (email.length > 254 || !EMAIL.test(email)) return json({ error: 'email' }, 400);
   const l = lang(body.lang);
+  if (!(await turnstileOk(env, body.turnstile, request.headers.get('cf-connecting-ip'), deps.fetch))) return json({ error: 'check' }, 403);
 
   const who = await visitor(request, env);
   const mine = await env.DB.prepare('SELECT COUNT(*) AS n FROM subscribe_hits WHERE voter = ?1 AND at > ?2').bind(who, now - HOUR_MS).first();
@@ -109,12 +132,13 @@ async function subscribe(request, env, now, deps) {
   const all = await env.DB.prepare('SELECT COUNT(*) AS n FROM subscribe_hits WHERE at > ?1').bind(now - HOUR_MS).first();
   if (Number(all?.n ?? 0) >= GLOBAL_HOURLY_CAP) return json({ error: 'busy' }, 429, { 'retry-after': '3600' });
   await env.DB.prepare('INSERT INTO subscribe_hits (voter, at) VALUES (?1, ?2)').bind(who, now).run();
-  // old attempts are only needed for the last hour
+  // old attempts are only needed for the last hour; a sign-up nobody confirmed is not kept for more than a week
   await env.DB.prepare('DELETE FROM subscribe_hits WHERE at < ?1').bind(now - 2 * HOUR_MS).run();
+  await env.DB.prepare("DELETE FROM subscribers WHERE status = 'pending' AND created_at < ?1").bind(now - PENDING_TTL_MS).run();
 
   const row = await env.DB.prepare('SELECT * FROM subscribers WHERE email = ?1').bind(email).first();
   let send = null;
-  if (!row || row.status === 'unsubscribed') {
+  if (!row) {
     send = { email, lang: l, confirm_token: token(), unsub_token: token() };
     await env.DB.prepare(
       `INSERT INTO subscribers (email, lang, status, confirm_token, unsub_token, created_at, confirm_sent_at)
@@ -146,20 +170,22 @@ async function confirm(url, env, now) {
   const t = url.searchParams.get('t') ?? '';
   if (!TOKEN.test(t)) return notice(l, COPY[l].invalid, { status: 404 });
   const row = await env.DB.prepare('SELECT status FROM subscribers WHERE confirm_token = ?1').bind(t).first();
-  if (!row || row.status === 'unsubscribed') return notice(l, COPY[l].invalid, { status: 404 });
+  if (!row) return notice(l, COPY[l].invalid, { status: 404 });
   if (row.status === 'active') return notice(l, COPY[l].already);
   await env.DB.prepare("UPDATE subscribers SET status = 'active', confirmed_at = ?2 WHERE confirm_token = ?1 AND status = 'pending'").bind(t, now).run();
   return notice(l, COPY[l].confirmed);
 }
 
-async function unsubscribe(request, url, env, now) {
+async function unsubscribe(request, url, env) {
   const l = lang(url.searchParams.get('l'));
   const t = url.searchParams.get('t') ?? '';
   if (!TOKEN.test(t)) return notice(l, COPY[l].invalid, { status: 404 });
-  const row = await env.DB.prepare('SELECT status FROM subscribers WHERE unsub_token = ?1').bind(t).first();
-  if (!row) return notice(l, COPY[l].invalid, { status: 404 });
-  if (request.method === 'GET') return notice(l, COPY[l].unsubAsk, { form: `${url.pathname}${url.search}` });
-  await env.DB.prepare("UPDATE subscribers SET status = 'unsubscribed', unsubscribed_at = ?2 WHERE unsub_token = ?1 AND status != 'unsubscribed'").bind(t, now).run();
+  if (request.method === 'GET') {
+    const row = await env.DB.prepare('SELECT status FROM subscribers WHERE unsub_token = ?1').bind(t).first();
+    return row ? notice(l, COPY[l].unsubAsk, { form: `${url.pathname}${url.search}` }) : notice(l, COPY[l].invalid, { status: 404 });
+  }
+  // leaving deletes the row; asking twice (a mail client retrying) is the same as asking once
+  await env.DB.prepare('DELETE FROM subscribers WHERE unsub_token = ?1').bind(t).run();
   // the one-click request of a mail client (List-Unsubscribe-Post) only needs a 2xx
   if ((request.headers.get('content-type') ?? '').includes('x-www-form-urlencoded') && (await request.clone().text()).includes('List-Unsubscribe=One-Click')) {
     return new Response('ok', { status: 200, headers: { 'cache-control': 'no-store' } });
@@ -174,8 +200,9 @@ export async function handleNewsletter(request, env, now = Date.now(), deps = { 
   if (!methods) return json({ error: 'not found' }, 404);
   if (!methods.includes(request.method)) return new Response(null, { status: 405, headers: { allow: methods.join(', '), 'cache-control': 'no-store' } });
   if (!configured(env)) return json({ error: 'newsletter is off on this host' }, 503);
-  if (action === 'status') return json({ enabled: true });
+  // the site key is public; it is only offered when the secret to check it is here too
+  if (action === 'status') return json({ enabled: true, turnstileSiteKey: env.TURNSTILE_SECRET && env.TURNSTILE_SITEKEY ? env.TURNSTILE_SITEKEY : null });
   if (action === 'subscribe') return subscribe(request, env, now, deps);
   if (action === 'confirm') return confirm(url, env, now);
-  return unsubscribe(request, url, env, now);
+  return unsubscribe(request, url, env);
 }

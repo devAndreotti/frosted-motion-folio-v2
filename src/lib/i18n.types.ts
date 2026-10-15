@@ -196,6 +196,9 @@ export interface Strings {
       error: string;
       tooMany: string;
       privacy: string;
+      privacyLink: string;
+      langLabel: string;
+      check: string;
     };
     searchLabel: string;
     searchPlaceholder: string;

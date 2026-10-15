@@ -98,7 +98,9 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 
 export const SITE_URL = 'https://devandreotti.com';
 export const GITHUB_URL = 'https://github.com/devAndreotti';
-export const REPLY_TO = 'ricardo@devandreotti.com';
+// as respostas vão direto para o Gmail (o remetente continua ricardo@devandreotti.com); mailto e cabeçalho Reply-To usam o mesmo
+export const REPLY_TO = 'devandreotti@gmail.com';
+export const PRIVACY_URL = `${SITE_URL}/privacidade/`;
 
 export const STRINGS = {
   pt: {
@@ -116,6 +118,7 @@ export const STRINGS = {
     replyButton: 'Responder',
     why: 'Você recebe este e-mail porque se inscreveu em devandreotti.com.',
     unsubscribe: 'Sair da lista',
+    privacy: 'Privacidade',
     other: 'Read in English',
     confirmSubject: 'Confirme sua inscrição na newsletter',
     confirmKicker: 'Falta um passo',
@@ -140,6 +143,7 @@ export const STRINGS = {
     replyButton: 'Reply',
     why: 'You are receiving this because you subscribed at devandreotti.com.',
     unsubscribe: 'Unsubscribe',
+    privacy: 'Privacy',
     other: 'Ler em português',
     confirmSubject: 'Confirm your newsletter subscription',
     confirmKicker: 'One more step',
@@ -305,6 +309,7 @@ ${links ? sectionLabel(L, S.links) + links : ''}
     <a class="acc" href="${esc(data.unsubscribeUrl)}" style="color:${L.accent};">${esc(S.unsubscribe)}</a>
     ${data.otherLangUrl ? ` · <a class="acc" href="${esc(data.otherLangUrl)}" style="color:${L.accent};">${esc(S.other)}</a>` : ''}
     · <a class="acc" href="${esc(data.siteUrl ?? SITE_URL)}" style="color:${L.accent};">devandreotti.com</a>
+    · <a class="acc" href="${PRIVACY_URL}" style="color:${L.accent};">${esc(S.privacy)}</a>
     · <a class="acc" href="${GITHUB_URL}" style="color:${L.accent};">GitHub</a>
   </p>`;
 
@@ -353,7 +358,7 @@ export function renderConfirmation(data, options = {}) {
       `<p style="margin:0;font:400 12px/1.5 ${MONO};word-break:break-all;"><a class="acc" href="${esc(data.confirmUrl)}" style="color:${L.accent};">${esc(data.confirmUrl)}</a></p>`,
     { cls: 'hero' }
   )}</div>`;
-  const footer = `<p class="t3" style="margin:0;font:400 12.5px/1.6 ${FONT};color:${L.fg3};">${esc(S.confirmIgnore)}</p>`;
+  const footer = `<p class="t3" style="margin:0 0 6px;font:400 12.5px/1.6 ${FONT};color:${L.fg3};">${esc(S.confirmIgnore)}</p><p class="t3" style="margin:0;font:400 12.5px/1.6 ${FONT};color:${L.fg3};"><a class="acc" href="${PRIVACY_URL}" style="color:${L.accent};">${esc(S.privacy)}</a></p>`;
   const html = shell({ lang: data.lang, hue, title: S.confirmSubject, preheader: S.confirmBody, inner, footer });
   const text = [S.confirmTitle, '', S.confirmBody, '', data.confirmUrl, '', S.confirmIgnore].join('\n');
   return { html, text, subject: S.confirmSubject, hue };

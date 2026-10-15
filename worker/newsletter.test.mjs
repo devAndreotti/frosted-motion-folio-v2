@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import worker from './index.js';
-import { GLOBAL_HOURLY_CAP, RATE_LIMIT, RESEND_MS, handleNewsletter } from './newsletter.js';
+import { GLOBAL_HOURLY_CAP, PENDING_TTL_MS, RATE_LIMIT, RESEND_MS, handleNewsletter } from './newsletter.js';
 
 // An in-memory stand-in for the D1 binding that answers the statements newsletter.js sends
 // (the real SQL runs against D1's own engine in the local end-to-end check, not here).
@@ -15,7 +15,7 @@ function d1() {
     if (sql.startsWith('SELECT * FROM subscribers')) return subscribers.get(a[0]) ?? null;
     if (sql.startsWith('INSERT INTO subscribers')) {
       const [email, lang, confirm_token, unsub_token, now] = a;
-      return void subscribers.set(email, { email, lang, status: 'pending', confirm_token, unsub_token, created_at: now, confirm_sent_at: now, confirmed_at: null, unsubscribed_at: null });
+      return void subscribers.set(email, { email, lang, status: 'pending', confirm_token, unsub_token, created_at: now, confirm_sent_at: now, confirmed_at: null });
     }
     if (sql.startsWith('UPDATE subscribers SET lang')) return void Object.assign(subscribers.get(a[0]), { lang: a[1], confirm_sent_at: a[2] });
     if (sql.startsWith('UPDATE subscribers SET confirm_sent_at = 0')) {
@@ -30,9 +30,12 @@ function d1() {
       if (r) Object.assign(r, { status: 'active', confirmed_at: a[1] });
       return;
     }
-    if (sql.startsWith("UPDATE subscribers SET status = 'unsubscribed'")) {
-      const r = [...subscribers.values()].find((x) => x.unsub_token === a[0] && x.status !== 'unsubscribed');
-      if (r) Object.assign(r, { status: 'unsubscribed', unsubscribed_at: a[1] });
+    if (sql.startsWith('DELETE FROM subscribers WHERE unsub_token')) {
+      for (const [email, r] of subscribers) if (r.unsub_token === a[0]) subscribers.delete(email);
+      return;
+    }
+    if (sql.startsWith("DELETE FROM subscribers WHERE status = 'pending'")) {
+      for (const [email, r] of subscribers) if (r.status === 'pending' && r.created_at < a[0]) subscribers.delete(email);
       return;
     }
     throw new Error(`the fake D1 does not know: ${sql}`);
@@ -72,7 +75,7 @@ describe('newsletter', () => {
     expect((await handleNewsletter(get('status'), { SMTP_USER: 'u', SMTP_PASS: 'p' }, NOW)).status).toBe(503);
     const res = await run(get('status'));
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ enabled: true });
+    expect(await res.json()).toEqual({ enabled: true, turnstileSiteKey: null });
   });
 
   it('is reachable through the worker', async () => {
@@ -88,6 +91,8 @@ describe('newsletter', () => {
     const mail = sendMail.mock.calls[0][1];
     expect(mail).toMatchObject({ from: 'ricardo@devandreotti.com', to: 'leitor@example.com', subject: 'Confirm your newsletter subscription' });
     expect(mail.html).toContain('Confirm subscription');
+    expect(mail.headers).toEqual({ 'Reply-To': 'devandreotti@gmail.com' });
+    expect(mail.html).toContain('/privacidade/');
     expect(confirmUrl().pathname).toBe('/api/newsletter/confirm');
     expect(confirmUrl().searchParams.get('l')).toBe('en');
   });
@@ -98,6 +103,9 @@ describe('newsletter', () => {
       expect((await run(post({ email }))).status).toBe(400);
     }
     expect((await run(new Request(`${ORIGIN}/api/newsletter/subscribe`, { method: 'POST', headers: { origin: ORIGIN }, body: 'not json' }))).status).toBe(400);
+    expect((await run(new Request(`${ORIGIN}/api/newsletter/subscribe`, { method: 'POST', headers: { origin: ORIGIN }, body: 'null' }))).status).toBe(400);
+    expect((await run(new Request(`${ORIGIN}/api/newsletter/subscribe`, { method: 'POST', headers: { origin: ORIGIN }, body: '[1]' }))).status).toBe(400);
+    expect((await run(post({ email: 'a@b.co', pad: 'x'.repeat(5000) }))).status).toBe(413);
     const bot = await run(post({ email: 'bot@example.com', website: 'http://spam.example' }));
     expect(await bot.json()).toEqual({ ok: true });
     expect(row('bot@example.com')).toBeUndefined();
@@ -156,7 +164,7 @@ describe('newsletter', () => {
     for (const bad of ['', 'curto', 'x'.repeat(30), '../../etc/passwd']) expect((await run(get(`confirm?t=${bad}`))).status).toBe(404);
   });
 
-  it('unsubscribes only on POST (a GET just asks), and understands the one-click header', async () => {
+  it('unsubscribes only on POST (a GET just asks), deletes the address, and understands the one-click header', async () => {
     await run(post({ email: 'leitor@example.com' }));
     await run(get(`confirm?t=${confirmUrl().searchParams.get('t')}`));
     const unsub = row('leitor@example.com').unsub_token;
@@ -167,10 +175,12 @@ describe('newsletter', () => {
     const oneClick = await run(new Request(`${ORIGIN}/api/newsletter/unsubscribe?t=${unsub}&l=pt`, { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: 'List-Unsubscribe=One-Click' }));
     expect(oneClick.status).toBe(200);
     expect(await oneClick.text()).toBe('ok');
-    expect(row('leitor@example.com')).toMatchObject({ status: 'unsubscribed', unsubscribed_at: NOW });
+    expect(row('leitor@example.com')).toBeUndefined(); // nothing is kept about who left
 
+    // a mail client that asks again still gets a 2xx; a person gets the "you left" page
     const again = await run(new Request(`${ORIGIN}/api/newsletter/unsubscribe?t=${unsub}&l=en`, { method: 'POST' }));
     expect(await again.text()).toContain('You left the list');
+    expect((await run(get(`unsubscribe?t=${unsub}`))).status).toBe(404);
     expect((await run(get('unsubscribe?t=nao-existe-nao-existe-1'))).status).toBe(404);
   });
 
@@ -184,6 +194,59 @@ describe('newsletter', () => {
     expect(after.confirm_token).not.toBe(before.confirm_token);
     expect(after.unsub_token).not.toBe(before.unsub_token);
     expect(sendMail).toHaveBeenCalledTimes(2);
+  });
+
+  it('deletes a sign-up nobody confirmed after a week, and keeps the confirmed ones', async () => {
+    await run(post({ email: 'nunca@example.com' }));
+    await run(post({ email: 'confirmou@example.com' }));
+    await run(get(`confirm?t=${confirmUrl().searchParams.get('t')}`));
+    NOW += PENDING_TTL_MS + 1;
+    await run(post({ email: 'outro@example.com' }, { 'cf-connecting-ip': '198.51.100.9' }));
+    expect(row('nunca@example.com')).toBeUndefined();
+    expect(row('confirmou@example.com').status).toBe('active');
+  });
+
+  describe('Turnstile', () => {
+    const withTurnstile = () => {
+      env.TURNSTILE_SECRET = 'ts-secret';
+      env.TURNSTILE_SITEKEY = '0xKEY';
+    };
+    const verify = (success) => vi.fn(async () => new Response(JSON.stringify({ success }), { status: 200 }));
+    const runWith = (request, fetchFn) => handleNewsletter(request, env, NOW, { sendMail, fetch: fetchFn });
+
+    it('offers its public key only when the secret to check it is here too', async () => {
+      env.TURNSTILE_SITEKEY = '0xKEY';
+      expect(await (await run(get('status'))).json()).toMatchObject({ turnstileSiteKey: null });
+      env.TURNSTILE_SECRET = 'ts-secret';
+      expect(await (await run(get('status'))).json()).toMatchObject({ turnstileSiteKey: '0xKEY' });
+    });
+
+    it('requires a valid token once the secret is set, and sends nothing without it', async () => {
+      withTurnstile();
+      const no = verify(true);
+      expect((await runWith(post({ email: 'a@b.co' }), no)).status).toBe(403);
+      expect(no).not.toHaveBeenCalled();
+      expect((await runWith(post({ email: 'a@b.co', turnstile: 'bad' }), verify(false))).status).toBe(403);
+      expect(sendMail).not.toHaveBeenCalled();
+
+      const good = verify(true);
+      expect((await runWith(post({ email: 'a@b.co', turnstile: 'tok' }), good)).status).toBe(200);
+      const [, init] = good.mock.calls[0];
+      expect(init.body.get('secret')).toBe('ts-secret');
+      expect(init.body.get('response')).toBe('tok');
+      expect(init.body.get('remoteip')).toBe('203.0.113.7');
+      expect(sendMail).toHaveBeenCalledTimes(1);
+    });
+
+    it('fails closed when the check itself breaks', async () => {
+      withTurnstile();
+      const broken = vi.fn(async () => {
+        throw new Error('network');
+      });
+      expect((await runWith(post({ email: 'a@b.co', turnstile: 'tok' }), broken)).status).toBe(403);
+      expect((await runWith(post({ email: 'a@b.co', turnstile: 'tok' }), vi.fn(async () => new Response('oops', { status: 500 })))).status).toBe(403);
+      expect(sendMail).not.toHaveBeenCalled();
+    });
   });
 
   it('knows its own routes and methods', async () => {

@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import NewsletterForm from './NewsletterForm';
 
@@ -23,13 +24,22 @@ function stubFetch(status: Response | Error, subscribe: Response | Error = json(
 const renderForm = () =>
   render(
     <LanguageProvider>
-      <NewsletterForm />
+      <MemoryRouter>
+        <NewsletterForm />
+      </MemoryRouter>
     </LanguageProvider>
   );
 
+const ON = json(200, { enabled: true, turnstileSiteKey: null });
+const bodyOf = (calls: { init?: RequestInit }[]) => JSON.parse(String(calls.find((c) => c.init?.method === 'POST')?.init?.body));
+
 describe('NewsletterForm', () => {
   beforeEach(() => localStorage.clear());
-  afterEach(() => vi.unstubAllGlobals());
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    delete window.turnstile;
+    document.head.querySelectorAll('script[src*="turnstile"]').forEach((node) => node.remove());
+  });
 
   it('stays hidden where there is no Worker or no mail behind it', async () => {
     stubFetch(json(503, { error: 'off' }));
@@ -44,33 +54,52 @@ describe('NewsletterForm', () => {
   });
 
   it('sends the address with the language, and asks the reader to confirm by e-mail', async () => {
-    const calls = stubFetch(json(200, { enabled: true }));
+    const calls = stubFetch(ON);
     renderForm();
     const input = await screen.findByLabelText('Seu e-mail');
     fireEvent.change(input, { target: { value: ' leitor@example.com ' } });
     fireEvent.click(screen.getByRole('button', { name: 'Inscrever' }));
     expect(await screen.findByText(/Enviei um e-mail de confirmação/)).toBeTruthy();
-    const post = calls.find((c) => c.init?.method === 'POST');
-    expect(post?.url).toContain('/api/newsletter/subscribe');
-    expect(JSON.parse(String(post?.init?.body))).toEqual({ email: 'leitor@example.com', lang: 'pt', website: '' });
+    expect(calls.find((c) => c.init?.method === 'POST')?.url).toContain('/api/newsletter/subscribe');
+    expect(bodyOf(calls)).toEqual({ email: 'leitor@example.com', lang: 'pt', website: '', turnstile: '' });
     expect(screen.queryByRole('button', { name: 'Inscrever' })).toBeNull();
   });
 
-  it('speaks English to an English visitor', async () => {
+  it('lets the reader choose the language of the e-mails, whatever the site is in', async () => {
+    const calls = stubFetch(ON);
+    renderForm();
+    fireEvent.change(await screen.findByLabelText('Seu e-mail'), { target: { value: 'leitor@example.com' } });
+    expect((screen.getByLabelText('PT') as HTMLInputElement).checked).toBe(true);
+    fireEvent.click(screen.getByLabelText('EN'));
+    fireEvent.click(screen.getByRole('button', { name: 'Inscrever' }));
+    await screen.findByText(/Enviei um e-mail de confirmação/);
+    expect(bodyOf(calls).lang).toBe('en');
+  });
+
+  it('links to the privacy policy', async () => {
+    stubFetch(ON);
+    renderForm();
+    const link = await screen.findByRole('link', { name: 'Política de privacidade' });
+    expect(link.getAttribute('href')).toBe('/privacidade/');
+  });
+
+  it('speaks English to an English visitor, and starts on English', async () => {
     localStorage.setItem('lang.picked', 'en');
-    stubFetch(json(200, { enabled: true }));
+    stubFetch(ON);
     renderForm();
     expect(await screen.findByRole('heading', { name: 'Get the weekly digest' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Subscribe' })).toBeTruthy();
+    expect((screen.getByLabelText('EN') as HTMLInputElement).checked).toBe(true);
   });
 
   it.each([
     ['an invalid address', json(400, { error: 'email' }), /não parece válido/],
+    ['a failed robot check', json(403, { error: 'check' }), /não é um robô/],
     ['too many attempts', json(429, { error: 'too many' }), /Muitas tentativas/],
     ['a mail failure', json(502, { error: 'mail' }), /Não consegui enviar/],
     ['no connection', new Error('offline'), /Não consegui enviar/],
   ])('tells the reader about %s and lets them try again', async (_name, answer, message) => {
-    stubFetch(json(200, { enabled: true }), answer);
+    stubFetch(ON, answer);
     renderForm();
     fireEvent.change(await screen.findByLabelText('Seu e-mail'), { target: { value: 'leitor@example.com' } });
     fireEvent.click(screen.getByRole('button', { name: 'Inscrever' }));
@@ -79,12 +108,62 @@ describe('NewsletterForm', () => {
   });
 
   it('passes along what a bot types into the hidden field, for the Worker to ignore', async () => {
-    const calls = stubFetch(json(200, { enabled: true }));
+    const calls = stubFetch(ON);
     const { container } = renderForm();
     fireEvent.change(await screen.findByLabelText('Seu e-mail'), { target: { value: 'bot@example.com' } });
     fireEvent.change(container.querySelector('input[name="website"]') as HTMLInputElement, { target: { value: 'http://spam.example' } });
     fireEvent.click(screen.getByRole('button', { name: 'Inscrever' }));
     await waitFor(() => expect(calls.some((c) => c.init?.method === 'POST')).toBe(true));
-    expect(JSON.parse(String(calls.find((c) => c.init?.method === 'POST')?.init?.body)).website).toBe('http://spam.example');
+    expect(bodyOf(calls).website).toBe('http://spam.example');
+  });
+
+  describe('with Turnstile', () => {
+    function fakeTurnstile() {
+      const api = {
+        callback: (_token: string) => undefined,
+        render: vi.fn((_el: HTMLElement, options: { sitekey: string; callback: (token: string) => void }) => {
+          api.callback = options.callback;
+          return 'widget-1';
+        }),
+        reset: vi.fn(),
+        remove: vi.fn(),
+      };
+      window.turnstile = api;
+      return api;
+    }
+
+    it('shows the check, keeps the button off until it passes, and sends its token', async () => {
+      const api = fakeTurnstile();
+      const calls = stubFetch(json(200, { enabled: true, turnstileSiteKey: '0xKEY' }));
+      renderForm();
+      const button = (await screen.findByRole('button', { name: 'Inscrever' })) as HTMLButtonElement;
+      await waitFor(() => expect(api.render).toHaveBeenCalled());
+      expect(api.render.mock.calls[0][1].sitekey).toBe('0xKEY');
+      expect(button.disabled).toBe(true);
+
+      fireEvent.change(screen.getByLabelText('Seu e-mail'), { target: { value: 'leitor@example.com' } });
+      fireEvent.submit(button.closest('form') as HTMLFormElement); // Enter in the field
+      expect(calls.some((c) => c.init?.method === 'POST')).toBe(false);
+
+      act(() => api.callback('token-123'));
+      expect(button.disabled).toBe(false);
+      fireEvent.click(button);
+      await screen.findByText(/Enviei um e-mail de confirmação/);
+      expect(bodyOf(calls).turnstile).toBe('token-123');
+    });
+
+    it('asks for a new token after a refused attempt', async () => {
+      const api = fakeTurnstile();
+      stubFetch(json(200, { enabled: true, turnstileSiteKey: '0xKEY' }), json(403, { error: 'check' }));
+      renderForm();
+      const button = (await screen.findByRole('button', { name: 'Inscrever' })) as HTMLButtonElement;
+      await waitFor(() => expect(api.render).toHaveBeenCalled());
+      fireEvent.change(screen.getByLabelText('Seu e-mail'), { target: { value: 'leitor@example.com' } });
+      act(() => api.callback('token-1'));
+      fireEvent.click(button);
+      await screen.findByRole('alert');
+      expect(api.reset).toHaveBeenCalledWith('widget-1');
+      expect(button.disabled).toBe(true);
+    });
   });
 });

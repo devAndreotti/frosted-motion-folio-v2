@@ -59,8 +59,9 @@ Formulário no blog (`NewsletterForm`) e no fim de cada post. A inscrição tem 
 
 Ligar em produção (uma vez):
 ```bash
-bash scripts/newsletter/set-secrets.sh   # grava SMTP_USER e SMTP_PASS no Worker (lê ~/.config/newsletter/smtp.env)
+bash scripts/newsletter/set-secrets.sh   # grava SMTP_USER, SMTP_PASS (e TURNSTILE_SECRET, se estiver no arquivo) no Worker
 ```
+O anti-robô é o Cloudflare Turnstile (chave pública em `wrangler.jsonc`, segredo só no Worker). A política de privacidade está em `/privacidade/` (`src/pages/Privacy.tsx`) e precisa continuar batendo com o que `worker/newsletter.js` faz. Respostas à newsletter vão para o Gmail via `Reply-To`.
 O visual do e-mail semanal está em `scripts/newsletter/template.mjs` (tema claro/escuro e as 7 cores do site, sorteadas por semana); veja as prévias com `node scripts/newsletter/preview.mjs <pasta>`.
 
 ## 🛠 Tecnologias Utilizadas
