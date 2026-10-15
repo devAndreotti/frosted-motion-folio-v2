@@ -24,7 +24,7 @@ export const projects: Project[] = [
     description: "Uma aplicação feita com React, Tailwind e n8n, que usa o modelo Gemini para sugerir receitas personalizadas a partir dos ingredientes enviados pelo usuário. A interface é simples e responsiva.",
     image: "./projects/httpsgithub.comdevAndreottimy-first-vibe-coding-project.webp",
     technologies: ["React", "Tailwind CSS", "n8n", "Gemini (Modelo de IA)", "TypeScript"],
-    githubUrl: "https://github.com/devAndreotti/my-first-vibe-coding-project",
+    githubUrl: "https://github.com/devAndreotti/chef-ai",
     liveUrl: "https://tasty-ai-chef.lovable.app/"
   },
   {
