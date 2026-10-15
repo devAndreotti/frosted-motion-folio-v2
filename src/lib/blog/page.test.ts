@@ -37,6 +37,13 @@ describe('prerendered blog pages', () => {
     expect(html).toContain('15 out 2026');
   });
 
+  it('points a post with an English version at ?lang=en', () => {
+    const html = renderPostPage(template, post, '<p>corpo</p>', '/', true);
+    expect(html).toContain('<link rel="alternate" hreflang="pt-BR" href="https://devandreotti.com/blog/meu-post/" />');
+    expect(html).toContain('<link rel="alternate" hreflang="en" href="https://devandreotti.com/blog/meu-post/?lang=en" />');
+    expect(html).toContain('hreflang="x-default"');
+  });
+
   it('keeps </script> out of the JSON-LD', () => {
     const html = applyHead(template, { title: 't', description: 'd', url: 'u', type: 'article', jsonLd: { x: '</script><b>' } });
     expect(html).toContain('\\u003c/script>');

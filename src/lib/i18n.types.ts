@@ -181,6 +181,8 @@ export interface Strings {
     pageLead: string;
     /** Posts are written in one language; said once on the list in the other one. */
     langNote: string;
+    translatedNote: string;
+    ptOnly: string;
     searchLabel: string;
     searchPlaceholder: string;
     searchButton: string;

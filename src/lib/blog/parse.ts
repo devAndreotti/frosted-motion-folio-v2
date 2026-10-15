@@ -42,10 +42,15 @@ export function splitFrontmatter(raw: string): { data: Record<string, Value>; bo
   return { data, body: raw.slice(match[0].length) };
 }
 
-/** `2026-10-15-meu-post.md` -> `meu-post`: the date prefix only orders the files. */
+/** `2026-10-15-meu-post.md` -> `meu-post`: the date prefix only orders the files; a `.en.md` shares its original's slug. */
 export function slugFromPath(file: string): string {
   const name = file.split(/[\\/]/).pop() ?? '';
-  return name.replace(/\.md$/, '').replace(/^\d{4}-\d{2}-\d{2}-/, '');
+  return name.replace(/(\.en)?\.md$/, '').replace(/^\d{4}-\d{2}-\d{2}-/, '');
+}
+
+/** `2026-10-15-meu-post.en.md` is the English version of `2026-10-15-meu-post.md`. */
+export function isTranslationFile(file: string): boolean {
+  return /\.en\.md$/.test(file);
 }
 
 export function readingMinutes(body: string): number {

@@ -21,6 +21,8 @@ interface Head {
   url: string;
   type: 'website' | 'article';
   jsonLd?: object;
+  /** hreflang links, for a post that has an English version. */
+  alternates?: { hreflang: string; href: string }[];
 }
 
 function setMeta(html: string, attr: 'name' | 'property', key: string, value: string): string {
@@ -42,7 +44,8 @@ export function applyHead(template: string, head: Head): string {
   // the hreflang alternates point at the home page's ?lang= versions; posts have one language
   html = html.replace(/[ \t]*<link rel="alternate" hreflang="[^"]*" href="[^"]*" \/>\r?\n?/g, '');
   const ld = head.jsonLd ? `<script type="application/ld+json">${JSON.stringify(head.jsonLd).replace(/</g, '\\u003c')}</script>\n` : '';
-  return html.replace('</head>', `${ld}</head>`);
+  const alternates = (head.alternates ?? []).map((a) => `<link rel="alternate" hreflang="${a.hreflang}" href="${a.href}" />\n`).join('');
+  return html.replace('</head>', `${alternates}${ld}</head>`);
 }
 
 export function injectRoot(template: string, markup: string): string {
@@ -53,7 +56,7 @@ export function injectRoot(template: string, markup: string): string {
 const meta = (post: PostMeta) =>
   `<p class="post-meta"><time datetime="${post.date}">${formatDay(post.date, 'pt')}</time> · ${post.minutes} min de leitura</p>`;
 
-export function renderPostPage(template: string, post: PostMeta, bodyHtml: string, base: string): string {
+export function renderPostPage(template: string, post: PostMeta, bodyHtml: string, base: string, hasEnglish = false): string {
   const markup =
     `<main class="wrap blog-main"><article class="post">` +
     `<a class="post-back" href="${base}blog/">~/blog</a>` +
@@ -64,6 +67,13 @@ export function renderPostPage(template: string, post: PostMeta, bodyHtml: strin
     description: post.description || BLOG_DESCRIPTION,
     url: blogUrl(post.slug),
     type: 'article',
+    alternates: hasEnglish
+      ? [
+          { hreflang: 'pt-BR', href: blogUrl(post.slug) },
+          { hreflang: 'en', href: `${blogUrl(post.slug)}?lang=en` },
+          { hreflang: 'x-default', href: blogUrl(post.slug) },
+        ]
+      : undefined,
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',
