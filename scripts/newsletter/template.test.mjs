@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { HUE_WEIGHTS, palette, pickHue, renderNewsletter, toRgb } from './template.mjs';
+import { countWords, emailReadingMinutes, HUE_WEIGHTS, palette, pickHue, renderNewsletter, toRgb } from './template.mjs';
 import { SAMPLE } from './sample.mjs';
 
 describe('pickHue', () => {
@@ -64,5 +64,35 @@ describe('renderNewsletter', () => {
     expect(out.html).not.toContain('Worth reading this week');
     expect(out.html).toContain('lang="en"');
     expect(out.html).toContain('Unsubscribe');
+  });
+});
+
+describe('emailReadingMinutes', () => {
+  const words = (n) => Array(n).fill('palavra').join(' ');
+
+  it('counts only words, never punctuation or symbols', () => {
+    expect(countWords('um — dois, três! ↗ 4')).toBe(4);
+    expect(countWords(undefined)).toBe(0);
+  });
+
+  it('is at least a minute, and reads 200 words a minute in Portuguese and 238 in English', () => {
+    expect(emailReadingMinutes({ lang: 'pt', intro: 'curto' })).toBe(1);
+    expect(emailReadingMinutes({ lang: 'pt', intro: words(600) })).toBe(3);
+    expect(emailReadingMinutes({ lang: 'en', intro: words(600) })).toBe(3); // 2.52 -> 3
+    expect(emailReadingMinutes({ lang: 'en', intro: words(476) })).toBe(2);
+  });
+
+  it('adds up the intro, the posts, the notes and the links, and shows the result in the header', () => {
+    const data = {
+      lang: 'pt',
+      intro: words(100),
+      posts: [{ title: words(10), description: words(40) }],
+      behind: words(100),
+      links: [{ title: words(10), note: words(40) }],
+    };
+    expect(emailReadingMinutes(data)).toBe(2); // 300 palavras / 200 = 1,5 -> 2
+    const out = renderNewsletter({ ...SAMPLE.pt }, { hue: 'black' });
+    expect(out.html).toMatch(/~\d+ min de leitura/);
+    expect(out.text).toMatch(/~\d+ min de leitura/);
   });
 });

@@ -61,11 +61,33 @@ export function palette(hue, mode) {
   };
 }
 
+/** Palavras por minuto de leitura silenciosa: ~238 em inglês (média de estudos), ~200 em português (mesmo valor dos posts do site). */
+export const WORDS_PER_MINUTE = { pt: 200, en: 238 };
+
+/** Conta só o que é palavra (letras/números), como o site faz nos posts. */
+export const countWords = (text) => String(text ?? '').split(/\s+/).filter((w) => /[\p{L}\p{N}]/u.test(w)).length;
+
+/**
+ * Tempo de leitura DO E-MAIL: o texto que a pessoa lê dentro dele (introdução, posts com título e descrição,
+ * bastidores, links com comentário), sem rodapé nem URLs. Mínimo de 1 minuto, arredondado ao mais próximo.
+ */
+export function emailReadingMinutes(data) {
+  const parts = [
+    data.intro,
+    ...(data.posts ?? []).flatMap((p) => [p.title, p.description]),
+    data.behind,
+    ...(data.links ?? []).flatMap((l) => [l.title, l.note]),
+  ];
+  const words = parts.reduce((sum, part) => sum + countWords(part), 0);
+  return Math.max(1, Math.round(words / WORDS_PER_MINUTE[data.lang === 'en' ? 'en' : 'pt']));
+}
+
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 export const STRINGS = {
   pt: {
     issue: (n, range) => `Semana ${n} · ${range}`,
+    readTime: (n) => `~${n} min de leitura`,
     thisWeek: 'Esta semana no blog',
     read: 'Ler o post',
     minutes: (n) => `${n} min de leitura`,
@@ -78,6 +100,7 @@ export const STRINGS = {
   },
   en: {
     issue: (n, range) => `Week ${n} · ${range}`,
+    readTime: (n) => `~${n} min read`,
     thisWeek: 'New on the blog',
     read: 'Read the post',
     minutes: (n) => `${n} min read`,
@@ -168,7 +191,7 @@ export function renderNewsletter(data, options = {}) {
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
   <td width="44" valign="middle"><div class="glass2" style="width:40px;height:40px;border-radius:999px;background-color:${L.glassStrong};border:1px solid ${L.glassBorder};text-align:center;font:600 13px/40px ${font};color:${L.fg1};"><span class="t1" style="color:${L.fg1};">RA</span></div></td>
   <td valign="middle" class="t1" style="font:600 15px/1.2 ${font};color:${L.fg1};padding-left:6px;">Ricardo A. Gonçalves</td>
-  <td align="right" valign="middle" class="t3" style="font:400 11px/1.2 ${mono};letter-spacing:0.08em;color:${L.fg3};">${esc(S.issue(data.week, data.range))}</td>
+  <td align="right" valign="middle" class="t3" style="font:400 11px/1.2 ${mono};letter-spacing:0.08em;color:${L.fg3};">${esc(S.issue(data.week, data.range))}<br>${esc(S.readTime(emailReadingMinutes(data)))}</td>
 </tr></table>
 
 <p class="t1" style="margin:30px 0 0;font:500 24px/1.35 ${font};letter-spacing:-0.02em;color:${L.fg1};">${esc(data.intro)}</p>
@@ -190,7 +213,7 @@ ${links ? label(S.links) + links : ''}
 
   // versão em texto puro: leitores sem HTML e filtros de spam gostam dela
   const text = [
-    S.issue(data.week, data.range),
+    `${S.issue(data.week, data.range)} · ${S.readTime(emailReadingMinutes(data))}`,
     '',
     data.intro,
     '',
