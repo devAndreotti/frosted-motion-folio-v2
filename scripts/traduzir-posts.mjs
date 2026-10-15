@@ -2,7 +2,7 @@
 // Traduz os posts do blog para inglês, de forma restritiva. Quem traduz é um agente (o cron do
 // Hermes); este script decide O QUE traduzir e só aceita a tradução se ela passar na validação.
 //
-//   node scripts/traduzir-posts.mjs pendentes                  lista os posts sem inglês (ou com o PT mudado)
+//   node scripts/traduzir-posts.mjs pendentes                  lista os posts sem inglês (ou com o PT mudado) e sem PR aberto
 //   node scripts/traduzir-posts.mjs aplicar <slug> <arquivo>   valida a tradução e grava o <post>.en.md
 //   node scripts/traduzir-posts.mjs publicar                   abre um PR só com os .en.md novos
 //   node scripts/traduzir-posts.mjs mesclar                    faz o merge dos PRs traducao/* com os checks verdes
@@ -122,9 +122,25 @@ export function pending(dir = POSTS_DIR) {
 
 const run = (cmd, args, opts = {}) => execFileSync(cmd, args, { cwd: ROOT, encoding: 'utf8', ...opts }).trim();
 
+/** Arquivos .en.md que já estão num PR traducao/* aberto: não traduzir de novo enquanto o PR não entra. */
+function inOpenPullRequests() {
+  const prs = JSON.parse(run('gh', ['pr', 'list', '--state', 'open', '--json', 'headRefName,files', '--limit', '50']));
+  return new Set(prs.filter((pr) => pr.headRefName.startsWith(BRANCH_PREFIX)).flatMap((pr) => pr.files.map((f) => f.path)));
+}
+
 function cmdPendentes() {
-  const list = pending();
-  for (const item of list) console.log(`${item.slug}\t${item.original}\t${item.reason}`);
+  let busy;
+  try {
+    busy = inOpenPullRequests();
+  } catch (error) {
+    // sem saber o que já está em PR, melhor não listar nada do que traduzir duas vezes
+    return fail(`não consegui consultar os PRs abertos: ${error.message.split('\n')[0]}`);
+  }
+  // a linha inclui o hash do original: o cron só acorda o agente quando esta saída muda
+  for (const item of pending().filter((p) => !busy.has(p.english))) {
+    const hash = hashOf(fs.readFileSync(path.join(ROOT, item.original), 'utf8'));
+    console.log(`${item.slug}\t${item.original}\t${hash}\t${item.reason}`);
+  }
 }
 
 function cmdAplicar(slug, translationFile) {
@@ -156,13 +172,18 @@ function cmdPublicar() {
 }
 
 function cmdMesclar() {
-  const prs = JSON.parse(run('gh', ['pr', 'list', '--state', 'open', '--json', 'number,headRefName,statusCheckRollup,files', '--limit', '50']));
+  const fields = 'number,headRefName,statusCheckRollup,files,mergeStateStatus';
+  const prs = JSON.parse(run('gh', ['pr', 'list', '--state', 'open', '--json', fields, '--limit', '50']));
   for (const pr of prs.filter((p) => p.headRefName.startsWith(BRANCH_PREFIX))) {
     const onlyTranslations = pr.files.length > 0 && pr.files.every((f) => EN_FILE.test(f.path));
     const checks = pr.statusCheckRollup ?? [];
-    const green = checks.length > 0 && checks.every((c) => (c.conclusion ?? c.state) === 'SUCCESS' || c.conclusion === 'SKIPPED' || c.conclusion === 'NEUTRAL');
+    const green = checks.length > 0 && checks.every((c) => ['SUCCESS', 'SKIPPED', 'NEUTRAL'].includes(c.conclusion ?? c.state));
     if (!onlyTranslations) console.log(`#${pr.number}: tem arquivo que não é tradução, não mesclo`);
-    else if (!green) console.log(`#${pr.number}: checks ainda não passaram`);
+    else if (pr.mergeStateStatus === 'BEHIND') {
+      // a main exige o branch atualizado; os checks rodam de novo e o merge sai na próxima volta
+      run('gh', ['pr', 'update-branch', String(pr.number)]);
+      console.log(`#${pr.number}: branch atualizado, aguardando os checks`);
+    } else if (!green) console.log(`#${pr.number}: checks ainda não passaram`);
     else {
       run('gh', ['pr', 'merge', String(pr.number), '--squash', '--delete-branch']);
       console.log(`#${pr.number}: mesclado`);
