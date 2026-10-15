@@ -54,6 +54,15 @@ git add -A && git commit -m "post: título" && git push
 - **Inglês automático:** não precisa traduzir. Um cron do Hermes cria `<post>.en.md` ao lado do original, valida (blocos de código, links, imagens e estrutura idênticos), abre um PR só com esse arquivo e faz o merge quando os checks passam (`scripts/traduzir-posts.mjs`). Quem usa o site em inglês vê a versão traduzida, com o aviso "Translated from Portuguese by AI". Para corrigir uma tradução, edite o `.en.md` (ela só é refeita se o texto original mudar depois).
 - Curtidas: usam o banco D1 da Cloudflare (`wrangler.jsonc`, bloco `d1_databases`). Sem ele o botão fica escondido.
 
+## 📬 Newsletter
+Formulário no blog (`NewsletterForm`) e no fim de cada post. A inscrição tem confirmação por e-mail (double opt-in), descadastro em um clique e a lista fica no D1 (`worker/newsletter.js`, tabela `subscribers`). O e-mail de confirmação sai do próprio Worker, pelo SMTP da Oracle (`worker/smtp.js`); o formulário só aparece onde o Worker responde `/api/newsletter/status`.
+
+Ligar em produção (uma vez):
+```bash
+bash scripts/newsletter/set-secrets.sh   # grava SMTP_USER e SMTP_PASS no Worker (lê ~/.config/newsletter/smtp.env)
+```
+O visual do e-mail semanal está em `scripts/newsletter/template.mjs` (tema claro/escuro e as 7 cores do site, sorteadas por semana); veja as prévias com `node scripts/newsletter/preview.mjs <pasta>`.
+
 ## 🛠 Tecnologias Utilizadas
 - **[React](https://react.dev/)** — Biblioteca JavaScript para interfaces declarativas.
 - **[TypeScript](https://www.typescriptlang.org/)** — Tipagem estática para maior robustez.

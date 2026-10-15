@@ -2,6 +2,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { ArrowRight, Search } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import BlogShell from '@/components/blog/BlogShell';
+import NewsletterForm from '@/components/blog/NewsletterForm';
 import { localize, posts as originals } from '@/lib/blog/catalog';
 import { collectTags, filterByTag, formatDay, groupByYear } from '@/lib/blog/list';
 import { BLOG_TITLE } from '@/lib/blog/page';
@@ -100,6 +101,8 @@ const Blog = () => {
             </ul>
           </section>
         ))}
+
+        <NewsletterForm />
       </main>
     </BlogShell>
   );

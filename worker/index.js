@@ -3,6 +3,7 @@
 //   - http:// and www. -> 301 to https://devandreotti.com (same path and query)
 //   - /api/gh/*        -> cached GitHub lookups for the browser (see github.js)
 //   - /api/likes/*     -> likes on blog posts, one per visitor (see likes.js)
+//   - /api/newsletter/* -> newsletter sign-up, confirmation and unsubscribe (see newsletter.js)
 //   - /e/<event>       -> 204: the click beacons from src/lib/track.ts. Umami
 //     records the clicks (when configured), so the beacon only needs a quiet answer.
 //   - MAINTENANCE=1, or the static files failing -> 503 with public/offline.html
@@ -13,6 +14,7 @@
 
 import { handleGithubApi } from './github.js';
 import { handleLikes, publishedSlugs } from './likes.js';
+import { handleNewsletter } from './newsletter.js';
 
 const APEX = 'devandreotti.com';
 // The only paths that are pages; any other HTML is the one-page app's fallback for an unknown route.
@@ -52,6 +54,7 @@ export default {
       return Response.redirect(url.toString(), 301);
     }
     if (url.pathname.startsWith('/api/likes/')) return handleLikes(request, env);
+    if (url.pathname.startsWith('/api/newsletter/')) return handleNewsletter(request, env);
     if (url.pathname.startsWith('/api/')) return handleGithubApi(request, env, ctx);
     if (url.pathname.startsWith('/e/')) {
       return new Response(null, { status: 204, headers: { 'cache-control': 'no-store' } });
