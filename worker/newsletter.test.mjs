@@ -158,6 +158,12 @@ describe('newsletter', () => {
     const t = confirmUrl().searchParams.get('t');
     const ok = await run(get(`confirm?t=${t}&l=pt`));
     expect(ok.status).toBe(200);
+    // the page that carries a token in its URL is not indexed, not cached, not framed, and does not leak that URL
+    expect(ok.headers.get('content-security-policy')).toContain("default-src 'none'");
+    expect(ok.headers.get('content-security-policy')).toContain("frame-ancestors 'none'");
+    expect(ok.headers.get('referrer-policy')).toBe('no-referrer');
+    expect(ok.headers.get('cache-control')).toBe('no-store');
+    expect(ok.headers.get('x-robots-tag')).toBe('noindex');
     expect(await ok.text()).toContain('Inscrição confirmada');
     expect(row('leitor@example.com')).toMatchObject({ status: 'active', confirmed_at: NOW });
     expect(await (await run(get(`confirm?t=${t}&l=en`))).text()).toContain('already on the list');

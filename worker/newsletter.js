@@ -68,7 +68,9 @@ a.link{margin-left:14px;color:var(--fg2);font-size:14px}
 </style></head><body><main><h1>${esc(title)}</h1><p>${esc(text)}</p>
 ${form ? `<form method="post" action="${esc(form)}"><button type="submit">${esc(c.unsubButton)}</button><a class="link" href="/">${esc(c.home)}</a></form>` : `<a class="btn" href="/">${esc(c.home)}</a>`}
 </main></body></html>`;
-  return new Response(html, { status, headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store', 'x-robots-tag': 'noindex' } });
+  // this page has an inline <style> and one form, nothing else: the policy says exactly that
+  const csp = "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'";
+  return new Response(html, { status, headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store', 'x-robots-tag': 'noindex', 'content-security-policy': csp, 'referrer-policy': 'no-referrer' } });
 }
 
 const token = () => {
