@@ -4,6 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import BlogShell from '@/components/blog/BlogShell';
 import LikeBar from '@/components/blog/LikeBar';
+import NewsletterForm from '@/components/blog/NewsletterForm';
 import { findPost, hasTranslation, loadPostBody, localize, posts } from '@/lib/blog/catalog';
 import { formatDay, neighbours } from '@/lib/blog/list';
 import type { TocEntry } from '@/lib/blog/markdown';
@@ -74,6 +75,7 @@ const BlogPost = () => {
           {body.status === 'error' && <p className="blog-empty">{b.loadError}</p>}
 
           <LikeBar slug={post.slug} title={shown.title} />
+          <NewsletterForm />
 
           {(newer || older) && (
             <nav className="post-nav" aria-label={b.pageTitle}>

@@ -183,6 +183,23 @@ export interface Strings {
     langNote: string;
     translatedNote: string;
     ptOnly: string;
+    newsletter: {
+      kicker: string;
+      title: string;
+      text: string;
+      label: string;
+      placeholder: string;
+      button: string;
+      sending: string;
+      sent: string;
+      invalid: string;
+      error: string;
+      tooMany: string;
+      privacy: string;
+      privacyLink: string;
+      langLabel: string;
+      check: string;
+    };
     searchLabel: string;
     searchPlaceholder: string;
     searchButton: string;
