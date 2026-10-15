@@ -44,34 +44,56 @@ async function offlinePage(request, env) {
   return new Response(body, { status: 503, headers: { 'content-type': type, 'retry-after': '120', 'cache-control': 'no-store' } });
 }
 
+// What public/_headers puts on the static files, for the answers this Worker makes itself
+// (API, errors, the offline page, redirects): they don't pass through the assets' headers.
+const BASELINE = {
+  'x-content-type-options': 'nosniff',
+  'referrer-policy': 'strict-origin-when-cross-origin',
+  'permissions-policy': 'camera=(), microphone=(), geolocation=()',
+  'x-frame-options': 'SAMEORIGIN',
+  'strict-transport-security': 'max-age=31536000',
+  'cross-origin-opener-policy': 'same-origin'
+};
+
+function hardened(res) {
+  const out = new Response(res.body, res); // a copy whose headers can change (a redirect's can't)
+  for (const [name, value] of Object.entries(BASELINE)) if (!out.headers.has(name)) out.headers.set(name, value);
+  return out;
+}
+
 export default {
   async fetch(request, env, ctx) {
-    const url = new URL(request.url);
-    const onPreview = url.hostname.endsWith('.workers.dev');
-    if (!onPreview && (url.protocol === 'http:' || url.hostname !== APEX)) {
-      url.protocol = 'https:';
-      url.hostname = APEX;
-      return Response.redirect(url.toString(), 301);
-    }
-    if (url.pathname.startsWith('/api/likes/')) return handleLikes(request, env);
-    if (url.pathname.startsWith('/api/newsletter/')) return handleNewsletter(request, env);
-    if (url.pathname.startsWith('/api/')) return handleGithubApi(request, env, ctx);
-    if (url.pathname.startsWith('/e/')) {
-      return new Response(null, { status: 204, headers: { 'cache-control': 'no-store' } });
-    }
-    if (env.MAINTENANCE === '1') return offlinePage(request, env);
-
-    let res;
-    try {
-      res = await env.ASSETS.fetch(request);
-    } catch {
-      return offlinePage(request, env);
-    }
-    if (res.status >= 500) return offlinePage(request, env);
-    const html = (res.headers.get('content-type') || '').includes('text/html');
-    if (res.status === 200 && html && !(await isPage(request, env, url.pathname))) {
-      return new Response(res.body, { status: 404, headers: res.headers });
-    }
-    return res;
+    return hardened(await route(request, env, ctx));
   }
 };
+
+async function route(request, env, ctx) {
+  const url = new URL(request.url);
+  const onPreview = url.hostname.endsWith('.workers.dev');
+  if (!onPreview && (url.protocol === 'http:' || url.hostname !== APEX)) {
+    url.protocol = 'https:';
+    url.hostname = APEX;
+    return Response.redirect(url.toString(), 301);
+  }
+  if (url.pathname.startsWith('/api/likes/')) return handleLikes(request, env);
+  if (url.pathname.startsWith('/api/newsletter/')) return handleNewsletter(request, env);
+  if (url.pathname.startsWith('/api/')) return handleGithubApi(request, env, ctx);
+  if (url.pathname.startsWith('/e/')) {
+    return new Response(null, { status: 204, headers: { 'cache-control': 'no-store' } });
+  }
+  if (env.MAINTENANCE === '1') return offlinePage(request, env);
+
+  let res;
+  try {
+    res = await env.ASSETS.fetch(request);
+  } catch {
+    return offlinePage(request, env);
+  }
+  if (res.status >= 500) return offlinePage(request, env);
+  const html = (res.headers.get('content-type') || '').includes('text/html');
+  if (res.status === 200 && html && !(await isPage(request, env, url.pathname))) {
+    return new Response(res.body, { status: 404, headers: res.headers });
+  }
+  return res;
+
+}

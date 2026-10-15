@@ -13,6 +13,50 @@ html {
      this doesn't fight that preference. */
   scroll-behavior: smooth;
   scroll-padding-top: 64px;
+  /* Page scrollbar: thin, no arrows, thumb in the theme accent. The accent
+     comes from --accent-rgb, which ThemeContext sets on this element for
+     every hue and mode, so the bar follows theme and color changes. The
+     fallback only shows before React has run. Firefox reads the standard
+     properties; Chromium uses the ::-webkit-scrollbar rules below. */
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--accent-rgb, 59 130 246) / 0.45) transparent;
+}
+
+html::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+html::-webkit-scrollbar-button {
+  display: none;
+}
+
+html::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: rgb(var(--accent-rgb, 59 130 246) / 0.45);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: background-color 0.25s ease;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--accent-rgb, 59 130 246) / 0.7);
+  background-clip: padding-box;
+}
+
+html::-webkit-scrollbar-thumb:active {
+  background: rgb(var(--accent-rgb, 59 130 246) / 0.85);
+  background-clip: padding-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html::-webkit-scrollbar-thumb {
+    transition: none;
+  }
 }
 
 /* Mode tokens: text/dot stay simple light/dark. Everything that should carry
@@ -23,6 +67,8 @@ html {
    crossfade a color/theme change — see that component for why). */
 @layer base {
   :root {
+    /* Native controls (scrollbars, form fields) follow the theme class. */
+    color-scheme: light;
     --fg-1: #131316;
     --fg-2: rgba(19, 19, 22, 0.7);
     /* fg-3/fg-4 are tuned to clear WCAG AA (4.5:1) against --bg at normal text sizes,
@@ -51,6 +97,7 @@ html {
   }
 
   .dark {
+    color-scheme: dark;
     --fg-1: #f5f5f5;
     --fg-2: rgba(255, 255, 255, 0.7);
     --fg-3: rgba(255, 255, 255, 0.56);

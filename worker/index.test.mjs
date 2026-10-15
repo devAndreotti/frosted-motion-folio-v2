@@ -50,3 +50,26 @@ describe('worker', () => {
     expect(await res.text()).toContain('saiu do ar');
   });
 });
+
+describe('worker security headers', () => {
+  const BASELINE = ['x-content-type-options', 'referrer-policy', 'permissions-policy', 'x-frame-options', 'strict-transport-security', 'cross-origin-opener-policy'];
+  const expectBaseline = (res) => {
+    for (const name of BASELINE) expect(res.headers.get(name), name).toBeTruthy();
+    expect(res.headers.get('x-content-type-options')).toBe('nosniff');
+    expect(res.headers.get('strict-transport-security')).toMatch(/max-age=\d{7,}/);
+  };
+
+  it('puts them on what the Worker answers itself: beacons, redirects and the offline page', async () => {
+    expectBaseline(await worker.fetch(get('/e/click'), { ASSETS: assets() }));
+    expectBaseline(await worker.fetch(new Request('http://devandreotti.com/'), { ASSETS: assets() }));
+    expectBaseline(await worker.fetch(get('/'), { ASSETS: assets(), MAINTENANCE: '1' }));
+    expectBaseline(await worker.fetch(get('/'), { ASSETS: assets({ fail: true }) }));
+  });
+
+  it('adds them to pages and files from the assets too, without overriding what is already set', async () => {
+    const page = await worker.fetch(get('/'), { ASSETS: assets() });
+    expectBaseline(page);
+    const custom = { fetch: async () => new Response('x', { headers: { 'x-frame-options': 'DENY' } }) };
+    expect((await worker.fetch(get('/profile/blue.webp'), { ASSETS: custom })).headers.get('x-frame-options')).toBe('DENY');
+  });
+});
