@@ -23,13 +23,10 @@
     { "pattern": "devandreotti.com", "custom_domain": true },
     { "pattern": "www.devandreotti.com", "custom_domain": true }
   ],
-  // Likes on blog posts (worker/likes.js) need a D1 database. Until this block is uncommented the
-  // like button stays hidden. One-time setup (from the repository root):
-  //   npx wrangler d1 create devandreotti-likes          -> put the database_id it prints below, uncomment
-  //   npx wrangler d1 migrations apply devandreotti-likes --remote   (creates the likes table)
-  //   npx wrangler secret put LIKES_SALT                  -> any long random string (optional, recommended)
-  // "d1_databases": [
-  //   { "binding": "DB", "database_name": "devandreotti-likes", "database_id": "<id>", "migrations_dir": "worker/migrations" }
-  // ],
+  // Likes on blog posts (worker/likes.js) live in this D1 database (table from worker/migrations/0001_likes.sql).
+  // Optional hardening: npx wrangler secret put LIKES_SALT   -> any long random string (the code has a default).
+  "d1_databases": [
+    { "binding": "DB", "database_name": "devandreotti-likes", "database_id": "a9aa09d8-fec5-4c60-8e28-da5a44c33a6e", "migrations_dir": "worker/migrations" }
+  ],
   "observability": { "enabled": true }
 }
