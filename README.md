@@ -48,6 +48,7 @@ npm run novo-post -- "Título do post" --publicar # já publicado (draft: false)
 git add -A && git commit -m "post: título" && git push
 ```
 
+- **Modelo com todos os recursos** (títulos, listas, bash, tabela, imagem, citação): [código-fonte](./src/content/posts/2026-10-15-um-blog-publicado-com-git-push.md) e [como fica publicado](https://devandreotti.com/blog/um-blog-publicado-com-git-push/). Imagens: coloque em `public/blog/<slug>/` e use `![descrição](/blog/<slug>/arquivo.jpg)`.
 - O endereço do post é o nome do arquivo sem a data: `2026-10-15-meu-post.md` vira `/blog/meu-post/`.
 - `draft: true` só aparece no `npm run dev`; o build não publica nada do rascunho.
 - Curtidas: usam o banco D1 da Cloudflare (`wrangler.jsonc`, bloco `d1_databases`). Sem ele o botão fica escondido.
