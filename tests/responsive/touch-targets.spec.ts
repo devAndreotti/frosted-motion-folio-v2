@@ -31,6 +31,8 @@ test("color swatch picker dots meet the minimum touch-target size in the mobile 
 
   await page.goto("");
   await page.getByRole("button", { name: "Abrir menu" }).click();
+  // the sheet slides in (v2-popin): measured mid-slide, a 24px dot can read 23.99997px
+  await page.getByTestId("mobile-menu").evaluate((menu) => Promise.all(menu.getAnimations({ subtree: true }).map((a) => a.finished)));
 
   const dots = page.getByTestId("mobile-menu").getByRole("button", { name: /^Cor de destaque:/ });
   const count = await dots.count();

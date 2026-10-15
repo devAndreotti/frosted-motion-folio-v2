@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { boneyardPlugin } from "boneyard-js/vite";
 import { buildBootPalette } from "./src/lib/bootPalette";
+import { blogPlugin } from "./vite-plugins/blog";
 
 // Inlines the hue x mode palette into the boot loader script in index.html,
 // so the loader paints in the visitor's saved colors before any bundle loads.
@@ -20,6 +21,7 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     bootPalette(),
+    blogPlugin(),
     mode === "development" && boneyardPlugin(),
   ].filter(Boolean),
   resolve: {

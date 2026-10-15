@@ -10,6 +10,7 @@ import { useSectionKeyboardNav } from '@/hooks/useSectionKeyboardNav';
 const NowSection = lazy(() => import('@/components/NowSection'));
 const Skills = lazy(() => import('@/components/Skills'));
 const GithubActivityFeed = lazy(() => import('@/components/GithubActivityFeed'));
+const BlogTeaser = lazy(() => import('@/components/BlogTeaser'));
 const Timeline = lazy(() => import('@/components/Timeline'));
 const Footer = lazy(() => import('@/components/Footer'));
 
@@ -49,6 +50,9 @@ const Index = () => {
             <NowSection />
           </LazySection>
           <Projects />
+          <LazySection id="blog" minHeight={0}>
+            <BlogTeaser />
+          </LazySection>
           <LazySection id="skills" minHeight={920}>
             <Skills />
           </LazySection>

@@ -29,6 +29,7 @@ export interface Strings {
     skills: string;
     journey: string;
     contact: string;
+    blog: string;
     reposLabel: (count: number) => string;
     themeToggleAria: string;
     langToggleAria: string;
@@ -170,6 +171,42 @@ export interface Strings {
     suggest: string;
     sections: Record<'projects' | 'now' | 'contact', { title: string; note: string }>;
     broken: string;
+  };
+  blog: {
+    sectionLabel: string;
+    teaserTitle: string;
+    teaserSub: string;
+    seeAll: string;
+    pageTitle: string;
+    pageLead: string;
+    /** Posts are written in one language; said once on the list in the other one. */
+    langNote: string;
+    searchLabel: string;
+    searchPlaceholder: string;
+    searchButton: string;
+    searchHint: string;
+    tagsLabel: string;
+    allTags: string;
+    latest: string;
+    readPost: string;
+    postsCount: (count: number) => string;
+    empty: string;
+    emptyTag: string;
+    minutes: (count: number) => string;
+    back: string;
+    onThisPage: string;
+    helpful: string;
+    like: string;
+    liked: string;
+    likeHint: string;
+    likedHint: string;
+    likeError: string;
+    copyLink: string;
+    linkCopied: string;
+    replyEmail: string;
+    newer: string;
+    older: string;
+    loadError: string;
   };
   colorPicker: {
     hueLabel: (label: string) => string;
