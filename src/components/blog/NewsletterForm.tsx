@@ -1,23 +1,20 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail } from 'lucide-react';
-import { useLanguage, type Lang } from '@/contexts/LanguageContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { useNewsletter } from '@/hooks/useNewsletter';
 import { loadTurnstile } from '@/lib/turnstile';
 
 /** The weekly digest sign-up: one field, double opt-in by e-mail. Hidden where this host can't send it. */
 const NewsletterForm = () => {
-  const { lang, t } = useLanguage();
+  const { lang, setLang, t } = useLanguage();
   const n = t.blog.newsletter;
   const { status, siteKey, state, submit } = useNewsletter();
   const [email, setEmail] = useState('');
   const [website, setWebsite] = useState('');
-  const [picked, setPicked] = useState<Lang | null>(null);
   const [token, setToken] = useState('');
   const widget = useRef<HTMLDivElement>(null);
   const widgetId = useRef<string | undefined>(undefined);
-  // the language of what they receive: the site's, unless they choose the other one
-  const choice = picked ?? lang;
 
   useEffect(() => {
     if (status !== 'ready' || !siteKey || !widget.current) return;
@@ -56,7 +53,7 @@ const NewsletterForm = () => {
     event.preventDefault();
     if (state === 'sending' || state === 'sent') return;
     if (waitingForCheck) return; // the button is off too: Enter in the field must not skip the check
-    void submit({ email: email.trim(), lang: choice, website, turnstile: token });
+    void submit({ email: email.trim(), lang, website, turnstile: token });
   };
 
   const message = { sent: n.sent, invalid: n.invalid, error: n.error, check: n.check, 'too-many': n.tooMany, sending: '', idle: '' }[state];
@@ -100,9 +97,10 @@ const NewsletterForm = () => {
           </button>
           <fieldset className="nws-lang">
             <legend>{n.langLabel}</legend>
+            {/* the same choice as the site's PT | EN: picking one here switches the whole page, so the reader sees it before typing */}
             {(['pt', 'en'] as const).map((code) => (
-              <label key={code} className={choice === code ? 'on' : ''}>
-                <input type="radio" name="newsletter-lang" value={code} checked={choice === code} onChange={() => setPicked(code)} />
+              <label key={code} className={lang === code ? 'on' : ''}>
+                <input type="radio" name="newsletter-lang" value={code} checked={lang === code} onChange={() => setLang(code)} />
                 {code.toUpperCase()}
               </label>
             ))}

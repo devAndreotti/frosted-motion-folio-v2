@@ -35,11 +35,14 @@
 .dot { position: relative; width: 7px; height: 7px; border-radius: 99px; background: var(--ok); flex: none; }
 .acc-w { position: relative; }
 .acc-dot { width: 14px; height: 14px; border-radius: 99px; box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent) 30%, transparent); }
-.np.lang { padding: 3px; gap: 2px; cursor: default; }
+.np.lang { display: inline-grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); padding: 3px; gap: 2px; cursor: default; }
 /* the group is not a button: its tap-area extension would sit on top of PT/EN and swallow the clicks */
 .np.lang::before { content: none; }
-.lg { height: 26px; min-width: 30px; padding: 0 8px; border: 0; border-radius: 999px; background: transparent; color: var(--fg-2); font: 600 11.5px/1 var(--font-mono); cursor: pointer; }
-.lg.on { background: var(--accent); color: var(--accent-text); }
+/* the accent pill slides under the active option (same 0.2s as the .np buttons); the labels stay above it */
+.np.lang::after { content: ''; position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 4px); border-radius: 999px; background: var(--accent); transition: transform 0.2s; pointer-events: none; }
+.np.lang[data-lang='en']::after { transform: translateX(calc(100% + 2px)); }
+.lg { position: relative; z-index: 1; height: 26px; min-width: 30px; padding: 0 8px; border: 0; border-radius: 999px; background: transparent; color: var(--fg-2); font: 600 11.5px/1 var(--font-mono); cursor: pointer; transition: color 0.2s; }
+.lg.on { color: var(--accent-text); }
 .pop { position: absolute; right: 0; top: 46px; z-index: 5; display: flex; gap: 7px; padding: 7px; border-radius: 999px; animation: v2-popin 0.25s cubic-bezier(0.2, 0.8, 0.2, 1); }
 .sw { position: relative; width: 24px; height: 24px; border: 0; border-radius: 99px; padding: 0; cursor: pointer; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25); flex: none; }
 .sw::before { content: ''; position: absolute; inset: -4px; }
@@ -498,7 +501,7 @@ button.also-i { cursor: pointer; }
   .dl a { grid-template-columns: 40px minmax(0, 1fr) 18px; column-gap: 14px; row-gap: 3px; padding: 10px 0; }
   .dl-i { grid-row: 1 / 3; }
   .dl-t { grid-column: 2; }
-  .dl-h { grid-column: 2; grid-row: 2; text-align: left; white-space: normal; line-height: 1.35; }
+  .dl-h { grid-column: 2; grid-row: 2; text-align: left; white-space: normal; overflow-wrap: anywhere; line-height: 1.35; }
   .dl a > svg { grid-column: 3; grid-row: 1 / 3; }
 }
 @media (max-width: 350px) {
@@ -509,6 +512,7 @@ button.also-i { cursor: pointer; }
 @media (hover: none) { .thumb { display: none; } }
 @media (prefers-reduced-motion: reduce) {
   .thumb-shot img { transition: none; }
+  .np.lang::after, .lg { transition: none; }
   .row:hover .thumb-shot img { transform: none; }
   .rv { animation: none; }
   .pulse::after { animation: none; }
