@@ -1,4 +1,4 @@
-import { useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { ArrowUpRight, Check, Ellipsis, Lock, Tv, X } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -7,6 +7,7 @@ import { contact } from '@/data/personal';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { useScrollLock } from '@/hooks/useScrollLock';
 import { track } from '@/lib/track';
+import { EGG_EVENTS } from '@/lib/eggs';
 import MemoryTvDialog from './MemoryTvDialog';
 import type { Lang } from '@/lib/i18n';
 
@@ -192,6 +193,16 @@ const NowSection = () => {
   const { hue } = useTheme();
   const [openItem, setOpenItem] = useState<AlsoItem | null>(null);
   const [tvProject, setTvProject] = useState<NowProject | null>(null);
+
+  // The TV-typing easter egg (useSecretKeys) opens the same dialog as the Memory Apartment card.
+  useEffect(() => {
+    const openTv = () => {
+      const memory = NOW_PROJECTS.find((p) => p.tv);
+      if (memory) setTvProject(memory);
+    };
+    window.addEventListener(EGG_EVENTS.openTv, openTv);
+    return () => window.removeEventListener(EGG_EVENTS.openTv, openTv);
+  }, []);
 
   return (
     <section className="wrap sec" aria-labelledby="h-now">
