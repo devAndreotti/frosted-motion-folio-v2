@@ -33,7 +33,9 @@ function events() {
 
 /** Congela o relógio, mocka o GitHub e fixa o gerador aleatório antes da primeira navegação. */
 export async function stabilize(page: Page) {
-  await page.clock.setFixedTime(FIXED_NOW);
+  // Relógio falso parado: timers e requestAnimationFrame (rotação de cargos, marquee) só andam com runFor.
+  await page.clock.install({ time: new Date(FIXED_NOW.getTime() - 60_000) });
+  await page.clock.pauseAt(FIXED_NOW);
   await page.addInitScript(() => {
     let seed = 42;
     Math.random = () => {
@@ -48,18 +50,19 @@ export async function stabilize(page: Page) {
   });
 }
 
-/** Espera a rede parar, carrega as seções preguiçosas rolando a página e volta ao topo. */
+/** Espera a rede parar, rola a página (carrega as seções preguiçosas) e deixa as entradas terminarem. */
 export async function settle(page: Page) {
   await page.waitForLoadState("networkidle");
-  await page.evaluate(async () => {
-    const step = Math.max(400, window.innerHeight);
-    for (let y = 0; y < document.body.scrollHeight; y += step) {
-      window.scrollTo(0, y);
-      await new Promise((resolve) => setTimeout(resolve, 80));
-    }
-    window.scrollTo(0, 0);
-    await document.fonts.ready;
-  });
+  const height = await page.evaluate(() => document.body.scrollHeight);
+  const step = 400;
+  for (let y = 0; y < height; y += step) {
+    await page.evaluate((top) => window.scrollTo(0, top), y);
+    await page.clock.runFor(120);
+  }
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.clock.runFor(3000);
   await page.waitForLoadState("networkidle");
+  await page.evaluate(() => document.fonts.ready);
+  await page.clock.runFor(500);
   await page.mouse.move(0, 0);
 }
