@@ -41,8 +41,8 @@ const Navigation = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [glitchText, setGlitchText] = useState<string | null>(null);
   const [activeId, setActiveId] = useState('header');
-  const holdTimer = useRef<ReturnType<typeof setTimeout>>();
-  const glitchInterval = useRef<ReturnType<typeof setInterval>>();
+  const holdTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const glitchInterval = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
   // Three quick clicks on the RA logo toggle debug mode (components/DebugOverlay.tsx).
   const raTripleClick = useRef(createTripleClickDetector());
 
