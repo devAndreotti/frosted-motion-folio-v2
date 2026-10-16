@@ -21,6 +21,8 @@ import './styles/img-load.css'
 import './styles/lite.css'
 import './styles/haunted.css'
 import './styles/print.css'
+// Last on purpose: the shared hover, focus and press states win over the per-component rules above.
+import './styles/interactive.css'
 
 trackImageLoading();
 initLiteMode();
