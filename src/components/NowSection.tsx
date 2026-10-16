@@ -1,5 +1,5 @@
 import { useRef, useState, type CSSProperties } from 'react';
-import { ArrowUpRight, Check, Ellipsis, Lock, X } from 'lucide-react';
+import { ArrowUpRight, Check, Ellipsis, Lock, Tv, X } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { GATE_CHECKS, NOW_ALSO, NOW_PROJECTS, type AlsoDetails, type AlsoItem, type NowProject } from '@/data/now';
@@ -7,6 +7,7 @@ import { contact } from '@/data/personal';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { useScrollLock } from '@/hooks/useScrollLock';
 import { track } from '@/lib/track';
+import MemoryTvDialog from './MemoryTvDialog';
 import type { Lang } from '@/lib/i18n';
 
 /** Quality Gate has no screenshot worth showing -- its card shows the checks it runs, which are this repo's own. */
@@ -22,16 +23,10 @@ const GateVisual = () => (
   </span>
 );
 
-const ProjectCard = ({ p, lang }: { p: NowProject; lang: Lang }) => {
+const ProjectCard = ({ p, lang, onOpenTv }: { p: NowProject; lang: Lang; onOpenTv: () => void }) => {
   const { t } = useLanguage();
-  return (
-    <a
-      className="nc glass"
-      href={p.href}
-      target="_blank"
-      rel="noopener noreferrer"
-      onClick={() => track(`now-open-${p.id}`)}
-    >
+  const body = (
+    <>
       {p.image ? (
         <span className={`nc-img${p.contain ? ' contain' : ''}`}>
           <img src={p.image} alt="" loading="lazy" />
@@ -54,8 +49,8 @@ const ProjectCard = ({ p, lang }: { p: NowProject; lang: Lang }) => {
           ))}
         </span>
         <span className="nc-link">
-          {p.linkLabel}
-          <ArrowUpRight className="ic s" />
+          {p.tv ? t.now.tv.open : p.linkLabel}
+          {p.tv ? <Tv className="ic s" /> : <ArrowUpRight className="ic s" />}
           {p.privateCode && (
             <span className="nc-priv">
               <Lock className="ic s" />
@@ -64,6 +59,18 @@ const ProjectCard = ({ p, lang }: { p: NowProject; lang: Lang }) => {
           )}
         </span>
       </span>
+    </>
+  );
+  if (p.tv) {
+    return (
+      <button type="button" className="nc glass" onClick={() => { track(`now-open-${p.id}`); onOpenTv(); }}>
+        {body}
+      </button>
+    );
+  }
+  return (
+    <a className="nc glass" href={p.href} target="_blank" rel="noopener noreferrer" onClick={() => track(`now-open-${p.id}`)}>
+      {body}
     </a>
   );
 };
@@ -184,6 +191,7 @@ const NowSection = () => {
   const { lang, t } = useLanguage();
   const { hue } = useTheme();
   const [openItem, setOpenItem] = useState<AlsoItem | null>(null);
+  const [tvProject, setTvProject] = useState<NowProject | null>(null);
 
   return (
     <section className="wrap sec" aria-labelledby="h-now">
@@ -214,7 +222,7 @@ const NowSection = () => {
 
         <div className="now-grid">
           {NOW_PROJECTS.map((p) => (
-            <ProjectCard key={p.id} p={p} lang={lang} />
+            <ProjectCard key={p.id} p={p} lang={lang} onOpenTv={() => setTvProject(p)} />
           ))}
         </div>
       </div>
@@ -241,6 +249,7 @@ const NowSection = () => {
         </ul>
       </div>
 
+      {tvProject && <MemoryTvDialog project={tvProject} onClose={() => setTvProject(null)} />}
       {openItem?.details && <AlsoCard item={openItem} details={openItem.details} onClose={() => setOpenItem(null)} />}
     </section>
   );
