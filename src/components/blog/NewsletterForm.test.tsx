@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { LanguageProvider } from '@/contexts/LanguageContext';
+import { LanguageProvider, useLanguage } from '@/contexts/LanguageContext';
 import NewsletterForm from './NewsletterForm';
 
 const json = (status: number, body: unknown = {}) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
@@ -65,22 +65,52 @@ describe('NewsletterForm', () => {
     expect(screen.queryByRole('button', { name: 'Inscrever' })).toBeNull();
   });
 
-  it('lets the reader choose the language of the e-mails, whatever the site is in', async () => {
+  it('switches the site to the language picked here, so the reader sees it before typing', async () => {
     const calls = stubFetch(ON);
     renderForm();
-    fireEvent.change(await screen.findByLabelText('Seu e-mail'), { target: { value: 'leitor@example.com' } });
-    expect((screen.getByLabelText('PT') as HTMLInputElement).checked).toBe(true);
-    fireEvent.click(screen.getByLabelText('EN'));
-    fireEvent.click(screen.getByRole('button', { name: 'Inscrever' }));
-    await screen.findByText(/Enviei um e-mail de confirmação/);
+    fireEvent.click(await screen.findByLabelText('EN'));
+    expect(await screen.findByRole('heading', { name: 'Get the weekly digest' })).toBeTruthy();
+    expect(localStorage.getItem('lang.picked')).toBe('en');
+    fireEvent.change(screen.getByLabelText('Your email'), { target: { value: 'leitor@example.com' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Subscribe' }));
+    await screen.findByText(/Almost there/);
     expect(bodyOf(calls).lang).toBe('en');
   });
 
-  it('links to the privacy policy', async () => {
+  it('follows the site when its language is switched elsewhere, not only here', async () => {
+    const calls = stubFetch(ON);
+    const SiteSwitch = () => {
+      const { setLang } = useLanguage();
+      return (
+        <button type="button" onClick={() => setLang('en')}>
+          site EN
+        </button>
+      );
+    };
+    render(
+      <LanguageProvider>
+        <MemoryRouter>
+          <SiteSwitch />
+          <NewsletterForm />
+        </MemoryRouter>
+      </LanguageProvider>
+    );
+    fireEvent.click(await screen.findByRole('button', { name: 'site EN' }));
+    expect(((await screen.findByLabelText('EN')) as HTMLInputElement).checked).toBe(true);
+    fireEvent.change(screen.getByLabelText('Your email'), { target: { value: 'leitor@example.com' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Subscribe' }));
+    await screen.findByText(/Almost there/);
+    expect(bodyOf(calls).lang).toBe('en');
+  });
+
+  it('links to the privacy policy, on a line of its own under the note', async () => {
     stubFetch(ON);
     renderForm();
     const link = await screen.findByRole('link', { name: 'Política de privacidade' });
     expect(link.getAttribute('href')).toBe('/privacidade/');
+    expect(link.textContent).toBe('Política de privacidade');
+    expect(link.parentElement?.className).toBe('nws-fine');
+    expect(link.parentElement?.textContent).toBe('Uso o seu e-mail só para a newsletter. Política de privacidade');
   });
 
   it('speaks English to an English visitor, and starts on English', async () => {
