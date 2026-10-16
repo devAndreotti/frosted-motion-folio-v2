@@ -16,6 +16,7 @@ const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const Uses = lazy(() => import("./pages/Uses"));
+const Novidades = lazy(() => import("./pages/Novidades"));
 
 const SecretKeys = () => {
   useSecretKeys();
@@ -37,6 +38,7 @@ const App = () => (
           <Route path="/blog/:slug" element={<Suspense fallback={null}><BlogPost /></Suspense>} />
           <Route path="/privacidade" element={<Suspense fallback={null}><Privacy /></Suspense>} />
           <Route path="/uses" element={<Suspense fallback={null}><Uses /></Suspense>} />
+          <Route path="/novidades" element={<Suspense fallback={null}><Novidades /></Suspense>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<Suspense fallback={null}><NotFound /></Suspense>} />
         </Routes>

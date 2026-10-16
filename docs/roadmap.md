@@ -192,3 +192,5 @@ Ordem sugerida: ~~10~~ (feito), 12, 13, 14 (base de qualidade, pouco risco) → 
 **O que fazer.** Página `/novidades` e um selo discreto no rodapé ("Novo") com a lista das mudanças visíveis ao visitante, em PT e EN, a partir de um arquivo de dados (`src/data/changelog.ts`) mantido junto com os PRs; opcionalmente alimentar o RSS. Não confundir com o `CHANGELOG.md` do kit de automação, que é interno.
 
 **Pronto quando.** A página lista as entradas por data, o selo some depois de visto (`localStorage`) e um teste garante que as entradas estão ordenadas.
+
+**Status: feito (#87).** `/novidades` lista as entradas de `src/data/changelog.ts` por data, em PT e EN. O selo "Novo" aparece nos rodapés até a página ser aberta (`novidades.visto` no `localStorage`, com try/catch). Testes garantem a ordem das datas, o texto nas duas línguas e o selo. Fora desta entrega: RSS.

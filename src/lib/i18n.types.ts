@@ -1,5 +1,6 @@
 import type { BlogStrings } from './i18n.types.blog';
 import type { NowStrings } from './i18n.types.now';
+import type { NovidadesStrings } from './i18n.types.novidades';
 
 export type Lang = 'pt' | 'en';
 
@@ -80,6 +81,7 @@ export interface Strings {
     alsoKnown: string;
   };
   now: NowStrings;
+  novidades: NovidadesStrings;
   projects: {
     sectionLabel: string;
     title: string;
