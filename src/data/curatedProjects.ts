@@ -162,17 +162,17 @@ const LIST_META: CurationMeta[] = [
     cat: 'mobile',
     tint: '#f97316',
     description: {
-      pt: 'Aplicação móvel desenvolvida em React Native, Expo e Supabase para gerenciamento de dados. Criada como parte de um curso da Rocketseat, oferece uma experiência de usuário completa e funcional em dispositivos Android e iOS.',
-      en: 'A mobile app built with React Native, Expo, and Supabase for data management. Created as part of a Rocketseat course, it offers a complete, functional user experience on Android and iOS.',
+      pt: 'App mobile de receitas feito em React Native, Expo e Supabase: você escolhe os ingredientes que tem em casa e vê as receitas possíveis, com o modo de preparo. Criado em um curso da Rocketseat, roda em Android e iOS.',
+      en: 'A recipe mobile app built with React Native, Expo, and Supabase: you pick the ingredients you have at home and see the recipes you can make, with the preparation steps. Created in a Rocketseat course, it runs on Android and iOS.',
     },
-    tagline: { pt: 'Receitas no celular, com Expo e Supabase.', en: 'Recipes on your phone, with Expo and Supabase.' },
+    tagline: { pt: 'Escolha os ingredientes, ache a receita.', en: 'Pick the ingredients, find the recipe.' },
     long: {
-      pt: 'App mobile de receitas construído durante um curso da Rocketseat, com CRUD completo via Supabase e experiência nativa em Android e iOS via Expo.',
-      en: 'A mobile recipe app built during a Rocketseat course, with full CRUD via Supabase and a native experience on Android and iOS via Expo.',
+      pt: 'App mobile construído durante um curso da Rocketseat: você marca os ingredientes que tem em casa e o app busca no Supabase as receitas que dá para fazer, com ingredientes e modo de preparo passo a passo. Roda em Android e iOS via Expo.',
+      en: 'A mobile app built during a Rocketseat course: you tick the ingredients you have at home and the app queries Supabase for the recipes you can make, with ingredients and step-by-step preparation. It runs on Android and iOS through Expo.',
     },
     points: {
-      pt: ['CRUD completo de receitas com Supabase.', 'Build e testes via Expo em Android e iOS.', 'Navegação nativa com React Navigation.'],
-      en: ['Full recipe CRUD with Supabase.', 'Build and testing via Expo on Android and iOS.', 'Native navigation with React Navigation.'],
+      pt: ['Busca de receitas por ingredientes, com uma função SQL (RPC) no Supabase.', 'Navegação por rotas de arquivo com Expo Router.', 'Interface em React Native e TypeScript para Android e iOS via Expo.'],
+      en: ['Recipe search by ingredients, with a SQL function (RPC) in Supabase.', 'File-based routing with Expo Router.', 'React Native and TypeScript interface for Android and iOS through Expo.'],
     },
   },
 ];
