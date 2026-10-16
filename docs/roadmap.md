@@ -189,4 +189,4 @@ Ordem sugerida: ~~10~~ (feito), 12, 13, 14 (base de qualidade, pouco risco) → 
 
 **Pronto quando.** A página lista as entradas por data, o selo some depois de visto (`localStorage`) e um teste garante que as entradas estão ordenadas.
 
-**Status: feito (#NN).** `/novidades` lista as entradas de `src/data/changelog.ts` por data, em PT e EN. O selo "Novo" aparece nos rodapés até a página ser aberta (`novidades.visto` no `localStorage`, com try/catch). Testes garantem a ordem das datas, o texto nas duas línguas e o selo. Fora desta entrega: RSS.
+**Status: feito (#87).** `/novidades` lista as entradas de `src/data/changelog.ts` por data, em PT e EN. O selo "Novo" aparece nos rodapés até a página ser aberta (`novidades.visto` no `localStorage`, com try/catch). Testes garantem a ordem das datas, o texto nas duas línguas e o selo. Fora desta entrega: RSS.
