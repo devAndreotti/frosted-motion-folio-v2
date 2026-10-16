@@ -156,6 +156,14 @@ html::-webkit-scrollbar-thumb:active {
   }
 }
 
+/* The wash is `fixed inset-0`, so it is only one viewport tall. Anywhere the page runs past that
+   (long pages, full-page captures, mobile toolbars), the body fallback shows through as a seam
+   (flat #f4f4f5 in light, a visible step in dark). Pin it to #root instead, which is as tall as
+   the whole page. */
+#root > [data-testid='background-layers'] {
+  position: absolute;
+}
+
 @layer components {
   /* Real glassmorphism needs three things together, not just a blur: a soft
      drop shadow so the panel visibly separates from the page (depth), and a
