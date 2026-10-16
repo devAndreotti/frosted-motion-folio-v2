@@ -44,17 +44,20 @@ jobs:
           for page in privacidade lhci-404; do
             mkdir -p "dist-vps/$page" && cp dist-vps/index.html "dist-vps/$page/index.html"
           done
-      # both runs write to .lighthouseci/ (the folder is hidden: the artifact needs include-hidden-files)
+      # each collect clears .lighthouseci/, so the JSON of each run is moved to its own folder first
       - name: Lighthouse mobile
-        run: npx --yes @lhci/cli@0.15.1 collect --config=lighthouserc.json
+        run: |
+          npx --yes @lhci/cli@0.15.1 collect --config=lighthouserc.json
+          mkdir -p lighthouse-runs/mobile && mv .lighthouseci/lhr-*.json lighthouse-runs/mobile/
       - name: Lighthouse desktop
         run: |
           jq '.ci.collect.settings.preset = "desktop"' lighthouserc.json > .lighthouserc.desktop.json
           npx --yes @lhci/cli@0.15.1 collect --config=.lighthouserc.desktop.json
+          mkdir -p lighthouse-runs/desktop && mv .lighthouseci/lhr-*.json lighthouse-runs/desktop/
       - name: Report
         env:
           COMMIT: ${{ github.event.pull_request.head.sha }}
-        run: node scripts/lighthouse-report.mjs --dir .lighthouseci --out lighthouse-report.md --commit "$COMMIT"
+        run: node scripts/lighthouse-report.mjs --dir lighthouse-runs --out lighthouse-report.md --commit "$COMMIT"
       - name: Comment on the PR (updates the same comment)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -72,8 +75,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: lighthouse-pr
-          path: .lighthouseci/
-          include-hidden-files: true
+          path: lighthouse-runs/
           if-no-files-found: ignore
           retention-days: 14
 
@@ -88,13 +90,16 @@ jobs:
         with:
           node-version: 22
       - name: Lighthouse mobile
-        run: npx --yes @lhci/cli@0.15.1 collect --config=lighthouserc.live.json
+        run: |
+          npx --yes @lhci/cli@0.15.1 collect --config=lighthouserc.live.json
+          mkdir -p lighthouse-runs/mobile && mv .lighthouseci/lhr-*.json lighthouse-runs/mobile/
       - name: Lighthouse desktop
         run: |
           jq '.ci.collect.settings.preset = "desktop"' lighthouserc.live.json > .lighthouserc.desktop.json
           npx --yes @lhci/cli@0.15.1 collect --config=.lighthouserc.desktop.json
+          mkdir -p lighthouse-runs/desktop && mv .lighthouseci/lhr-*.json lighthouse-runs/desktop/
       - name: Report
-        run: node scripts/lighthouse-report.mjs --dir .lighthouseci --out lighthouse-report.md --commit "$GITHUB_SHA"
+        run: node scripts/lighthouse-report.mjs --dir lighthouse-runs --out lighthouse-report.md --commit "$GITHUB_SHA"
       - name: Summary
         run: cat lighthouse-report.md >> "$GITHUB_STEP_SUMMARY"
       - name: Upload the LHR files
@@ -102,7 +107,6 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: lighthouse-live
-          path: .lighthouseci/
-          include-hidden-files: true
+          path: lighthouse-runs/
           if-no-files-found: ignore
           retention-days: 30
