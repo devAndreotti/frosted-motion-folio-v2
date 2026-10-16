@@ -3,7 +3,7 @@ import { BUDGET, MARKER, renderReport, summarize } from './lighthouse-report.mjs
 
 const lhr = (url, form, perf, lcp, cls = 0, tbt = 0) => ({
   requestedUrl: url,
-  configSettings: { emulatedFormFactor: form },
+  configSettings: { formFactor: form, emulatedFormFactor: null },
   categories: {
     performance: { score: perf },
     accessibility: { score: 1 },

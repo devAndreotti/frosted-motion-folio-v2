@@ -25,7 +25,8 @@ const median = (values) => {
 export function summarize(lhrs) {
   const groups = new Map();
   for (const lhr of lhrs) {
-    const form = lhr.configSettings?.emulatedFormFactor === 'desktop' ? 'desktop' : 'mobile';
+    // the desktop preset sets formFactor (emulatedFormFactor stays null in the LHR)
+    const form = (lhr.configSettings?.formFactor ?? lhr.configSettings?.emulatedFormFactor) === 'desktop' ? 'desktop' : 'mobile';
     const page = new URL(lhr.requestedUrl ?? lhr.finalUrl).pathname;
     const key = `${page}\u0000${form}`;
     if (!groups.has(key)) groups.set(key, { page, form, runs: [] });

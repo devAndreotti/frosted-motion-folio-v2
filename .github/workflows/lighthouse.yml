@@ -44,17 +44,13 @@ jobs:
           for page in privacidade lhci-404; do
             mkdir -p "dist-vps/$page" && cp dist-vps/index.html "dist-vps/$page/index.html"
           done
-      # each collect clears its output folder, so mobile and desktop go to their own folders
+      # both runs write to .lighthouseci/ (the folder is hidden: the artifact needs include-hidden-files)
       - name: Lighthouse mobile
-        run: npx --yes @lhci/cli@0.15.1 collect --config=lighthouserc.json --outputDir=.lighthouseci/mobile
+        run: npx --yes @lhci/cli@0.15.1 collect --config=lighthouserc.json
       - name: Lighthouse desktop
         run: |
           jq '.ci.collect.settings.preset = "desktop"' lighthouserc.json > .lighthouserc.desktop.json
-          npx --yes @lhci/cli@0.15.1 collect --config=.lighthouserc.desktop.json --outputDir=.lighthouseci/desktop
-      - name: DEBUG lhr layout
-        run: |
-          find .lighthouseci -maxdepth 3 | head -60
-          for f in $(find .lighthouseci -name 'lhr-*.json' | head -30); do echo "$f $(jq -c '[.requestedUrl, .configSettings.emulatedFormFactor, .configSettings.formFactor, .categories.performance.score]' "$f")"; done
+          npx --yes @lhci/cli@0.15.1 collect --config=.lighthouserc.desktop.json
       - name: Report
         env:
           COMMIT: ${{ github.event.pull_request.head.sha }}
@@ -77,6 +73,7 @@ jobs:
         with:
           name: lighthouse-pr
           path: .lighthouseci/
+          include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 14
 
@@ -91,11 +88,11 @@ jobs:
         with:
           node-version: 22
       - name: Lighthouse mobile
-        run: npx --yes @lhci/cli@0.15.1 collect --config=lighthouserc.live.json --outputDir=.lighthouseci/mobile
+        run: npx --yes @lhci/cli@0.15.1 collect --config=lighthouserc.live.json
       - name: Lighthouse desktop
         run: |
           jq '.ci.collect.settings.preset = "desktop"' lighthouserc.live.json > .lighthouserc.desktop.json
-          npx --yes @lhci/cli@0.15.1 collect --config=.lighthouserc.desktop.json --outputDir=.lighthouseci/desktop
+          npx --yes @lhci/cli@0.15.1 collect --config=.lighthouserc.desktop.json
       - name: Report
         run: node scripts/lighthouse-report.mjs --dir .lighthouseci --out lighthouse-report.md --commit "$GITHUB_SHA"
       - name: Summary
@@ -106,5 +103,6 @@ jobs:
         with:
           name: lighthouse-live
           path: .lighthouseci/
+          include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 30
