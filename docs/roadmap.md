@@ -169,6 +169,8 @@ Ordem sugerida: ~~10~~ (feito), 12, 13, 14 (base de qualidade, pouco risco) → 
 
 **Pronto quando.** Zero violações sérias ou críticas no axe e a tabela de contraste está sem falhas.
 
+**Status: em revisão (PR em rascunho).** Tabela de contraste em `src/lib/contrast.test.ts` (dívida registrada, não corrigida) e axe em `tests/a11y/axe.spec.ts`. Correções visuais ficaram de fora, ver o PR.
+
 ## 14. Testes visuais automáticos
 
 **Problema.** Quebras de layout (como o ícone de tema fora da borda ou o desenho do "404" empurrado) só apareciam quando alguém olhava.

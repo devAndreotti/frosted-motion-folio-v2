@@ -251,6 +251,8 @@ button.also-i { cursor: pointer; }
 /* ---------- stack ---------- */
 .mq { margin-top: 36px; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
 .mq::-webkit-scrollbar { display: none; }
+/* Focusable scroll region: an outset outline would be clipped by overflow-y hidden, so it sits inside. */
+.mq:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 12px; }
 .mq-g { display: flex; gap: 12px; width: max-content; padding: 4px 0; }
 .tool { display: flex; align-items: center; gap: 12px; padding: 9px 18px 9px 9px; border-radius: 16px; border: 1px solid var(--border-1); background: var(--surface-1); box-shadow: inset 0 1px var(--hl); white-space: nowrap; flex: none; }
 .tool-n { display: block; font: 600 14px/1.2 var(--font-sans); }

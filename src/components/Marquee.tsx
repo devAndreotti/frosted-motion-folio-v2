@@ -82,6 +82,8 @@ const Marquee = ({ boosted }: { boosted: boolean }) => {
       style={{ touchAction: 'pan-y', overscrollBehaviorX: 'contain' }}
       aria-label={t.marquee.ariaLabel}
       role="region"
+      // Scrollable region with overflowing content: keyboard users must be able to focus it and use the arrow keys.
+      tabIndex={0}
       onMouseEnter={() => (pausedRef.current = true)}
       onMouseLeave={() => (pausedRef.current = false)}
     >

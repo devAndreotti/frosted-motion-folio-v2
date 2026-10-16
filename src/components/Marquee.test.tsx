@@ -72,4 +72,12 @@ describe("Marquee", () => {
 
     expect(boostedSpeed).toBeGreaterThan(baseSpeed * 2);
   });
+
+  it("the track is a focusable named region, so keyboard users can reach its overflowing content", () => {
+    render(<Harness />);
+    const track = screen.getAllByTestId("marquee-track")[0];
+    expect(track.getAttribute("tabindex")).toBe("0");
+    expect(track.getAttribute("role")).toBe("region");
+    expect(track.getAttribute("aria-label")).toBeTruthy();
+  });
 });
