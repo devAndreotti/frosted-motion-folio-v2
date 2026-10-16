@@ -1,16 +1,40 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import worker from './index.js';
-import { RESEND_MS } from './newsletter.js';
+import { RESEND_MS, emailHash } from './newsletter.js';
 import { handleAdmin } from './admin.js';
 
 // An in-memory stand-in for the D1 binding that answers the statements admin.js sends. It keeps
 // every statement it was asked, so a test can check that the database was never touched.
-function d1(seed = []) {
+function d1(seed = [], sendSeed = []) {
   const subscribers = new Map(seed.map((r) => [r.email, { ...r }]));
+  const sends = sendSeed.map((s) => ({ ...s }));
   const statements = [];
   const exec = (sql, a) => {
     statements.push(sql);
     const all = [...subscribers.values()];
+    // the send records (newsletter_sends): these branches come first, before the generic subscriber counts
+    if (sql.startsWith("SELECT email, lang, unsub_token FROM subscribers WHERE status = 'active' ORDER BY")) {
+      const rows = all.filter((r) => r.status === 'active').sort((x, y) => x.confirmed_at - y.confirmed_at || x.email.localeCompare(y.email));
+      return { rows: rows.map((r) => ({ email: r.email, lang: r.lang, unsub_token: r.unsub_token })) };
+    }
+    if (sql.startsWith('SELECT email_hash, status, attempts FROM newsletter_sends WHERE issue_id')) {
+      return { rows: sends.filter((s) => s.issue_id === a[0]).map(({ email_hash, status, attempts }) => ({ email_hash, status, attempts })) };
+    }
+    if (sql.startsWith('INSERT INTO newsletter_sends')) {
+      const found = sends.find((s) => s.issue_id === a[0] && s.email_hash === a[1]);
+      if (found) Object.assign(found, { status: 'sending', attempts: found.attempts + 1, updated_at: a[2] });
+      else sends.push({ issue_id: a[0], email_hash: a[1], status: 'sending', attempts: 1, updated_at: a[2] });
+      return { rows: [] };
+    }
+    if (sql.startsWith('UPDATE newsletter_sends SET status = ?3')) {
+      const found = sends.find((s) => s.issue_id === a[0] && s.email_hash === a[1]);
+      if (found) Object.assign(found, { status: a[2], updated_at: a[3] });
+      return { rows: [] };
+    }
+    if (sql.startsWith('DELETE FROM newsletter_sends WHERE email_hash')) {
+      for (let i = sends.length - 1; i >= 0; i--) if (sends[i].email_hash === a[0]) sends.splice(i, 1);
+      return { rows: [], changes: 0 };
+    }
     if (sql.includes("WHERE status = 'active' GROUP BY lang")) {
       const rows = all.filter((r) => r.status === 'active');
       return { rows: ['pt', 'en'].map((lang) => ({ lang, n: rows.filter((r) => r.lang === lang).length })).filter((g) => g.n > 0) };
@@ -36,7 +60,14 @@ function d1(seed = []) {
   };
   return {
     subscribers,
+    sends,
     statements,
+    // D1's batch: the statements in order, one transaction (here: in order)
+    batch: async (list) => {
+      const out = [];
+      for (const s of list) out.push(await s.run());
+      return out;
+    },
     prepare: (sql) => {
       // a statement can run with no binds (D1 allows it) or after bind(...)
       const statement = (args) => ({
@@ -281,5 +312,244 @@ describe('admin', () => {
     const unset = await worker.fetch(req('stats', { method: 'GET' }), { ASSETS: assets });
     expect(unset.status).toBe(404);
     expect(await json(unset)).toEqual({ error: 'not found' });
+  });
+
+  describe('issues: preview and send', () => {
+    const issue = (over = {}) => ({
+      pt: { subject: 'Edição 43', week: 43, range: '19–25 out', intro: 'Olá, leitor.', posts: [{ title: 'Um post', description: 'Descrição.', minutes: 2, tags: ['ia'], url: 'https://devandreotti.com/blog/um/' }] },
+      en: { subject: 'Issue 43', week: 43, range: 'Oct 19–25', intro: 'Hi there.', posts: [{ title: 'A post', description: 'Description.', minutes: 2, tags: ['ai'], url: 'https://devandreotti.com/blog/um/' }] },
+      ...over,
+    });
+    const reader = (email, lang, n, over = {}) => ({
+      email,
+      lang,
+      status: 'active',
+      created_at: NOW - 10 * RESEND_MS,
+      confirmed_at: NOW - 1000 * (10 - n),
+      confirm_sent_at: 0,
+      confirm_token: `ctk-${email}-aaaaaaaaaaaaaaaa`,
+      unsub_token: `utk-${n}-${email.split('@')[0]}-aaaaaaaaaaaa`,
+      ...over,
+    });
+    const hashOf = async (email) => emailHash(email);
+    const batch = (body) => req('send', { body });
+
+    beforeEach(() => {
+      env.DB = d1();
+    });
+
+    it('preview renders both languages with an example unsubscribe link, the other-language link, and writes nothing', async () => {
+      const res = await run(req('preview', { body: { issue: issue() } }));
+      expect(res.status).toBe(200);
+      expect(res.headers.get('cache-control')).toBe('no-store');
+      const body = await json(res);
+      expect(Object.keys(body).sort()).toEqual(['en', 'pt']);
+      expect(body.pt.subject).toBe('Edição 43');
+      expect(body.pt.html).toContain('https://devandreotti.com/api/newsletter/unsubscribe?t=exemplo-de-previa&amp;l=pt');
+      expect(body.pt.html).toContain('https://devandreotti.com/?lang=en');
+      expect(body.en.html).toContain('https://devandreotti.com/?lang=pt');
+      expect(body.pt.text).toContain('Um post');
+      expect(env.DB.statements).toEqual([]);
+      expect(sendMail).not.toHaveBeenCalled();
+    });
+
+    it('preview works without SMTP: it only renders', async () => {
+      const res = await handleAdmin(req('preview', { body: { issue: issue() } }), { ...env, SMTP_PASS: undefined }, NOW, { sendMail });
+      expect(res.status).toBe(200);
+      expect(Object.keys(await json(res)).sort()).toEqual(['en', 'pt']);
+    });
+
+    it('preview answers only the languages present', async () => {
+      const body = await json(await run(req('preview', { body: { issue: { pt: issue().pt } } })));
+      expect(Object.keys(body)).toEqual(['pt']);
+    });
+
+    it('answers 400 for a malformed issue: no language, a bad subject, a non-https link, a missing post field', async () => {
+      const bad = [
+        {},
+        { pt: 'texto' },
+        { pt: { ...issue().pt, subject: '' } },
+        { pt: { ...issue().pt, subject: 'x'.repeat(151) } },
+        { pt: { ...issue().pt, week: 1.5 } },
+        { pt: { ...issue().pt, posts: [{ ...issue().pt.posts[0], url: 'http://devandreotti.com/blog/um/' }] } },
+        { pt: { ...issue().pt, posts: [{ title: 'sem minutos', description: 'x', tags: [], url: 'https://devandreotti.com/' }] } },
+        { pt: { ...issue().pt, posts: [] } },
+        { pt: { ...issue().pt, links: [{ title: 'l', url: 'javascript:alert(1)', note: 'n' }] } },
+      ];
+      for (const i of bad) {
+        const res = await run(req('preview', { body: { issue: i } }));
+        expect(res.status, JSON.stringify(i).slice(0, 80)).toBe(400);
+        expect(await json(res)).toEqual({ error: 'bad request' });
+      }
+      expect(env.DB.statements).toEqual([]);
+    });
+
+    it('a body over 64 KB is refused, and the issue actions take up to 64 KB', async () => {
+      const big = await run(req('preview', { body: { issue: issue(), pad: 'x'.repeat(65536) } }));
+      expect(big.status).toBe(400);
+      const ok = await run(req('preview', { body: { issue: issue(), pad: 'x'.repeat(4096) } }));
+      expect(ok.status).toBe(200);
+      // the other actions still stop at 2 KB
+      expect((await run(req('lookup', { body: { email: 'a@b.co', pad: 'x'.repeat(4096) } }))).status).toBe(400);
+    });
+
+    it('a test send mails each language to the address with [TESTE] in the subject, and records nothing', async () => {
+      const res = await run(batch({ issue_id: 'edicao-43', issue: issue(), test_to: ' Ricardo@Example.com ' }));
+      expect(res.status).toBe(200);
+      expect(await json(res)).toEqual({ sent: 2, failed: 0, remaining: null, total: null });
+      expect(sendMail).toHaveBeenCalledTimes(2);
+      const subjects = sendMail.mock.calls.map(([, m]) => m.subject).sort();
+      expect(subjects).toEqual(['[TESTE] Edição 43', '[TESTE] Issue 43']);
+      for (const [, m] of sendMail.mock.calls) expect(m.to).toBe('ricardo@example.com');
+      expect(env.DB.sends).toEqual([]);
+      expect(env.DB.statements.some((s) => s.includes('newsletter_sends'))).toBe(false);
+    });
+
+    it('a test send to one language only sends that one, and counts a failed mail', async () => {
+      sendMail.mockImplementationOnce(async () => {
+        throw new Error('smtp down');
+      });
+      const res = await run(batch({ issue_id: 'edicao-43', issue: issue(), test_to: 'ricardo@example.com' }));
+      expect(await json(res)).toEqual({ sent: 1, failed: 1, remaining: null, total: null });
+    });
+
+    it('a batch send answers 400 when one language is missing, and sends nothing', async () => {
+      env.DB = d1([reader('a@x.com', 'pt', 1)]);
+      const res = await run(batch({ issue_id: 'edicao-43', issue: { pt: issue().pt } }));
+      expect(res.status).toBe(400);
+      expect(await json(res)).toEqual({ error: 'bad request' });
+      expect(sendMail).not.toHaveBeenCalled();
+      expect(env.DB.sends).toEqual([]);
+    });
+
+    it('a batch send validates issue_id and limit', async () => {
+      for (const body of [
+        { issue_id: 'curto', issue: issue() },
+        { issue_id: 'com espaço!', issue: issue() },
+        { issue_id: 'edicao-43', issue: issue(), limit: 0 },
+        { issue_id: 'edicao-43', issue: issue(), limit: 21 },
+        { issue_id: 'edicao-43', issue: issue(), limit: 2.5 },
+        { issue: issue() },
+      ]) {
+        expect((await run(batch(body))).status, JSON.stringify(body).slice(0, 60)).toBe(400);
+      }
+      expect(sendMail).not.toHaveBeenCalled();
+    });
+
+    it('a batch takes at most limit readers (default 10), marks them sent, and counts remaining and total', async () => {
+      env.DB = d1([reader('a@x.com', 'pt', 1), reader('b@x.com', 'en', 2), reader('c@x.com', 'pt', 3)]);
+      const first = await run(batch({ issue_id: 'edicao-43', issue: issue(), limit: 2 }));
+      expect(await json(first)).toEqual({ sent: 2, failed: 0, remaining: 1, total: 3 });
+      expect(sendMail).toHaveBeenCalledTimes(2);
+      expect(env.DB.sends.map((s) => s.status)).toEqual(['sent', 'sent']);
+      const second = await run(batch({ issue_id: 'edicao-43', issue: issue() }));
+      expect(await json(second)).toEqual({ sent: 1, failed: 0, remaining: 0, total: 3 });
+      expect(await json(await run(batch({ issue_id: 'edicao-43', issue: issue() })))).toEqual({ sent: 0, failed: 0, remaining: 0, total: 3 });
+      expect(sendMail).toHaveBeenCalledTimes(3);
+    });
+
+    it('never mails a reader again for the same issue once it is sent, and each reader gets exactly one copy', async () => {
+      env.DB = d1([reader('a@x.com', 'pt', 1), reader('b@x.com', 'en', 2)]);
+      for (let i = 0; i < 3; i++) await run(batch({ issue_id: 'edicao-43', issue: issue(), limit: 20 }));
+      const mailed = sendMail.mock.calls.map(([, m]) => m.to).sort();
+      expect(mailed).toEqual(['a@x.com', 'b@x.com']);
+      // another issue goes to both again
+      await run(batch({ issue_id: 'edicao-44', issue: issue(), limit: 20 }));
+      expect(sendMail).toHaveBeenCalledTimes(4);
+    });
+
+    it('sends each reader in their own language, with their own unsubscribe link in the body and the List-Unsubscribe headers', async () => {
+      env.DB = d1([reader('pt@x.com', 'pt', 1), reader('en@x.com', 'en', 2)]);
+      await run(batch({ issue_id: 'edicao-43', issue: issue(), limit: 20 }));
+      const byTo = Object.fromEntries(sendMail.mock.calls.map(([, m]) => [m.to, m]));
+      expect(byTo['pt@x.com'].subject).toBe('Edição 43');
+      expect(byTo['en@x.com'].subject).toBe('Issue 43');
+      expect(byTo['pt@x.com'].html).toContain('Um post');
+      expect(byTo['en@x.com'].html).toContain('A post');
+      const ptToken = 'utk-1-pt-aaaaaaaaaaaa';
+      const enToken = 'utk-2-en-aaaaaaaaaaaa';
+      expect(byTo['pt@x.com'].headers['List-Unsubscribe']).toBe(`<https://devandreotti.com/api/newsletter/unsubscribe?t=${ptToken}&l=pt>`);
+      expect(byTo['en@x.com'].headers['List-Unsubscribe']).toBe(`<https://devandreotti.com/api/newsletter/unsubscribe?t=${enToken}&l=en>`);
+      expect(byTo['pt@x.com'].headers['List-Unsubscribe-Post']).toBe('List-Unsubscribe=One-Click');
+      expect(byTo['pt@x.com'].text).toContain(`t=${ptToken}`);
+      expect(byTo['pt@x.com'].text).not.toContain(enToken);
+      expect(byTo['pt@x.com'].from).toBe('ricardo@devandreotti.com');
+      expect(byTo['pt@x.com'].headers['Reply-To']).toBe('devandreotti@gmail.com');
+    });
+
+    it('takes only active readers in confirmation order, and stores a hash of the address, never the address', async () => {
+      env.DB = d1([
+        reader('tarde@x.com', 'pt', 5),
+        reader('cedo@x.com', 'pt', 1),
+        reader('pendente@x.com', 'pt', 0, { status: 'pending', confirmed_at: null }),
+      ]);
+      await run(batch({ issue_id: 'edicao-43', issue: issue(), limit: 1 }));
+      expect(sendMail.mock.calls[0][1].to).toBe('cedo@x.com');
+      const [sent] = env.DB.sends;
+      expect(sent).toMatchObject({ issue_id: 'edicao-43', email_hash: await hashOf('cedo@x.com'), status: 'sent', attempts: 1 });
+      expect(JSON.stringify(env.DB.sends)).not.toContain('@');
+      expect(await json(await run(batch({ issue_id: 'edicao-43', issue: issue(), limit: 20 })))).toEqual({ sent: 1, failed: 0, remaining: 0, total: 2 });
+    });
+
+    it('a failed mail is marked failed and tried again on the next call, at most three attempts in all', async () => {
+      env.DB = d1([reader('b@x.com', 'pt', 1)]);
+      sendMail.mockImplementation(async () => {
+        throw new Error('smtp: 554 refused');
+      });
+      expect(await json(await run(batch({ issue_id: 'edicao-43', issue: issue(), limit: 20 })))).toEqual({ sent: 0, failed: 1, remaining: 1, total: 1 });
+      expect(env.DB.sends[0]).toMatchObject({ status: 'failed', attempts: 1 });
+      // the second try goes through and marks it sent: the reader is not mailed again after that
+      sendMail.mockImplementation(async () => undefined);
+      expect(await json(await run(batch({ issue_id: 'edicao-43', issue: issue(), limit: 20 })))).toEqual({ sent: 1, failed: 0, remaining: 0, total: 1 });
+      expect(env.DB.sends[0]).toMatchObject({ status: 'sent', attempts: 2 });
+      expect(sendMail).toHaveBeenCalledTimes(2);
+    });
+
+    it('stops retrying a reader after three failed attempts', async () => {
+      env.DB = d1([reader('b@x.com', 'pt', 1)]);
+      sendMail.mockImplementation(async () => {
+        throw new Error('smtp: 554 refused');
+      });
+      for (let i = 0; i < 4; i++) await run(batch({ issue_id: 'edicao-43', issue: issue(), limit: 20 }));
+      expect(sendMail).toHaveBeenCalledTimes(3);
+      expect(env.DB.sends[0]).toMatchObject({ status: 'failed', attempts: 3 });
+    });
+
+    it('a reader left in sending (the send died mid-way) is never mailed again and is not counted as remaining', async () => {
+      env.DB = d1([reader('travado@x.com', 'pt', 1), reader('novo@x.com', 'pt', 2)], [
+        { issue_id: 'edicao-43', email_hash: await hashOf('travado@x.com'), status: 'sending', attempts: 1, updated_at: NOW - 5 * RESEND_MS },
+      ]);
+      expect(await json(await run(batch({ issue_id: 'edicao-43', issue: issue(), limit: 20 })))).toEqual({ sent: 1, failed: 0, remaining: 0, total: 2 });
+      expect(sendMail.mock.calls.map(([, m]) => m.to)).toEqual(['novo@x.com']);
+      // later calls, however much time has passed, still leave it alone
+      expect(await json(await run(batch({ issue_id: 'edicao-43', issue: issue(), limit: 20 })))).toEqual({ sent: 0, failed: 0, remaining: 0, total: 2 });
+      expect(sendMail).toHaveBeenCalledTimes(1);
+      const stuck = await hashOf('travado@x.com');
+      expect(env.DB.sends.find((s) => s.email_hash === stuck)?.status).toBe('sending');
+    });
+
+    it('a reader with three failed attempts is not mailed again and is not counted as remaining, so remaining reaches 0', async () => {
+      env.DB = d1([reader('esgotado@x.com', 'pt', 1), reader('novo@x.com', 'pt', 2)], [
+        { issue_id: 'edicao-43', email_hash: await hashOf('esgotado@x.com'), status: 'failed', attempts: 3, updated_at: NOW },
+      ]);
+      expect(await json(await run(batch({ issue_id: 'edicao-43', issue: issue(), limit: 20 })))).toEqual({ sent: 1, failed: 0, remaining: 0, total: 2 });
+      expect(sendMail.mock.calls.map(([, m]) => m.to)).toEqual(['novo@x.com']);
+      expect(await json(await run(batch({ issue_id: 'edicao-43', issue: issue(), limit: 20 })))).toEqual({ sent: 0, failed: 0, remaining: 0, total: 2 });
+    });
+
+    it('answers 503 for a batch send when SMTP is not configured', async () => {
+      const res = await handleAdmin(batch({ issue_id: 'edicao-43', issue: issue() }), { ...env, SMTP_PASS: undefined }, NOW, { sendMail });
+      expect(res.status).toBe(503);
+      expect(await json(res)).toEqual({ error: 'mail is off on this host' });
+    });
+
+    it('the admin delete takes the subscriber send records with the row', async () => {
+      env.DB = d1([reader('saindo@x.com', 'pt', 1)], [
+        { issue_id: 'edicao-43', email_hash: await hashOf('saindo@x.com'), status: 'sent', attempts: 1, updated_at: NOW },
+        { issue_id: 'edicao-43', email_hash: await hashOf('outro@x.com'), status: 'sent', attempts: 1, updated_at: NOW },
+      ]);
+      expect(await json(await run(req('delete', { body: { email: 'saindo@x.com' } })))).toEqual({ deleted: true });
+      expect(env.DB.sends.map((s) => s.email_hash)).toEqual([await hashOf('outro@x.com')]);
+    });
   });
 });

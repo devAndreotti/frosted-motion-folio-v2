@@ -1,11 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import worker from './index.js';
-import { GLOBAL_HOURLY_CAP, PENDING_TTL_MS, RATE_LIMIT, RESEND_MS, handleNewsletter } from './newsletter.js';
+import { GLOBAL_HOURLY_CAP, PENDING_TTL_MS, RATE_LIMIT, RESEND_MS, emailHash, handleNewsletter } from './newsletter.js';
 
 // An in-memory stand-in for the D1 binding that answers the statements newsletter.js sends
 // (the real SQL runs against D1's own engine in the local end-to-end check, not here).
 function d1() {
   const subscribers = new Map();
+  const sends = [];
   let hits = [];
   const run = (sql, a) => {
     if (sql.startsWith('SELECT COUNT(*) AS n FROM subscribe_hits WHERE voter')) return { n: hits.filter((h) => h.voter === a[0] && h.at > a[1]).length };
@@ -30,6 +31,8 @@ function d1() {
       if (r) Object.assign(r, { status: 'active', confirmed_at: a[1] });
       return;
     }
+    if (sql.startsWith('SELECT email FROM subscribers WHERE unsub_token')) return [...subscribers.values()].find((r) => r.unsub_token === a[0]) ?? null;
+    if (sql.startsWith("SELECT email FROM subscribers WHERE status = 'pending'")) return [...subscribers.values()].filter((r) => r.status === 'pending' && r.created_at < a[0]);
     if (sql.startsWith('DELETE FROM subscribers WHERE unsub_token')) {
       for (const [email, r] of subscribers) if (r.unsub_token === a[0]) subscribers.delete(email);
       return;
@@ -38,12 +41,33 @@ function d1() {
       for (const [email, r] of subscribers) if (r.status === 'pending' && r.created_at < a[0]) subscribers.delete(email);
       return;
     }
+    if (sql.startsWith('DELETE FROM newsletter_sends WHERE email_hash')) {
+      for (let i = sends.length - 1; i >= 0; i--) if (sends[i].email_hash === a[0]) sends.splice(i, 1);
+      return;
+    }
     throw new Error(`the fake D1 does not know: ${sql}`);
   };
   return {
     subscribers,
+    sends,
+    // D1's batch runs the statements in order, as one transaction
+    batch: async (statements) => {
+      const out = [];
+      for (const s of statements) out.push(await s.run());
+      return out;
+    },
     addHits: (n, at) => Array.from({ length: n }, (_, i) => hits.push({ voter: `v${i}`, at })),
-    prepare: (sql) => ({ bind: (...args) => ({ first: async () => run(sql, args), run: async () => run(sql, args) }) }),
+    prepare: (sql) => ({
+      bind: (...args) => ({
+        sql,
+        first: async () => run(sql, args),
+        all: async () => ({ results: run(sql, args) ?? [] }),
+        run: async () => {
+          run(sql, args);
+          return { success: true, meta: { changes: 0 } };
+        },
+      }),
+    }),
   };
 }
 
@@ -210,6 +234,28 @@ describe('newsletter', () => {
     await run(post({ email: 'outro@example.com' }, { 'cf-connecting-ip': '198.51.100.9' }));
     expect(row('nunca@example.com')).toBeUndefined();
     expect(row('confirmou@example.com').status).toBe('active');
+  });
+
+  it('deletes the send records of an address with its row: on unsubscribe, and when an unconfirmed sign-up is purged', async () => {
+    await run(post({ email: 'leitor@example.com' }));
+    await run(get(`confirm?t=${confirmUrl().searchParams.get('t')}`));
+    await run(post({ email: 'nunca@example.com' }, { 'cf-connecting-ip': '198.51.100.9' }));
+    const leitor = await emailHash('leitor@example.com');
+    const nunca = await emailHash('nunca@example.com');
+    env.DB.sends.push(
+      { issue_id: 'edicao-43', email_hash: leitor, status: 'sent', attempts: 1, updated_at: NOW },
+      { issue_id: 'edicao-43', email_hash: nunca, status: 'sent', attempts: 1, updated_at: NOW }
+    );
+
+    await run(new Request(`${ORIGIN}/api/newsletter/unsubscribe?t=${row('leitor@example.com').unsub_token}`, { method: 'POST' }));
+    expect(env.DB.sends.map((s) => s.email_hash)).toEqual([nunca]);
+
+    NOW += PENDING_TTL_MS + 1;
+    await run(post({ email: 'outro@example.com' }, { 'cf-connecting-ip': '198.51.100.10' }));
+    expect(row('nunca@example.com')).toBeUndefined();
+    expect(env.DB.sends).toEqual([]);
+    // the record names no address, only its hash
+    expect(JSON.stringify(env.DB.sends)).not.toContain('example.com');
   });
 
   describe('Turnstile', () => {
