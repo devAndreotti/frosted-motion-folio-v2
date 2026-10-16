@@ -87,11 +87,12 @@ export function renderReport(rows, { commit, runs } = {}) {
   ].join('\n');
 }
 
+/** Every lhr-*.json under the folder (the mobile and desktop runs keep their own sub-folders). */
 function readLhrs(dir) {
   if (!fs.existsSync(dir)) throw new Error(`lighthouse-report: a pasta ${dir} não existe (o collect falhou?)`);
   return fs
-    .readdirSync(dir)
-    .filter((file) => /^lhr-.*\.json$/.test(file))
+    .readdirSync(dir, { recursive: true })
+    .filter((file) => /(^|[\\/])lhr-[^\\/]*\.json$/.test(file))
     .map((file) => JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8')));
 }
 
