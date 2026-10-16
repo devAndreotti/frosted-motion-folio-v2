@@ -1,6 +1,7 @@
 import type { Strings } from './i18n.types';
 import { ptBlog } from './i18n.pt.blog';
 import { ptNow } from './i18n.pt.now';
+import { ptNovidades } from './i18n.pt.novidades';
 
 export const pt: Strings = {
   common: {
@@ -77,6 +78,7 @@ export const pt: Strings = {
     alsoKnown: 'Também na bagagem',
   },
   now: ptNow,
+  novidades: ptNovidades,
   projects: {
     sectionLabel: 'Projetos',
     title: 'Projetos com contexto, decisão e entrega.',

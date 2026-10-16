@@ -6,6 +6,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { contact } from '@/data/personal';
 import { LangSwitch } from '@/components/NavExtras';
 import ColorPickerPopover from '@/components/ColorPickerPopover';
+import NovidadesBadge from '@/components/NovidadesBadge';
 
 // The app's root on either deploy ("/" on devandreotti.com, "/frosted-motion-folio-v2/" on GitHub Pages).
 export const HOME = import.meta.env.BASE_URL;
@@ -54,6 +55,7 @@ const BlogShell = ({ title, children }: { title: string; children: ReactNode }) 
       <footer className="nf-foot">
         <span>© {new Date().getFullYear()} Ricardo A. Gonçalves</span>
         <a href={`mailto:${contact.email}`}>{contact.email}</a>
+        <NovidadesBadge />
       </footer>
     </div>
   );
