@@ -12,6 +12,7 @@ import './styles/v2.css'
 import './styles/hero-cards.css'
 import './styles/blog.css'
 import './styles/carousel.css'
+import './styles/memory-tv.css'
 import './styles/more.css'
 import './styles/img-load.css'
 

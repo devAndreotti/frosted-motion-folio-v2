@@ -19,13 +19,28 @@ describe("NowSection", () => {
     for (const p of NOW_PROJECTS) expect(screen.getByText(p.title)).toBeTruthy();
   });
 
-  it("links private projects to their public site, never to a repo", () => {
+  it("links the projects with a site out of the page, and never to a private repo", () => {
     renderNow();
-    for (const p of NOW_PROJECTS.filter((x) => x.privateCode)) {
+    for (const p of NOW_PROJECTS.filter((x) => x.privateCode && x.href)) {
       const card = screen.getByRole("link", { name: new RegExp(p.title) });
       expect(card.getAttribute("href")).not.toContain("github.com");
       expect(within(card).getByText("código privado")).toBeTruthy();
     }
+  });
+
+  it("opens Memory Apartment's TV in a dialog instead of linking to its site", () => {
+    renderNow();
+    const project = NOW_PROJECTS.find((x) => x.tv)!;
+    expect(project.href).toBeUndefined();
+    expect(screen.queryByRole("link", { name: new RegExp(project.title) })).toBeNull();
+    const card = screen.getByRole("button", { name: new RegExp(project.title) });
+    expect(within(card).getByText("código privado")).toBeTruthy();
+    fireEvent.click(card);
+    const dialog = screen.getByRole("dialog", { name: /TV de/ });
+    expect(within(dialog).getByRole("img", { name: /Tela da TV/ })).toBeTruthy();
+    expect(dialog.querySelector("a[href]")).toBeNull();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Fechar" }));
+    expect(screen.queryByRole("dialog")).toBeNull();
   });
 
   it("draws the Quality Gate checks instead of a screenshot", () => {

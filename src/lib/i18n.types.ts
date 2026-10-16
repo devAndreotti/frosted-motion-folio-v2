@@ -94,6 +94,25 @@ export interface Strings {
     alsoWhat: string;
     alsoPrivateFoot: string;
     alsoGithub: string;
+    /** Memory Apartment's card opens a TV instead of a site. */
+    tv: {
+      open: string;
+      dialogAria: (title: string) => string;
+      screenAria: (channel: string) => string;
+      power: string;
+      next: string;
+      prev: string;
+      knob: string;
+      errTitle: string;
+      errSub: string;
+      osdDate: string;
+      osdError: string;
+      bridgeAlt: string;
+      channelError: string;
+      channelBridge: string;
+      tvOn: string;
+      tvOff: string;
+    };
   };
   projects: {
     sectionLabel: string;
