@@ -110,6 +110,13 @@ export const en: Strings = {
     code: 'Code',
     emptyCategory: 'No projects in this category yet.',
     moreProjects: (count) => `See the other ${count} on GitHub`,
+    more: {
+      title: 'Experiments and studies worth a click too.',
+      subtitle: 'Pages, components and effects I built to practice. Click to see the screens.',
+      cardAria: (title) => `See the screens of ${title}`,
+      showAll: (count) => `See all ${count}`,
+      showLess: 'Show less',
+    },
   },
   caseModal: {
     whatIDid: 'What I did',
