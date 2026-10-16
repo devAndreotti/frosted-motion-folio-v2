@@ -11,7 +11,7 @@ import ColorPickerPopover from '@/components/ColorPickerPopover';
 export const HOME = import.meta.env.BASE_URL;
 
 /** The blog pages' frame: a slim bar (home, blog, RSS, accent color, language, theme) and a one-line footer. */
-const BlogShell = ({ title, children }: { title: string; children: ReactNode }) => {
+const BlogShell = ({ title, children, className }: { title: string; children: ReactNode; className?: string }) => {
   const { theme, toggleTheme } = useTheme();
   const { lang, setLang, t } = useLanguage();
 
@@ -20,7 +20,7 @@ const BlogShell = ({ title, children }: { title: string; children: ReactNode }) 
   }, [title]);
 
   return (
-    <div className="blog min-h-screen relative [overflow-x:clip]">
+    <div className={`blog min-h-screen relative [overflow-x:clip]${className ? ` ${className}` : ''}`}>
       <header className="nav">
         <div className="nav-in blog-nav">
           <a className="brand" href={HOME}>

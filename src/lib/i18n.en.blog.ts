@@ -54,4 +54,5 @@ export const enBlog: Strings['blog'] = {
   newer: 'Newer',
   older: 'Older',
   loadError: "This post couldn't be loaded.",
+  readingMode: 'Reading mode',
 };
