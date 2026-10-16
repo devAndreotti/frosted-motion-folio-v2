@@ -2,8 +2,9 @@ import { useRef } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { useDodgeGame } from '@/hooks/useDodgeGame';
+import { LIVES } from '@/lib/dodgeGame';
 
-/** Mini game for the 404 page: dodge the falling bugs, score = seconds survived. */
+/** Mini game for the 404 page: dodge the falling bugs, catch coffee, score = seconds survived + coffee. */
 const NotFoundGame = () => {
   const { t } = useLanguage();
   const g = t.notFound.game;
@@ -17,8 +18,16 @@ const NotFoundGame = () => {
       <div className="nf-game-head">
         <span className="k">{g.title}</span>
         <span className="nf-game-score">
-          {g.score(view.score)} · {g.best(view.best)}
+          {g.score(view.score)} · {g.best(view.best)} ·{' '}
+          <span className="nf-game-lives" role="img" aria-label={g.lives(view.lives)}>
+            {Array.from({ length: LIVES }, (_, i) => (
+              <span key={i} aria-hidden="true" className={i < view.lives ? 'on' : undefined}>
+                {i < view.lives ? '♥' : '♡'}
+              </span>
+            ))}
+          </span>
         </span>
+        {view.status === 'playing' && view.record && <span className="nf-game-rec">{g.record}</span>}
       </div>
       <div
         ref={fieldRef}
@@ -34,6 +43,11 @@ const NotFoundGame = () => {
         onKeyUp={onKeyUp}
       >
         <canvas ref={canvasRef} className="nf-game-canvas" aria-hidden="true" />
+        {view.banner && (
+          <p className="nf-game-wave" aria-hidden="true">
+            {g.wave(view.wave)}
+          </p>
+        )}
         {view.status === 'ready' && (
           <div className="nf-game-over">
             <button type="button" className="btn btn-pri btn-sm" onClick={begin}>
@@ -47,6 +61,7 @@ const NotFoundGame = () => {
             <p className="nf-game-msg">
               {g.over} · {g.score(view.score)}
             </p>
+            {view.record && <p className="nf-game-rec">{g.record}</p>}
             <button type="button" className="btn btn-pri btn-sm" onClick={begin}>
               {g.restart}
             </button>

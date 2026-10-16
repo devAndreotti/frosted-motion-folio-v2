@@ -220,10 +220,10 @@ export const pt: Strings = {
     },
     broken: 'Achou um link quebrado meu?',
     game: {
-      aria: 'Mini jogo: desvie dos bugs', title: 'desvie dos bugs', hint: 'Arraste o quadrado ou use ← → (A D)',
-      start: 'Começar', pressToStart: 'Aperte para começar', over: 'Você bateu num bug',
-      restart: 'Jogar de novo', restartHint: 'Espaço, Enter ou toque para reiniciar', score: (seconds) => `${seconds}s sobrevividos`,
-      best: (seconds) => `recorde ${seconds}s`,
+      aria: 'Mini jogo: desvie dos bugs e pegue o café', title: 'desvie dos bugs', hint: 'Arraste o quadrado ou use ← → (A D). Café vale +5 e deixa os bugs lentos',
+      start: 'Começar', pressToStart: 'Aperte para começar', over: 'Você bateu num bug', record: 'novo recorde!',
+      restart: 'Jogar de novo', restartHint: 'Espaço, Enter ou toque para reiniciar', score: (points) => `${points} pontos`,
+      best: (points) => `recorde ${points}`, wave: (n) => `Onda ${n}!`, lives: (n) => (n === 1 ? '1 vida' : `${n} vidas`),
     },
   },
   blog: {
