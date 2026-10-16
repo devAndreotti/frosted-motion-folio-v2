@@ -1,10 +1,11 @@
+import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ArrowRight, Search } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import BlogShell from '@/components/blog/BlogShell';
 import NewsletterForm from '@/components/blog/NewsletterForm';
 import { localize, posts as originals } from '@/lib/blog/catalog';
-import { collectTags, filterByTag, formatDay, groupByYear } from '@/lib/blog/list';
+import { PAGE_SIZE, collectTags, filterByTag, formatDay, groupByYear } from '@/lib/blog/list';
 import { BLOG_TITLE } from '@/lib/blog/page';
 import type { PostMeta } from '@/lib/blog/types';
 
@@ -40,7 +41,9 @@ const Blog = () => {
   const posts = originals.map((post) => localize(post, lang));
   const tags = collectTags(posts);
   const tag = tags.includes(params.get('tag') ?? '') ? params.get('tag') : null;
-  const shown = filterByTag(posts, tag);
+  const [limit, setLimit] = useState(PAGE_SIZE);
+  const all = filterByTag(posts, tag);
+  const shown = all.slice(0, limit);
   const pick = (next: string | null) => setParams(next ? { tag: next } : {}, { replace: true });
 
   return (
@@ -80,7 +83,7 @@ const Blog = () => {
         )}
 
         {posts.length === 0 && <p className="blog-empty">{b.empty}</p>}
-        {posts.length > 0 && shown.length === 0 && <p className="blog-empty">{b.emptyTag}</p>}
+        {posts.length > 0 && all.length === 0 && <p className="blog-empty">{b.emptyTag}</p>}
         {!tag && posts[0] && <Featured post={posts[0]} />}
 
         {groupByYear(shown).map((group) => (
@@ -101,6 +104,14 @@ const Blog = () => {
             </ul>
           </section>
         ))}
+
+        {all.length > shown.length && (
+          <div className="blog-more">
+            <button type="button" className="btn btn-gh btn-sm" onClick={() => setLimit((n) => n + PAGE_SIZE)}>
+              {b.loadMore}
+            </button>
+          </div>
+        )}
 
         <NewsletterForm />
       </main>

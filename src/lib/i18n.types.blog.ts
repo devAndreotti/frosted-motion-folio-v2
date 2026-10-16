@@ -53,4 +53,8 @@ export interface BlogStrings {
   newer: string;
   older: string;
   loadError: string;
+  relatedTitle: string;
+  copyHeading: string;
+  headingCopied: string;
+  loadMore: string;
 }
