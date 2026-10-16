@@ -220,10 +220,10 @@ export const en: Strings = {
     },
     broken: 'Found a broken link of mine?',
     game: {
-      aria: 'Mini game: dodge the bugs', title: 'dodge the bugs', hint: 'Drag the square or use ← → (A D)',
-      start: 'Start', pressToStart: 'Press to start', over: 'You hit a bug',
-      restart: 'Play again', restartHint: 'Space, Enter or tap to restart', score: (seconds) => `${seconds}s survived`,
-      best: (seconds) => `best ${seconds}s`,
+      aria: 'Mini game: dodge the bugs and catch the coffee', title: 'dodge the bugs', hint: 'Drag the square or use ← → (A D). Coffee is +5 and slows the bugs',
+      start: 'Start', pressToStart: 'Press to start', over: 'You hit a bug', record: 'new record!',
+      restart: 'Play again', restartHint: 'Space, Enter or tap to restart', score: (points) => `${points} points`,
+      best: (points) => `best ${points}`, wave: (n) => `Wave ${n}!`, lives: (n) => (n === 1 ? '1 life' : `${n} lives`),
     },
   },
   blog: {

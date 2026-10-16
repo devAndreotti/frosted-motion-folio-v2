@@ -28,10 +28,12 @@ const ctx = {
   ellipse: vi.fn(),
   arc: vi.fn(),
   roundRect: vi.fn(),
+  fillRect: vi.fn(),
+  fillText: vi.fn(),
 };
 const lastPlayerX = () => {
   const call = ctx.roundRect.mock.calls.at(-1);
-  return call ? (call[0] as number) + 12 : NaN;
+  return call ? (call[0] as number) + 14 : NaN;
 };
 
 const originalMatchMedia = window.matchMedia;
@@ -51,7 +53,7 @@ const renderGame = () =>
     </LanguageProvider>
   );
 
-const field = () => screen.getByRole('group', { name: 'Mini jogo: desvie dos bugs' });
+const field = () => screen.getByRole('group', { name: 'Mini jogo: desvie dos bugs e pegue o café' });
 
 describe('NotFoundGame', () => {
   beforeEach(() => {
@@ -80,24 +82,50 @@ describe('NotFoundGame', () => {
   it('starts by itself with normal motion, ends on a hit and keeps the best score', () => {
     renderGame();
     expect(screen.queryByRole('button', { name: 'Começar' })).toBeNull();
-    expect(screen.getByText(/recorde 0s/)).toBeTruthy();
+    expect(screen.getByText(/recorde 0\b/)).toBeTruthy();
 
-    runFrames(200);
+    runFrames(1000);
 
     expect(screen.getByRole('status').textContent).toContain('Você bateu num bug');
     expect(Number(localStorage.getItem(BEST_KEY))).toBeGreaterThan(0);
     expect(screen.getByRole('button', { name: 'Jogar de novo' })).toBeTruthy();
   });
 
+  it('shows three hearts in the header, loses one per hit and announces the wave', () => {
+    renderGame();
+    expect(screen.getByRole('img', { name: '3 vidas' })).toBeTruthy();
+    expect(screen.getByText('Onda 1!')).toBeTruthy();
+
+    // every bug lands on the centred player: the first one arrives after about 4 seconds
+    runFrames(90);
+    expect(screen.getByRole('img', { name: '2 vidas' })).toBeTruthy();
+    expect(screen.queryByRole('status')).toBeNull();
+  });
+
+  it('shows a new record when the run beats the stored best, and not otherwise', () => {
+    renderGame();
+    runFrames(1000);
+    expect(screen.getByText('novo recorde!')).toBeTruthy();
+  });
+
+  it('keeps the record quiet when the run does not beat the stored best', () => {
+    localStorage.setItem(BEST_KEY, '999');
+    renderGame();
+    runFrames(1000);
+    expect(screen.getByRole('status').textContent).toContain('Você bateu num bug');
+    expect(screen.queryByText('novo recorde!')).toBeNull();
+    expect(localStorage.getItem(BEST_KEY)).toBe('999');
+  });
+
   it('shows the best score saved by an earlier visit', () => {
     localStorage.setItem(BEST_KEY, '42');
     renderGame();
-    expect(screen.getByText(/recorde 42s/)).toBeTruthy();
+    expect(screen.getByText(/recorde 42\b/)).toBeTruthy();
   });
 
   it('restarts with Enter or Space once the run is over, but ignores held keys', () => {
     renderGame();
-    runFrames(200);
+    runFrames(1000);
     expect(screen.getByRole('button', { name: 'Jogar de novo' })).toBeTruthy();
 
     fireEvent.keyDown(field(), { key: ' ', repeat: true });
@@ -114,7 +142,7 @@ describe('NotFoundGame', () => {
     const start = screen.getByRole('button', { name: 'Começar' });
     expect(screen.getByText('Aperte para começar').textContent).toBe('Aperte para começar');
 
-    runFrames(200);
+    runFrames(1000);
     expect(screen.getByRole('button', { name: 'Começar' })).toBeTruthy();
 
     fireEvent.click(start);
@@ -152,7 +180,7 @@ describe('NotFoundGame', () => {
     vi.mocked(Math.random).mockReturnValue(0.99);
     renderGame();
     const el = field();
-    el.getBoundingClientRect = () => ({ left: 0, width: 400, top: 0, height: 250, right: 400, bottom: 250, x: 0, y: 0, toJSON: () => ({}) }) as DOMRect;
+    el.getBoundingClientRect = () => ({ left: 0, width: 640, top: 0, height: 320, right: 640, bottom: 320, x: 0, y: 0, toJSON: () => ({}) }) as DOMRect;
     // capture follows the pointer like a browser: held from pointerdown until pointerup
     let captured = false;
     el.hasPointerCapture = () => captured;
@@ -191,14 +219,14 @@ describe('NotFoundGame', () => {
     act(() => {
       document.dispatchEvent(new Event('visibilitychange'));
     });
-    runFrames(200);
+    runFrames(1000);
     expect(screen.queryByRole('status')).toBeNull();
 
     Object.defineProperty(document, 'hidden', { configurable: true, value: false });
     act(() => {
       document.dispatchEvent(new Event('visibilitychange'));
     });
-    runFrames(200);
+    runFrames(1000);
     expect(screen.getByRole('status').textContent).toContain('Você bateu num bug');
   });
 
@@ -213,7 +241,7 @@ describe('NotFoundGame', () => {
   it('still renders and plays when the canvas has no 2D context', () => {
     vi.mocked(HTMLCanvasElement.prototype.getContext).mockReturnValue(null);
     renderGame();
-    runFrames(200);
+    runFrames(1000);
     expect(screen.getByRole('status').textContent).toContain('Você bateu num bug');
   });
 });

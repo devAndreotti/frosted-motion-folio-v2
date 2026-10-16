@@ -415,13 +415,20 @@ button.also-i { cursor: pointer; }
 .nf-game-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; }
 .nf-game-head .k { margin: 0; }
 .nf-game-score { font: 500 12px/1.4 var(--font-mono); color: var(--fg-2); white-space: nowrap; }
-.nf-game-field { position: relative; margin-top: 12px; aspect-ratio: 400 / 250; border-radius: 14px; border: 1px solid var(--border-1); background: var(--surface-1); box-shadow: inset 0 1px var(--hl); overflow: hidden; touch-action: none; user-select: none; cursor: pointer; }
+.nf-game-field { position: relative; margin-top: 12px; aspect-ratio: 640 / 320;border-radius: 14px; border: 1px solid var(--border-1); background: var(--surface-1); box-shadow: inset 0 1px var(--hl); overflow: hidden; touch-action: none; user-select: none; cursor: pointer; }
 .nf-game-field:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .nf-game-canvas { display: block; width: 100%; height: 100%; }
 .nf-game-over { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 16px; text-align: center; background: color-mix(in oklab, var(--solid, #0a0a0a) 55%, transparent); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
 .nf-game-msg { margin: 0; font: 600 17px/1.3 var(--font-sans); color: var(--fg-1); }
 .nf-game-note { margin: 0; font: 500 12px/1.5 var(--font-mono); color: var(--fg-3); }
 .nf-game > .nf-game-note { margin-top: 10px; }
+.nf-game-lives { display: inline-flex; gap: 2px; font-size: 13px; line-height: 1; vertical-align: -1px; color: var(--fg-3); }
+.nf-game-lives .on { color: var(--accent); }
+.nf-game-rec { display: inline-block; margin: 0; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--accent); font: 600 11px/1.3 var(--font-mono); color: var(--accent-ink); white-space: nowrap; }
+.nf-game-over .nf-game-rec { font-size: 12px; }
+.nf-game-wave { position: absolute; top: 12px; left: 50%; margin: 0; padding: 0 2px; font: 600 15px/1.3 var(--font-sans); color: var(--fg-1); white-space: nowrap; pointer-events: none; transform: translateX(-50%); animation: nf-wave 1.8s ease both; }
+@keyframes nf-wave { 0% { opacity: 0; } 12%, 78% { opacity: 1; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .nf-game-wave { animation: none; } }
 @media (max-width: 960px) {
   .nf-main { grid-template-columns: 1fr; gap: 40px; padding-top: 36px; }
   .nf-big { display: none; }

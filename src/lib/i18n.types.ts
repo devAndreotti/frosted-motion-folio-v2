@@ -212,9 +212,9 @@ export interface Strings {
     broken: string;
     game: {
       aria: string; title: string; hint: string;
-      start: string; pressToStart: string; over: string;
-      restart: string; restartHint: string; score: (seconds: number) => string;
-      best: (seconds: number) => string;
+      start: string; pressToStart: string; over: string; record: string;
+      restart: string; restartHint: string; score: (points: number) => string;
+      best: (points: number) => string; wave: (n: number) => string; lives: (n: number) => string;
     };
   };
   blog: {
