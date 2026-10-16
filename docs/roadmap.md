@@ -167,7 +167,7 @@ Ordem sugerida: ~~10~~ (feito), 12, 13, 14 (base de qualidade, pouco risco) → 
 
 ## 14. Testes visuais automáticos
 
-**Status: feito (#88).** Bases geradas no CI (Linux) e commitadas em `tests/visual/pages.spec.ts-snapshots/`; `visual.yml` falha em diferença. Falta a prova de estabilidade (5 execuções seguidas).
+**Status: feito (#88).** Bases geradas no CI (Linux) e commitadas em `tests/visual/pages.spec.ts-snapshots/`; `visual.yml` falha em diferença. Estável em 5 execuções seguidas no CI.
 
 **Problema.** Quebras de layout (como o ícone de tema fora da borda ou o desenho do "404" empurrado) só apareciam quando alguém olhava.
 
