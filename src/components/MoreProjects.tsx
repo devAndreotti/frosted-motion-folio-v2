@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import type { CuratedProject } from '@/data/curatedProjects';
 
@@ -28,8 +28,11 @@ const MoreProjects = ({ projects, onOpen }: MoreProjectsProps) => {
         {shown.map((p) => (
           <li key={p.id}>
             <button type="button" className="mp-card glass" onClick={() => onOpen(p)} aria-label={m.cardAria(p.title)}>
-              <span className="mp-img">
-                <img src={p.image} alt="" loading="lazy" decoding="async" />
+              <span className="mp-img" style={{ '--tint': p.tint } as CSSProperties}>
+                <img className="mp-bg" src={p.image} alt="" aria-hidden="true" loading="lazy" decoding="async" />
+                <span className="mp-win">
+                  <img src={p.image} alt="" loading="lazy" decoding="async" />
+                </span>
               </span>
               <span className="mp-b">
                 <span className="mp-n">{p.title}</span>

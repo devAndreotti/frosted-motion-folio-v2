@@ -118,6 +118,32 @@ describe("CaseModal gallery autoplay", () => {
     expect(dots[0].getAttribute("aria-current")).toBeNull();
   });
 
+  it("layers every picture on the stage and exposes only the current one", () => {
+    renderModal();
+    const layers = Array.from(document.querySelectorAll<HTMLImageElement>(".dlg-img"));
+    expect(layers).toHaveLength(3);
+    expect(layers.filter((img) => img.classList.contains("on"))).toHaveLength(1);
+    expect(layers.filter((img) => img.getAttribute("aria-hidden") === "true")).toHaveLength(2);
+    expect(document.querySelectorAll(".dlg-bg")).toHaveLength(3);
+    tick(2000);
+    expect(layers[1].classList.contains("on")).toBe(true);
+    expect(layers[0].classList.contains("on")).toBe(false);
+  });
+
+  it("fills one bar per picture: done behind, running on the current one", () => {
+    renderModal();
+    tick(2000);
+    const bars = Array.from(document.querySelectorAll(".dlg-seg i"));
+    expect(bars.map((bar) => bar.className)).toEqual(["done", "run", ""]);
+    expect(document.querySelector(".dlg-count")?.textContent).toBe("2 / 3");
+  });
+
+  it("shows the current bar full, not running, while the pointer holds the gallery", () => {
+    renderModal();
+    fireEvent.mouseEnter(document.querySelector(".dlg-gallery") as HTMLElement);
+    expect(document.querySelector(".dlg-seg i")?.className).toBe("done");
+  });
+
   it("holds still while the pointer is over the gallery, and goes on when it leaves", () => {
     renderModal();
     const media = document.querySelector(".dlg-gallery") as HTMLElement;
