@@ -104,7 +104,7 @@ Ordem sugerida: ~~10~~ (feito), 12, 13, 14 (base de qualidade, pouco risco) → 
 
 ## 8. "Agora" com data e arquivo
 
-**Status: feito em parte (#79).** Os textos foram divididos por área (`i18n.pt.ts` e `i18n.en.ts` caíram de 299 para 205 linhas) e o bloco "Agora" mostra "Atualizado em <data>", a partir de `NOW_UPDATED` em `src/data/now.ts`. Falta a página `/agora` com o arquivo das versões anteriores. Atenção: `src/lib/i18n.types.ts` está em 293 linhas; o próximo texto novo pede dividir os tipos também.
+**Status: feito (#85).** A página `/agora` mostra a versão atual e o arquivo por data (`src/data/now-archive.ts`); o link "Ver o arquivo" fica no bloco Agora da home. Os textos foram divididos por área antes, em #79.
 
 **Estado atual.** O bloco "Agora" vem de `src/data/now.ts` e inclui o card do Memory Apartment com a TV.
 
