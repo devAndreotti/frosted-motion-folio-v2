@@ -1,0 +1,96 @@
+name: Lighthouse
+
+# Lighthouse CI (docs/roadmap.md, item 12). A PR gets one comment with the medians of
+# the home, /blog/, /privacidade/ and the 404 page, mobile and desktop, updated on every push.
+# Once a week (and on demand) the published site is measured, to catch a bad deploy.
+# The budget is a warning only: nothing here fails on the numbers yet.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  schedule:
+    - cron: "17 9 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: lighthouse-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  pr:
+    name: Lighthouse (PR)
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - name: Build (VPS, base /)
+        run: npm run build:vps
+      - name: 404 page to measure (the SPA answers any unknown path)
+        run: mkdir -p dist-vps/lhci-404 && cp dist-vps/index.html dist-vps/lhci-404/index.html
+      - name: Lighthouse mobile
+        run: npx --yes @lhci/cli@0.15.1 collect --config=lighthouserc.json --outputDir=.lighthouseci
+      - name: Lighthouse desktop
+        run: npx --yes @lhci/cli@0.15.1 collect --config=lighthouserc.json --outputDir=.lighthouseci --preset=desktop
+      - name: Report
+        run: node scripts/lighthouse-report.mjs --dir .lighthouseci --out lighthouse-report.md --commit "$GITHUB_SHA"
+      - name: Comment on the PR (updates the same comment)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          id=$(gh api "repos/$REPO/issues/$PR_NUMBER/comments" --paginate --jq '.[] | select(.body | startswith("<!-- lighthouse-ci-report -->")) | .id' | head -n 1)
+          if [ -n "$id" ]; then
+            gh api -X PATCH "repos/$REPO/issues/comments/$id" -F body=@lighthouse-report.md
+          else
+            gh api -X POST "repos/$REPO/issues/$PR_NUMBER/comments" -F body=@lighthouse-report.md
+          fi
+      - name: Upload the LHR files
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: lighthouse-pr
+          path: .lighthouseci/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  live:
+    name: Lighthouse (published site)
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Lighthouse mobile
+        run: npx --yes @lhci/cli@0.15.1 collect --config=lighthouserc.live.json --outputDir=.lighthouseci
+      - name: Lighthouse desktop
+        run: npx --yes @lhci/cli@0.15.1 collect --config=lighthouserc.live.json --outputDir=.lighthouseci --preset=desktop
+      - name: Report
+        run: node scripts/lighthouse-report.mjs --dir .lighthouseci --out lighthouse-report.md
+      - name: Summary
+        run: cat lighthouse-report.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload the LHR files
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: lighthouse-live
+          path: .lighthouseci/
+          if-no-files-found: ignore
+          retention-days: 30
