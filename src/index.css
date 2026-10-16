@@ -156,6 +156,14 @@ html::-webkit-scrollbar-thumb:active {
   }
 }
 
+/* The wash is `fixed inset-0`, so it is only one viewport tall. Anywhere the page runs past that
+   (long pages, full-page captures, mobile toolbars), the body fallback shows through as a seam
+   (flat #f4f4f5 in light, a visible step in dark). Pin it to #root instead, which is as tall as
+   the whole page. */
+#root > [data-testid='background-layers'] {
+  position: absolute;
+}
+
 @layer components {
   /* Real glassmorphism needs three things together, not just a blur: a soft
      drop shadow so the panel visibly separates from the page (depth), and a
@@ -164,10 +172,9 @@ html::-webkit-scrollbar-thumb:active {
     transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
     background: var(--surface-1);
     border: 1px solid var(--border-1);
-    /* 12px, not 20: backdrop blur cost grows with the radius and the
-       difference is invisible over the soft background gradient. */
-    backdrop-filter: blur(12px) saturate(160%);
-    -webkit-backdrop-filter: blur(12px) saturate(160%);
+    /* No backdrop-filter here: the background wash is fixed, so every glass card on screen
+       was re-blurred on every scroll frame (heavy on Edge/Windows GPUs), and over a soft
+       gradient the blur is invisible. The nav, the dialogs and .glass-strong keep theirs. */
     box-shadow: 0 8px 32px var(--sh), inset 0 1px var(--hl);
   }
 
@@ -182,8 +189,6 @@ html::-webkit-scrollbar-thumb:active {
 
   .glass-button {
     @apply glass rounded-full px-8 py-4 transition-all duration-300 hover:scale-110 active:scale-95;
-    backdrop-filter: blur(15px) saturate(180%);
-    -webkit-backdrop-filter: blur(15px) saturate(180%);
   }
 
   .glass-button:hover {

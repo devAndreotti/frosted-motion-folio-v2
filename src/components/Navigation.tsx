@@ -8,6 +8,8 @@ import ColorSwatchPicker from './ColorSwatchPicker';
 import ColorPickerPopover from './ColorPickerPopover';
 import SudoTerminal from './SudoTerminal';
 import { LangSwitch, RepoPill } from './NavExtras';
+import { createTripleClickDetector } from '@/lib/eggs';
+import { toggleDebug } from '@/lib/debugOverlay';
 
 const GLITCH_CHARS = '#$%&01</>{}=+*';
 const GLITCH_TICKS = 10;
@@ -41,6 +43,8 @@ const Navigation = () => {
   const [activeId, setActiveId] = useState('header');
   const holdTimer = useRef<ReturnType<typeof setTimeout>>();
   const glitchInterval = useRef<ReturnType<typeof setInterval>>();
+  // Three quick clicks on the RA logo toggle debug mode (components/DebugOverlay.tsx).
+  const raTripleClick = useRef(createTripleClickDetector());
 
   useEffect(
     () => () => {
@@ -101,7 +105,10 @@ const Navigation = () => {
             }}
             onMouseUp={() => clearTimeout(holdTimer.current)}
             onMouseLeave={() => clearTimeout(holdTimer.current)}
-            onClick={() => scrollToSection('header')}
+            onClick={() => {
+              if (raTripleClick.current()) toggleDebug();
+              scrollToSection('header');
+            }}
           >
             <span className="mono-b">RA</span>
             <span className="brand-name" style={glitchText ? { color: 'var(--accent)', fontFamily: 'var(--font-mono)' } : undefined}>

@@ -1,0 +1,90 @@
+/* Debug mode (see lib/debugOverlay.ts): outline every section that has an id and label it with that id. */
+html.egg-debug section[id] {
+  outline: 2px dashed #f59e0b;
+  outline-offset: -2px;
+  position: relative;
+}
+
+html.egg-debug section[id]::before {
+  content: attr(id);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9000;
+  padding: 2px 6px;
+  font: 600 11px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: #111;
+  background: #f59e0b;
+  pointer-events: none;
+}
+
+.egg-debug-panel {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  z-index: 9001;
+  min-width: 200px;
+  padding: 10px 12px;
+  border: 1px solid #f59e0b;
+  border-radius: 10px;
+  background: rgba(10, 10, 14, 0.92);
+  color: #f5f5f5;
+  font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+  pointer-events: none;
+}
+
+.egg-debug-panel .egg-debug-title {
+  margin: 0 0 6px;
+  color: #f59e0b;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.egg-debug-panel dl {
+  display: grid;
+  gap: 2px 12px;
+  margin: 0;
+}
+
+.egg-debug-panel dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.egg-debug-panel dt {
+  opacity: 0.6;
+}
+
+.egg-debug-panel dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.egg-debug-panel .egg-debug-hint {
+  margin: 8px 0 0;
+  opacity: 0.5;
+  font-size: 11px;
+}
+
+.egg-hire-line {
+  animation: egg-line-in 300ms ease-out both;
+}
+
+@keyframes egg-line-in {
+  from {
+    opacity: 0;
+    transform: translateX(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .egg-hire-line {
+    animation: none;
+  }
+}

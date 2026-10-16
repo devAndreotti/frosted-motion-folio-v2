@@ -8,9 +8,12 @@ export interface NowProject {
   meta: Localized<string>;
   pitch: Localized<string>;
   tags: string[];
-  href: string;
+  /** Where the card goes; none for the ones that open something on this page instead (`tv`). */
+  href?: string;
   /** Visible link text: the site's host, or "GitHub". */
-  linkLabel: string;
+  linkLabel?: string;
+  /** The card opens Memory Apartment's TV, not a site. */
+  tv?: boolean;
   /** Repo is private -- the card links to the public site instead. */
   privateCode?: boolean;
   /** Screenshot in public/now; cards without one draw their own visual. */
@@ -18,6 +21,9 @@ export interface NowProject {
   /** Banner-shaped art that should be shown whole, not cropped. */
   contain?: boolean;
 }
+
+/** When this list was last reviewed (ISO date); shown under the section subtitle. Update it with the list. */
+export const NOW_UPDATED = '2026-10-16';
 
 // What's on the workbench right now, newest first. Taken from the GitHub
 // account in Oct 2026: private repos only ever link to their public site.
@@ -32,8 +38,7 @@ export const NOW_PROJECTS: NowProject[] = [
       en: 'First-person psychological horror: October 2003, apartment 17, and every night at 03:17 something changes. Impossible architecture, anomalies and a working early-2000s PC inside the game.',
     },
     tags: ['Godot 4', 'GDScript', 'Blender'],
-    href: 'https://memoryapartment.com',
-    linkLabel: 'memoryapartment.com',
+    tv: true,
     privateCode: true,
     image: './now/memory-apartment.webp',
   },

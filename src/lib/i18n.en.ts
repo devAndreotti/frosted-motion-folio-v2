@@ -1,4 +1,6 @@
 import type { Strings } from './i18n.types';
+import { enBlog } from './i18n.en.blog';
+import { enNow } from './i18n.en.now';
 
 export const en: Strings = {
   common: {
@@ -74,28 +76,7 @@ export const en: Strings = {
     reposUnit: 'repositories on GitHub',
     alsoKnown: 'Also in the toolbox',
   },
-  now: {
-    sectionLabel: 'Now',
-    title: "What I'm working on right now.",
-    subtitle: "What's busiest on my GitHub. Some repos are still private: those link to the project's site.",
-    aboutLabel: 'About me',
-    aboutBody:
-      "I'm Ricardo: an IT technician in my 7th semester of Computer Science at UNIP, in Sorocaba, Brazil. I learn by building things I use myself: tools to code better, AI automation running on my own infrastructure and, lately, a horror game.",
-    facts: [
-      { label: 'Based in', value: 'Sorocaba, Brazil' },
-      { label: 'Studying', value: 'Computer Science · UNIP' },
-      { label: 'Into', value: 'applied AI, DX and games' },
-    ],
-    privateCode: 'private code',
-    alsoLabel: 'Also in the oven',
-    privateTag: 'private',
-    alsoMore: 'See more',
-    alsoMoreNote: 'the other repositories on GitHub',
-    alsoOpen: 'see details',
-    alsoWhat: 'What it does',
-    alsoPrivateFoot: 'Private code: no public page yet.',
-    alsoGithub: 'View the code on GitHub',
-  },
+  now: enNow,
   projects: {
     sectionLabel: 'Projects',
     title: 'Projects with context, decisions, and delivery.',
@@ -110,6 +91,13 @@ export const en: Strings = {
     code: 'Code',
     emptyCategory: 'No projects in this category yet.',
     moreProjects: (count) => `See the other ${count} on GitHub`,
+    more: {
+      title: 'Experiments and studies worth a click too.',
+      subtitle: 'Pages, components and effects I built to practice. Click to see the screens.',
+      cardAria: (title) => `See the screens of ${title}`,
+      showAll: (count) => `See all ${count}`,
+      showLess: 'Show less',
+    },
   },
   caseModal: {
     whatIDid: 'What I did',
@@ -120,6 +108,10 @@ export const en: Strings = {
     prevImageAria: 'Previous image',
     nextImageAria: 'Next image',
     imageAlt: (title, index) => `Screenshot ${index} of ${title}`,
+    imagesAria: 'Project images',
+    goToImageAria: (index) => `Go to image ${index}`,
+    pauseAria: 'Pause the automatic image slideshow',
+    playAria: 'Resume the automatic image slideshow',
   },
   timeline: {
     sectionLabel: 'Journey',
@@ -165,6 +157,10 @@ export const en: Strings = {
     builtWith: 'built with React, Tailwind CSS, and a lot of coffee.',
     backToTop: 'Back to top',
   },
+  easter: {
+    hauntedLine: 'still awake? so is the code.',
+    printNote: 'Psst: you found the Ctrl+P easter egg.',
+  },
   notFound: {
     badge: 'Error 404',
     kicker: 'route not found',
@@ -182,47 +178,28 @@ export const en: Strings = {
       contact: { title: 'Contact', note: 'Email, LinkedIn and GitHub, all in one place.' },
     },
     broken: 'Found a broken link of mine?',
+    game: {
+      aria: 'Mini game: dodge the bugs and catch the coffee', title: 'dodge the bugs', hint: 'Drag the square or use ← → (A D). Coffee is +5 and slows the bugs',
+      start: 'Start', pressToStart: 'Press to start', over: 'You hit a bug', record: 'new record!',
+      restart: 'Play again', restartHint: 'Space, Enter or tap to restart', score: (points) => `${points} points`,
+      best: (points) => `best ${points}`, wave: (n) => `Wave ${n}!`, lives: (n) => (n === 1 ? '1 life' : `${n} lives`),
+    },
   },
-  blog: {
-    sectionLabel: 'Writing',
-    teaserTitle: 'Notes from building my own site.',
-    teaserSub: 'Decisions, mistakes and what I learned along the way. Written in Markdown, published with a git push.',
-    seeAll: 'See all posts',
-    pageTitle: 'Writing',
-    pageLead: 'On front-end, small infrastructure and the decisions behind this site.',
-    langNote: 'Posts are written in Portuguese and translated to English automatically.',
-    translatedNote: 'Translated from Portuguese by AI.',
-    ptOnly: 'This post is only available in Portuguese.',
-    searchLabel: 'Search the posts',
-    searchPlaceholder: 'Search the posts…',
-    searchButton: 'Search',
-    searchHint: 'Search by DuckDuckGo · site:devandreotti.com',
-    tagsLabel: 'Filter by tag',
-    allTags: 'all',
-    latest: 'Latest',
-    readPost: 'Read post',
-    postsCount: (count) => (count === 1 ? '1 post' : `${count} posts`),
-    empty: 'No posts published yet. Check back soon.',
-    emptyTag: 'No posts with this tag yet.',
-    minutes: (count) => `${count} min read`,
-    back: '~/blog',
-    onThisPage: 'In this post',
-    helpful: 'Did this post help?',
-    like: 'Like',
-    liked: 'Liked',
-    likeHint: 'No account and no tracking cookie. One like per visitor.',
-    likedHint: 'Thanks! It counts once per visitor. Click again to undo.',
-    likeError: "Couldn't save that right now. Try again in a moment.",
-    copyLink: 'Copy link',
-    linkCopied: 'Link copied',
-    replyEmail: 'Reply by email',
-    newer: 'Newer',
-    older: 'Older',
-    loadError: "This post couldn't be loaded.",
-  },
+  blog: enBlog,
   colorPicker: {
     hueLabel: (label) => `Accent color: ${label}`,
     trigger: 'Choose accent color',
     hueNames: { black: 'Black', blue: 'Blue', purple: 'Purple', orange: 'Orange', red: 'Red', green: 'Green', yellow: 'Yellow' },
+  },
+  eggs: {
+    hireHelp: 'hire Ricardo',
+    hireLines: ['> authenticating as root... ok', "> reading Ricardo's application... ok", '> hiring approved [ OK ]', '> sending an invite to the team...'],
+    hireContact: (email) => `direct contact: ${email}`,
+    sudoDenied: 'sudo: permission denied. Try: sudo hire ricardo',
+    debug: {
+      title: 'debug mode', ariaLabel: 'Debug panel', viewport: 'viewport',
+      theme: 'theme', themeNames: { dark: 'dark', light: 'light' }, language: 'language',
+      loadTime: 'load time', notAvailable: 'n/a', exitHint: 'triple-click the logo or Esc to exit',
+    },
   },
 };

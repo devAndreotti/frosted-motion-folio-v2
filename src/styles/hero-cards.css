@@ -93,12 +93,24 @@
 @keyframes hc-fill-a { to { transform: none; } }
 @keyframes hc-fill-b { to { transform: none; } }
 @media (max-width: 720px) {
-  .dk { width: 300px; height: 384px; }
+  /* wide and tall enough for the fanned-out pile (PHONE_SPREAD in cardStack.ts): 236px card + 3 steps right, 324px + 3 steps and the tilt down */
+  .dk { width: 320px; height: 408px; }
   .dk-card { width: 236px; height: 324px; border-radius: 22px; }
   .dk-cap { left: 10px; right: 10px; bottom: 10px; padding: 12px 14px 13px; border-radius: 15px; }
   .dk-cap .hc-t { font-size: 17px; }
   .dk-cap .hc-s { font-size: 13px; }
   .prog-s { width: 24px; }
+}
+/* the fanned-out pile is wider than the card: on small phones the cards shrink so it still fits the column */
+@media (max-width: 380px) {
+  .dk { width: 290px; height: 372px; }
+  .dk-card { width: 208px; height: 286px; }
+}
+@media (max-width: 340px) {
+  .dk { width: 262px; height: 340px; }
+  .dk-card { width: 188px; height: 258px; }
+  .dk-cap .hc-t { font-size: 15px; }
+  .dk-cap .hc-s { font-size: 12px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

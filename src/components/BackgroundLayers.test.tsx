@@ -61,4 +61,29 @@ describe("BackgroundLayers", () => {
       expect(hidden!.style.background).toBe(initialGradient);
     });
   });
+
+  it("in lite mode (data-lite) a hue change swaps the gradient at once, with no crossfade", async () => {
+    // the crossfade test above saved "blue" as the hue; start from the default so the switch changes the gradient
+    localStorage.clear();
+    document.documentElement.setAttribute("data-lite", "");
+    try {
+      render(
+        <ThemeProvider>
+          <BackgroundLayers />
+          <HueSwitcher />
+        </ThemeProvider>
+      );
+      const initialGradient = queryLayers()[0].style.background;
+
+      fireEvent.click(screen.getByRole("button", { name: "switch to blue" }));
+
+      await waitFor(() => {
+        const layers = queryLayers();
+        expect(layers[0].style.background).toBe(layers[1].style.background);
+        expect(layers[0].style.background).not.toBe(initialGradient);
+      });
+    } finally {
+      document.documentElement.removeAttribute("data-lite");
+    }
+  });
 });

@@ -1,0 +1,226 @@
+/* Print = a clean CV (Ctrl+P or window.print). Only the text of the main
+   content survives: no nav, background, buttons, dialogs, the TV or likes. */
+
+/* Screen: the print-only bits stay out of the way. */
+.print-url,
+.print-foot {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm 14mm 18mm;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    height: auto !important;
+    overflow: visible !important;
+    font-size: 10.5pt;
+    line-height: 1.45;
+  }
+
+  /* Recruiter Mode prints its own summary (index.css isolates that dialog).
+     While that dialog is open, the CV rules below step aside. */
+  :root:not(:has([data-print-target='recruiter-summary'])) body * {
+    visibility: visible !important;
+  }
+
+  /* Chrome that does not belong on paper. Tailwind's .fixed covers the nav
+     overlays, the scroll bar and the page wash. */
+  :root:not(:has([data-print-target='recruiter-summary'])) :is(
+      .fixed,
+      header.nav,
+      a[href='#header'],
+      [role='dialog'],
+      .dlg,
+      .ov,
+      button:not(.row):not(.mp-card),
+      input,
+      select,
+      textarea,
+      dialog,
+      video,
+      iframe,
+      canvas,
+      img,
+      .ic,
+      .btn,
+      .ctas,
+      .ctas-g,
+      .vsep,
+      .more,
+      .mp-more,
+      .np,
+      .pulse,
+      .hc-w,
+      .thumb,
+      .mp-img,
+      .mp-win,
+      .ra,
+      .nc-link,
+      .nc-priv,
+      .nc-gate,
+      .mq,
+      .shimmer,
+      .haunted-line,
+      #github-activity,
+      #blog,
+      .prog
+    ) {
+    display: none !important;
+  }
+
+  /* Project rows and cards are buttons, so they come back on purpose. */
+  :root:not(:has([data-print-target='recruiter-summary'])) :is(.row, .mp-card) {
+    display: block !important;
+    height: auto !important;
+  }
+
+  /* One paper color, one ink. Layers and glass fall away. */
+  *,
+  *::before,
+  *::after {
+    background-color: transparent !important;
+    background-image: none !important;
+    color: #000 !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    filter: none !important;
+  }
+
+  .glass,
+  .ctc,
+  .about,
+  .nc {
+    border: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .wrap,
+  .sec,
+  .hero,
+  main,
+  .min-h-screen,
+  .now-layout,
+  .rows,
+  .mp-grid,
+  .ctc {
+    max-width: none !important;
+    width: auto !important;
+    min-height: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    display: block !important;
+    overflow: visible !important;
+  }
+
+  .stats {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .sec {
+    padding-top: 4mm !important;
+    padding-bottom: 2mm !important;
+  }
+
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+    color: #000 !important;
+  }
+
+  h1 {
+    font-size: 24pt;
+    line-height: 1.15;
+    margin-bottom: 2mm;
+  }
+
+  h2 {
+    font-size: 15pt;
+    margin-top: 4mm;
+    margin-bottom: 1.5mm;
+    border-bottom: 1px solid #000;
+  }
+
+  .row,
+  .mp-card,
+  .st,
+  .tl-list > * {
+    break-inside: avoid;
+    border-bottom: 1px solid #bbb !important;
+    padding-top: 2mm !important;
+    padding-bottom: 2mm !important;
+  }
+
+  .tag,
+  .chip {
+    border: 1px solid #777 !important;
+    padding: 0 3px !important;
+    font-size: 8.5pt;
+    margin-right: 2px;
+  }
+
+  /* Links keep their text, and in the main content the address follows in brackets. */
+  a {
+    color: #000 !important;
+    text-decoration: underline;
+  }
+
+  main a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    word-break: break-all;
+  }
+
+  /* Link rows are flex boxes: the printed address would become a one-letter-wide
+     flex item, so these rows print as blocks and the address wraps normally. */
+  main .dl a[href^="http"],
+  main a.nc[href^="http"],
+  main a.also-i[href^="http"] {
+    display: block !important;
+  }
+
+  main .dl .dl-h {
+    margin-right: 0.6em;
+  }
+
+  /* The journey cards scroll sideways on screen; on paper they wrap instead. */
+  main .tl-list {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    overflow: visible !important;
+  }
+
+  .print-url {
+    display: inline !important;
+    margin-left: 0.4em;
+    font-size: 0.85em;
+    word-break: break-all;
+  }
+
+  .print-foot {
+    display: block !important;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    font-size: 7.5pt;
+    text-align: center;
+    color: #555 !important;
+  }
+}

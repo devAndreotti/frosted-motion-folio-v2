@@ -80,6 +80,8 @@ export interface Strings {
     sectionLabel: string;
     title: string;
     subtitle: string;
+    /** "Updated on <date>", under the section subtitle. */
+    updated: (date: string) => string;
     aboutLabel: string;
     aboutBody: string;
     facts: { label: string; value: string }[];
@@ -94,6 +96,29 @@ export interface Strings {
     alsoWhat: string;
     alsoPrivateFoot: string;
     alsoGithub: string;
+    /** Memory Apartment's card opens a TV instead of a site. */
+    tv: {
+      open: string;
+      dialogAria: (title: string) => string;
+      screenAria: (channel: string) => string;
+      power: string;
+      next: string;
+      prev: string;
+      knob: string;
+      errTitle: string;
+      errSub: string;
+      osdDate: string;
+      osdError: string;
+      bridgeAlt: string;
+      channelError: string;
+      channelBridge: string;
+      tvOn: string;
+      tvOff: string;
+      soundOn: string;
+      soundOff: string;
+      antenna: string;
+      tap: string;
+    };
   };
   projects: {
     sectionLabel: string;
@@ -109,6 +134,13 @@ export interface Strings {
     code: string;
     emptyCategory: string;
     moreProjects: (count: number) => string;
+    more: {
+      title: string;
+      subtitle: string;
+      cardAria: (title: string) => string;
+      showAll: (count: number) => string;
+      showLess: string;
+    };
   };
   caseModal: {
     whatIDid: string;
@@ -119,6 +151,10 @@ export interface Strings {
     prevImageAria: string;
     nextImageAria: string;
     imageAlt: (title: string, index: number) => string;
+    imagesAria: string;
+    goToImageAria: (index: number) => string;
+    pauseAria: string;
+    playAria: string;
   };
   timeline: {
     sectionLabel: string;
@@ -157,6 +193,11 @@ export interface Strings {
     builtWith: string;
     backToTop: string;
   };
+  /** Easter eggs: the 03:17 haunted footer line and the Ctrl+P printed footer. */
+  easter: {
+    hauntedLine: string;
+    printNote: string;
+  };
   notFound: {
     badge: string;
     kicker: string;
@@ -171,6 +212,12 @@ export interface Strings {
     suggest: string;
     sections: Record<'projects' | 'now' | 'contact', { title: string; note: string }>;
     broken: string;
+    game: {
+      aria: string; title: string; hint: string;
+      start: string; pressToStart: string; over: string; record: string;
+      restart: string; restartHint: string; score: (points: number) => string;
+      best: (points: number) => string; wave: (n: number) => string; lives: (n: number) => string;
+    };
   };
   blog: {
     sectionLabel: string;
@@ -183,6 +230,23 @@ export interface Strings {
     langNote: string;
     translatedNote: string;
     ptOnly: string;
+    newsletter: {
+      kicker: string;
+      title: string;
+      text: string;
+      label: string;
+      placeholder: string;
+      button: string;
+      sending: string;
+      sent: string;
+      invalid: string;
+      error: string;
+      tooMany: string;
+      privacy: string;
+      privacyLink: string;
+      langLabel: string;
+      check: string;
+    };
     searchLabel: string;
     searchPlaceholder: string;
     searchButton: string;
@@ -214,5 +278,16 @@ export interface Strings {
     hueLabel: (label: string) => string;
     trigger: string;
     hueNames: Record<'black' | 'blue' | 'purple' | 'orange' | 'red' | 'green' | 'yellow', string>;
+  };
+  eggs: {
+    hireHelp: string;
+    hireLines: string[];
+    hireContact: (email: string) => string;
+    sudoDenied: string;
+    debug: {
+      title: string; ariaLabel: string; viewport: string;
+      theme: string; themeNames: Record<'dark' | 'light', string>; language: string;
+      loadTime: string; notAvailable: string; exitHint: string;
+    };
   };
 }

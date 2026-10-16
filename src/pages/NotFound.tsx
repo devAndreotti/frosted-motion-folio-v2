@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { contact } from "@/data/personal";
+import NotFoundGame from "@/components/NotFoundGame";
 
 // The app's root on either deploy ("/" on devandreotti.com, "/frosted-motion-folio-v2/" on GitHub Pages).
 const HOME = import.meta.env.BASE_URL;
@@ -20,12 +21,14 @@ const NotFound = () => {
 
   return (
     <div className="nf">
-      <header className="nf-top">
-        <a className="brand" href={HOME}>
-          <span className="mono-b">RA</span>
-          <span>Ricardo Andreotti</span>
-        </a>
-        <span className="nf-host">{window.location.host}</span>
+      <header className="nav">
+        <div className="nav-in nf-nav">
+          <a className="brand" href={HOME}>
+            <span className="mono-b">RA</span>
+            <span>Ricardo Andreotti</span>
+          </a>
+          <span className="nf-host">{window.location.host}</span>
+        </div>
       </header>
 
       <main className="wrap nf-main">
@@ -38,7 +41,7 @@ const NotFound = () => {
             {n.kicker}
           </p>
           <h1 className="nf-h">
-            {n.title} <span>{n.titleAccent}</span>
+            {n.title} <span data-text={n.titleAccent}>{n.titleAccent}</span>
           </h1>
           <p className="lead">{n.body}</p>
           <div className="nf-path glass">
@@ -61,21 +64,27 @@ const NotFound = () => {
           </div>
         </div>
 
-        <nav className="nf-sug" aria-label={n.suggest}>
-          <span className="nf-big" aria-hidden="true">404</span>
-          <p className="k">{n.suggest}</p>
-          {SECTIONS.map((id, i) => (
-            <a key={id} className="nf-s glass" href={`${HOME}#${id}`}>
-              <span className="nf-n">0{i + 1}</span>
-              <span>
-                <span className="nf-st">{n.sections[id].title}</span>
-                <span className="nf-sd">{n.sections[id].note}</span>
-              </span>
-              <ArrowUpRight className="ic" />
-            </a>
-          ))}
-        </nav>
+        <div className="nf-side">
+          <nav className="nf-sug" aria-label={n.suggest}>
+            <span className="nf-big" aria-hidden="true">404</span>
+            <p className="k">{n.suggest}</p>
+            {SECTIONS.map((id, i) => (
+              <a key={id} className="nf-s glass" href={`${HOME}#${id}`}>
+                <span className="nf-n">0{i + 1}</span>
+                <span>
+                  <span className="nf-st">{n.sections[id].title}</span>
+                  <span className="nf-sd">{n.sections[id].note}</span>
+                </span>
+                <ArrowUpRight className="ic" />
+              </a>
+            ))}
+          </nav>
+        </div>
       </main>
+
+      <section className="wrap nf-play">
+        <NotFoundGame />
+      </section>
 
       <footer className="nf-foot">
         <span>© {new Date().getFullYear()} Ricardo A. Gonçalves</span>

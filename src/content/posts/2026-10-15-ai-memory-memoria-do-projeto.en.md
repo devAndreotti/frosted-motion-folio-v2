@@ -4,7 +4,7 @@ date: 2026-10-15
 description: ai-memory keeps a project's decisions, rules and gotchas outside the chat session, so any model can pick up where the last one stopped.
 tags: [ia, mcp, ai-memory]
 draft: false
-source: be3e7e5f2cd1
+source: a47e4a90d6ce
 ---
 
 > "A big f\*-you to the AI providers and the lock-in they try to push."
@@ -13,7 +13,7 @@ Fabio Akita was on Flow and talked about this trap. If you program with AI, you 
 probably noticed it already: every provider tries to lock you into its own little
 pen. ChatGPT's memory lives at OpenAI; Projects live at Anthropic.
 
-![Cover of the Flow episode with Fabio Akita](/blog/ai-memory-memoria-do-projeto/capa.jpg)
+![Cover of the Flow episode with Fabio Akita](/blog/ai-memory-memoria-do-projeto/capa.webp)
 
 ## The cost of switching models
 
