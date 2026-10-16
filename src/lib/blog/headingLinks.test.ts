@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { addHeadingLinks } from './headingLinks';
 
-const LABELS = { copy: 'Copiar link para esta seção', copied: 'Link copiado' };
+const LABELS = { copy: 'Copiar link da seção', copied: 'Link copiado' };
 const flush = () => new Promise((resolve) => setTimeout(resolve, 0));
 
 describe('addHeadingLinks', () => {
@@ -19,7 +19,7 @@ describe('addHeadingLinks', () => {
     const root = setup();
     addHeadingLinks(root, LABELS, 'https://devandreotti.com/blog/x/', vi.fn().mockResolvedValue(undefined));
     expect(root.querySelectorAll('button.h-anchor')).toHaveLength(2);
-    expect(root.querySelector('#a button')?.getAttribute('aria-label')).toBe(LABELS.copy);
+    expect(root.querySelector('#a button')?.getAttribute('aria-label')).toBe('Copiar link da seção: A');
     expect(root.querySelector('#c button')).toBeNull();
   });
 

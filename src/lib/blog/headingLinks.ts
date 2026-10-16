@@ -20,7 +20,8 @@ export function addHeadingLinks(root: HTMLElement, labels: HeadingLabels, pageUr
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'h-anchor';
-    button.setAttribute('aria-label', labels.copy);
+    // the section in the name, so each button reads differently in a screen reader
+    button.setAttribute('aria-label', `${labels.copy}: ${heading.textContent?.trim() ?? ''}`);
     button.innerHTML = `${ICON}<span class="sr-only" aria-live="polite"></span>`;
     const status = button.querySelector('span') as HTMLSpanElement;
     button.addEventListener('click', () => {
