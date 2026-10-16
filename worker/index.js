@@ -21,7 +21,7 @@ import { handleNewsletter } from './newsletter.js';
 const APEX = 'devandreotti.com';
 // The only paths that are pages; any other HTML is the one-page app's fallback for an unknown route.
 // (Assets serve offline.html at /offline: html_handling drops the extension.)
-const PAGES = new Set(['/', '/offline', '/blog/', '/privacidade/']);
+const PAGES = new Set(['/', '/offline', '/blog/', '/privacidade/', '/uses/']);
 const POST_PAGE = /^\/blog\/([a-z0-9-]+)\/$/;
 
 async function isPage(request, env, pathname) {

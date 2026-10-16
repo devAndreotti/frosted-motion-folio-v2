@@ -31,6 +31,11 @@ describe('worker', () => {
     expect(await res.text()).toContain('id="root"');
   });
 
+  it('serves /uses/ as a page of its own', async () => {
+    const res = await worker.fetch(get('/uses/'), { ASSETS: assets() });
+    expect(res.status).toBe(200);
+  });
+
   it('leaves files that are not pages alone', async () => {
     const res = await worker.fetch(get('/profile/blue.webp'), { ASSETS: assets() });
     expect(res.status).toBe(200);

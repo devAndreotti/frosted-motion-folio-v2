@@ -98,6 +98,8 @@ Ordem sugerida: ~~10~~ (feito), 12, 13, 14 (base de qualidade, pouco risco) → 
 
 ## 7. Página `/uses`
 
+**Status: em PR draft (branch `feat/uses`).** Página, dados e testes prontos; falta revisão do conteúdo pelo dono e o CI.
+
 **O que fazer.** Página com as ferramentas do dia a dia: editor, terminal, extensões, hardware, serviços, e o motivo de cada escolha. Dados em `src/data/uses.ts` (lista por categoria), página no padrão do `Privacy.tsx` (usa a barra do blog e a largura de leitura de 880 px). Link no rodapé e no menu do blog.
 
 **Pronto quando.** Está no sitemap, tem `<title>` próprio, funciona em PT e EN e passa na auditoria de contraste do item 13.
