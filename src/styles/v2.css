@@ -19,15 +19,14 @@
 .brand { display: inline-flex; align-items: center; gap: 12px; font: 600 16px/1 var(--font-sans); letter-spacing: -0.01em; justify-self: start; color: var(--fg-1); white-space: nowrap; user-select: none; }
 .mono-b { width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--border-1); background: var(--surface-1); box-shadow: inset 0 1px var(--hl); display: grid; place-items: center; font: 600 12px/1 var(--font-mono); letter-spacing: 0.02em; }
 .nav-links { display: flex; gap: 2px; }
-.nl { position: relative; padding: 11px 13px; border-radius: 999px; color: var(--fg-2); font: 500 14px/1 var(--font-sans); transition: color 0.2s; }
-.nl:hover, .nl.on { color: var(--fg-1); }
+.nl { position: relative; padding: 11px 13px; border-radius: 999px; color: var(--fg-2); font: 500 14px/1 var(--font-sans); }
+.nl.on { color: var(--fg-1); }
 .nl.on::after { content: ''; position: absolute; left: 13px; right: 13px; bottom: 4px; height: 2px; border-radius: 2px; background: var(--accent); }
 .nav-r { justify-self: end; display: flex; align-items: center; gap: 8px; }
 /* the pills keep their natural width: when the middle column squeezes the bar they used to shrink under their own content (PT/EN spilling out of the pill, the repo dot on the border) */
 .nav-r > * { flex: none; }
-.np { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 34px; min-width: 34px; padding: 0 13px; border-radius: 999px; border: 1px solid var(--border-1); background: var(--surface-1); box-shadow: inset 0 1px var(--hl); color: var(--fg-2); font: 500 12px/1 var(--font-mono); white-space: nowrap; cursor: pointer; transition: color 0.2s, border-color 0.2s, background 0.2s; }
+.np { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 34px; min-width: 34px; padding: 0 13px; border-radius: 999px; border: 1px solid var(--border-1); background: var(--surface-1); box-shadow: inset 0 1px var(--hl); color: var(--fg-2); font: 500 12px/1 var(--font-mono); white-space: nowrap; cursor: pointer; }
 .np::before { content: ''; position: absolute; inset: -5px; }
-.np:hover { color: var(--fg-1); border-color: var(--border-2); }
 .np.sq { width: 34px; padding: 0; }
 .np.fix { cursor: default; }
 .np.on { background: var(--accent); color: var(--accent-text); border-color: transparent; }
@@ -43,7 +42,7 @@
 /* the accent pill slides under the active option (same 0.2s as the .np buttons); the labels stay above it */
 .np.lang::after { content: ''; position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 4px); border-radius: 999px; background: var(--accent); transition: transform 0.2s; pointer-events: none; }
 .np.lang[data-lang='en']::after { transform: translateX(calc(100% + 2px)); }
-.lg { position: relative; z-index: 1; height: 26px; min-width: 30px; padding: 0 8px; border: 0; border-radius: 999px; background: transparent; color: var(--fg-2); font: 600 11.5px/1 var(--font-mono); cursor: pointer; transition: color 0.2s; }
+.lg { position: relative; z-index: 1; height: 26px; min-width: 30px; padding: 0 8px; border: 0; border-radius: 999px; background: transparent; color: var(--fg-2); font: 600 11.5px/1 var(--font-mono); cursor: pointer; }
 .lg.on { color: var(--accent-text); }
 .pop { position: absolute; right: 0; top: 46px; z-index: 5; display: flex; gap: 7px; padding: 7px; border-radius: 999px; animation: v2-popin 0.25s cubic-bezier(0.2, 0.8, 0.2, 1); }
 .sw { position: relative; width: 24px; height: 24px; border: 0; border-radius: 99px; padding: 0; cursor: pointer; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25); flex: none; }
@@ -71,14 +70,11 @@
 .ctas { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 32px; }
 .ctas-g, .soc { display: flex; align-items: center; gap: 12px; }
 .ctas-g { flex-wrap: wrap; }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 48px; padding: 0 22px; border-radius: 999px; border: 1px solid transparent; font: 600 15px/1 var(--font-sans); cursor: pointer; white-space: nowrap; transition: transform 0.2s, border-color 0.2s, filter 0.2s; }
-.btn:hover { transform: translateY(-1px); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 48px; padding: 0 22px; border-radius: 999px; border: 1px solid transparent; font: 600 15px/1 var(--font-sans); cursor: pointer; white-space: nowrap; }
 .btn-pri { background: var(--accent); color: var(--accent-text); border-color: color-mix(in oklab, var(--accent) 70%, white); box-shadow: 0 16px 40px -12px color-mix(in oklab, var(--accent) 55%, transparent), inset 0 1px rgba(255, 255, 255, 0.25); }
-.btn-pri:hover { filter: brightness(1.06); }
 .btn-gh { background: var(--surface-2); border-color: var(--border-2); color: var(--fg-1); box-shadow: inset 0 1px var(--hl); }
 .btn-sm { height: 42px; padding: 0 16px; font-size: 14px; }
-.ibtn { width: 48px; height: 48px; border-radius: 999px; display: inline-grid; place-items: center; padding: 0; border: 1px solid var(--border-2); background: var(--surface-2); color: var(--fg-1); cursor: pointer; box-shadow: inset 0 1px var(--hl); transition: transform 0.2s; }
-.ibtn:hover { transform: translateY(-1px); }
+.ibtn { width: 48px; height: 48px; border-radius: 999px; display: inline-grid; place-items: center; padding: 0; border: 1px solid var(--border-2); background: var(--surface-2); color: var(--fg-1); cursor: pointer; box-shadow: inset 0 1px var(--hl); }
 .vsep { width: 1px; height: 28px; background: var(--line-2); margin: 0 2px; }
 .rv { animation: v2-rv 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) var(--d, 0s) both; }
 html.booting .rv { animation-play-state: paused; }
@@ -105,8 +101,7 @@ html.booting .rv { animation-play-state: paused; }
 .sub { margin: 14px 0 0; max-width: 56ch; font: 400 16px/1.6 var(--font-sans); color: var(--fg-2); }
 .sh-r { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .seg { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
-.seg button { position: relative; display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border: 0; border-radius: 999px; background: transparent; color: var(--fg-2); font: 600 14px/1 var(--font-sans); cursor: pointer; white-space: nowrap; transition: color 0.2s; }
-.seg button:hover { color: var(--fg-1); }
+.seg button { position: relative; display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border: 0; border-radius: 999px; background: transparent; color: var(--fg-2); font: 600 14px/1 var(--font-sans); cursor: pointer; white-space: nowrap; }
 .seg button.on { color: var(--accent-text); }
 .seg-hl { position: absolute; inset: 0; border-radius: 999px; background: var(--accent); z-index: -1; }
 .seg-n { font: 500 11px/1 var(--font-mono); opacity: 0.65; }
@@ -527,7 +522,7 @@ button.also-i { cursor: pointer; }
 @media (hover: none) { .thumb { display: none; } }
 @media (prefers-reduced-motion: reduce) {
   .thumb-shot img { transition: none; }
-  .np.lang::after, .lg { transition: none; }
+  .np.lang::after { transition: none; }
   .row:hover .thumb-shot img { transform: none; }
   .rv { animation: none; }
   .pulse::after { animation: none; }
