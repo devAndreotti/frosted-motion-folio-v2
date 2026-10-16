@@ -70,6 +70,8 @@ Ordem sugerida: ~~10~~ (feito), 12, 13, 14 (base de qualidade, pouco risco) → 
 
 ## 3. Imagem de compartilhamento por página
 
+**Status: em PR draft.** Cada post (PT, e EN quando há tradução) tem PNG 1200×630 gerado no build (`vite-plugins/og-image.ts`, satori + resvg, fontes Geist estáticas em WOFF) em `/og/<slug>.png`; `og:image`, `og:image:*` e `twitter:*` vêm do próprio post, com a imagem do site como fallback. Projetos (item 1) ficam para depois. Falta validar no depurador do LinkedIn e no Open Graph do Facebook.
+
 **Problema.** Há uma só imagem (`public/og-image.png`) para o site todo. Ao colar um post ou um projeto no LinkedIn, WhatsApp ou Discord, aparece sempre a mesma.
 
 **O que fazer.**

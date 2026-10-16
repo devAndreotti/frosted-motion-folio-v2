@@ -4,7 +4,8 @@ import type { Plugin } from 'vite';
 import { isTranslationFile, parsePost } from '../src/lib/blog/parse';
 import { renderMarkdown } from '../src/lib/blog/markdown';
 import { sortPosts } from '../src/lib/blog/list';
-import { buildRss, extendSitemap, renderIndexPage, renderPostPage } from '../src/lib/blog/page';
+import { BLOG_DESCRIPTION, buildRss, extendSitemap, postImage, renderIndexPage, renderPostPage } from '../src/lib/blog/page';
+import { writeShareImages } from './og-image';
 import type { PostMeta } from '../src/lib/blog/types';
 
 // The blog: posts are Markdown files in src/content/posts/.
@@ -13,6 +14,12 @@ import type { PostMeta } from '../src/lib/blog/types';
 //   - drafts exist on the dev server only: a build ships none of their text and makes no page
 //   - after a build, writes the real HTML pages (blog/index.html, blog/<slug>/index.html),
 //     blog/rss.xml, blog/index.json (the slugs the Worker accepts) and the sitemap entries
+//   - and the share images og/<slug>.png (and og/<slug>-en.png for a translated post), 1200x630
+
+// the kicker above a card's title: the blog's name in each language
+const BLOG_KICKER = 'Escritos · devandreotti.com';
+const BLOG_KICKER_EN = 'Writing · devandreotti.com';
+const BLOG_DESCRIPTION_EN = 'Notes on front-end, small infrastructure and the decisions behind devandreotti.com.';
 
 export const POSTS_DIR = path.resolve(__dirname, '../src/content/posts');
 
@@ -78,16 +85,24 @@ export function blogPlugin(dir = POSTS_DIR): Plugin {
         map: null,
       };
     },
-    closeBundle() {
+    async closeBundle() {
       if (!isBuild) return;
       const all = readPosts(dir);
       const posts = all.filter(({ meta, en }) => !en && !meta.draft);
       const translated = new Set(all.filter(({ en }) => en).map(({ meta }) => meta.slug));
       const metas = sortPosts(posts.map(({ meta }) => meta));
+      // one card per published post, and one per English version of a published post (its title and description)
+      const englishOf = all.filter(({ en, meta }) => en && posts.some((post) => post.meta.slug === meta.slug));
+      const cards = [
+        ...posts.map(({ meta }) => ({ name: meta.slug, card: { kicker: BLOG_KICKER, title: meta.title, subtitle: meta.description || BLOG_DESCRIPTION } })),
+        ...englishOf.map(({ meta }) => ({ name: `${meta.slug}-en`, card: { kicker: BLOG_KICKER_EN, title: meta.title, subtitle: meta.description || BLOG_DESCRIPTION_EN } })),
+      ];
+      const images = await writeShareImages(outDir, cards);
       const template = fs.readFileSync(path.join(outDir, 'index.html'), 'utf8');
       write(path.join(outDir, 'blog/index.html'), renderIndexPage(template, metas, base));
       for (const { meta, body } of posts) {
-        write(path.join(outDir, 'blog', meta.slug, 'index.html'), renderPostPage(template, meta, renderMarkdown(body).html, base, translated.has(meta.slug)));
+        const image = images.has(meta.slug) ? postImage(meta.slug) : undefined;
+        write(path.join(outDir, 'blog', meta.slug, 'index.html'), renderPostPage(template, meta, renderMarkdown(body).html, base, translated.has(meta.slug), image));
       }
       write(path.join(outDir, 'blog/rss.xml'), buildRss(metas));
       write(path.join(outDir, 'blog/index.json'), JSON.stringify({ slugs: metas.map((meta) => meta.slug) }));
