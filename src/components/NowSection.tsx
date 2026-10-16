@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { ArrowUpRight, Check, Ellipsis, Lock, Tv, X } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import { GATE_CHECKS, NOW_ALSO, NOW_PROJECTS, type AlsoDetails, type AlsoItem, type NowProject } from '@/data/now';
+import { GATE_CHECKS, NOW_ALSO, NOW_PROJECTS, NOW_UPDATED, type AlsoDetails, type AlsoItem, type NowProject } from '@/data/now';
 import { contact } from '@/data/personal';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { useScrollLock } from '@/hooks/useScrollLock';
@@ -190,6 +190,7 @@ const AlsoCard = ({ item, details: d, onClose }: { item: AlsoItem; details: Also
 /** "Agora": a short note about me next to what I'm actually building lately. */
 const NowSection = () => {
   const { lang, t } = useLanguage();
+  const updatedLabel = new Date(`${NOW_UPDATED}T12:00:00`).toLocaleDateString(lang === 'en' ? 'en-US' : 'pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
   const { hue } = useTheme();
   const [openItem, setOpenItem] = useState<AlsoItem | null>(null);
   const [tvProject, setTvProject] = useState<NowProject | null>(null);
@@ -213,6 +214,9 @@ const NowSection = () => {
             {t.now.title}
           </h2>
           <p className="sub">{t.now.subtitle}</p>
+          <p className="now-upd">
+            <time dateTime={NOW_UPDATED}>{t.now.updated(updatedLabel)}</time>
+          </p>
         </div>
       </div>
 

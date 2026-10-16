@@ -1,0 +1,48 @@
+import type { Strings } from './i18n.types';
+
+/** The `now` block of the PT strings, kept in its own file so i18n.pt.ts stays under the 300-line limit. */
+export const ptNow: Strings['now'] = {
+  sectionLabel: 'Agora',
+  title: 'No que estou trabalhando agora.',
+  subtitle: 'O que anda mais movimentado no meu GitHub. Alguns repositórios ainda são privados, e um deles tem até uma TV para ligar.',
+  updated: (date) => `Atualizado em ${date}`,
+  aboutLabel: 'Sobre mim',
+  aboutBody:
+    'Sou o Ricardo: técnico em informática e no 7º semestre de Ciência da Computação na UNIP, em Sorocaba. Aprendo construindo coisas que eu mesmo uso: ferramentas pra programar melhor, automação com IA rodando na minha própria infraestrutura e, ultimamente, um jogo de terror.',
+  facts: [
+    { label: 'Base', value: 'Sorocaba, SP' },
+    { label: 'Formação', value: 'Ciência da Computação · UNIP' },
+    { label: 'Interesses', value: 'IA aplicada, DX e jogos' },
+  ],
+  privateCode: 'código privado',
+  alsoLabel: 'Também no forno',
+  privateTag: 'privado',
+  alsoMore: 'Ver mais',
+  alsoMoreNote: 'os outros repositórios no GitHub',
+  alsoOpen: 'ver detalhes',
+  alsoWhat: 'O que faz',
+  alsoPrivateFoot: 'Código privado: ainda sem página pública.',
+  alsoGithub: 'Ver o código no GitHub',
+  tv: {
+    open: 'Ligar a TV',
+    dialogAria: (title) => `TV de ${title}`,
+    screenAria: (channel) => `Tela da TV: ${channel}`,
+    power: 'Ligar ou desligar a TV',
+    next: 'Próximo canal',
+    prev: 'Canal anterior',
+    knob: 'CANAL',
+    errTitle: 'EM CONSTRUÇÃO',
+    errSub: 'O apartamento 17 ainda está sendo montado.',
+    osdDate: 'OUT · 2003',
+    osdError: 'ERRO',
+    bridgeAlt: 'A ponte, em uma cena do jogo',
+    channelError: 'ERRO · EM CONSTRUÇÃO',
+    channelBridge: 'A PONTE',
+    tvOn: 'TV ligada.',
+    tvOff: 'TV desligada.',
+    soundOn: 'SOM · LIGADO',
+    soundOff: 'SOM · DESLIGADO',
+    antenna: 'Ajustar a antena',
+    tap: 'Bater na TV',
+  },
+};
