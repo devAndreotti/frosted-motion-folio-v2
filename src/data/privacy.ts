@@ -73,7 +73,7 @@ export const PRIVACY: Record<PrivacyLang, PrivacyCopy> = {
         label: 'Newsletter',
         title: 'Newsletter',
         sum: 'Confirmação por e-mail e, depois, a newsletter semanal, toda segunda-feira.',
-        keep: ['E-mail', 'Idioma escolhido', 'Data do pedido', 'Data da confirmação'],
+        keep: ['E-mail', 'Idioma escolhido', 'Data do pedido', 'Data da confirmação', 'Código (hash) do e-mail nas edições já enviadas'],
         not: ['Nome', 'IP', 'Abertura dos e-mails', 'Cliques nos e-mails'],
         rows: [
           { k: 'Para quê', v: 'Enviar o e-mail de confirmação e, depois de confirmado, a newsletter semanal (segundas-feiras). Nada além disso.' },
@@ -163,7 +163,7 @@ export const PRIVACY: Record<PrivacyLang, PrivacyCopy> = {
         label: 'Newsletter',
         title: 'Newsletter',
         sum: 'Email confirmation and, after that, the weekly newsletter, every Monday.',
-        keep: ['Email', 'Chosen language', 'Request date', 'Confirmation date'],
+        keep: ['Email', 'Chosen language', 'Request date', 'Confirmation date', 'Code (hash) of the email in the issues already sent'],
         not: ['Name', 'IP address', 'Email opens', 'Email clicks'],
         rows: [
           { k: 'What for', v: 'Sending the confirmation email and, once you confirm, the weekly newsletter (Mondays). Nothing beyond that.' },

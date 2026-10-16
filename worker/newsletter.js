@@ -8,8 +8,9 @@
 // form can't be used to find out who is on the list. A confirmation goes out only once every
 // RESEND_MS per address and RATE_LIMIT attempts an hour per visitor, so it can't be used to flood
 // someone's inbox either. With TURNSTILE_SECRET set, a Turnstile token is required too.
-// Nothing is kept about who left: unsubscribing deletes the row, and a sign-up nobody confirmed is
-// deleted after PENDING_TTL_MS. Without the DB binding or the SMTP secrets everything answers 503.
+// Nothing is kept about who left: unsubscribing deletes the row (and the newsletter_sends rows of that
+// address, by its hash), and a sign-up nobody confirmed is deleted after PENDING_TTL_MS, sends included.
+// Without the DB binding or the SMTP secrets everything answers 503.
 import { REPLY_TO, renderConfirmation } from '../scripts/newsletter/template.mjs';
 import { sendMail as smtpSend } from './smtp.js';
 
@@ -21,7 +22,8 @@ export const RESEND_MS = 10 * 60_000;
 export const PENDING_TTL_MS = 7 * 24 * 3_600_000;
 const MAX_BODY = 2048;
 const HOUR_MS = 3_600_000;
-const FROM = 'ricardo@devandreotti.com';
+export const FROM = 'ricardo@devandreotti.com';
+export const SENDER_NAME = 'Ricardo A. Gonçalves';
 
 const lang = (value) => (value === 'en' ? 'en' : 'pt');
 
@@ -88,10 +90,21 @@ async function visitor(request, env) {
 
 export const configured = (env) => Boolean(env.DB && env.SMTP_USER && env.SMTP_PASS);
 
+/** SHA-256 hex of the lower-case address: the only form in which newsletter_sends names a reader. */
+export async function emailHash(email) {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(email.toLowerCase()));
+  return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+/** The statement that deletes every send record of one address. Batch it with the subscriber's own delete. */
+export async function forgetSendsStatement(env, email) {
+  return env.DB.prepare('DELETE FROM newsletter_sends WHERE email_hash = ?1').bind(await emailHash(email));
+}
+
 export async function confirmationMail(origin, row) {
   const confirmUrl = `${origin}/api/newsletter/confirm?t=${row.confirm_token}&l=${row.lang}`;
   const { html, text, subject } = renderConfirmation({ lang: row.lang, confirmUrl });
-  return { from: FROM, fromName: 'Ricardo A. Gonçalves', to: row.email, subject, text, html, headers: { 'Reply-To': REPLY_TO } };
+  return { from: FROM, fromName: SENDER_NAME, to: row.email, subject, text, html, headers: { 'Reply-To': REPLY_TO } };
 }
 
 /** Cloudflare Turnstile: true when the token is real (or when this host doesn't use it). Fails closed on any error. */
@@ -136,7 +149,12 @@ async function subscribe(request, env, now, deps) {
   await env.DB.prepare('INSERT INTO subscribe_hits (voter, at) VALUES (?1, ?2)').bind(who, now).run();
   // old attempts are only needed for the last hour; a sign-up nobody confirmed is not kept for more than a week
   await env.DB.prepare('DELETE FROM subscribe_hits WHERE at < ?1').bind(now - 2 * HOUR_MS).run();
-  await env.DB.prepare("DELETE FROM subscribers WHERE status = 'pending' AND created_at < ?1").bind(now - PENDING_TTL_MS).run();
+  // the unconfirmed sign-ups past their week go, with any send record under their hash
+  const stale = await env.DB.prepare("SELECT email FROM subscribers WHERE status = 'pending' AND created_at < ?1").bind(now - PENDING_TTL_MS).all();
+  if ((stale?.results ?? []).length > 0) {
+    const sends = await Promise.all(stale.results.map((r) => forgetSendsStatement(env, r.email)));
+    await env.DB.batch([...sends, env.DB.prepare("DELETE FROM subscribers WHERE status = 'pending' AND created_at < ?1").bind(now - PENDING_TTL_MS)]);
+  }
 
   const row = await env.DB.prepare('SELECT * FROM subscribers WHERE email = ?1').bind(email).first();
   let send = null;
@@ -186,8 +204,11 @@ async function unsubscribe(request, url, env) {
     const row = await env.DB.prepare('SELECT status FROM subscribers WHERE unsub_token = ?1').bind(t).first();
     return row ? notice(l, COPY[l].unsubAsk, { form: `${url.pathname}${url.search}` }) : notice(l, COPY[l].invalid, { status: 404 });
   }
-  // leaving deletes the row; asking twice (a mail client retrying) is the same as asking once
-  await env.DB.prepare('DELETE FROM subscribers WHERE unsub_token = ?1').bind(t).run();
+  // leaving deletes the row and its send records; asking twice (a mail client retrying) is the same as asking once
+  const who = await env.DB.prepare('SELECT email FROM subscribers WHERE unsub_token = ?1').bind(t).first();
+  const statements = [env.DB.prepare('DELETE FROM subscribers WHERE unsub_token = ?1').bind(t)];
+  if (who) statements.unshift(await forgetSendsStatement(env, who.email));
+  await env.DB.batch(statements);
   // the one-click request of a mail client (List-Unsubscribe-Post) only needs a 2xx
   if ((request.headers.get('content-type') ?? '').includes('x-www-form-urlencoded') && (await request.clone().text()).includes('List-Unsubscribe=One-Click')) {
     return new Response('ok', { status: 200, headers: { 'cache-control': 'no-store' } });

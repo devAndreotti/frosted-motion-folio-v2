@@ -34,6 +34,11 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build:vps
+      # D1 migrations (worker/migrations, e.g. the newsletter_sends table the Tower's send action writes): applied to the
+      # production database before the Worker that expects them goes out. Wrangler skips the ones already applied.
+      - name: D1 migrations (main)
+        if: github.event_name != 'pull_request' && env.CLOUDFLARE_API_TOKEN != ''
+        run: npx --yes wrangler@4.148.0 d1 migrations apply devandreotti-likes --remote
       - name: Deploy (main)
         if: github.event_name != 'pull_request' && env.CLOUDFLARE_API_TOKEN != ''
         run: npx --yes wrangler@4.148.0 deploy
