@@ -116,6 +116,10 @@ src/
    ```
 ````
 
+## 🖼 Testes visuais
+
+As imagens de referência ficam em `tests/visual/` e são geradas no CI (Linux). Para comparar localmente: `npm run test:visual`. Quando o layout mudar de propósito, atualize as bases com `npm run test:visual:update`, baixe o artifact `visual-snapshots` do CI e commite.
+
 ## 🔮 Melhorias Futuras
 * [ ] Adicionar novos projetos
 * [ ] Melhorar performance e fluidez das animações

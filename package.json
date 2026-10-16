@@ -12,6 +12,8 @@
     "lint": "eslint .",
     "test": "vitest run --coverage",
     "test:coverage:ci": "vitest run --coverage",
+    "test:visual": "vite build && playwright test -c playwright.visual.config.ts",
+    "test:visual:update": "vite build && playwright test -c playwright.visual.config.ts --update-snapshots",
     "preview": "vite preview",
     "novo-post": "node scripts/novo-post.cjs",
     "predeploy": "npm run build",

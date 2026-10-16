@@ -17,6 +17,8 @@ const RESPONSIVE_VIEWPORTS: Record<string, { width: number; height: number }> = 
 };
 
 const RESPONSIVE_TEST_MATCH = /responsive[\\/].*\.spec\.ts/;
+// Os testes visuais têm a própria config (playwright.visual.config.ts) e ficam fora do E2E.
+const VISUAL_TEST_MATCH = /visual[\\/].*\.spec\.ts/;
 
 export default defineConfig({
   testDir: "./tests",
@@ -39,7 +41,7 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
   },
   projects: [
-    { name: "chromium", testIgnore: RESPONSIVE_TEST_MATCH, use: { ...devices["Desktop Chrome"] } },
+    { name: "chromium", testIgnore: [RESPONSIVE_TEST_MATCH, VISUAL_TEST_MATCH], use: { ...devices["Desktop Chrome"] } },
     ...Object.entries(RESPONSIVE_VIEWPORTS).map(([name, viewport]) => ({
       name,
       testMatch: RESPONSIVE_TEST_MATCH,
