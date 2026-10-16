@@ -41,8 +41,8 @@ describe('LikeBar', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Copiar link' }));
     await waitFor(() => expect(screen.getByRole('button', { name: 'Link copiado' })).toBeTruthy());
     expect(writeText).toHaveBeenCalledWith(window.location.href);
-    act(() => {
-      vi.advanceTimersByTime(2100);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(2100);
     });
     expect(screen.getByRole('button', { name: 'Copiar link' })).toBeTruthy();
   });

@@ -32,7 +32,7 @@ export function useCardStack(ids: string[], autoplayMs = DECK_STEP_MS, paused = 
   const [auto, setAuto] = useState(true);
   const orderRef = useRef(order);
   const flightCount = useRef(0);
-  const flightTimer = useRef<ReturnType<typeof setTimeout>>();
+  const flightTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useLayoutEffect(() => {
     orderRef.current = order;

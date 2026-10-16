@@ -7,7 +7,7 @@ const COPIED_MS = 1800;
 /** The LGPD rights line and the contact: a mailto link, and a button that copies the address. */
 const PrivacyRights = ({ copy }: { copy: PrivacyCopy }) => {
   const [copied, setCopied] = useState(false);
-  const timer = useRef<ReturnType<typeof setTimeout>>();
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => () => clearTimeout(timer.current), []);
 
