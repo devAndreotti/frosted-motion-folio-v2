@@ -39,8 +39,11 @@ jobs:
       - run: npm ci
       - name: Build (VPS, base /)
         run: npm run build:vps
-      - name: 404 page to measure (the SPA answers any unknown path)
-        run: mkdir -p dist-vps/lhci-404 && cp dist-vps/index.html dist-vps/lhci-404/index.html
+      - name: Pages the SPA answers without a file (the static server needs an index.html for each)
+        run: |
+          for page in privacidade lhci-404; do
+            mkdir -p "dist-vps/$page" && cp dist-vps/index.html "dist-vps/$page/index.html"
+          done
       - name: Lighthouse mobile
         run: npx --yes @lhci/cli@0.15.1 collect --config=lighthouserc.json --outputDir=.lighthouseci
       - name: Lighthouse desktop
