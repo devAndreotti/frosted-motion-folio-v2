@@ -8,7 +8,7 @@ const FEEDBACK_MS = 1800;
 const CopyEmailButton = ({ email, className = 'btn btn-gh', withIcon = true }: { email: string; className?: string; withIcon?: boolean }) => {
   const { t } = useLanguage();
   const [copied, setCopied] = useState(false);
-  const timer = useRef<ReturnType<typeof setTimeout>>();
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => () => clearTimeout(timer.current), []);
 
