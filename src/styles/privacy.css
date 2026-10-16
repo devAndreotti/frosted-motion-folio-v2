@@ -39,6 +39,9 @@
 .pv-tabs { display: flex; flex-wrap: wrap; gap: 10px; }
 .pv-tab { min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--border-2); background: var(--surface-1); color: var(--fg-2); font: 600 15px/1 var(--font-sans); cursor: pointer; transition: color 0.2s, background-color 0.2s, border-color 0.2s; }
 .pv-tab:hover { color: var(--fg-1); }
+/* Light mode: --border-2 is a white glass token there (0.5 alpha over a near-white wash, about 1.1:1),
+   so the outline vanished. Use the ink tokens instead: fg-2 border (>= 3:1 non-text), fg-1 text. Dark is untouched. */
+:root:not(.dark) .pv-tab:not([aria-pressed='true']) { color: var(--fg-1); border-color: var(--fg-2); }
 .pv-tab[aria-pressed='true'] { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
 
 /* ficha */

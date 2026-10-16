@@ -287,4 +287,21 @@ export const en: Strings = {
     trigger: 'Choose accent color',
     hueNames: { black: 'Black', blue: 'Blue', purple: 'Purple', orange: 'Orange', red: 'Red', green: 'Green', yellow: 'Yellow' },
   },
+  eggs: {
+    hireHelp: 'hire Ricardo',
+    hireLines: ['> authenticating as root... ok', "> reading Ricardo's application... ok", '> hiring approved [ OK ]', '> sending an invite to the team...'],
+    hireContact: (email) => `direct contact: ${email}`,
+    sudoDenied: 'sudo: permission denied. Try: sudo hire ricardo',
+    debug: {
+      title: 'debug mode',
+      ariaLabel: 'Debug panel',
+      viewport: 'viewport',
+      theme: 'theme',
+      themeNames: { dark: 'dark', light: 'light' },
+      language: 'language',
+      loadTime: 'load time',
+      notAvailable: 'n/a',
+      exitHint: 'triple-click the logo or Esc to exit',
+    },
+  },
 };

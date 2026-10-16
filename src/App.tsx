@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import BackgroundLayers from "@/components/BackgroundLayers";
+import DebugOverlay from "@/components/DebugOverlay";
+import { useSecretKeys } from "@/hooks/useSecretKeys";
 import Index from "./pages/Index";
 
 // Only reached by unknown paths, so it is split out of the first screen's bundle.
@@ -12,10 +14,17 @@ const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 
+const SecretKeys = () => {
+  useSecretKeys();
+  return null;
+};
+
 const App = () => (
   <LanguageProvider>
     <ThemeProvider>
+      <SecretKeys />
       <BackgroundLayers />
+      <DebugOverlay />
       <BrowserRouter basename={import.meta.env.BASE_URL}>
         <Routes>
           <Route path="/" element={<Index />} />

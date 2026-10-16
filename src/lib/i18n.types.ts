@@ -278,4 +278,21 @@ export interface Strings {
     trigger: string;
     hueNames: Record<'black' | 'blue' | 'purple' | 'orange' | 'red' | 'green' | 'yellow', string>;
   };
+  eggs: {
+    hireHelp: string;
+    hireLines: string[];
+    hireContact: (email: string) => string;
+    sudoDenied: string;
+    debug: {
+      title: string;
+      ariaLabel: string;
+      viewport: string;
+      theme: string;
+      themeNames: Record<'dark' | 'light', string>;
+      language: string;
+      loadTime: string;
+      notAvailable: string;
+      exitHint: string;
+    };
+  };
 }

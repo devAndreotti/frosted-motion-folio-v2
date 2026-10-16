@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { buildHueTheme } from "@/lib/theme";
 import { useTheme } from "@/contexts/ThemeContext";
+import { isLiteMode } from "@/lib/liteMode";
 
 interface LayerContent {
   bg: string;
@@ -26,7 +27,7 @@ function prefersReducedMotion(): boolean {
  * Renders the page-wide gradient wash + ambient blobs behind everything.
  * The blobs are static on purpose: everything glass on the page blurs this
  * layer, so animating it made the browser re-blur every panel every frame.
- * Respects prefers-reduced-motion: skips the hue/theme crossfade.
+ * Respects prefers-reduced-motion and lite mode: both skip the hue/theme crossfade.
  */
 const BackgroundLayers = () => {
   const { hue, theme } = useTheme();
@@ -43,7 +44,8 @@ const BackgroundLayers = () => {
       return;
     }
 
-    if (prefersReducedMotion()) {
+    // lite mode (data-lite) also skips the crossfade: the new gradient is swapped in at once
+    if (prefersReducedMotion() || isLiteMode()) {
       setContentA(current);
       setContentB(current);
       return;
