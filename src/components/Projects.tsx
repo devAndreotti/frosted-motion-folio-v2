@@ -2,17 +2,20 @@ import { lazy, Suspense, useState } from 'react';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { projects } from '@/data/projects';
 import { contact } from '@/data/personal';
+import { moreProjects } from '@/data/moreProjects';
 import { featuredProject, curatedProjects, CATEGORY_FILTERS, type CuratedProject, type ProjectCategory } from '@/data/curatedProjects';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { track } from '@/lib/track';
 import FeaturedCase from './FeaturedCase';
+import MoreProjects from './MoreProjects';
 import SegmentedControl from './SegmentedControl';
 
 // Only opened on click, so its code stays out of the first screen's bundle.
 const CaseModal = lazy(() => import('./CaseModal'));
 
 const ALL_CURATED = [featuredProject, ...curatedProjects];
-export const OTHERS_COUNT = projects.length - ALL_CURATED.length;
+// The ones neither ranked above nor in the gallery: only the GitHub link is left for them.
+export const OTHERS_COUNT = projects.length - ALL_CURATED.length - moreProjects.length;
 
 type Filter = ProjectCategory | 'all';
 
@@ -95,6 +98,8 @@ const Projects = () => {
         ))}
         {rows.length === 0 && !showFeatured && <div className="empty">{t.projects.emptyCategory}</div>}
       </div>
+
+      <MoreProjects projects={moreProjects} onOpen={openCase} />
 
       <div className="more">
         <a className="btn btn-gh" href={contact.repos} target="_blank" rel="noopener noreferrer">

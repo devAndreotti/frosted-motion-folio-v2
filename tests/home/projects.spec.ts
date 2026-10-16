@@ -2,8 +2,9 @@ import { test, expect } from "@playwright/test";
 import { projects } from "../../src/data/projects";
 import { featuredProject, curatedProjects, CATEGORY_FILTERS } from "../../src/data/curatedProjects";
 import { strings } from "../../src/lib/i18n";
+import { moreProjects } from "../../src/data/moreProjects";
 
-const OTHERS_COUNT = projects.length - (curatedProjects.length + 1);
+const OTHERS_COUNT = projects.length - (curatedProjects.length + 1) - moreProjects.length;
 const FEATURED_CAT = featuredProject.cat;
 
 test("shows the featured case and every curated project in the ranked list", async ({ page }) => {
