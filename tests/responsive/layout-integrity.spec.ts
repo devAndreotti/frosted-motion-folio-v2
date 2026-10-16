@@ -33,6 +33,9 @@ test("contact handles are shown in full on phones", async ({ page }) => {
   const viewport = page.viewportSize();
   test.skip(!viewport || viewport.width > 480, "handles sit beside the labels (and may truncate) on wider screens");
   await page.goto("");
+  // the contact list may not be mounted yet: wait for it, or this would pass on an empty list (and fail on a slower run)
+  await page.locator("#contact").scrollIntoViewIfNeeded();
+  await page.locator("#contact .dl-h").first().waitFor();
   const cut = await page.locator("#contact .dl-h").evaluateAll((handles) => handles.filter((el) => el.scrollWidth > el.clientWidth + 1).map((el) => el.textContent));
   expect(cut).toEqual([]);
 });
