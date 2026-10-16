@@ -80,6 +80,8 @@ export interface Strings {
     sectionLabel: string;
     title: string;
     subtitle: string;
+    /** "Updated on <date>", under the section subtitle. */
+    updated: (date: string) => string;
     aboutLabel: string;
     aboutBody: string;
     facts: { label: string; value: string }[];

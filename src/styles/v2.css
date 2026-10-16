@@ -398,6 +398,7 @@ button.also-i { cursor: pointer; }
 .nf-code { margin: 8px 0 0; font: 500 12px/1.4 var(--font-mono); color: var(--fg-3); }
 .nf-sug { position: relative; display: flex; flex-direction: column; gap: 12px; }
 .nf-side { display: flex; flex-direction: column; gap: 28px; min-width: 0; }
+.now-upd { margin: 10px 0 0; color: var(--fg-3); font: 500 12px/1.4 var(--font-mono); }
 .nf-play { flex: 1; width: 100%; padding-top: 8px; padding-bottom: 72px; }
 .nf-play .nf-game { max-width: 760px; margin: 0 auto; }
 .nf-sug .k { position: relative; margin: 0 0 6px; }

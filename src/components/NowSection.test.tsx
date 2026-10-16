@@ -3,7 +3,7 @@ import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { EGG_EVENTS } from "@/lib/eggs";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
-import { NOW_ALSO, NOW_PROJECTS } from "@/data/now";
+import { NOW_ALSO, NOW_PROJECTS, NOW_UPDATED } from "@/data/now";
 import NowSection from "./NowSection";
 
 const renderNow = () =>
@@ -14,6 +14,13 @@ const renderNow = () =>
   );
 
 describe("NowSection", () => {
+  it("says when the list was last reviewed, as a machine-readable date", () => {
+    const { container } = renderNow();
+    const stamp = container.querySelector("time");
+    expect(stamp?.getAttribute("datetime")).toBe(NOW_UPDATED);
+    expect(stamp?.textContent).toMatch(/^Atualizado em .*2026$/);
+  });
+
   it("shows the about card next to every current project", () => {
     renderNow();
     expect(screen.getByText("Sobre mim")).toBeTruthy();
