@@ -279,4 +279,21 @@ export const pt: Strings = {
     trigger: 'Escolher cor de destaque',
     hueNames: { black: 'Preto', blue: 'Azul', purple: 'Roxo', orange: 'Laranja', red: 'Vermelho', green: 'Verde', yellow: 'Amarelo' },
   },
+  eggs: {
+    hireHelp: 'contratar o Ricardo',
+    hireLines: ['> autenticando como root... ok', '> lendo a candidatura do Ricardo... ok', '> contratação aprovada [ OK ]', '> enviando convite para o time...'],
+    hireContact: (email) => `contato direto: ${email}`,
+    sudoDenied: 'sudo: permissão negada. Tente: sudo hire ricardo',
+    debug: {
+      title: 'modo debug',
+      ariaLabel: 'Painel de depuração',
+      viewport: 'viewport',
+      theme: 'tema',
+      themeNames: { dark: 'escuro', light: 'claro' },
+      language: 'idioma',
+      loadTime: 'carregamento',
+      notAvailable: 'n/d',
+      exitHint: 'triplo clique na logo ou Esc para sair',
+    },
+  },
 };

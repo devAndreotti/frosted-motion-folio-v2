@@ -66,4 +66,18 @@ describe("Navigation", () => {
     fireEvent.keyDown(window, { key: "Escape" });
     expect(screen.queryByTestId("mobile-menu")).toBeNull();
   });
+
+  it("toggles debug mode with a triple click on the RA logo, and a fourth click starts a new count", () => {
+    renderNav();
+    const logo = screen.getByText("RA");
+    fireEvent.click(logo);
+    fireEvent.click(logo);
+    expect(document.documentElement.classList.contains("egg-debug")).toBe(false);
+    fireEvent.click(logo);
+    expect(document.documentElement.classList.contains("egg-debug")).toBe(true);
+    fireEvent.click(logo);
+    fireEvent.click(logo);
+    fireEvent.click(logo);
+    expect(document.documentElement.classList.contains("egg-debug")).toBe(false);
+  });
 });

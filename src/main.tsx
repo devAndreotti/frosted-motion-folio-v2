@@ -4,6 +4,7 @@ import { initWebVitals } from './lib/vitals'
 import { decodeImage, dismissBootLoader } from './lib/bootLoader'
 import { loadUmami } from './lib/track'
 import { trackImageLoading } from './lib/imageLoad'
+import { initLiteMode } from './lib/liteMode'
 import { savedHue } from './contexts/ThemeContext'
 import '@fontsource-variable/geist'
 import '@fontsource-variable/geist-mono'
@@ -14,12 +15,15 @@ import './styles/blog.css'
 import './styles/privacy.css'
 import './styles/carousel.css'
 import './styles/memory-tv.css'
+import './styles/eggs.css'
 import './styles/more.css'
 import './styles/img-load.css'
+import './styles/lite.css'
 import './styles/haunted.css'
 import './styles/print.css'
 
 trackImageLoading();
+initLiteMode();
 createRoot(document.getElementById("root")!).render(<App />);
 initWebVitals();
 // Umami only where the build is configured for it (the Cloudflare deploy, see .github/workflows/cloudflare.yml).
