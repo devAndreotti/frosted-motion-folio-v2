@@ -75,3 +75,19 @@ describe('prerendered blog pages', () => {
     expect(() => extendSitemap('<x/>', [])).toThrow(/urlset/);
   });
 });
+
+describe('imagem de compartilhamento por página', () => {
+  it('usa a imagem da página quando ela existe, com o tamanho', () => {
+    const html = renderPostPage(template, post, '<p>corpo</p>', '/', false, { url: 'https://devandreotti.com/og/meu-post.png', width: 1200, height: 630 });
+    expect(html).toContain('<meta property="og:image" content="https://devandreotti.com/og/meu-post.png" />');
+    expect(html).toContain('<meta name="twitter:image" content="https://devandreotti.com/og/meu-post.png" />');
+    expect(html).toContain('<meta property="og:image:width" content="1200" />');
+    expect(html).toContain('<meta name="twitter:card" content="summary_large_image" />');
+  });
+
+  it('sem imagem própria, a página mantém a imagem do site', () => {
+    const html = renderPostPage(template, post, '<p>corpo</p>', '/');
+    expect(html).toContain('<meta property="og:image" content="https://devandreotti.com/og-image.png" />');
+    expect(html).toContain('<meta property="og:image:height" content="630" />');
+  });
+});

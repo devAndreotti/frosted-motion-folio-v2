@@ -15,6 +15,22 @@ export function escapeHtml(text: string): string {
   return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
+/** The share image (Open Graph / Twitter): a page's own PNG, or the site's image when it has none. */
+export interface ShareImage {
+  url: string;
+  width: number;
+  height: number;
+}
+
+export const SITE_IMAGE: ShareImage = { url: `${SITE}/og-image.png`, width: 1200, height: 630 };
+
+/** Where vite-plugins/og-image.ts writes a page's card: `og/<slug>.png` (`-en` for the English version). */
+export const postImage = (slug: string, en = false): ShareImage => ({
+  url: `${SITE}/og/${slug}${en ? '-en' : ''}.png`,
+  width: 1200,
+  height: 630,
+});
+
 interface Head {
   title: string;
   description: string;
@@ -23,6 +39,7 @@ interface Head {
   jsonLd?: object;
   /** hreflang links, for a post that has an English version. */
   alternates?: { hreflang: string; href: string }[];
+  image?: ShareImage;
 }
 
 function setMeta(html: string, attr: 'name' | 'property', key: string, value: string): string {
@@ -40,6 +57,12 @@ export function applyHead(template: string, head: Head): string {
   html = setMeta(html, 'property', 'og:url', head.url);
   html = setMeta(html, 'name', 'twitter:title', head.title);
   html = setMeta(html, 'name', 'twitter:description', head.description);
+  const image = head.image ?? SITE_IMAGE;
+  html = setMeta(html, 'property', 'og:image', image.url);
+  html = setMeta(html, 'property', 'og:image:width', String(image.width));
+  html = setMeta(html, 'property', 'og:image:height', String(image.height));
+  html = setMeta(html, 'name', 'twitter:card', 'summary_large_image');
+  html = setMeta(html, 'name', 'twitter:image', image.url);
   html = html.replace(/(<link rel="canonical" href=")[^"]*(")/, `$1${head.url}$2`);
   // the hreflang alternates point at the home page's ?lang= versions; posts have one language
   html = html.replace(/[ \t]*<link rel="alternate" hreflang="[^"]*" href="[^"]*" \/>\r?\n?/g, '');
@@ -56,7 +79,7 @@ export function injectRoot(template: string, markup: string): string {
 const meta = (post: PostMeta) =>
   `<p class="post-meta"><time datetime="${post.date}">${formatDay(post.date, 'pt')}</time> · ${post.minutes} min de leitura</p>`;
 
-export function renderPostPage(template: string, post: PostMeta, bodyHtml: string, base: string, hasEnglish = false): string {
+export function renderPostPage(template: string, post: PostMeta, bodyHtml: string, base: string, hasEnglish = false, image?: ShareImage): string {
   const markup =
     `<main class="wrap blog-main"><article class="post">` +
     `<a class="post-back" href="${base}blog/">~/blog</a>` +
@@ -67,6 +90,7 @@ export function renderPostPage(template: string, post: PostMeta, bodyHtml: strin
     description: post.description || BLOG_DESCRIPTION,
     url: blogUrl(post.slug),
     type: 'article',
+    image,
     alternates: hasEnglish
       ? [
           { hreflang: 'pt-BR', href: blogUrl(post.slug) },
