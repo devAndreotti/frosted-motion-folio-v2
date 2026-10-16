@@ -55,4 +55,8 @@ export const enBlog: Strings['blog'] = {
   older: 'Older',
   loadError: "This post couldn't be loaded.",
   readingMode: 'Reading mode',
+  relatedTitle: 'Related posts',
+  copyHeading: 'Copy link to section',
+  headingCopied: 'Link copied',
+  loadMore: 'Load more posts',
 };

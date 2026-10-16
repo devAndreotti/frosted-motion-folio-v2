@@ -86,6 +86,8 @@ Ordem sugerida: ~~10~~ (feito), 12, 13, 14 (base de qualidade, pouco risco) → 
 
 ## 6. Melhorias no blog
 
+**Status: feito (#90).** Índice com o título atual destacado, copiar link em cada h2/h3, posts relacionados no fim, e "carregar mais" a partir de 20 posts. "Mais lidos" ficou de fora: depende de dado real (item 12).
+
 **Estado atual.** O blog tem posts em Markdown, busca, curtidas, newsletter e RSS. Há estilos de índice (`.toc`), a confirmar quanto já está pronto.
 
 **O que fazer.**

@@ -118,7 +118,7 @@ describe('blog pages', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Post novo' })).toBeTruthy();
     expect(await screen.findByText('Corpo do post.')).toBeTruthy();
     expect(screen.getByRole('complementary', { name: 'Neste post' })).toBeTruthy();
-    expect(screen.getByText('Post meio').closest('a')?.getAttribute('href')).toBe('/blog/meio/');
+    expect(screen.getAllByText('Post meio')[0].closest('a')?.getAttribute('href')).toBe('/blog/meio/');
     expect(document.title).toBe('Post novo — Ricardo A. Gonçalves');
     await waitFor(() => expect(screen.queryByRole('button', { name: /Curtir/ })).toBeNull());
     expect(screen.getByRole('button', { name: 'Copiar link' })).toBeTruthy();

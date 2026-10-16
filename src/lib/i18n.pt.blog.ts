@@ -55,4 +55,8 @@ export const ptBlog: Strings['blog'] = {
   older: 'Anterior',
   loadError: 'Não foi possível carregar este post.',
   readingMode: 'Modo leitura',
+  relatedTitle: 'Posts relacionados',
+  copyHeading: 'Copiar link da seção',
+  headingCopied: 'Link copiado',
+  loadMore: 'Carregar mais posts',
 };
