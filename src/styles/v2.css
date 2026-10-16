@@ -15,19 +15,19 @@
 
 /* ---------- nav ---------- */
 .nav { position: sticky; top: 0; z-index: 50; background: color-mix(in oklab, var(--solid, #0a0a0a) 42%, transparent); backdrop-filter: blur(12px) saturate(160%); -webkit-backdrop-filter: blur(12px) saturate(160%); border-bottom: 1px solid var(--line); }
-.nav-in { max-width: 1240px; margin: 0 auto; padding: 0 32px; height: 64px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 20px; }
+/* brand | links (centred in the room left over) | pills: the pills keep their width, so a fixed 1fr/auto/1fr split used to push the last one past the content edge */
+.nav-in { max-width: 1240px; margin: 0 auto; padding: 0 32px; height: 64px; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 20px; }
 .brand { display: inline-flex; align-items: center; gap: 12px; font: 600 16px/1 var(--font-sans); letter-spacing: -0.01em; justify-self: start; color: var(--fg-1); white-space: nowrap; user-select: none; }
 .mono-b { width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--border-1); background: var(--surface-1); box-shadow: inset 0 1px var(--hl); display: grid; place-items: center; font: 600 12px/1 var(--font-mono); letter-spacing: 0.02em; }
-.nav-links { display: flex; gap: 2px; }
-.nl { position: relative; padding: 11px 13px; border-radius: 999px; color: var(--fg-2); font: 500 14px/1 var(--font-sans); transition: color 0.2s; }
-.nl:hover, .nl.on { color: var(--fg-1); }
+.nav-links { display: flex; justify-content: center; gap: 2px; }
+.nl { position: relative; padding: 11px 13px; border-radius: 999px; color: var(--fg-2); font: 500 14px/1 var(--font-sans); }
+.nl.on { color: var(--fg-1); }
 .nl.on::after { content: ''; position: absolute; left: 13px; right: 13px; bottom: 4px; height: 2px; border-radius: 2px; background: var(--accent); }
 .nav-r { justify-self: end; display: flex; align-items: center; gap: 8px; }
 /* the pills keep their natural width: when the middle column squeezes the bar they used to shrink under their own content (PT/EN spilling out of the pill, the repo dot on the border) */
 .nav-r > * { flex: none; }
-.np { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 34px; min-width: 34px; padding: 0 13px; border-radius: 999px; border: 1px solid var(--border-1); background: var(--surface-1); box-shadow: inset 0 1px var(--hl); color: var(--fg-2); font: 500 12px/1 var(--font-mono); white-space: nowrap; cursor: pointer; transition: color 0.2s, border-color 0.2s, background 0.2s; }
+.np { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 34px; min-width: 34px; padding: 0 13px; border-radius: 999px; border: 1px solid var(--border-1); background: var(--surface-1); box-shadow: inset 0 1px var(--hl); color: var(--fg-2); font: 500 12px/1 var(--font-mono); white-space: nowrap; cursor: pointer; }
 .np::before { content: ''; position: absolute; inset: -5px; }
-.np:hover { color: var(--fg-1); border-color: var(--border-2); }
 .np.sq { width: 34px; padding: 0; }
 .np.fix { cursor: default; }
 .np.on { background: var(--accent); color: var(--accent-text); border-color: transparent; }
@@ -43,7 +43,7 @@
 /* the accent pill slides under the active option (same 0.2s as the .np buttons); the labels stay above it */
 .np.lang::after { content: ''; position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 4px); border-radius: 999px; background: var(--accent); transition: transform 0.2s; pointer-events: none; }
 .np.lang[data-lang='en']::after { transform: translateX(calc(100% + 2px)); }
-.lg { position: relative; z-index: 1; height: 26px; min-width: 30px; padding: 0 8px; border: 0; border-radius: 999px; background: transparent; color: var(--fg-2); font: 600 11.5px/1 var(--font-mono); cursor: pointer; transition: color 0.2s; }
+.lg { position: relative; z-index: 1; height: 26px; min-width: 30px; padding: 0 8px; border: 0; border-radius: 999px; background: transparent; color: var(--fg-2); font: 600 11.5px/1 var(--font-mono); cursor: pointer; }
 .lg.on { color: var(--accent-text); }
 .pop { position: absolute; right: 0; top: 46px; z-index: 5; display: flex; gap: 7px; padding: 7px; border-radius: 999px; animation: v2-popin 0.25s cubic-bezier(0.2, 0.8, 0.2, 1); }
 .sw { position: relative; width: 24px; height: 24px; border: 0; border-radius: 99px; padding: 0; cursor: pointer; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25); flex: none; }
@@ -71,14 +71,11 @@
 .ctas { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 32px; }
 .ctas-g, .soc { display: flex; align-items: center; gap: 12px; }
 .ctas-g { flex-wrap: wrap; }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 48px; padding: 0 22px; border-radius: 999px; border: 1px solid transparent; font: 600 15px/1 var(--font-sans); cursor: pointer; white-space: nowrap; transition: transform 0.2s, border-color 0.2s, filter 0.2s; }
-.btn:hover { transform: translateY(-1px); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 48px; padding: 0 22px; border-radius: 999px; border: 1px solid transparent; font: 600 15px/1 var(--font-sans); cursor: pointer; white-space: nowrap; }
 .btn-pri { background: var(--accent); color: var(--accent-text); border-color: color-mix(in oklab, var(--accent) 70%, white); box-shadow: 0 16px 40px -12px color-mix(in oklab, var(--accent) 55%, transparent), inset 0 1px rgba(255, 255, 255, 0.25); }
-.btn-pri:hover { filter: brightness(1.06); }
 .btn-gh { background: var(--surface-2); border-color: var(--border-2); color: var(--fg-1); box-shadow: inset 0 1px var(--hl); }
 .btn-sm { height: 42px; padding: 0 16px; font-size: 14px; }
-.ibtn { width: 48px; height: 48px; border-radius: 999px; display: inline-grid; place-items: center; padding: 0; border: 1px solid var(--border-2); background: var(--surface-2); color: var(--fg-1); cursor: pointer; box-shadow: inset 0 1px var(--hl); transition: transform 0.2s; }
-.ibtn:hover { transform: translateY(-1px); }
+.ibtn { width: 48px; height: 48px; border-radius: 999px; display: inline-grid; place-items: center; padding: 0; border: 1px solid var(--border-2); background: var(--surface-2); color: var(--fg-1); cursor: pointer; box-shadow: inset 0 1px var(--hl); }
 .vsep { width: 1px; height: 28px; background: var(--line-2); margin: 0 2px; }
 .rv { animation: v2-rv 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) var(--d, 0s) both; }
 html.booting .rv { animation-play-state: paused; }
@@ -105,8 +102,7 @@ html.booting .rv { animation-play-state: paused; }
 .sub { margin: 14px 0 0; max-width: 56ch; font: 400 16px/1.6 var(--font-sans); color: var(--fg-2); }
 .sh-r { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .seg { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
-.seg button { position: relative; display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border: 0; border-radius: 999px; background: transparent; color: var(--fg-2); font: 600 14px/1 var(--font-sans); cursor: pointer; white-space: nowrap; transition: color 0.2s; }
-.seg button:hover { color: var(--fg-1); }
+.seg button { position: relative; display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border: 0; border-radius: 999px; background: transparent; color: var(--fg-2); font: 600 14px/1 var(--font-sans); cursor: pointer; white-space: nowrap; }
 .seg button.on { color: var(--accent-text); }
 .seg-hl { position: absolute; inset: 0; border-radius: 999px; background: var(--accent); z-index: -1; }
 .seg-n { font: 500 11px/1 var(--font-mono); opacity: 0.65; }
@@ -380,11 +376,21 @@ button.also-i { cursor: pointer; }
 
 /* ---------- 404 (pages/NotFound) ---------- */
 .nf { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 100vh; color: var(--fg-1); }
-.nf-top { display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 0 32px; border-bottom: 1px solid var(--line); }
+.nf-nav { display: flex; justify-content: space-between; }
 .nf-host { font: 500 12px/1 var(--font-mono); color: var(--fg-3); }
-.nf-main { flex: 1; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 72px; align-items: center; padding-top: 64px; padding-bottom: 64px; }
+.nf-main { width: 100%; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 72px; align-items: center; padding-top: 64px; padding-bottom: 64px; }
 .nf-h { margin: 22px 0 0; font: 600 clamp(40px, 5.4vw, 76px)/1.02 var(--font-sans); letter-spacing: -0.045em; }
-.nf-h span { display: block; color: var(--accent-ink); }
+.nf-h span { position: relative; display: block; width: fit-content; background: linear-gradient(100deg, var(--accent-ink), color-mix(in oklab, var(--accent-ink) 60%, var(--fg-1))); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+/* a brief glitch every few seconds: two offset copies of the line flicker through clipped slices */
+.nf-h span::before, .nf-h span::after { content: attr(data-text); position: absolute; inset: 0; -webkit-text-fill-color: currentColor; opacity: 0; pointer-events: none; }
+.nf-h span::before { color: var(--accent); }
+.nf-h span::after { color: var(--fg-1); }
+@keyframes nf-glitch-a { 0%, 92%, 100% { opacity: 0; transform: none; } 93% { opacity: 0.8; transform: translate(-4px, 0); clip-path: inset(10% 0 62% 0); } 95% { opacity: 0.8; transform: translate(3px, 0); clip-path: inset(58% 0 12% 0); } 97% { opacity: 0.8; transform: translate(-2px, 0); clip-path: inset(30% 0 40% 0); } }
+@keyframes nf-glitch-b { 0%, 93%, 100% { opacity: 0; transform: none; } 94% { opacity: 0.55; transform: translate(4px, 0); clip-path: inset(48% 0 24% 0); } 96% { opacity: 0.55; transform: translate(-3px, 0); clip-path: inset(6% 0 70% 0); } }
+@media (prefers-reduced-motion: no-preference) {
+  .nf-h span::before { animation: nf-glitch-a 6s steps(1, end) infinite; }
+  .nf-h span::after { animation: nf-glitch-b 6s steps(1, end) infinite; }
+}
 .nf-path { max-width: 580px; margin-top: 30px; padding: 18px 20px; border-radius: 18px; }
 .nf-path .k { margin: 0; }
 .nf-url { margin: 12px 0 0; font: 500 15px/1.5 var(--font-mono); color: var(--fg-2); overflow-wrap: anywhere; }
@@ -392,8 +398,10 @@ button.also-i { cursor: pointer; }
 .nf-code { margin: 8px 0 0; font: 500 12px/1.4 var(--font-mono); color: var(--fg-3); }
 .nf-sug { position: relative; display: flex; flex-direction: column; gap: 12px; }
 .nf-side { display: flex; flex-direction: column; gap: 28px; min-width: 0; }
+.nf-play { flex: 1; width: 100%; padding-top: 8px; padding-bottom: 72px; }
+.nf-play .nf-game { max-width: 760px; margin: 0 auto; }
 .nf-sug .k { position: relative; margin: 0 0 6px; }
-.nf-big { position: absolute; right: -24px; top: -270px; font: 600 300px/1 var(--font-mono); letter-spacing: -0.07em; color: transparent; -webkit-text-stroke: 1px var(--border-2); pointer-events: none; user-select: none; }
+.nf-big { position: absolute; right: -24px; top: -230px; font: 600 300px/1 var(--font-mono); letter-spacing: -0.07em; color: transparent; -webkit-text-stroke: 1px var(--border-2); pointer-events: none; user-select: none; }
 .nf-s { position: relative; display: grid; grid-template-columns: 44px minmax(0, 1fr) 20px; align-items: center; gap: 16px; padding: 20px 22px; border-radius: 20px; color: inherit; transition: transform 0.25s, border-color 0.25s, background 0.25s; }
 .nf-s:hover, .nf-s:focus-visible { transform: translateX(4px); border-color: color-mix(in oklab, var(--accent) 60%, transparent); background: color-mix(in oklab, var(--accent) 8%, var(--surface-1)); }
 .nf-n { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--border-1); font: 500 13px/1 var(--font-mono); color: var(--fg-3); }
@@ -401,7 +409,7 @@ button.also-i { cursor: pointer; }
 .nf-sd { display: block; margin-top: 4px; font: 400 14px/1.5 var(--font-sans); color: var(--fg-2); }
 .nf-s > .ic { color: var(--fg-3); }
 .nf-s:is(:hover, :focus-visible) .nf-n, .nf-s:is(:hover, :focus-visible) > .ic { color: var(--accent-ink); }
-.nf-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding: 20px 32px; border-top: 1px solid var(--line); font: 500 12px/1.5 var(--font-mono); color: var(--fg-3); }
+.nf-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding: 20px max(32px, calc((100% - 1240px) / 2 + 32px)); border-top: 1px solid var(--line); font: 500 12px/1.5 var(--font-mono); color: var(--fg-3); }
 .nf-foot a { color: var(--fg-1); }
 .nf-game { padding: 16px 18px 18px; border-radius: 20px; }
 .nf-game-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; }
@@ -426,9 +434,12 @@ button.also-i { cursor: pointer; }
   .nf-big { display: none; }
 }
 @media (max-width: 720px) {
-  .nf-top, .nf-foot { padding-left: 20px; padding-right: 20px; }
+  .nf-foot { padding-left: 20px; padding-right: 20px; }
   .nf-host { display: none; }
 }
+
+/* blog and privacy pages: the bar is as wide as the reading column under it */
+.blog:has(> main.blog-main) .nav-in { max-width: 880px; }
 
 /* ---------- responsive ---------- */
 @media (max-width: 1100px) {
@@ -534,7 +545,7 @@ button.also-i { cursor: pointer; }
 @media (hover: none) { .thumb { display: none; } }
 @media (prefers-reduced-motion: reduce) {
   .thumb-shot img { transition: none; }
-  .np.lang::after, .lg { transition: none; }
+  .np.lang::after { transition: none; }
   .row:hover .thumb-shot img { transform: none; }
   .rv { animation: none; }
   .pulse::after { animation: none; }

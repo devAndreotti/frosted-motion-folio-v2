@@ -21,12 +21,14 @@ const NotFound = () => {
 
   return (
     <div className="nf">
-      <header className="nf-top">
-        <a className="brand" href={HOME}>
-          <span className="mono-b">RA</span>
-          <span>Ricardo Andreotti</span>
-        </a>
-        <span className="nf-host">{window.location.host}</span>
+      <header className="nav">
+        <div className="nav-in nf-nav">
+          <a className="brand" href={HOME}>
+            <span className="mono-b">RA</span>
+            <span>Ricardo Andreotti</span>
+          </a>
+          <span className="nf-host">{window.location.host}</span>
+        </div>
       </header>
 
       <main className="wrap nf-main">
@@ -39,7 +41,7 @@ const NotFound = () => {
             {n.kicker}
           </p>
           <h1 className="nf-h">
-            {n.title} <span>{n.titleAccent}</span>
+            {n.title} <span data-text={n.titleAccent}>{n.titleAccent}</span>
           </h1>
           <p className="lead">{n.body}</p>
           <div className="nf-path glass">
@@ -77,9 +79,12 @@ const NotFound = () => {
               </a>
             ))}
           </nav>
-          <NotFoundGame />
         </div>
       </main>
+
+      <section className="wrap nf-play">
+        <NotFoundGame />
+      </section>
 
       <footer className="nf-foot">
         <span>© {new Date().getFullYear()} Ricardo A. Gonçalves</span>

@@ -1,4 +1,4 @@
-/* /privacidade/. Color comes from the site tokens (--accent, --accent-text, --accent-ink, the --fg, --surface
+/* /privacidade/. Hover, focus and press for its buttons and tabs are in interactive.css. Color comes from the site tokens (--accent, --accent-text, --accent-ink, the --fg, --surface
    and --border sets), so the page follows the chosen color and light/dark mode. The only own colors are the
    soft red of "Não guardo", defined here for both modes. No backdrop blur, no long animations. */
 
@@ -6,6 +6,13 @@
   --pv-no: #b42318;
   --pv-no-bg: rgba(180, 35, 24, 0.07);
   --pv-no-line: rgba(180, 35, 24, 0.3);
+  /* the unpicked tab's ink and outline: light mode uses the ink tokens, since --border-2 is a white glass there */
+  --pv-tab-fg: var(--fg-2);
+  --pv-tab-line: var(--border-2);
+}
+:root:not(.dark) .pv {
+  --pv-tab-fg: var(--fg-1);
+  --pv-tab-line: var(--fg-2);
 }
 .dark .pv {
   --pv-no: #fca5a5;
@@ -37,11 +44,9 @@
 .pv-sec-head { display: flex; flex-direction: column; gap: 6px; }
 .pv-sec-head p { margin: 0; font: 400 15px/1.5 var(--font-sans); color: var(--fg-3); }
 .pv-tabs { display: flex; flex-wrap: wrap; gap: 10px; }
-.pv-tab { min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--border-2); background: var(--surface-1); color: var(--fg-2); font: 600 15px/1 var(--font-sans); cursor: pointer; transition: color 0.2s, background-color 0.2s, border-color 0.2s; }
-.pv-tab:hover { color: var(--fg-1); }
+.pv-tab { min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--pv-tab-line); background: var(--surface-1); color: var(--pv-tab-fg); font: 600 15px/1 var(--font-sans); cursor: pointer; }
 /* Light mode: --border-2 is a white glass token there (0.5 alpha over a near-white wash, about 1.1:1),
-   so the outline vanished. Use the ink tokens instead: fg-2 border (>= 3:1 non-text), fg-1 text. Dark is untouched. */
-:root:not(.dark) .pv-tab:not([aria-pressed='true']) { color: var(--fg-1); border-color: var(--fg-2); }
+   so the outline vanished; the variables above switch to the ink tokens (fg-2 border, fg-1 text). Dark is untouched. */
 .pv-tab[aria-pressed='true'] { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
 
 /* ficha */
@@ -76,7 +81,7 @@
 .pv-gone { display: inline-flex; margin-left: 10px; padding: 3px 10px; border-radius: 999px; background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent-ink); font: 600 12px/1.2 var(--font-sans); }
 .pv-days { display: flex; flex-direction: column; gap: 10px; font: 400 14px/1.4 var(--font-sans); color: var(--fg-2); }
 .pv-bar { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
-.pv-seg { min-height: 44px; border: 1px solid var(--border-2); border-radius: 10px; background: var(--surface-2); color: var(--fg-3); font: 600 14px/1 var(--font-mono); cursor: pointer; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
+.pv-seg { min-height: 44px; border: 1px solid var(--border-2); border-radius: 10px; background: var(--surface-2); color: var(--fg-3); font: 600 14px/1 var(--font-mono); cursor: pointer; }
 .pv-seg[data-on='true'] { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
 .pv-seg[aria-pressed='true']:not([data-on='true']) { border-color: var(--accent); color: var(--accent-ink); }
 .pv-note { margin: 0; font: 400 16px/1.55 var(--font-sans); color: var(--fg-2); }
@@ -101,7 +106,4 @@
 @media (max-width: 480px) {
   .pv { padding-left: 16px; padding-right: 16px; }
   .pv-ficha, .pv-sim, .pv-rights { padding: 20px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .pv-tab, .pv-seg { transition: none; }
 }
