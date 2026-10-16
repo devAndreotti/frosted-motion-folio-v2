@@ -1,0 +1,51 @@
+name: Visual tests
+
+# Testes visuais (playwright.visual.config.ts). Bases em falta são gravadas nesta execução e sobem como artifact
+# (visual-snapshots): baixe, copie para tests/visual/ e commite. Bases existentes são comparadas, sem atualização.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+concurrency:
+  group: visual-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  visual:
+    name: Visual tests (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - name: Visual tests
+        run: npx playwright test -c playwright.visual.config.ts --update-snapshots=missing
+      - name: Upload snapshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: visual-snapshots
+          path: tests/visual/
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Upload Playwright report (antes e depois)
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: visual-report
+          path: playwright-report/
+          if-no-files-found: ignore
+          retention-days: 7
