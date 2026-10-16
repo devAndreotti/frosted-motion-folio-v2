@@ -154,6 +154,9 @@ const LIST_META: CurationMeta[] = [
     },
   },
   {
+    // the app's own art (real food photos, which the new shots can't show) closes the gallery
+    ...shots('cook-app', ['01', '04', '05']),
+    images: ['01', '04', '05'].map((n) => `./projects/cook-app/${n}.webp`).concat('./projects/httpsgithub.comdevAndreotticook-app/project.webp'),
     id: 1,
     type: { pt: 'Mobile', en: 'Mobile' },
     cat: 'mobile',

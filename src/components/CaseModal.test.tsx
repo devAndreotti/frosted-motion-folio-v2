@@ -120,7 +120,7 @@ describe("CaseModal gallery autoplay", () => {
 
   it("holds still while the pointer is over the gallery, and goes on when it leaves", () => {
     renderModal();
-    const media = document.querySelector(".dlg-media") as HTMLElement;
+    const media = document.querySelector(".dlg-gallery") as HTMLElement;
     fireEvent.mouseEnter(media);
     tick(6000);
     expect(imageSrc()).toBe("a.png");

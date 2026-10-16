@@ -76,25 +76,27 @@ const CaseModal = ({ project, onClose }: CaseModalProps) => {
           </button>
         </div>
 
-        <div
-          className="dlg-media"
-          aria-live={playing ? 'off' : 'polite'}
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
-          onFocus={() => setFocused(true)}
-          onBlur={onMediaBlur}
-        >
-          {multi ? (
-            <>
-              <motion.div className="cursor-grab active:cursor-grabbing" drag="x" dragConstraints={{ left: 0, right: 0 }} dragElastic={0.6} onDragEnd={handleDragEnd}>
-                {img}
-              </motion.div>
-              <button type="button" aria-label={t.caseModal.prevImageAria} onClick={() => advance(-1)} className="np sq dlg-nav" style={{ left: 12 }}>
-                <ChevronLeft className="ic" />
-              </button>
-              <button type="button" aria-label={t.caseModal.nextImageAria} onClick={() => advance(1)} className="np sq dlg-nav" style={{ right: 12 }}>
-                <ChevronRight className="ic" />
-              </button>
+        {/* The hover/focus pause covers the whole gallery: the picture and the bar of dots under it. */}
+        <div className="dlg-gallery" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onFocus={() => setFocused(true)} onBlur={onMediaBlur}>
+          <div className="dlg-media" aria-live={playing ? 'off' : 'polite'}>
+            {multi ? (
+              <>
+                <motion.div className="cursor-grab active:cursor-grabbing" drag="x" dragConstraints={{ left: 0, right: 0 }} dragElastic={0.6} onDragEnd={handleDragEnd}>
+                  {img}
+                </motion.div>
+                <button type="button" aria-label={t.caseModal.prevImageAria} onClick={() => advance(-1)} className="np sq dlg-nav" style={{ left: 12 }}>
+                  <ChevronLeft className="ic" />
+                </button>
+                <button type="button" aria-label={t.caseModal.nextImageAria} onClick={() => advance(1)} className="np sq dlg-nav" style={{ right: 12 }}>
+                  <ChevronRight className="ic" />
+                </button>
+              </>
+            ) : (
+              img
+            )}
+          </div>
+          {multi && (
+            <div className="dlg-bar">
               <div className="dlg-dots" role="group" aria-label={t.caseModal.imagesAria}>
                 {images.map((src, i) => (
                   <button key={src} type="button" className="dlg-dot" aria-label={t.caseModal.goToImageAria(i + 1)} aria-current={i === imgIdx ? 'true' : undefined} onClick={() => setImgIdx(i)} />
@@ -111,9 +113,7 @@ const CaseModal = ({ project, onClose }: CaseModalProps) => {
                   {userPaused ? <Play className="ic s" /> : <Pause className="ic s" />}
                 </button>
               )}
-            </>
-          ) : (
-            img
+            </div>
           )}
         </div>
 

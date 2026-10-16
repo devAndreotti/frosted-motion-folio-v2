@@ -368,11 +368,14 @@ button.also-i { cursor: pointer; }
 .dlg-media { position: relative; margin-top: 20px; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-1); }
 .dlg-img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: 0 0; animation: dlg-fade 0.4s ease; }
 @keyframes dlg-fade { from { opacity: 0; } }
-.dlg-dots { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; padding: 8px 11px; border-radius: 999px; background: rgba(8, 8, 12, 0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
-.dlg-dot { position: relative; width: 8px; height: 8px; padding: 0; border: 0; border-radius: 99px; background: rgba(255, 255, 255, 0.5); cursor: pointer; transition: width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.3s; }
+.dlg-gallery { margin-top: 20px; }
+.dlg-gallery .dlg-media { margin-top: 0; }
+.dlg-bar { position: relative; display: flex; align-items: center; justify-content: center; min-height: 36px; margin-top: 8px; }
+.dlg-dots { display: flex; align-items: center; gap: 6px; }
+.dlg-dot { position: relative; width: 8px; height: 8px; padding: 0; border: 0; border-radius: 99px; background: var(--line-2); cursor: pointer; transition: width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.3s; }
 .dlg-dot::before { content: ''; position: absolute; inset: -8px -3px; }
 .dlg-dot[aria-current='true'] { width: 22px; background: var(--accent); }
-.dlg-pause { position: absolute; right: 12px; bottom: 10px; }
+.dlg-pause { position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
 .dlg-nav { position: absolute; top: 50%; transform: translateY(-50%); }
 .dlg h3 { margin: 22px 0 0; font: 600 34px/1.1 var(--font-sans); letter-spacing: -0.03em; }
 .dlg-p { margin: 12px 0 0; font: 400 16px/1.65 var(--font-sans); color: var(--fg-2); }
