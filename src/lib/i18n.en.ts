@@ -219,6 +219,12 @@ export const en: Strings = {
       contact: { title: 'Contact', note: 'Email, LinkedIn and GitHub, all in one place.' },
     },
     broken: 'Found a broken link of mine?',
+    game: {
+      aria: 'Mini game: dodge the bugs', title: 'dodge the bugs', hint: 'Drag the square or use ← → (A D)',
+      start: 'Start', pressToStart: 'Press to start', over: 'You hit a bug',
+      restart: 'Play again', restartHint: 'Space, Enter or tap to restart', score: (seconds) => `${seconds}s survived`,
+      best: (seconds) => `best ${seconds}s`,
+    },
   },
   blog: {
     sectionLabel: 'Writing',
@@ -285,15 +291,9 @@ export const en: Strings = {
     hireContact: (email) => `direct contact: ${email}`,
     sudoDenied: 'sudo: permission denied. Try: sudo hire ricardo',
     debug: {
-      title: 'debug mode',
-      ariaLabel: 'Debug panel',
-      viewport: 'viewport',
-      theme: 'theme',
-      themeNames: { dark: 'dark', light: 'light' },
-      language: 'language',
-      loadTime: 'load time',
-      notAvailable: 'n/a',
-      exitHint: 'triple-click the logo or Esc to exit',
+      title: 'debug mode', ariaLabel: 'Debug panel', viewport: 'viewport',
+      theme: 'theme', themeNames: { dark: 'dark', light: 'light' }, language: 'language',
+      loadTime: 'load time', notAvailable: 'n/a', exitHint: 'triple-click the logo or Esc to exit',
     },
   },
 };

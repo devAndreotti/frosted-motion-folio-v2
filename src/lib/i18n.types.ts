@@ -210,6 +210,12 @@ export interface Strings {
     suggest: string;
     sections: Record<'projects' | 'now' | 'contact', { title: string; note: string }>;
     broken: string;
+    game: {
+      aria: string; title: string; hint: string;
+      start: string; pressToStart: string; over: string;
+      restart: string; restartHint: string; score: (seconds: number) => string;
+      best: (seconds: number) => string;
+    };
   };
   blog: {
     sectionLabel: string;
@@ -277,15 +283,9 @@ export interface Strings {
     hireContact: (email: string) => string;
     sudoDenied: string;
     debug: {
-      title: string;
-      ariaLabel: string;
-      viewport: string;
-      theme: string;
-      themeNames: Record<'dark' | 'light', string>;
-      language: string;
-      loadTime: string;
-      notAvailable: string;
-      exitHint: string;
+      title: string; ariaLabel: string; viewport: string;
+      theme: string; themeNames: Record<'dark' | 'light', string>; language: string;
+      loadTime: string; notAvailable: string; exitHint: string;
     };
   };
 }

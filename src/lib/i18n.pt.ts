@@ -219,6 +219,12 @@ export const pt: Strings = {
       contact: { title: 'Contato', note: 'E-mail, LinkedIn e GitHub, tudo num lugar.' },
     },
     broken: 'Achou um link quebrado meu?',
+    game: {
+      aria: 'Mini jogo: desvie dos bugs', title: 'desvie dos bugs', hint: 'Arraste o quadrado ou use ← → (A D)',
+      start: 'Começar', pressToStart: 'Aperte para começar', over: 'Você bateu num bug',
+      restart: 'Jogar de novo', restartHint: 'Espaço, Enter ou toque para reiniciar', score: (seconds) => `${seconds}s sobrevividos`,
+      best: (seconds) => `recorde ${seconds}s`,
+    },
   },
   blog: {
     sectionLabel: 'Escritos',
@@ -285,15 +291,9 @@ export const pt: Strings = {
     hireContact: (email) => `contato direto: ${email}`,
     sudoDenied: 'sudo: permissão negada. Tente: sudo hire ricardo',
     debug: {
-      title: 'modo debug',
-      ariaLabel: 'Painel de depuração',
-      viewport: 'viewport',
-      theme: 'tema',
-      themeNames: { dark: 'escuro', light: 'claro' },
-      language: 'idioma',
-      loadTime: 'carregamento',
-      notAvailable: 'n/d',
-      exitHint: 'triplo clique na logo ou Esc para sair',
+      title: 'modo debug', ariaLabel: 'Painel de depuração', viewport: 'viewport',
+      theme: 'tema', themeNames: { dark: 'escuro', light: 'claro' }, language: 'idioma',
+      loadTime: 'carregamento', notAvailable: 'n/d', exitHint: 'triplo clique na logo ou Esc para sair',
     },
   },
 };

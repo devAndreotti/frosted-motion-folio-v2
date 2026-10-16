@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { contact } from "@/data/personal";
+import NotFoundGame from "@/components/NotFoundGame";
 
 // The app's root on either deploy ("/" on devandreotti.com, "/frosted-motion-folio-v2/" on GitHub Pages).
 const HOME = import.meta.env.BASE_URL;
@@ -61,20 +62,23 @@ const NotFound = () => {
           </div>
         </div>
 
-        <nav className="nf-sug" aria-label={n.suggest}>
-          <span className="nf-big" aria-hidden="true">404</span>
-          <p className="k">{n.suggest}</p>
-          {SECTIONS.map((id, i) => (
-            <a key={id} className="nf-s glass" href={`${HOME}#${id}`}>
-              <span className="nf-n">0{i + 1}</span>
-              <span>
-                <span className="nf-st">{n.sections[id].title}</span>
-                <span className="nf-sd">{n.sections[id].note}</span>
-              </span>
-              <ArrowUpRight className="ic" />
-            </a>
-          ))}
-        </nav>
+        <div className="nf-side">
+          <nav className="nf-sug" aria-label={n.suggest}>
+            <span className="nf-big" aria-hidden="true">404</span>
+            <p className="k">{n.suggest}</p>
+            {SECTIONS.map((id, i) => (
+              <a key={id} className="nf-s glass" href={`${HOME}#${id}`}>
+                <span className="nf-n">0{i + 1}</span>
+                <span>
+                  <span className="nf-st">{n.sections[id].title}</span>
+                  <span className="nf-sd">{n.sections[id].note}</span>
+                </span>
+                <ArrowUpRight className="ic" />
+              </a>
+            ))}
+          </nav>
+          <NotFoundGame />
+        </div>
       </main>
 
       <footer className="nf-foot">
