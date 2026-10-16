@@ -36,8 +36,7 @@ export interface PrivacyCopy {
     steps: string[];
     panel: string;
     slider: string;
-    deletedTag: string;
-    empty: string;
+    gone: string;
     labels: { email: string; lang: string; requested: string; confirmed: string };
     values: { email: string; lang: string; requested: string; confirmed: string; notYet: string };
     dayTag: (n: number) => string;
@@ -117,9 +116,8 @@ export const PRIVACY: Record<PrivacyLang, PrivacyCopy> = {
       group: 'Etapa da inscrição',
       steps: ['Pedi a inscrição', 'Confirmei', 'Saí da lista'],
       panel: 'O que existe sobre você agora',
-      slider: 'Avance os dias sem confirmar',
-      deletedTag: 'dia 7: apagado',
-      empty: 'Nenhum dado seu aqui.',
+      slider: 'Toque num dia para avançar sem confirmar',
+      gone: 'apagado',
       labels: { email: 'E-mail', lang: 'Idioma', requested: 'Pedido em', confirmed: 'Confirmado em' },
       values: { email: 'voce@exemplo.com', lang: 'PT', requested: 'dia 0', confirmed: 'dia 1', notYet: 'ainda não' },
       dayTag: (n) => `dia ${n}`,
@@ -208,9 +206,8 @@ export const PRIVACY: Record<PrivacyLang, PrivacyCopy> = {
       group: 'Subscription step',
       steps: ['I asked to subscribe', 'I confirmed', 'I left the list'],
       panel: 'What exists about you right now',
-      slider: 'Move the days forward without confirming',
-      deletedTag: 'day 7: deleted',
-      empty: 'No data about you here.',
+      slider: 'Tap a day to move forward without confirming',
+      gone: 'deleted',
       labels: { email: 'Email', lang: 'Language', requested: 'Requested on', confirmed: 'Confirmed on' },
       values: { email: 'you@example.com', lang: 'EN', requested: 'day 0', confirmed: 'day 1', notYet: 'not yet' },
       dayTag: (n) => `day ${n}`,

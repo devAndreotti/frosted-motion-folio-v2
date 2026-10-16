@@ -13,6 +13,8 @@ const PrivacySimulation = ({ copy }: { copy: PrivacyCopy }) => {
   const info = sim.phases[phase];
   const note = phase === 'waiting' ? `${info.note} ${sim.faltam(DELETE_AFTER_DAYS - day)}` : info.note;
   const isEmpty = phase === 'deleted' || phase === 'left';
+  // once the record is gone each value stays on the panel, struck through, so the visitor sees what was removed
+  const gone = (value: string) => (isEmpty ? (<><s>{value}</s><span className="pv-gone">{sim.gone}</span></>) : value);
 
   return (
     <section className="pv-section" aria-labelledby="pv-sim-h">
@@ -32,44 +34,37 @@ const PrivacySimulation = ({ copy }: { copy: PrivacyCopy }) => {
           <span className="pv-sim-title">{sim.panel}</span>
           <span className="pv-status" data-tone={phase}>{info.status}</span>
         </div>
-        {(phase === 'waiting' || phase === 'active') && (
-          <dl className="pv-rows">
-            <div className="pv-row"><dt>{sim.labels.email}</dt><dd>{sim.values.email}</dd></div>
-            <div className="pv-row"><dt>{sim.labels.lang}</dt><dd>{sim.values.lang}</dd></div>
-            <div className="pv-row"><dt>{sim.labels.requested}</dt><dd>{sim.values.requested}</dd></div>
-            <div className="pv-row">
-              <dt>{sim.labels.confirmed}</dt>
-              <dd className={phase === 'waiting' ? 'pv-dim' : undefined}>
-                {phase === 'waiting' ? sim.values.notYet : sim.values.confirmed}
-              </dd>
-            </div>
-          </dl>
-        )}
-        {isEmpty && <div className="pv-empty">{sim.empty}</div>}
+        <dl className="pv-rows" data-gone={isEmpty}>
+          <div className="pv-row"><dt>{sim.labels.email}</dt><dd>{gone(sim.values.email)}</dd></div>
+          <div className="pv-row"><dt>{sim.labels.lang}</dt><dd>{gone(sim.values.lang)}</dd></div>
+          <div className="pv-row"><dt>{sim.labels.requested}</dt><dd>{gone(sim.values.requested)}</dd></div>
+          <div className="pv-row">
+            <dt>{sim.labels.confirmed}</dt>
+            <dd className={phase === 'waiting' ? 'pv-dim' : undefined}>
+              {gone(phase === 'waiting' || phase === 'deleted' ? sim.values.notYet : sim.values.confirmed)}
+            </dd>
+          </div>
+        </dl>
         {step === 0 && (
-          <>
-            <div className="pv-bar" aria-hidden="true">
+          <div className="pv-days">
+            <span id="pv-days-l">{sim.slider}</span>
+            <div role="group" aria-labelledby="pv-days-l" className="pv-bar">
               {SEGMENTS.map((i) => (
-                <span key={i} className="pv-seg" data-on={i < day && phase !== 'deleted'} />
+                <button
+                  key={i}
+                  type="button"
+                  className="pv-seg"
+                  data-on={i < day && phase !== 'deleted'}
+                  aria-pressed={day === i + 1}
+                  aria-label={sim.dayTag(i + 1)}
+                  // tapping the day you are on steps one back, so the bar can also go back to day 0
+                  onClick={() => setDay(day === i + 1 ? i : i + 1)}
+                >
+                  {i + 1}
+                </button>
               ))}
             </div>
-            <div className="pv-bar-txt">
-              <span>{sim.dayTag(day)}</span>
-              <span>{sim.deletedTag}</span>
-            </div>
-            <label className="pv-range">
-              {sim.slider}
-              <input
-                type="range"
-                min={0}
-                max={DELETE_AFTER_DAYS}
-                step={1}
-                value={day}
-                aria-valuetext={sim.dayTag(day)}
-                onChange={(e) => setDay(Number(e.target.value))}
-              />
-            </label>
-          </>
+          </div>
         )}
         <p className="pv-note">{note}</p>
       </div>

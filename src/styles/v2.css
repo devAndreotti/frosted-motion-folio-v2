@@ -23,6 +23,8 @@
 .nl:hover, .nl.on { color: var(--fg-1); }
 .nl.on::after { content: ''; position: absolute; left: 13px; right: 13px; bottom: 4px; height: 2px; border-radius: 2px; background: var(--accent); }
 .nav-r { justify-self: end; display: flex; align-items: center; gap: 8px; }
+/* the pills keep their natural width: when the middle column squeezes the bar they used to shrink under their own content (PT/EN spilling out of the pill, the repo dot on the border) */
+.nav-r > * { flex: none; }
 .np { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 34px; min-width: 34px; padding: 0 13px; border-radius: 999px; border: 1px solid var(--border-1); background: var(--surface-1); box-shadow: inset 0 1px var(--hl); color: var(--fg-2); font: 500 12px/1 var(--font-mono); white-space: nowrap; cursor: pointer; transition: color 0.2s, border-color 0.2s, background 0.2s; }
 .np::before { content: ''; position: absolute; inset: -5px; }
 .np:hover { color: var(--fg-1); border-color: var(--border-2); }
@@ -365,7 +367,8 @@ button.also-i { cursor: pointer; }
 
 /* ---------- dialogs ---------- */
 .ov { position: fixed; inset: 0; z-index: 60; display: flex; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 48px 16px; background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); animation: v2-fade 0.25s ease; }
-.dlg { position: relative; width: min(860px, 100%); margin: auto 0; padding: 28px; border-radius: 26px; border: 1px solid var(--border-2); background: color-mix(in oklab, var(--solid, #0a0a0a) 90%, transparent); backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%); color: var(--fg-1); box-shadow: 0 50px 120px -30px rgba(0, 0, 0, 0.7), inset 0 1px var(--hl); animation: v2-pop 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); }
+/* no backdrop-filter on the dialog itself: .ov already blurs the page, and a second live blur on a card that scales in made Edge stutter on open */
+.dlg { position: relative; width: min(860px, 100%); margin: auto 0; padding: 28px; border-radius: 26px; border: 1px solid var(--border-2); background: color-mix(in oklab, var(--solid, #0a0a0a) 95%, transparent); color: var(--fg-1); box-shadow: 0 50px 120px -30px rgba(0, 0, 0, 0.7), inset 0 1px var(--hl); animation: v2-pop 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); }
 .dlg.sm { width: min(620px, 100%); }
 .dlg-h { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .dlg h3 { margin: 22px 0 0; font: 600 34px/1.1 var(--font-sans); letter-spacing: -0.03em; }
