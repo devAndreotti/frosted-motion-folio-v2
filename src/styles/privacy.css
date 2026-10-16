@@ -1,0 +1,109 @@
+/* /privacidade/. Hover, focus and press for its buttons and tabs are in interactive.css. Color comes from the site tokens (--accent, --accent-text, --accent-ink, the --fg, --surface
+   and --border sets), so the page follows the chosen color and light/dark mode. The only own colors are the
+   soft red of "Não guardo", defined here for both modes. No backdrop blur, no long animations. */
+
+.pv {
+  --pv-no: #b42318;
+  --pv-no-bg: rgba(180, 35, 24, 0.07);
+  --pv-no-line: rgba(180, 35, 24, 0.3);
+  /* the unpicked tab's ink and outline: light mode uses the ink tokens, since --border-2 is a white glass there */
+  --pv-tab-fg: var(--fg-2);
+  --pv-tab-line: var(--border-2);
+}
+:root:not(.dark) .pv {
+  --pv-tab-fg: var(--fg-1);
+  --pv-tab-line: var(--fg-2);
+}
+.dark .pv {
+  --pv-no: #fca5a5;
+  --pv-no-bg: rgba(248, 113, 113, 0.1);
+  --pv-no-line: rgba(248, 113, 113, 0.35);
+}
+
+.pv-card { border: 1px solid var(--border-1); background: var(--surface-1); border-radius: 20px; }
+.pv-h1 { margin: 0; font: 600 clamp(38px, 6vw, 64px)/1.05 var(--font-sans); letter-spacing: -0.035em; max-width: 14ch; overflow-wrap: break-word; }
+.pv-lead { margin: 0; max-width: 56ch; font: 400 clamp(17px, 2vw, 20px)/1.55 var(--font-sans); color: var(--fg-2); }
+.pv-h2 { margin: 0; font: 600 clamp(26px, 3.6vw, 32px)/1.15 var(--font-sans); letter-spacing: -0.02em; }
+.pv-h3 { margin: 0; font: 600 24px/1.2 var(--font-sans); letter-spacing: -0.02em; }
+.pv-hero { display: flex; flex-direction: column; gap: 18px; }
+.pv-ic { width: 28px; height: 28px; color: var(--accent-ink); }
+
+/* promises and numbers */
+.pv-promises, .pv-numbers, .pv-chips { margin: 0; padding: 0; list-style: none; }
+.pv-promises { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; margin-top: 10px; }
+.pv-promise { display: flex; flex-direction: column; gap: 10px; padding: 20px; }
+.pv-promise strong { font: 600 17px/1.3 var(--font-sans); }
+.pv-promise span { font: 400 15px/1.5 var(--font-sans); color: var(--fg-3); }
+.pv-numbers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 56px; }
+.pv-num { display: flex; flex-direction: column; gap: 8px; padding: 18px 20px; border-color: color-mix(in srgb, var(--accent) 35%, transparent); background: color-mix(in srgb, var(--accent) 9%, var(--surface-1)); }
+.pv-num-big { font: 700 clamp(30px, 4vw, 38px)/1 var(--font-sans); letter-spacing: -0.03em; color: var(--accent-ink); font-variant-numeric: tabular-nums; }
+.pv-num-small { font: 400 14px/1.45 var(--font-sans); color: var(--fg-2); }
+
+/* sections and tabs */
+.pv-section { display: flex; flex-direction: column; gap: 18px; margin-top: 56px; }
+.pv-sec-head { display: flex; flex-direction: column; gap: 6px; }
+.pv-sec-head p { margin: 0; font: 400 15px/1.5 var(--font-sans); color: var(--fg-3); }
+.pv-tabs { display: flex; flex-wrap: wrap; gap: 10px; }
+.pv-tab { min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--pv-tab-line); background: var(--surface-1); color: var(--pv-tab-fg); font: 600 15px/1 var(--font-sans); cursor: pointer; }
+/* Light mode: --border-2 is a white glass token there (0.5 alpha over a near-white wash, about 1.1:1),
+   so the outline vanished; the variables above switch to the ink tokens (fg-2 border, fg-1 text). Dark is untouched. */
+.pv-tab[aria-pressed='true'] { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+
+/* ficha */
+.pv-ficha { display: flex; flex-direction: column; gap: 20px; padding: 28px; border-radius: 24px; }
+.pv-sum { margin: 6px 0 0; font: 400 16px/1.5 var(--font-sans); color: var(--fg-2); }
+.pv-chips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+.pv-chips-k { display: block; margin-bottom: 10px; font: 500 12px/1 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; }
+.pv-keep-k { color: var(--accent-ink); }
+.pv-not-k { color: var(--pv-no); }
+.pv-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.pv-chip { padding: 7px 12px; border-radius: 12px; font: 400 14px/1.35 var(--font-sans); overflow-wrap: anywhere; }
+.pv-chip-keep { background: color-mix(in srgb, var(--accent) 14%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); color: var(--accent-ink); }
+.pv-chip-not { background: var(--pv-no-bg); border: 1px solid var(--pv-no-line); color: var(--pv-no); text-decoration: line-through; text-decoration-color: var(--pv-no-line); }
+.pv-rows { margin: 0; }
+.pv-row { display: grid; gap: 6px; padding: 14px 0; border-top: 1px solid var(--border-1); }
+.pv-row dt { font: 500 12px/1.4 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-3); }
+.pv-row dd { margin: 0; font: 400 16px/1.55 var(--font-sans); color: var(--fg-1); overflow-wrap: anywhere; }
+.pv-row .pv-dim { color: var(--fg-3); }
+
+/* simulation */
+.pv-sim { display: flex; flex-direction: column; gap: 18px; padding: 28px; border-radius: 24px; }
+.pv-sim-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.pv-sim-title { font: 500 12px/1 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-3); }
+.pv-status { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--border-2); background: var(--surface-2); color: var(--fg-1); font: 600 14px/1 var(--font-sans); }
+.pv-status::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--fg-3); }
+.pv-status[data-tone='waiting'] { border-style: dashed; }
+.pv-status[data-tone='waiting']::before { background: var(--accent); }
+.pv-status[data-tone='active'] { background: color-mix(in srgb, var(--accent) 14%, transparent); border-color: color-mix(in srgb, var(--accent) 45%, transparent); color: var(--accent-ink); }
+.pv-status[data-tone='active']::before { background: var(--accent); }
+.pv-rows[data-gone='true'] .pv-row dd { color: var(--fg-3); }
+.pv-rows s { text-decoration-thickness: 1.5px; }
+.pv-gone { display: inline-flex; margin-left: 10px; padding: 3px 10px; border-radius: 999px; background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent-ink); font: 600 12px/1.2 var(--font-sans); }
+.pv-days { display: flex; flex-direction: column; gap: 10px; font: 400 14px/1.4 var(--font-sans); color: var(--fg-2); }
+.pv-bar { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.pv-seg { min-height: 44px; border: 1px solid var(--border-2); border-radius: 10px; background: var(--surface-2); color: var(--fg-3); font: 600 14px/1 var(--font-mono); cursor: pointer; }
+.pv-seg[data-on='true'] { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+.pv-seg[aria-pressed='true']:not([data-on='true']) { border-color: var(--accent); color: var(--accent-ink); }
+.pv-note { margin: 0; font: 400 16px/1.55 var(--font-sans); color: var(--fg-2); }
+
+/* rights */
+.pv-rights { display: flex; flex-direction: column; gap: 14px; margin-top: 56px; padding: 28px; border-radius: 24px; }
+.pv-rights > p { margin: 0; max-width: 60ch; font: 400 16px/1.55 var(--font-sans); color: var(--fg-2); }
+.pv-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.pv-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 20px; border-radius: 999px; border: 1px solid var(--border-2); background: var(--surface-2); color: var(--fg-1); font: 600 15px/1 var(--font-sans); text-decoration: none; cursor: pointer; overflow-wrap: anywhere; }
+.pv-btn-pri { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+
+/* phones: 16px gutter, cards a little tighter */
+@media (min-width: 640px) {
+  .pv-row { grid-template-columns: 180px minmax(0, 1fr); gap: 6px 24px; }
+}
+@media (min-width: 720px) {
+  .pv-promises { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 760px) {
+  .pv-numbers { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 480px) {
+  .pv { padding-left: 16px; padding-right: 16px; }
+  .pv-ficha, .pv-sim, .pv-rights { padding: 20px; }
+}

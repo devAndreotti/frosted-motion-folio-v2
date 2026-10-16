@@ -6,9 +6,11 @@ import { blogPlugin } from "./vite-plugins/blog";
 export default defineConfig({
   plugins: [react(), blogPlugin()],
   resolve: {
-    alias: {
-      "@": path.resolve(import.meta.dirname, "./src"),
-    },
+    alias: [
+      { find: "@", replacement: path.resolve(import.meta.dirname, "./src") },
+      // only exists inside workerd; worker/smtp.js is tested with its own fake connection
+      { find: "cloudflare:sockets", replacement: path.resolve(import.meta.dirname, "./worker/test-stubs/sockets.js") },
+    ],
   },
   test: {
     environment: "jsdom",

@@ -5,11 +5,12 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { contact } from '@/data/personal';
 import { LangSwitch } from '@/components/NavExtras';
+import ColorPickerPopover from '@/components/ColorPickerPopover';
 
 // The app's root on either deploy ("/" on devandreotti.com, "/frosted-motion-folio-v2/" on GitHub Pages).
 export const HOME = import.meta.env.BASE_URL;
 
-/** The blog pages' frame: a slim bar (home, blog, RSS, language, theme) and a one-line footer. */
+/** The blog pages' frame: a slim bar (home, blog, RSS, accent color, language, theme) and a one-line footer. */
 const BlogShell = ({ title, children }: { title: string; children: ReactNode }) => {
   const { theme, toggleTheme } = useTheme();
   const { lang, setLang, t } = useLanguage();
@@ -39,6 +40,7 @@ const BlogShell = ({ title, children }: { title: string; children: ReactNode }) 
               <Rss className="ic s" />
               <span className="blog-rss-t">RSS</span>
             </a>
+            <ColorPickerPopover />
             <LangSwitch lang={lang} onPick={setLang} ariaLabel={t.nav.langToggleAria} />
             <button type="button" onClick={toggleTheme} aria-label={t.nav.themeToggleAria} className="np sq">
               {theme === 'light' ? <Moon className="ic" /> : <Sun className="ic" />}

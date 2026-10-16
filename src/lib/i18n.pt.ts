@@ -1,4 +1,6 @@
 import type { Strings } from './i18n.types';
+import { ptBlog } from './i18n.pt.blog';
+import { ptNow } from './i18n.pt.now';
 
 export const pt: Strings = {
   common: {
@@ -74,28 +76,7 @@ export const pt: Strings = {
     reposUnit: 'repositórios no GitHub',
     alsoKnown: 'Também na bagagem',
   },
-  now: {
-    sectionLabel: 'Agora',
-    title: 'No que estou trabalhando agora.',
-    subtitle: 'O que anda mais movimentado no meu GitHub. Alguns repositórios ainda são privados: esses levam pro site do projeto.',
-    aboutLabel: 'Sobre mim',
-    aboutBody:
-      'Sou o Ricardo: técnico em informática e no 7º semestre de Ciência da Computação na UNIP, em Sorocaba. Aprendo construindo coisas que eu mesmo uso: ferramentas pra programar melhor, automação com IA rodando na minha própria infraestrutura e, ultimamente, um jogo de terror.',
-    facts: [
-      { label: 'Base', value: 'Sorocaba, SP' },
-      { label: 'Formação', value: 'Ciência da Computação · UNIP' },
-      { label: 'Interesses', value: 'IA aplicada, DX e jogos' },
-    ],
-    privateCode: 'código privado',
-    alsoLabel: 'Também no forno',
-    privateTag: 'privado',
-    alsoMore: 'Ver mais',
-    alsoMoreNote: 'os outros repositórios no GitHub',
-    alsoOpen: 'ver detalhes',
-    alsoWhat: 'O que faz',
-    alsoPrivateFoot: 'Código privado: ainda sem página pública.',
-    alsoGithub: 'Ver o código no GitHub',
-  },
+  now: ptNow,
   projects: {
     sectionLabel: 'Projetos',
     title: 'Projetos com contexto, decisão e entrega.',
@@ -110,6 +91,13 @@ export const pt: Strings = {
     code: 'Código',
     emptyCategory: 'Nenhum projeto nessa categoria ainda.',
     moreProjects: (count) => `Ver os outros ${count} no GitHub`,
+    more: {
+      title: 'Experimentos e estudos que também valem o clique.',
+      subtitle: 'Páginas, componentes e efeitos que construí para praticar. Clique para ver as telas.',
+      cardAria: (title) => `Ver as telas de ${title}`,
+      showAll: (count) => `Ver todos os ${count}`,
+      showLess: 'Ver menos',
+    },
   },
   caseModal: {
     whatIDid: 'O que eu fiz',
@@ -120,6 +108,10 @@ export const pt: Strings = {
     prevImageAria: 'Imagem anterior',
     nextImageAria: 'Próxima imagem',
     imageAlt: (title, index) => `Screenshot ${index} de ${title}`,
+    imagesAria: 'Imagens do projeto',
+    goToImageAria: (index) => `Ir para a imagem ${index}`,
+    pauseAria: 'Pausar a troca automática de imagens',
+    playAria: 'Retomar a troca automática de imagens',
   },
   timeline: {
     sectionLabel: 'Trajetória',
@@ -165,6 +157,10 @@ export const pt: Strings = {
     builtWith: 'feito com React, Tailwind CSS e muito café.',
     backToTop: 'Voltar ao topo',
   },
+  easter: {
+    hauntedLine: 'ainda acordado? o código também.',
+    printNote: 'Psiu: você achou o easter egg do Ctrl+P.',
+  },
   notFound: {
     badge: 'Erro 404',
     kicker: 'rota não encontrada',
@@ -182,47 +178,28 @@ export const pt: Strings = {
       contact: { title: 'Contato', note: 'E-mail, LinkedIn e GitHub, tudo num lugar.' },
     },
     broken: 'Achou um link quebrado meu?',
+    game: {
+      aria: 'Mini jogo: desvie dos bugs e pegue o café', title: 'desvie dos bugs', hint: 'Arraste o quadrado ou use ← → (A D). Café vale +5 e deixa os bugs lentos',
+      start: 'Começar', pressToStart: 'Aperte para começar', over: 'Você bateu num bug', record: 'novo recorde!',
+      restart: 'Jogar de novo', restartHint: 'Espaço, Enter ou toque para reiniciar', score: (points) => `${points} pontos`,
+      best: (points) => `recorde ${points}`, wave: (n) => `Onda ${n}!`, lives: (n) => (n === 1 ? '1 vida' : `${n} vidas`),
+    },
   },
-  blog: {
-    sectionLabel: 'Escritos',
-    teaserTitle: 'Notas de quem constrói o próprio site.',
-    teaserSub: 'Decisões, erros e o que aprendi pelo caminho. Escrito em Markdown, publicado com um git push.',
-    seeAll: 'Ver todos os posts',
-    pageTitle: 'Escritos',
-    pageLead: 'Sobre front-end, infraestrutura pequena e as decisões por trás deste site.',
-    langNote: '',
-    translatedNote: '',
-    ptOnly: '',
-    searchLabel: 'Buscar nos posts',
-    searchPlaceholder: 'Buscar nos posts…',
-    searchButton: 'Buscar',
-    searchHint: 'Busca pelo DuckDuckGo · site:devandreotti.com',
-    tagsLabel: 'Filtrar por tag',
-    allTags: 'todos',
-    latest: 'Mais recente',
-    readPost: 'Ler post',
-    postsCount: (count) => (count === 1 ? '1 post' : `${count} posts`),
-    empty: 'Nenhum post publicado ainda. Volte em breve.',
-    emptyTag: 'Nenhum post com essa tag ainda.',
-    minutes: (count) => `${count} min de leitura`,
-    back: '~/blog',
-    onThisPage: 'Neste post',
-    helpful: 'Esse post te ajudou?',
-    like: 'Curtir',
-    liked: 'Curtido',
-    likeHint: 'Sem conta e sem cookie de rastreio. Uma curtida por visitante.',
-    likedHint: 'Valeu! Conta uma vez por visitante. Clique de novo para desfazer.',
-    likeError: 'Não deu para registrar agora. Tente de novo em instantes.',
-    copyLink: 'Copiar link',
-    linkCopied: 'Link copiado',
-    replyEmail: 'Responder por e-mail',
-    newer: 'Mais novo',
-    older: 'Anterior',
-    loadError: 'Não foi possível carregar este post.',
-  },
+  blog: ptBlog,
   colorPicker: {
     hueLabel: (label) => `Cor de destaque: ${label}`,
     trigger: 'Escolher cor de destaque',
     hueNames: { black: 'Preto', blue: 'Azul', purple: 'Roxo', orange: 'Laranja', red: 'Vermelho', green: 'Verde', yellow: 'Amarelo' },
+  },
+  eggs: {
+    hireHelp: 'contratar o Ricardo',
+    hireLines: ['> autenticando como root... ok', '> lendo a candidatura do Ricardo... ok', '> contratação aprovada [ OK ]', '> enviando convite para o time...'],
+    hireContact: (email) => `contato direto: ${email}`,
+    sudoDenied: 'sudo: permissão negada. Tente: sudo hire ricardo',
+    debug: {
+      title: 'modo debug', ariaLabel: 'Painel de depuração', viewport: 'viewport',
+      theme: 'tema', themeNames: { dark: 'escuro', light: 'claro' }, language: 'idioma',
+      loadTime: 'carregamento', notAvailable: 'n/d', exitHint: 'triplo clique na logo ou Esc para sair',
+    },
   },
 };

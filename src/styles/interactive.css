@@ -1,0 +1,106 @@
+/* Shared interactive states: the one place for hover, focus-visible, press and disabled on buttons,
+   pills, tabs and text links. Loaded last (main.tsx), so it wins over the older per-component rules
+   at equal specificity. Colors come only from theme tokens (--accent, --accent-text, --accent-ink,
+   --border-1/2, --surface-1/2, --fg-1/2), so light/dark and every hue follow the site setting.
+
+   Rules for every control here:
+   - hover only on devices that hover (@media (hover: hover)), so a touch tap leaves no stuck state;
+   - 0.2s on color, border, background, filter, opacity, and the lift/press below;
+   - a lift of at most 1px, or an accent tint of border and fill, never a big move;
+   - press (:active) scales to 98% (or dims a primary), without any motion under reduced motion;
+   - :focus-visible is a 2px accent ring with a 2px offset;
+   - :disabled is half opacity with no hover;
+   - reduced motion keeps the color and fill changes and drops every translate and scale.
+
+   Groups (keep these lists in step with privacy.css and blog.css):
+   primary   .btn-pri, .pv-btn-pri (the mailto link also carries .pv-btn, so ghost rules skip it)
+   ghost     .btn-gh, .pv-btn, .like, and icon buttons .ibtn, .np.sq
+   pill/tab  .np pills (not the .np.lang group or the static .np.fix), .pv-tab, .pv-seg (day buttons),
+             .blog-tags button, .seg button, .lg (language switch)
+   text link .nl, .prose a, .toc a, .post-back, .nws-fine a, .ft button */
+
+/* ---------- 1. transitions ---------- */
+:is(.btn, .btn-pri, .btn-gh, .pv-btn, .pv-btn-pri, .like, .ibtn, .np, .pv-tab, .pv-seg, .blog-tags button, .seg button, .lg, .nl, .prose a, .toc a, .post-back, .nws-fine a, .ft button) {
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, filter 0.2s, opacity 0.2s, translate 0.2s, scale 0.2s;
+}
+
+/* ---------- 2. focus-visible: 2px accent ring, 2px out ---------- */
+:is(.btn, .btn-pri, .btn-gh, .pv-btn, .pv-btn-pri, .like, .ibtn, .np, .pv-tab, .pv-seg, .blog-tags button, .seg button, .lg, .nl, .prose a, .toc a, .post-back, .nws-fine a, .ft button):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------- 3. hover, only where the pointer can hover ---------- */
+@media (hover: hover) {
+  /* primary: the fill brightens a little */
+  :is(.btn-pri, .pv-btn-pri):hover:where(:not(:disabled)) {
+    filter: brightness(1.06);
+  }
+
+  /* ghost and icon buttons: accent-tinted ring and fill */
+  :is(.btn-gh, .pv-btn, .like, .ibtn, .np.sq):hover:where(:not(.on, .oc-x, .pv-btn-pri, :disabled)) {
+    color: var(--fg-1);
+    border-color: color-mix(in oklab, var(--accent) 50%, var(--border-2));
+    background: color-mix(in oklab, var(--accent) 8%, var(--surface-2));
+  }
+
+  /* pills and tabs: the same tint, on the thinner surface they sit on */
+  :is(.np, .pv-tab, .pv-seg, .blog-tags button, .seg button, .lg):hover:where(:not(.on, .fix, .lang, .oc-x, [aria-pressed='true'], [data-on='true'], :disabled)) {
+    color: var(--fg-1);
+    border-color: color-mix(in oklab, var(--accent) 50%, var(--border-2));
+    background: color-mix(in oklab, var(--accent) 8%, var(--surface-2));
+  }
+
+  /* a pressed or selected control keeps its accent fill and gets a brighter fill instead */
+  :is(.like.on, .np.on, .pv-tab[aria-pressed='true'], .pv-seg[aria-pressed='true'], .pv-seg[data-on='true'], .blog-tags button.on, .lg.on):hover:where(:not(:disabled)) {
+    filter: brightness(1.06);
+  }
+
+  /* text links: the ink goes to the full foreground */
+  :is(.nl, .prose a, .toc a, .post-back, .nws-fine a, .ft button):hover:where(:not(:disabled)) {
+    color: var(--fg-1);
+  }
+}
+
+/* ---------- 4. lift and press: only where motion is allowed ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  @media (hover: hover) {
+    :is(.btn, .btn-pri, .pv-btn, .pv-btn-pri, .btn-gh, .like, .ibtn, .np.sq):hover:where(:not(:disabled)) {
+      translate: 0 -1px;
+    }
+  }
+
+  :is(.btn, .btn-pri, .btn-gh, .pv-btn, .pv-btn-pri, .like, .ibtn, .np.sq):active:where(:not(:disabled)) {
+    scale: 0.98;
+  }
+
+  :is(.np, .pv-tab, .pv-seg, .blog-tags button, .seg button, .lg):active:where(:not(:disabled)) {
+    scale: 0.98;
+  }
+}
+
+/* press colour, for every control (no motion here, so it is not in the block above) */
+:is(.btn-pri, .pv-btn-pri):active:where(:not(:disabled)) {
+  filter: brightness(0.94);
+}
+
+:is(.btn-gh, .pv-btn, .like, .ibtn, .np, .pv-tab, .pv-seg, .blog-tags button, .seg button, .lg):active:where(:not(.on, .oc-x, .pv-btn-pri, [aria-pressed='true'], [data-on='true'], :disabled)) {
+  background: color-mix(in oklab, var(--accent) 16%, var(--surface-2));
+}
+
+:is(.nl, .prose a, .toc a, .post-back, .nws-fine a, .ft button):active {
+  opacity: 0.75;
+}
+
+/* ---------- 5. disabled ---------- */
+:is(.btn, .btn-pri, .btn-gh, .pv-btn, .pv-btn-pri, .like, .ibtn, .np, .pv-tab, .pv-seg, .blog-tags button, .seg button, .lg):disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- 6. reduced motion: colors and fills stay, nothing moves ---------- */
+@media (prefers-reduced-motion: reduce) {
+  :is(.btn, .btn-pri, .btn-gh, .pv-btn, .pv-btn-pri, .like, .ibtn, .np, .pv-tab, .pv-seg, .blog-tags button, .seg button, .lg, .nl, .prose a, .toc a, .post-back, .nws-fine a, .ft button) {
+    transition: color 0.2s, background-color 0.2s, border-color 0.2s, filter 0.2s, opacity 0.2s;
+  }
+}

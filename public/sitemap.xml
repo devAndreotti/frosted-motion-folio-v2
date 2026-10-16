@@ -8,4 +8,9 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://devandreotti.com/?lang=en" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://devandreotti.com/" />
   </url>
+  <url>
+    <loc>https://devandreotti.com/privacidade/</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
 </urlset>

@@ -1,0 +1,25 @@
+/* Pictures on their way: the site's shimmer, light, behind the <img> until it settles (lib/imageLoad.ts sets data-ld / data-err). */
+@keyframes img-sweep {
+  from { background-position: 160% 0, 0 0; }
+  to { background-position: -60% 0, 0 0; }
+}
+
+:is(.mp-win img, .bf img, .thumb-shot img, .nc-img img, .fan-img img, .dk-img, .about-ph, .dlg-img.on):not([data-ld], [data-err]) {
+  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.16) 50%, transparent 70%) 160% 0 / 200% 100% no-repeat, #1a1a22;
+}
+/* the dialog's picture already has its own entrance animation; the others get the sweep */
+:is(.mp-win img, .bf img, .thumb-shot img, .nc-img img, .dk-img, .about-ph):not([data-ld], [data-err]) {
+  /* three sweeps, not forever: lazy pictures far down the page never start loading, and an endless background-position animation repaints on the main thread every frame (heavy in Edge) */
+  animation: img-sweep 1.4s ease-in-out 3;
+}
+
+/* Failed: a quiet tile instead of a hole, the same tone as the shimmer's base. */
+:is(.mp-win img, .bf img, .thumb-shot img, .nc-img img, .fan-img img, .dk-img, .about-ph, .dlg-img.on)[data-err] {
+  background: #1a1a22;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(.mp-win img, .bf img, .thumb-shot img, .nc-img img, .dk-img, .about-ph):not([data-ld], [data-err]) {
+    animation: none;
+  }
+}

@@ -3,6 +3,9 @@ import { X, Terminal as TerminalIcon } from "lucide-react";
 import { useScrollLock } from "@/hooks/useScrollLock";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { HUE_ORDER, useTheme, type Hue } from "@/contexts/ThemeContext";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { EGG_EVENTS } from "@/lib/eggs";
+import { SudoHire } from "./SudoHire";
 
 interface CommandLog {
   id: string;
@@ -32,6 +35,7 @@ export const SudoTerminal = () => {
   const [divergenceEffect, setDivergenceEffect] = useState(false);
 
   const { setHue, toggleTheme, theme } = useTheme();
+  const { t } = useLanguage();
   const buffer = useRef("");
   const dialogRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -52,6 +56,13 @@ export const SudoTerminal = () => {
     };
     window.addEventListener("keydown", onKeydown);
     return () => window.removeEventListener("keydown", onKeydown);
+  }, []);
+
+  // The Konami code (useSecretKeys) opens the terminal through this event.
+  useEffect(() => {
+    const open = () => setShow(true);
+    window.addEventListener(EGG_EVENTS.openTerminal, open);
+    return () => window.removeEventListener(EGG_EVENTS.openTerminal, open);
   }, []);
 
   useScrollLock(show);
@@ -107,6 +118,7 @@ export const SudoTerminal = () => {
             <div><span className="text-[var(--accent)] font-semibold">contact</span> — Links e e-mail</div>
             <div><span className="text-[var(--accent)] font-semibold">clear</span> — Limpa a tela</div>
             <div><span className="text-[var(--accent)] font-semibold">exit</span> — Fecha terminal</div>
+            <div><span className="text-[var(--accent)] font-semibold">sudo hire ricardo</span> — {t.eggs.hireHelp}</div>
           </div>
         );
         break;
@@ -166,6 +178,14 @@ export const SudoTerminal = () => {
           return;
         }
         output = <div className="text-white/50">Comando desconhecido: {cleanCmd}. Digite <span className="text-[var(--accent)]">help</span>.</div>;
+        break;
+
+      case "sudo":
+        if (args.join(" ") === "hire ricardo") {
+          output = <SudoHire />;
+        } else {
+          output = <div className="text-red-400">{t.eggs.sudoDenied}</div>;
+        }
         break;
 
       case "tuturu":

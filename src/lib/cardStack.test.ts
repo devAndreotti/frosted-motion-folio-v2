@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MAX_VISIBLE_DEPTH, moveKind, reorderStack, stackDim, stackTransform } from "./cardStack";
+import { MAX_VISIBLE_DEPTH, PHONE_SPREAD, moveKind, reorderStack, stackDim, stackTransform } from "./cardStack";
 
 describe("reorderStack", () => {
   it("sends the front card to the back when it's clicked", () => {
@@ -33,6 +33,13 @@ describe("stackTransform", () => {
 
   it("collapses everything past the last visible slot onto it", () => {
     expect(stackTransform(MAX_VISIBLE_DEPTH + 2)).toBe(stackTransform(MAX_VISIBLE_DEPTH));
+  });
+
+  it("fans the pile out more with a spread, keeping the front card and the shrink as they are", () => {
+    expect(stackTransform(0, PHONE_SPREAD)).toBe(stackTransform(0));
+    expect(stackTransform(1, PHONE_SPREAD)).toBe("translate(25.2px, 16.8px) rotate(4.2deg) scale(0.955)");
+    expect(stackTransform(3, PHONE_SPREAD)).toBe("translate(75.6px, 50.4px) rotate(12.6deg) scale(0.865)");
+    expect(PHONE_SPREAD).toBeGreaterThan(1);
   });
 });
 

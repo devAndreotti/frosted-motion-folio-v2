@@ -1,0 +1,33 @@
+/* The gallery of smaller projects under the ranked list (MoreProjects). Tokens as in v2.css. */
+.mp { margin-top: 72px; }
+.mp-t { margin: 0; font: 600 28px/1.15 var(--font-sans); letter-spacing: -0.03em; }
+.mp-s { margin: 10px 0 0; max-width: 60ch; color: var(--fg-2); font: 400 16px/1.6 var(--font-sans); }
+.mp-grid { list-style: none; margin: 32px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.mp-card { display: flex; flex-direction: column; width: 100%; height: 100%; padding: 0; border-radius: 20px; overflow: hidden; text-align: left; color: var(--fg-1); cursor: pointer; transition: transform 0.25s, border-color 0.25s; }
+@media (hover: hover) { .mp-card:hover { transform: translateY(-3px); border-color: var(--border-2); } }
+.mp-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.mp-img { position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden; border-bottom: 1px solid var(--border-1); background: linear-gradient(160deg, color-mix(in srgb, var(--tint, #8b5cf6) 40%, transparent), #130a2c 85%), #0b0b10; }
+/* the whole shot in a frame over a stage that takes the project's color; a blurred copy of the shot fills the stage */
+.mp-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: blur(16px) saturate(1.3); transform: scale(1.3); opacity: 0.55; }
+.mp-win { position: absolute; left: 10px; right: 10px; top: 50%; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 6px; background: #000; transform: translateY(-50%); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.14); transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.mp-win img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 0 0; }
+@media (hover: hover) { .mp-card:hover .mp-win { transform: translateY(-50%) scale(1.03); } }
+.mp-b { display: flex; flex-direction: column; flex: 1; gap: 8px; padding: 16px 18px 18px; }
+.mp-n { font: 600 17px/1.25 var(--font-sans); letter-spacing: -0.01em; }
+.mp-d { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: var(--fg-2); font: 400 14px/1.5 var(--font-sans); }
+.mp-b .tags { margin-top: auto; padding-top: 4px; }
+.mp-more { display: flex; justify-content: center; margin-top: 28px; }
+@media (max-width: 720px) {
+  .mp { margin-top: 56px; }
+  .mp-t { font-size: 24px; }
+  .mp-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .mp-card { border-radius: 16px; }
+  .mp-b { gap: 6px; padding: 12px 14px 14px; }
+  .mp-n { font-size: 15px; }
+  .mp-d, .mp-b .tags { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mp-card, .mp-win { transition: none; }
+  .mp-card:hover { transform: none; }
+  .mp-card:hover .mp-win { transform: translateY(-50%); }
+}

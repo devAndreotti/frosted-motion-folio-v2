@@ -12,7 +12,10 @@ export interface CuratedProject extends Omit<Project, 'description'> {
   tagline: Localized<string>;
   long: Localized<string>;
   points: Localized<string[]>;
+  /** The gallery in the case modal (16:10 shots, the first is the cover); the cover alone when empty. */
   images: string[];
+  /** Portrait shot (3:4) for the hero cards; falls back to `image`, which those cards then crop. */
+  portrait?: string;
 }
 
 interface CurationMeta {
@@ -24,10 +27,24 @@ interface CurationMeta {
   tagline: Localized<string>;
   long: Localized<string>;
   points: Localized<string[]>;
+  /** Replaces the project's cover (16:10) from projects.ts. */
+  image?: string;
   images?: string[];
+  portrait?: string;
 }
 
+/**
+ * Photos of a case, taken for the portfolio: public/projects/<slug>/NN.webp are the 16:10 gallery shots (the first is
+ * the cover, also used for the featured card and the list thumbnail), portrait.webp is the 3:4 shot for the hero cards.
+ */
+const shots = (slug: string, numbers: string[]) => ({
+  image: `./projects/${slug}/${numbers[0]}.webp`,
+  images: numbers.map((n) => `./projects/${slug}/${n}.webp`),
+  portrait: `./projects/${slug}/portrait.webp`,
+});
+
 const FEATURED_META: CurationMeta = {
+  ...shots('self-sync-daily', ['01', '02', '03', '04', '05']),
   id: 26,
   type: { pt: 'Produto pessoal', en: 'Personal product' },
   cat: 'web',
@@ -57,6 +74,7 @@ const FEATURED_META: CurationMeta = {
 
 const LIST_META: CurationMeta[] = [
   {
+    ...shots('gold-portfolio-analyzer', ['01', '02', '03', '05']),
     id: 9,
     type: { pt: 'Web app', en: 'Web app' },
     cat: 'web',
@@ -76,6 +94,7 @@ const LIST_META: CurationMeta[] = [
     },
   },
   {
+    ...shots('chef-ai', ['01', '02', '03', '04']),
     id: 2,
     type: { pt: 'IA aplicada', en: 'Applied AI' },
     cat: 'ia',
@@ -95,6 +114,7 @@ const LIST_META: CurationMeta[] = [
     },
   },
   {
+    ...shots('ideaforge-nexus-genesis', ['01', '03', '04', '05']),
     id: 5,
     type: { pt: 'Ferramenta', en: 'Tool' },
     cat: 'tool',
@@ -114,6 +134,7 @@ const LIST_META: CurationMeta[] = [
     },
   },
   {
+    ...shots('git-wizard-commander', ['01', '02', '04']),
     id: 30,
     type: { pt: 'Educacional', en: 'Educational' },
     cat: 'tool',
@@ -133,22 +154,25 @@ const LIST_META: CurationMeta[] = [
     },
   },
   {
+    // the app's own art (real food photos, which the new shots can't show) closes the gallery
+    ...shots('cook-app', ['01', '04', '05']),
+    images: ['01', '04', '05'].map((n) => `./projects/cook-app/${n}.webp`).concat('./projects/httpsgithub.comdevAndreotticook-app/project.webp'),
     id: 1,
     type: { pt: 'Mobile', en: 'Mobile' },
     cat: 'mobile',
     tint: '#f97316',
     description: {
-      pt: 'Aplicação móvel desenvolvida em React Native, Expo e Supabase para gerenciamento de dados. Criada como parte de um curso da Rocketseat, oferece uma experiência de usuário completa e funcional em dispositivos Android e iOS.',
-      en: 'A mobile app built with React Native, Expo, and Supabase for data management. Created as part of a Rocketseat course, it offers a complete, functional user experience on Android and iOS.',
+      pt: 'App mobile de receitas feito em React Native, Expo e Supabase: você escolhe os ingredientes que tem em casa e vê as receitas possíveis, com o modo de preparo. Criado em um curso da Rocketseat, roda em Android e iOS.',
+      en: 'A recipe mobile app built with React Native, Expo, and Supabase: you pick the ingredients you have at home and see the recipes you can make, with the preparation steps. Created in a Rocketseat course, it runs on Android and iOS.',
     },
-    tagline: { pt: 'Receitas no celular, com Expo e Supabase.', en: 'Recipes on your phone, with Expo and Supabase.' },
+    tagline: { pt: 'Escolha os ingredientes, ache a receita.', en: 'Pick the ingredients, find the recipe.' },
     long: {
-      pt: 'App mobile de receitas construído durante um curso da Rocketseat, com CRUD completo via Supabase e experiência nativa em Android e iOS via Expo.',
-      en: 'A mobile recipe app built during a Rocketseat course, with full CRUD via Supabase and a native experience on Android and iOS via Expo.',
+      pt: 'App mobile construído durante um curso da Rocketseat: você marca os ingredientes que tem em casa e o app busca no Supabase as receitas que dá para fazer, com ingredientes e modo de preparo passo a passo. Roda em Android e iOS via Expo.',
+      en: 'A mobile app built during a Rocketseat course: you tick the ingredients you have at home and the app queries Supabase for the recipes you can make, with ingredients and step-by-step preparation. It runs on Android and iOS through Expo.',
     },
     points: {
-      pt: ['CRUD completo de receitas com Supabase.', 'Build e testes via Expo em Android e iOS.', 'Navegação nativa com React Navigation.'],
-      en: ['Full recipe CRUD with Supabase.', 'Build and testing via Expo on Android and iOS.', 'Native navigation with React Navigation.'],
+      pt: ['Busca de receitas por ingredientes, com uma função SQL (RPC) no Supabase.', 'Navegação por rotas de arquivo com Expo Router.', 'Interface em React Native e TypeScript para Android e iOS via Expo.'],
+      en: ['Recipe search by ingredients, with a SQL function (RPC) in Supabase.', 'File-based routing with Expo Router.', 'React Native and TypeScript interface for Android and iOS through Expo.'],
     },
   },
 ];
@@ -156,7 +180,8 @@ const LIST_META: CurationMeta[] = [
 function merge(meta: CurationMeta): CuratedProject {
   const project = projects.find((p) => p.id === meta.id);
   if (!project) throw new Error(`curatedProjects: no project with id ${meta.id} in data/projects.ts`);
-  return { ...project, ...meta, images: meta.images ?? [project.image] };
+  const image = meta.image ?? project.image;
+  return { ...project, ...meta, image, images: meta.images ?? [image] };
 }
 
 export const featuredProject: CuratedProject = merge(FEATURED_META);

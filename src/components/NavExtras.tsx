@@ -49,7 +49,7 @@ interface LangSwitchProps {
 
 /** PT | EN segmented pill -- the active language sits on the accent. */
 export const LangSwitch = ({ lang, onPick, ariaLabel, className = '' }: LangSwitchProps) => (
-  <div className={`np lang ${className}`} role="group" aria-label={ariaLabel}>
+  <div className={`np lang ${className}`} role="group" aria-label={ariaLabel} data-lang={lang}>
     {(['pt', 'en'] as const).map((option) => (
       <button key={option} type="button" aria-pressed={lang === option} className={`lg${lang === option ? ' on' : ''}`} onClick={() => onPick(option)}>
         {option.toUpperCase()}
