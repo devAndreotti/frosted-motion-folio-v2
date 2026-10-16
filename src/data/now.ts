@@ -22,6 +22,9 @@ export interface NowProject {
   contain?: boolean;
 }
 
+/** When this list was last reviewed (ISO date); shown under the section subtitle. Update it with the list. */
+export const NOW_UPDATED = '2026-10-16';
+
 // What's on the workbench right now, newest first. Taken from the GitHub
 // account in Oct 2026: private repos only ever link to their public site.
 export const NOW_PROJECTS: NowProject[] = [
