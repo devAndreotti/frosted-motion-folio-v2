@@ -51,6 +51,10 @@ jobs:
         run: |
           jq '.ci.collect.settings.preset = "desktop"' lighthouserc.json > .lighthouserc.desktop.json
           npx --yes @lhci/cli@0.15.1 collect --config=.lighthouserc.desktop.json --outputDir=.lighthouseci/desktop
+      - name: DEBUG lhr layout
+        run: |
+          find .lighthouseci -maxdepth 3 | head -60
+          for f in $(find .lighthouseci -name 'lhr-*.json' | head -30); do echo "$f $(jq -c '[.requestedUrl, .configSettings.emulatedFormFactor, .configSettings.formFactor, .categories.performance.score]' "$f")"; done
       - name: Report
         env:
           COMMIT: ${{ github.event.pull_request.head.sha }}
