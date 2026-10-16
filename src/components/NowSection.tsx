@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { ArrowUpRight, Check, Ellipsis, Lock, Tv, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { GATE_CHECKS, NOW_ALSO, NOW_PROJECTS, NOW_UPDATED, type AlsoDetails, type AlsoItem, type NowProject } from '@/data/now';
@@ -216,6 +217,8 @@ const NowSection = () => {
           <p className="sub">{t.now.subtitle}</p>
           <p className="now-upd">
             <time dateTime={NOW_UPDATED}>{t.now.updated(updatedLabel)}</time>
+            {' · '}
+            <Link to="/agora/">{t.now.archiveLink}</Link>
           </p>
         </div>
       </div>

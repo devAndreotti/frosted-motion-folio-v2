@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { MemoryRouter } from "react-router-dom";
 import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { EGG_EVENTS } from "@/lib/eggs";
 import { LanguageProvider } from "@/contexts/LanguageContext";
@@ -8,9 +9,11 @@ import NowSection from "./NowSection";
 
 const renderNow = () =>
   render(
-    <LanguageProvider>
-      <NowSection />
-    </LanguageProvider>
+    <MemoryRouter>
+      <LanguageProvider>
+        <NowSection />
+      </LanguageProvider>
+    </MemoryRouter>
   );
 
 describe("NowSection", () => {
@@ -88,11 +91,13 @@ describe("NowSection", () => {
   it("shows the portrait for the saved site color", () => {
     localStorage.setItem("hue", "red");
     const { container } = render(
-      <ThemeProvider>
-        <LanguageProvider>
-          <NowSection />
-        </LanguageProvider>
-      </ThemeProvider>
+      <MemoryRouter>
+        <ThemeProvider>
+          <LanguageProvider>
+            <NowSection />
+          </LanguageProvider>
+        </ThemeProvider>
+      </MemoryRouter>
     );
     expect(container.querySelector(".about-ph")?.getAttribute("src")).toBe("./profile/red.webp");
     localStorage.clear();
