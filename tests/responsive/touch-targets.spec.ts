@@ -7,7 +7,7 @@ test("CaseModal close/gallery buttons meet the minimum touch-target size", async
   await page.goto("");
   const section = page.locator("#projects");
   const sample = curatedProjects[0];
-  await section.getByRole("button", { name: new RegExp(sample.title) }).click();
+  await section.getByRole("link", { name: new RegExp(sample.title) }).click();
 
   const dialog = page.getByRole("dialog");
   const closeBox = await dialog.getByRole("button", { name: "Fechar" }).boundingBox();

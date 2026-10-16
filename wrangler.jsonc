@@ -13,7 +13,7 @@
     // one-page app: unknown paths get index.html and the React 404 page
     "not_found_handling": "single-page-application",
     // pages and /e/ beacons go through the Worker (www/http redirects); static files skip it and stay free
-    "run_worker_first": ["/*", "!/assets/*", "!/projects/*", "!/now/*", "!/favicon.ico", "!/og-image.png", "!/profile.*", "!/profile/*", "!/placeholder.svg", "!/robots.txt", "!/sitemap.xml", "!/blog/rss.xml", "!/blog/index.json"]
+    "run_worker_first": ["/*", "!/assets/*", "!/projects/*", "!/now/*", "!/favicon.ico", "!/og-image.png", "!/profile.*", "!/profile/*", "!/placeholder.svg", "!/robots.txt", "!/sitemap.xml", "!/blog/rss.xml", "!/blog/index.json", "!/projetos/index.json"]
   },
   // "1" turns every page into public/offline.html with a 503 (worker/index.js). Flip it in the dashboard
   // (Workers > devandreotti-portfolio > Settings > Variables) without a deploy; the next deploy resets it to "0".

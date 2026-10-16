@@ -4,6 +4,7 @@ import path from "path";
 import { boneyardPlugin } from "boneyard-js/vite";
 import { buildBootPalette } from "./src/lib/bootPalette";
 import { blogPlugin } from "./vite-plugins/blog";
+import { projectsPlugin } from "./vite-plugins/projects";
 import { cspPlugin } from "./vite-plugins/csp";
 
 // Inlines the hue x mode palette into the boot loader script in index.html,
@@ -23,6 +24,7 @@ export default defineConfig(({ mode }) => ({
     react(),
     bootPalette(),
     blogPlugin(),
+    projectsPlugin(),
     cspPlugin(),
     mode === "development" && boneyardPlugin(),
   ].filter(Boolean),

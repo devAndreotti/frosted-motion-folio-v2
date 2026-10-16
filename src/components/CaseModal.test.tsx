@@ -6,6 +6,7 @@ import CaseModal, { resolveSwipeDelta } from "./CaseModal";
 
 const FAKE_PROJECT: CuratedProject = {
   id: 999,
+  slug: "fake-project",
   title: "Fake Project",
   image: "a.png",
   images: ["a.png", "b.png", "c.png"],

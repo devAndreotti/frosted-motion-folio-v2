@@ -9,7 +9,8 @@
 //     records the clicks (when configured), so the beacon only needs a quiet answer.
 //   - MAINTENANCE=1, or the static files failing -> 503 with public/offline.html
 //   - unknown paths     -> the app shell (its React 404 page) with a real 404 status;
-//     /blog/ and /blog/<slug>/ are pages when the build published that post (blog/index.json)
+//     /blog/ and /blog/<slug>/ are pages when the build published that post (blog/index.json),
+//     /projetos/<slug>/ when it published that case (projetos/index.json)
 // Static files (assets/, images, robots, sitemap) never reach this code: see
 // run_worker_first in wrangler.jsonc.
 
@@ -17,6 +18,7 @@ import { handleGithubApi } from './github.js';
 import { handleLikes, publishedSlugs } from './likes.js';
 import { handleAdmin } from './admin.js';
 import { handleNewsletter } from './newsletter.js';
+import { PROJECT_PAGE, publishedProjectSlugs } from './projects.js';
 
 const APEX = 'devandreotti.com';
 // The only paths that are pages; any other HTML is the one-page app's fallback for an unknown route.
@@ -27,7 +29,9 @@ const POST_PAGE = /^\/blog\/([a-z0-9-]+)\/$/;
 async function isPage(request, env, pathname) {
   if (PAGES.has(pathname)) return true;
   const post = POST_PAGE.exec(pathname);
-  return post !== null && (await publishedSlugs(request, env)).has(post[1]);
+  if (post !== null && (await publishedSlugs(request, env)).has(post[1])) return true;
+  const project = PROJECT_PAGE.exec(pathname);
+  return project !== null && (await publishedProjectSlugs(request, env)).has(project[1]);
 }
 
 /** The "back soon" page with a 503, so crawlers and caches know it is temporary. */

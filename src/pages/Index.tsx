@@ -1,4 +1,5 @@
 import { lazy, Suspense, type ReactNode } from 'react';
+import { useParams } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import Header from '@/components/Header';
 import Projects from '@/components/Projects';
@@ -8,6 +9,7 @@ import BlogTeaser from '@/components/BlogTeaser';
 import ScrollProgress from '@/components/ScrollProgress';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useSectionKeyboardNav } from '@/hooks/useSectionKeyboardNav';
+import { caseBySlug } from '@/data/cases';
 
 // Everything below the hero loads as its own chunk, after the first paint.
 const NowSection = lazy(() => import('@/components/NowSection'));
@@ -15,6 +17,7 @@ const Skills = lazy(() => import('@/components/Skills'));
 const GithubActivityFeed = lazy(() => import('@/components/GithubActivityFeed'));
 const Timeline = lazy(() => import('@/components/Timeline'));
 const Footer = lazy(() => import('@/components/Footer'));
+const NotFound = lazy(() => import('./NotFound'));
 
 /**
  * A lazy section inside a wrapper that owns the anchor id (#now, #skills...),
@@ -30,6 +33,15 @@ const LazySection = ({ id, minHeight, children }: { id: string; minHeight: numbe
 const Index = () => {
   const { t } = useLanguage();
   useSectionKeyboardNav();
+  const { slug } = useParams();
+  // /projetos/<unknown>/: the React 404 page (the Worker answers that URL with a 404 status too)
+  if (slug !== undefined && !caseBySlug(slug)) {
+    return (
+      <Suspense fallback={null}>
+        <NotFound />
+      </Suspense>
+    );
+  }
 
   return (
     <>
