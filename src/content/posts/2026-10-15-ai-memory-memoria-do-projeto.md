@@ -12,7 +12,7 @@ Fabio Akita esteve no Flow e falou sobre essa armadilha. Se você programa com I
 provavelmente já percebeu: cada provedor tenta te prender no próprio cercadinho.
 A memória do ChatGPT fica na OpenAI; os Projects, na Anthropic.
 
-![Capa do episódio do Flow com Fabio Akita](/blog/ai-memory-memoria-do-projeto/capa.jpg)
+![Capa do episódio do Flow com Fabio Akita](/blog/ai-memory-memoria-do-projeto/capa.webp)
 
 ## O custo de trocar de modelo
 

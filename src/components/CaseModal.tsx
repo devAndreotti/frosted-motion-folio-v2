@@ -39,7 +39,7 @@ const CaseModal = ({ project, onClose }: CaseModalProps) => {
           </button>
         </div>
 
-        <ImageCarousel images={images} title={project.title} />
+        <ImageCarousel images={images} title={project.title} tint={project.tint} />
 
         <h3>{project.title}</h3>
         <p className="dlg-p">{project.long[lang]}</p>
