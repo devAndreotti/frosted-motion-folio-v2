@@ -8,6 +8,8 @@ import type { Plugin } from 'vite';
 // by its SHA-256, so a build puts the right hashes into dist/_headers: nothing is allowed because
 // it "looks like" ours, and a script injected into a page doesn't run.
 export const PLACEHOLDER = '__CSP_SCRIPT_HASHES__';
+// where the analytics script (Umami, VITE_UMAMI_SRC) comes from: the policy has to name that host, or the browser blocks it
+export const UMAMI_PLACEHOLDER = '__CSP_UMAMI__';
 
 /** `'sha256-...'` for every inline <script> (not the ones with a src, not the JSON-LD data block). */
 export function inlineScriptHashes(html: string): string[] {
@@ -20,8 +22,18 @@ export function inlineScriptHashes(html: string): string[] {
   return [...hashes];
 }
 
-export function applyHashes(headers: string, html: string): string {
-  return headers.replace(PLACEHOLDER, inlineScriptHashes(html).join(' '));
+/** The origin of the analytics script, or '' (no analytics, or anything but https). */
+export function umamiOrigin(src: string | undefined): string {
+  try {
+    const url = new URL(src ?? '');
+    return url.protocol === 'https:' ? url.origin : '';
+  } catch {
+    return '';
+  }
+}
+
+export function applyHashes(headers: string, html: string, umamiSrc?: string): string {
+  return headers.replace(PLACEHOLDER, inlineScriptHashes(html).join(' ')).replaceAll(UMAMI_PLACEHOLDER, umamiOrigin(umamiSrc));
 }
 
 export function cspPlugin(): Plugin {
@@ -40,7 +52,7 @@ export function cspPlugin(): Plugin {
         if (!fs.existsSync(headers) || !fs.existsSync(index)) return;
         const text = fs.readFileSync(headers, 'utf8');
         if (!text.includes(PLACEHOLDER)) return;
-        fs.writeFileSync(headers, applyHashes(text, fs.readFileSync(index, 'utf8')));
+        fs.writeFileSync(headers, applyHashes(text, fs.readFileSync(index, 'utf8'), process.env.VITE_UMAMI_SRC));
       },
     },
   };
