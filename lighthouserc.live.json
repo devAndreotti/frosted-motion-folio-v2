@@ -1,0 +1,17 @@
+{
+  "ci": {
+    "collect": {
+      "numberOfRuns": 3,
+      "url": [
+        "https://devandreotti.com/",
+        "https://devandreotti.com/blog/",
+        "https://devandreotti.com/privacidade/",
+        "https://devandreotti.com/lhci-404/"
+      ],
+      "settings": {
+        "chromeFlags": "--no-sandbox --disable-gpu",
+        "onlyCategories": ["performance", "accessibility", "best-practices", "seo"]
+      }
+    }
+  }
+}

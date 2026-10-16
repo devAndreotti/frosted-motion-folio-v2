@@ -150,6 +150,8 @@ Ordem sugerida: ~~10~~ (feito), 12, 13, 14 (base de qualidade, pouco risco) → 
 
 ## 12. Medição de desempenho no CI
 
+**Status: em PR draft.** Workflow `.github/workflows/lighthouse.yml` (LHCI 0.15.1 fixo, sem entrar no package.json): em PR, mobile e desktop, home, /blog/, /privacidade/ e 404, comentário único atualizado a cada push; semanal contra o site publicado. Orçamento só como aviso. Web Vitals reais (LCP, INP, CLS) já vão ao Umami por `src/lib/vitals.ts`. Linha de base em `docs/lighthouse-baseline.md` depois da primeira rodada do CI.
+
 **Estado atual.** O `web-vitals` já está nas dependências e `initWebVitals()` roda no `main.tsx`. Não há medição de Lighthouse no CI.
 
 **O que fazer.**
