@@ -112,6 +112,10 @@ export interface Strings {
       channelBridge: string;
       tvOn: string;
       tvOff: string;
+      soundOn: string;
+      soundOff: string;
+      antenna: string;
+      tap: string;
     };
   };
   projects: {

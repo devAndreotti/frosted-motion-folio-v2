@@ -112,6 +112,10 @@ export const pt: Strings = {
       channelBridge: 'A PONTE',
       tvOn: 'TV ligada.',
       tvOff: 'TV desligada.',
+      soundOn: 'SOM · LIGADO',
+      soundOff: 'SOM · DESLIGADO',
+      antenna: 'Ajustar a antena',
+      tap: 'Bater na TV',
     },
   },
   projects: {

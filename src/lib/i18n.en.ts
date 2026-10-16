@@ -112,6 +112,10 @@ export const en: Strings = {
       channelBridge: 'THE BRIDGE',
       tvOn: 'TV on.',
       tvOff: 'TV off.',
+      soundOn: 'SOUND · ON',
+      soundOff: 'SOUND · OFF',
+      antenna: 'Adjust the antenna',
+      tap: 'Hit the TV',
     },
   },
   projects: {

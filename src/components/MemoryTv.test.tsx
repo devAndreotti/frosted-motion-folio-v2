@@ -2,6 +2,16 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import MemoryTv from "./MemoryTv";
+import * as audio from "@/lib/tvAudio";
+
+vi.mock("@/lib/tvAudio", () => ({
+  loadTvSounds: vi.fn(() => Promise.resolve()),
+  startTvHum: vi.fn(),
+  stopTvHum: vi.fn(),
+  closeTvAudio: vi.fn(),
+  tvClick: vi.fn(),
+  tvClunk: vi.fn(),
+}));
 
 const renderTv = () =>
   render(
@@ -16,6 +26,8 @@ describe("MemoryTv", () => {
   beforeEach(() => {
     // jsdom has no canvas: the noise stays off, the rest of the TV is what these tests look at
     vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(null);
+    localStorage.clear();
+    vi.clearAllMocks();
   });
   afterEach(() => vi.restoreAllMocks());
 
@@ -48,6 +60,58 @@ describe("MemoryTv", () => {
     expect(screenEl().className).toContain("za");
     fireEvent.click(next());
     expect(screenEl().className).toContain("zb");
+  });
+
+  it("wobbles the antenna and fills the screen with static when the antenna is touched", () => {
+    renderTv();
+    fireEvent.click(screen.getByRole("button", { name: "Ajustar a antena" }));
+    expect(screen.getByRole("button", { name: "Ajustar a antena" }).className).toContain("wa");
+    expect(screenEl().className).toContain("hit-ant");
+    expect(audio.tvClick).toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "Ajustar a antena" }));
+    expect(screen.getByRole("button", { name: "Ajustar a antena" }).className).toContain("wb");
+  });
+
+  it("jolts the picture and thunks when the screen is hit, and the jolt wears off", () => {
+    vi.useFakeTimers();
+    renderTv();
+    fireEvent.click(screen.getByRole("button", { name: "Bater na TV" }));
+    expect(screenEl().className).toContain("hit-tap");
+    expect(audio.tvClunk).toHaveBeenCalled();
+    act(() => {
+      vi.advanceTimersByTime(700);
+    });
+    expect(screenEl().className).not.toContain("hit-");
+    vi.useRealTimers();
+  });
+
+  it("hums while the TV is on with sound, clicks on the keys, and goes quiet when switched off", () => {
+    renderTv();
+    expect(audio.startTvHum).toHaveBeenCalled();
+    fireEvent.click(next());
+    expect(audio.tvClick).toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "Ligar ou desligar a TV" }));
+    expect(audio.tvClunk).toHaveBeenCalled();
+    expect(audio.stopTvHum).toHaveBeenCalled();
+  });
+
+  it("mutes from its own button and remembers the choice", () => {
+    renderTv();
+    const snd = screen.getByRole("button", { name: /SOM · LIGADO/ });
+    expect(snd.getAttribute("aria-pressed")).toBe("true");
+    fireEvent.click(snd);
+    expect(screen.getByRole("button", { name: /SOM · DESLIGADO/ }).getAttribute("aria-pressed")).toBe("false");
+    expect(localStorage.getItem("tv.sound")).toBe("0");
+    vi.mocked(audio.tvClick).mockClear();
+    fireEvent.click(next());
+    expect(audio.tvClick).not.toHaveBeenCalled();
+  });
+
+  it("starts muted for a visitor who muted it before", () => {
+    localStorage.setItem("tv.sound", "0");
+    renderTv();
+    expect(screen.getByRole("button", { name: /SOM · DESLIGADO/ })).toBeTruthy();
+    expect(audio.startTvHum).not.toHaveBeenCalled();
   });
 
   describe("power", () => {
