@@ -57,6 +57,14 @@ jobs:
             printf '%s' "$SMTP_USER" | npx --yes wrangler@4.148.0 secret put SMTP_USER
             printf '%s' "$SMTP_PASS" | npx --yes wrangler@4.148.0 secret put SMTP_PASS
           fi
+      # Private Tower panel (worker/admin.js): repository secret TOWER_ADMIN_TOKEN -> Worker secret. Without it the
+      # /api/admin/ routes answer 404.
+      - name: Worker secret TOWER_ADMIN_TOKEN (main)
+        if: github.event_name != 'pull_request' && env.CLOUDFLARE_API_TOKEN != ''
+        env:
+          TOWER_ADMIN_TOKEN: ${{ secrets.TOWER_ADMIN_TOKEN }}
+        run: |
+          if [ -n "$TOWER_ADMIN_TOKEN" ]; then printf '%s' "$TOWER_ADMIN_TOKEN" | npx --yes wrangler@4.148.0 secret put TOWER_ADMIN_TOKEN; fi
       - name: Preview version (pull request)
         if: github.event_name == 'pull_request' && env.CLOUDFLARE_API_TOKEN != ''
         run: |

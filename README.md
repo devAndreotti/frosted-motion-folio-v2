@@ -62,6 +62,7 @@ Ligar em produção (uma vez):
 bash scripts/newsletter/set-secrets.sh   # grava SMTP_USER, SMTP_PASS (e TURNSTILE_SECRET, se estiver no arquivo) no Worker
 ```
 O anti-robô é o Cloudflare Turnstile (chave pública em `wrangler.jsonc`, segredo só no Worker). A política de privacidade está em `/privacidade/` (`src/pages/Privacy.tsx`) e precisa continuar batendo com o que `worker/newsletter.js` faz. Respostas à newsletter vão para o Gmail via `Reply-To`.
+Rotas de administração (`worker/admin.js`): `/api/admin/newsletter/<stats|lookup|delete|resend>` servem o painel privado Tower, que roda no VPS e chama o Worker com `Authorization: Bearer <TOWER_ADMIN_TOKEN>`. O segredo `TOWER_ADMIN_TOKEN` (no mínimo 32 caracteres) fica só no Worker, gravado por `set-secrets.sh` ou pelo painel da Cloudflare. Sem ele, ou com um valor curto demais, essas rotas respondem 404, como se não existissem. Nenhuma resposta traz tokens de confirmação ou de descadastro.
 O visual do e-mail semanal está em `scripts/newsletter/template.mjs` (tema claro/escuro e as 7 cores do site, sorteadas por semana); veja as prévias com `node scripts/newsletter/preview.mjs <pasta>`.
 
 ## 🛠 Tecnologias Utilizadas

@@ -13,7 +13,7 @@
 import { REPLY_TO, renderConfirmation } from '../scripts/newsletter/template.mjs';
 import { sendMail as smtpSend } from './smtp.js';
 
-const EMAIL = /^[^\s@<>()[\]\\,;:"]+@[^\s@<>()[\]\\,;:"]+\.[^\s@<>()[\]\\,;:"]{2,}$/;
+export const EMAIL = /^[^\s@<>()[\]\\,;:"]+@[^\s@<>()[\]\\,;:"]+\.[^\s@<>()[\]\\,;:"]{2,}$/;
 const TOKEN = /^[A-Za-z0-9_-]{20,64}$/;
 export const RATE_LIMIT = 5;
 export const GLOBAL_HOURLY_CAP = 300;
@@ -86,9 +86,9 @@ async function visitor(request, env) {
   return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
-const configured = (env) => Boolean(env.DB && env.SMTP_USER && env.SMTP_PASS);
+export const configured = (env) => Boolean(env.DB && env.SMTP_USER && env.SMTP_PASS);
 
-async function confirmationMail(origin, row) {
+export async function confirmationMail(origin, row) {
   const confirmUrl = `${origin}/api/newsletter/confirm?t=${row.confirm_token}&l=${row.lang}`;
   const { html, text, subject } = renderConfirmation({ lang: row.lang, confirmUrl });
   return { from: FROM, fromName: 'Ricardo A. Gonçalves', to: row.email, subject, text, html, headers: { 'Reply-To': REPLY_TO } };
