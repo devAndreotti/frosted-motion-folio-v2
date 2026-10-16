@@ -30,7 +30,7 @@ Convenções do projeto que valem para todos os itens:
 | 17 | Modo leitura nos posts | Baixo | nada | Baixo |
 | 18 | Novidades do site (changelog) | Baixo | nada | Baixo |
 
-Ordem sugerida: 10, 12, 13, 14 (base de qualidade, pouco risco) → 11 → 1, 3, 2 (visibilidade) → 6, 7, 8, 17, 18.
+Ordem sugerida: ~~10~~ (feito), 12, 13, 14 (base de qualidade, pouco risco) → 11 → 1, 3, 2 (visibilidade) → 6, 7, 8, 17, 18.
 
 ---
 
@@ -104,6 +104,8 @@ Ordem sugerida: 10, 12, 13, 14 (base de qualidade, pouco risco) → 11 → 1, 3,
 
 ## 8. "Agora" com data e arquivo
 
+**Obstáculo conhecido.** O texto "Atualizado em…" precisa existir em PT e EN, mas `i18n.pt.ts` e `i18n.en.ts` já estão em 299 linhas (limite de 300). Antes de fazer este item, dividir os textos por área (por exemplo, `i18n.now.ts`) ou compactar mais blocos.
+
 **Estado atual.** O bloco "Agora" vem de `src/data/now.ts` e inclui o card do Memory Apartment com a TV.
 
 **O que fazer.**
@@ -114,6 +116,8 @@ Ordem sugerida: 10, 12, 13, 14 (base de qualidade, pouco risco) → 11 → 1, 3,
 **Pronto quando.** Há ao menos uma versão arquivada, o RSS (opcional) inclui as atualizações e o teste garante que a data mais recente é a exibida.
 
 ## 10. Hover dos cards sem "grudar" no toque
+
+**Status: feito no PR #78.** Todas as regras de `:hover` dos cards e linhas foram para dentro de `@media (hover: hover)`, com o foco por teclado separado, e há um teste que impede `:hover` solto em `v2.css`, `blog.css` e `more.css`. Sobrou fora: `memory-tv.css` (botões da TV) e `index.css`.
 
 **Problema.** Os botões já foram padronizados em `src/styles/interactive.css`, mas os cards e linhas ainda usam hover sem `@media (hover: hover)` e podem ficar levantados depois de um toque no celular.
 
