@@ -1,14 +1,17 @@
 import { describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import MoreProjects, { INITIAL_CARDS } from "./MoreProjects";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { moreProjects } from "@/data/moreProjects";
 
 const renderGallery = (onOpen = vi.fn()) => {
   render(
-    <LanguageProvider>
-      <MoreProjects projects={moreProjects} onOpen={onOpen} />
-    </LanguageProvider>,
+    <MemoryRouter>
+      <LanguageProvider>
+        <MoreProjects projects={moreProjects} onOpen={onOpen} />
+      </LanguageProvider>
+    </MemoryRouter>,
   );
   return onOpen;
 };
@@ -26,17 +29,27 @@ describe("MoreProjects", () => {
     expect(screen.getAllByRole("listitem")).toHaveLength(INITIAL_CARDS);
   });
 
-  it("opens the project of the clicked card", () => {
+  it("opens the project of the clicked card, and each card links to its own page", () => {
     const onOpen = renderGallery();
-    fireEvent.click(screen.getByRole("button", { name: `Ver as telas de ${moreProjects[0].title}` }));
+    const card = screen.getByRole("link", { name: `Ver as telas de ${moreProjects[0].title}` });
+    expect(card.getAttribute("href")).toBe(`/projetos/${moreProjects[0].slug}/`);
+    fireEvent.click(card);
     expect(onOpen).toHaveBeenCalledWith(moreProjects[0]);
+  });
+
+  it("leaves a modified click to the link (a new tab), without opening the popup", () => {
+    const onOpen = renderGallery();
+    fireEvent.click(screen.getByRole("link", { name: `Ver as telas de ${moreProjects[0].title}` }), { ctrlKey: true });
+    expect(onOpen).not.toHaveBeenCalled();
   });
 
   it("renders nothing without projects", () => {
     const { container } = render(
-      <LanguageProvider>
-        <MoreProjects projects={[]} onOpen={vi.fn()} />
-      </LanguageProvider>,
+      <MemoryRouter>
+        <LanguageProvider>
+          <MoreProjects projects={[]} onOpen={vi.fn()} />
+        </LanguageProvider>
+      </MemoryRouter>,
     );
     expect(container.firstChild).toBeNull();
   });

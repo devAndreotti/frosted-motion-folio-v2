@@ -1,6 +1,8 @@
 
 export interface Project {
   id: number;
+  /** Stable name for the case page (/projetos/<slug>/); unique across the list. */
+  slug: string;
   title: string;
   description: string;
   image: string;
@@ -11,7 +13,7 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    id: 1,
+    id: 1, slug: "cook-app",
     title: "Cook App",
     description: "App mobile de receitas feito em React Native, Expo e Supabase: você escolhe os ingredientes que tem em casa e vê as receitas possíveis, com o modo de preparo. Criado em um curso da Rocketseat, roda em Android e iOS.",
     image: "./projects/httpsgithub.comdevAndreotticook-app/project.webp",
@@ -19,7 +21,7 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/devAndreotti/cook-app"
   },
   {
-    id: 2,
+    id: 2, slug: "chef-ai",
     title: "Chef AI",
     description: "Uma aplicação feita com React, Tailwind e n8n, que usa o modelo Gemini para sugerir receitas personalizadas a partir dos ingredientes enviados pelo usuário. A interface é simples e responsiva.",
     image: "./projects/httpsgithub.comdevAndreottimy-first-vibe-coding-project.webp",
@@ -28,7 +30,7 @@ export const projects: Project[] = [
     liveUrl: "https://tasty-ai-chef.lovable.app/"
   },
   {
-    id: 3,
+    id: 3, slug: "financial-vision",
     title: "Financial Vision",
     description: "Uma landing page moderna e dinâmica para uma aplicação de gestão financeira empresarial. Desenvolvida com HTML, CSS e JavaScript, a página oferece uma experiência de usuário envolvente e responsiva, com seções interativas e um grid animado.",
     image: "./projects/httpsgithub.comdevAndreottifinancial-vision.webp",
@@ -37,7 +39,7 @@ export const projects: Project[] = [
     liveUrl: "https://devandreotti.github.io/financial-vision"
   },
   {
-    id: 4,
+    id: 4, slug: "powder-gate",
     title: "Powder Gate",
     description: "Plataforma de streaming fictícia desenvolvida com HTML, CSS e JavaScript. Possui layout responsivo, carrossel interativo, busca dinâmica e visual 3D com Spline para destacar habilidades em front-end.",
     image: "./projects/httpsgithub.comdevAndreottipowder-gate.webp",
@@ -46,7 +48,7 @@ export const projects: Project[] = [
     liveUrl: "https://devandreotti.github.io/powder-gate/"
   },
   {
-    id: 5,
+    id: 5, slug: "ideaforge-nexus-genesis",
     title: "IdeaForge Nexus Genesis",
     description: "Agente criativo de geração de projetos, construído com foco em design de jogos, storytelling e prototipagem inteligente.",
     image: "./projects/httpsgithub.comdevAndreottiideaforge-nexus-genesis.webp",
@@ -55,7 +57,7 @@ export const projects: Project[] = [
     liveUrl: "https://ideaforge-nexus-genesis.lovable.app"
   },
   {
-    id: 6,
+    id: 6, slug: "innovation-degree-mvc",
     title: "Innovation Degree MVC",
     description: "Aplicação web MVC com integração a banco de dados, desenvolvida em um curso Técnico e otimizada para ser totalmente responsiva.",
     image: "./projects/httpsgithub.comdevAndreottiinnovation-degree-mvctreemain/home.webp",
@@ -63,7 +65,7 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/devAndreotti/innovation-degree-mvc"
   },
   {
-    id: 7,
+    id: 7, slug: "aps-04",
     title: "APS-04",
     description: "Estação Meteorológica: Monitoramento climático via sensores e interface Java. Projeto acadêmico que realiza coleta e visualização de dados meteorológicos em tempo real, com sensores ligados a um Arduino.",
     image: "./projects/httpsgithub.comdevAndreottiAPS-04.webp",
@@ -71,7 +73,7 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/devAndreotti/APS-04"
   },
   {
-    id: 8,
+    id: 8, slug: "upa-clinic",
     title: "UPA Clinic",
     description: "Site para clínica odontológica, feito com HTML, CSS e JavaScript. Criado durante curso técnico e atualizado em 2024 com foco em usabilidade, design moderno e formulários com validação.",
     image: "./projects/httpsgithub.comdevAndreottiupa-clinic/new-footer.webp",
@@ -80,7 +82,7 @@ export const projects: Project[] = [
     liveUrl: "https://devandreotti.github.io/upa-clinic"
   },
   {
-    id: 9,
+    id: 9, slug: "gold-portfolio-analyzer",
     title: "Gold Portfolio Analyzer",
     description: "Ferramenta inteligente de análise e otimização de carteiras de investimento, construída com foco em mercado brasileiro, diversificação inteligente e recomendações personalizadas.",
     image: "./projects/httpsgithub.comdevAndreottigold-portfolio-analyzer.webp",
@@ -89,7 +91,7 @@ export const projects: Project[] = [
     liveUrl: "https://gold-portfolio-analyzer.lovable.app"
   },
   {
-    id: 10,
+    id: 10, slug: "dev-tlou",
     title: "Dev TLOU",
     description: "Página interativa sobre \"The Last Of Us\", desenvolvida em HTML, CSS e JavaScript. Inclui carrossel de imagens, descrição da série e ícones sociais, com design responsivo.",
     image: "./projects/httpsgithub.comdevAndreottidev-tlou.webp",
@@ -98,7 +100,7 @@ export const projects: Project[] = [
     liveUrl: "https://devandreotti.github.io/dev-tlou"
   },
   {
-    id: 11,
+    id: 11, slug: "my-first-spline-project",
     title: "My First Spline Project",
     description: "Este é um ambiente 3D desenvolvido com HTML, CSS, JavaScript e a plataforma Spline. Possui navegação intuitiva, efeitos visuais e design responsivo para diferentes dispositivos.",
     image: "./projects/httpsgithub.comdevAndreottimy-first-spline-project.webp",
@@ -107,7 +109,7 @@ export const projects: Project[] = [
     liveUrl: "https://devandreotti.github.io/my-first-spline-project/"
   },
   {
-    id: 12,
+    id: 12, slug: "starbucks",
     title: "Starbucks",
     description: "Página inspirada no Starbucks, desenvolvida para praticar HTML e CSS. Apresenta o slogan da empresa, links para redes sociais e um design focado na experiência visual.",
     image: "./projects/httpsgithub.comdevAndreottistarbuckstab=readme-ov-file.webp",
@@ -116,7 +118,7 @@ export const projects: Project[] = [
     liveUrl: "https://devandreotti.github.io/starbucks"
   },
   {
-    id: 13,
+    id: 13, slug: "responsive-login",
     title: "Responsive Login",
     description: "Página de login responsiva com design moderno e animações suaves. Utiliza HTML e CSS para uma experiência visual atraente em diferentes dispositivos.",
     image: "./projects/httpsgithub.comdevAndreottiresponsive-login.webp",
@@ -125,7 +127,7 @@ export const projects: Project[] = [
     liveUrl: "https://devandreotti.github.io/responsive-login"
   },
   {
-    id: 14,
+    id: 14, slug: "js-background",
     title: "JS Background",
     description: "Este projeto feito com o anime.js usa HTML e CSS para criar animações dinâmicas em elementos da página. O projeto demonstra a aplicação de efeitos visuais interativos com JavaScript.",
     image: "./projects/httpsgithub.comdevAndreottijs-background.webp",
@@ -134,7 +136,7 @@ export const projects: Project[] = [
     liveUrl: "https://devandreotti.github.io/js-background"
   },
   {
-    id: 15,
+    id: 15, slug: "gradient-cards",
     title: "Gradient Cards",
     description: "Utiliza HTML, CSS e JavaScript para criar cartões interativos com efeito de inclinação e mudança de cor ao passar o mouse. Inclui um cursor personalizado.",
     image: "./projects/httpsgithub.comdevAndreottigradient-cards.webp",
@@ -143,7 +145,7 @@ export const projects: Project[] = [
     liveUrl: "https://devandreotti.github.io/gradient-cards"
   },
   {
-    id: 16,
+    id: 16, slug: "animated-burger",
     title: "Animated Burger",
     description: "Este projeto usa HTML, CSS e JavaScript para criar um cartão interativo com animação de imagem. Permite alternar entre uma imagem estática e uma animação do produto.",
     image: "./projects/httpsgithub.comdevAndreottianimated-burger.webp",
@@ -152,7 +154,7 @@ export const projects: Project[] = [
     liveUrl: "https://devandreotti.github.io/animated-burger"
   },
   {
-    id: 17,
+    id: 17, slug: "dev-hero-selector",
     title: "Dev Hero Selector",
     description: "Projeto de seleção de personagens no estilo de jogos de luta. Permite escolher heróis e vilões, atualizando a imagem e o nome do personagem principal. Desenvolvido com HTML5, CSS3 e JavaScript.",
     image: "./projects/httpsgithub.comdevAndreottidev-hero-selector.webp",
@@ -161,7 +163,7 @@ export const projects: Project[] = [
     liveUrl: "https://devandreotti.github.io/dev-hero-selector"
   },
   {
-    id: 18,
+    id: 18, slug: "cubes-background",
     title: "Cubes Background",
     description: "Este projeto utiliza animações em CSS para criar uma série de cubos animados com efeitos visuais dinâmicos em uma página web, transformando e movimentando cubos para gerar um fundo animado e visualmente interessante. Desenvolvido com HTML e CSS.",
     image: "./projects/httpsgithub.comdevAndreotticubes-background.webp",
@@ -170,7 +172,7 @@ export const projects: Project[] = [
     liveUrl: "https://devandreotti.github.io/cubes-background"
   },
   {
-    id: 19,
+    id: 19, slug: "e-geek",
     title: "E-Geek",
     description: "Loja de produtos geek focada no universo Star Wars. Originalmente desenvolvida em curso técnico, foi atualizada em 2024 com design responsivo, barra de pesquisa, navegação intuitiva e exibição de produtos em destaque, utilizando HTML5, CSS3 e JavaScript.",
     image: "./projects/httpsgithub.comdevAndreottie-geek.webp",
@@ -178,7 +180,7 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/devAndreotti/e-geek"
   },
   {
-    id: 20,
+    id: 20, slug: "dev-one-piece",
     title: "Dev One Piece",
     description: "Página para seleção de personagens do anime One Piece, com JavaScript responsável por exibir detalhes ao clicar em cada personagem e CSS responsivo que garante boa visualização em diferentes dispositivos.",
     image: "./projects/httpsgithub.comdevAndreottidev-one-piece.webp",
@@ -187,7 +189,7 @@ export const projects: Project[] = [
     liveUrl: "https://devandreotti.github.io/dev-one-piece"
   },
   {
-    id: 21,
+    id: 21, slug: "healthy-city-mvc",
     title: "Healthy City MVC",
     description: "Esta é uma aplicação web que promove saúde urbana com eventos, dicas e patrocinadores, utilizando ASP.NET Core e Bootstrap. A versão atual oferece um design novo e funcionalidades interativas.",
     image: "./projects/httpsgithub.comdevAndreottihealthy-city-mvc/projeto-novo.webp",
@@ -195,7 +197,7 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/devAndreotti/healthy-city-mvc"
   },
   {
-    id: 22,
+    id: 22, slug: "slider-pokemon",
     title: "Slider Pokemon",
     description: "Este projeto apresenta um slider de cartões que utiliza HTML, CSS e JavaScript para navegação e estilização, permitindo visualizar e alternar entre cartões com botões.",
     image: "./projects/httpsgithub.comdevAndreottisliderpokemon.webp",
@@ -204,7 +206,7 @@ export const projects: Project[] = [
     liveUrl: "https://devandreotti.github.io/sliderpokemon"
   },
   {
-    id: 23,
+    id: 23, slug: "soft-dropdown",
     title: "Soft Dropdown",
     description: "Projeto de um dropdown para seleção de categorias, criado com HTML, CSS e JavaScript, e com ícones Lucide para uma interface moderna e elegante.",
     image: "./projects/httpsgithub.comdevAndreottisoft-dropdown.webp",
@@ -213,7 +215,7 @@ export const projects: Project[] = [
     liveUrl: "https://devandreotti.github.io/soft-dropdown"
   },
   {
-    id: 24,
+    id: 24, slug: "aps-01",
     title: "APS-01",
     description: "Earth Solutions: Trabalho acadêmico que promove práticas seguras e sustentáveis no ambiente de trabalho, com informações sobre segurança e proteção ambiental.",
     image: "./projects/httpsgithub.comdevAndreottiAPS-01.webp",
@@ -222,7 +224,7 @@ export const projects: Project[] = [
     liveUrl: "https://devandreotti.github.io/APS-01"
   },
   {
-    id: 25,
+    id: 25, slug: "aps-03",
     title: "APS-03",
     description: "Sistema digital desenvolvido em Java com interface gráfica Swing, projetado para coletar pesquisas de satisfação de visitantes em exposições sobre exploração robótica no planeta Marte. Transforma feedbacks em dados úteis para curadores e organizadores.",
     image: "./projects/httpsgithub.comdevAndreottiAPS-03.webp",
@@ -230,7 +232,7 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/devAndreotti/APS-03"
   },
   {
-    id: 26,
+    id: 26, slug: "self-sync-daily",
     title: "Self-Sync Daily",
     description: "Aplicação de produtividade pessoal construída com foco em gestão de tempo, monitoramento de energia e reflexão diária.",
     image: "./projects/httpsgithub.comdevAndreottiself-sync-daily.webp",
@@ -239,7 +241,7 @@ export const projects: Project[] = [
     liveUrl: "https://self-sync-daily.lovable.app"
   },
   {
-    id: 27,
+    id: 27, slug: "pokedex",
     title: "Pokedex",
     description: "Uma aplicação web interativa para exibir informações detalhadas sobre Pokémon, com design responsivo e navegação intuitiva entre os cartões. Desenvolvida com HTML, CSS e JavaScript.",
     image: "./projects/httpsgithub.comdevAndreottipokedex.webp",
@@ -248,7 +250,7 @@ export const projects: Project[] = [
     liveUrl: "https://devandreotti.github.io/pokedex"
   },
   {
-    "id": 28,
+    "id": 28, "slug": "essential-tools-navigator",
     "title": "Essential Tools Navigator",
     "description": "Plataforma web que permite buscar diversas ferramentas de produtividade, oferecendo informações detalhadas sobre cada uma para ajudar os usuários a maximizar sua eficiência.",
     "image": "./projects/httpsgithub.comdevAndreottiessential-tools-navigator.webp",
@@ -257,7 +259,7 @@ export const projects: Project[] = [
     "liveUrl": "https://devandreotti.github.io/essential-tools-navigator"
   },
   {
-    "id": 29,
+    "id": 29, "slug": "crypto-glass-hub",
     "title": "Crypto Glass Hub",
     "description": "Plataforma cripto com dados dinâmicos, visual 3D e tema claro/escuro. Feita com React, TypeScript, Tailwind e Spline. Moderna, fluida e responsiva para todos os dispositivos.",
     "image": "./projects/httpsgithub.comdevAndreotticrypto-glass-hub.webp",
@@ -266,7 +268,7 @@ export const projects: Project[] = [
     "liveUrl": "https://devandreotti.github.io/crypto-glass-hub"
   },
   {
-    "id": 30,
+    "id": 30, "slug": "git-wizard-commander",
     "title": "Git Wizard Commander",
     "description": "Plataforma interativa que ensina Git de forma visual e prática. Permite montar comandos, criar commits, testar conhecimentos com quizzes e acompanhar o progresso.",
     "image": "./projects/httpsgithub.comdevAndreottigit-wizard-commander.webp",

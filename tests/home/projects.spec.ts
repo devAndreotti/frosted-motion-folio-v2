@@ -44,7 +44,7 @@ test("opening a project from the ranked list shows its case study", async ({ pag
   const section = page.locator("#projects");
   const sample = curatedProjects[0];
 
-  await section.getByRole("button", { name: new RegExp(sample.title) }).click();
+  await section.getByRole("link", { name: new RegExp(sample.title) }).click();
 
   const dialog = page.getByRole("dialog");
   await expect(dialog.getByRole("heading", { name: sample.title })).toBeVisible();

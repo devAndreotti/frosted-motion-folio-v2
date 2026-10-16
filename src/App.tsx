@@ -41,6 +41,8 @@ const App = () => (
           <Route path="/uses" element={<Suspense fallback={null}><Uses /></Suspense>} />
           <Route path="/novidades" element={<Suspense fallback={null}><Novidades /></Suspense>} />
           <Route path="/agora" element={<Suspense fallback={null}><Agora /></Suspense>} />
+          {/* a case opens over the home page: the same page as /, with the popup of that project (unknown slugs: 404) */}
+          <Route path="/projetos/:slug" element={<Index />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<Suspense fallback={null}><NotFound /></Suspense>} />
         </Routes>

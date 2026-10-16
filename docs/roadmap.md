@@ -36,6 +36,8 @@ Ordem sugerida: ~~10~~ (feito), 12, 13, 14 (base de qualidade, pouco risco) → 
 
 ## 1. Página própria para cada projeto
 
+**Status: em revisão (PR draft, número a preencher no merge).** Slug em cada projeto, rota `/projetos/:slug` (PT/EN), páginas estáticas no build, link no card com popup por URL.
+
 **Problema.** Hoje o projeto abre num detalhe (`CaseModal`) sem endereço. Não dá para mandar o link de um projeto num processo seletivo, e o Google não indexa cada caso.
 
 **Estado atual.** Os dados vêm de `src/data/projects.ts`, `curatedProjects.ts` e `moreProjects.ts`. O blog já tem um gerador de páginas estáticas em `vite-plugins/blog.ts`, que serve de modelo.
