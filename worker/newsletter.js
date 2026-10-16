@@ -145,7 +145,7 @@ async function subscribe(request, env, now, deps) {
     await env.DB.prepare(
       `INSERT INTO subscribers (email, lang, status, confirm_token, unsub_token, created_at, confirm_sent_at)
        VALUES (?1, ?2, 'pending', ?3, ?4, ?5, ?5)
-       ON CONFLICT(email) DO UPDATE SET lang = ?2, status = 'pending', confirm_token = ?3, unsub_token = ?4, created_at = ?5, confirm_sent_at = ?5, confirmed_at = NULL, unsubscribed_at = NULL`
+       ON CONFLICT(email) DO UPDATE SET lang = ?2, status = 'pending', confirm_token = ?3, unsub_token = ?4, created_at = ?5, confirm_sent_at = ?5, confirmed_at = NULL`
     )
       .bind(send.email, send.lang, send.confirm_token, send.unsub_token, now)
       .run();
