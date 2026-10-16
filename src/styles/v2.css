@@ -366,7 +366,13 @@ button.also-i { cursor: pointer; }
 .dlg.sm { width: min(620px, 100%); }
 .dlg-h { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .dlg-media { position: relative; margin-top: 20px; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-1); }
-.dlg-img { display: block; width: 100%; aspect-ratio: 16 / 8; object-fit: cover; object-position: 0 0; }
+.dlg-img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: 0 0; animation: dlg-fade 0.4s ease; }
+@keyframes dlg-fade { from { opacity: 0; } }
+.dlg-dots { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; padding: 8px 11px; border-radius: 999px; background: rgba(8, 8, 12, 0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.dlg-dot { position: relative; width: 8px; height: 8px; padding: 0; border: 0; border-radius: 99px; background: rgba(255, 255, 255, 0.5); cursor: pointer; transition: width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.3s; }
+.dlg-dot::before { content: ''; position: absolute; inset: -8px -3px; }
+.dlg-dot[aria-current='true'] { width: 22px; background: var(--accent); }
+.dlg-pause { position: absolute; right: 12px; bottom: 10px; }
 .dlg-nav { position: absolute; top: 50%; transform: translateY(-50%); }
 .dlg h3 { margin: 22px 0 0; font: 600 34px/1.1 var(--font-sans); letter-spacing: -0.03em; }
 .dlg-p { margin: 12px 0 0; font: 400 16px/1.65 var(--font-sans); color: var(--fg-2); }
@@ -512,6 +518,8 @@ button.also-i { cursor: pointer; }
 @media (hover: none) { .thumb { display: none; } }
 @media (prefers-reduced-motion: reduce) {
   .thumb-shot img { transition: none; }
+  .dlg-img { animation: none; }
+  .dlg-dot { transition: none; }
   .row:hover .thumb-shot img { transform: none; }
   .rv { animation: none; }
   .pulse::after { animation: none; }

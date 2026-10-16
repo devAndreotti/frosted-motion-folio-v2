@@ -120,6 +120,10 @@ export const pt: Strings = {
     prevImageAria: 'Imagem anterior',
     nextImageAria: 'Próxima imagem',
     imageAlt: (title, index) => `Screenshot ${index} de ${title}`,
+    imagesAria: 'Imagens do projeto',
+    goToImageAria: (index) => `Ir para a imagem ${index}`,
+    pauseAria: 'Pausar a troca automática de imagens',
+    playAria: 'Retomar a troca automática de imagens',
   },
   timeline: {
     sectionLabel: 'Trajetória',

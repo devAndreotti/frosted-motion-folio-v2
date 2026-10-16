@@ -1,5 +1,5 @@
-import { describe, expect, it, vi } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import type { CuratedProject } from "@/data/curatedProjects";
 import CaseModal, { resolveSwipeDelta } from "./CaseModal";
@@ -42,10 +42,8 @@ describe("resolveSwipeDelta", () => {
 });
 
 describe("CaseModal gallery navigation", () => {
-  // The gallery UI (arrows/dots) only renders for images.length > 1, which no
-  // curated project uses today (src/data/curatedProjects.ts) -- this exercises
-  // the same `advance()` the swipe gesture calls, via the one interaction path
-  // that IS reliably testable without fighting framer-motion's drag engine in jsdom.
+  // Exercises the same `advance()` the swipe gesture calls, via the one interaction
+  // path that is reliably testable without fighting framer-motion's drag engine in jsdom.
   it("prev/next arrows cycle through images with wraparound", () => {
     render(
       <LanguageProvider>
@@ -64,3 +62,117 @@ describe("CaseModal gallery navigation", () => {
     expect(imageSrc()).toBe("c.png"); // wrapped back to the last image
   });
 });
+
+describe("CaseModal gallery autoplay", () => {
+  const renderModal = (project: CuratedProject = FAKE_PROJECT) =>
+    render(
+      <LanguageProvider>
+        <CaseModal project={project} onClose={vi.fn()} />
+      </LanguageProvider>
+    );
+  const imageSrc = () => screen.getByAltText(/Screenshot \d de Fake Project/).getAttribute("src");
+  const tick = (ms: number) =>
+    act(() => {
+      vi.advanceTimersByTime(ms);
+    });
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+  });
+
+  it("turns to the next picture every 2 seconds and wraps around", () => {
+    renderModal();
+    expect(imageSrc()).toBe("a.png");
+    tick(1999);
+    expect(imageSrc()).toBe("a.png");
+    tick(1);
+    expect(imageSrc()).toBe("b.png");
+    tick(2000);
+    expect(imageSrc()).toBe("c.png");
+    tick(2000);
+    expect(imageSrc()).toBe("a.png");
+  });
+
+  it("restarts the countdown on a manual move, instead of turning again right after it", () => {
+    renderModal();
+    tick(1500);
+    fireEvent.click(screen.getByRole("button", { name: "Próxima imagem" }));
+    expect(imageSrc()).toBe("b.png");
+    tick(1999);
+    expect(imageSrc()).toBe("b.png");
+    tick(1);
+    expect(imageSrc()).toBe("c.png");
+  });
+
+  it("jumps to a picture from the dots and marks the current one", () => {
+    renderModal();
+    const dots = screen.getAllByRole("button", { name: /Ir para a imagem/ });
+    expect(dots).toHaveLength(3);
+    fireEvent.click(dots[2]);
+    expect(imageSrc()).toBe("c.png");
+    expect(dots[2].getAttribute("aria-current")).toBe("true");
+    expect(dots[0].getAttribute("aria-current")).toBeNull();
+  });
+
+  it("holds still while the pointer is over the gallery, and goes on when it leaves", () => {
+    renderModal();
+    const media = document.querySelector(".dlg-media") as HTMLElement;
+    fireEvent.mouseEnter(media);
+    tick(6000);
+    expect(imageSrc()).toBe("a.png");
+    fireEvent.mouseLeave(media);
+    tick(2000);
+    expect(imageSrc()).toBe("b.png");
+  });
+
+  it("holds still while a control inside the gallery has the keyboard focus", () => {
+    renderModal();
+    const next = screen.getByRole("button", { name: "Próxima imagem" });
+    fireEvent.focus(next);
+    tick(6000);
+    expect(imageSrc()).toBe("a.png");
+    fireEvent.blur(next, { relatedTarget: document.body });
+    tick(2000);
+    expect(imageSrc()).toBe("b.png");
+  });
+
+  it("can be paused and resumed with its own button", () => {
+    renderModal();
+    fireEvent.click(screen.getByRole("button", { name: "Pausar a troca automática de imagens" }));
+    tick(6000);
+    expect(imageSrc()).toBe("a.png");
+    const resume = screen.getByRole("button", { name: "Retomar a troca automática de imagens" });
+    expect(resume.getAttribute("aria-pressed")).toBe("true");
+    fireEvent.click(resume);
+    tick(2000);
+    expect(imageSrc()).toBe("b.png");
+  });
+
+  it("does not move by itself for a visitor who asked for less motion, but still answers clicks", () => {
+    vi.stubGlobal("matchMedia", (query: string) => ({
+      matches: query.includes("prefers-reduced-motion"),
+      media: query,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    }));
+    renderModal();
+    tick(10000);
+    expect(imageSrc()).toBe("a.png");
+    expect(screen.queryByRole("button", { name: /troca automática/ })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Próxima imagem" }));
+    expect(imageSrc()).toBe("b.png");
+  });
+
+  it("has no gallery controls, and no timer, for a project with one picture", () => {
+    renderModal({ ...FAKE_PROJECT, images: ["a.png"] });
+    expect(screen.queryByRole("button", { name: "Próxima imagem" })).toBeNull();
+    expect(screen.queryByRole("group", { name: "Imagens do projeto" })).toBeNull();
+    tick(10000);
+    expect(imageSrc()).toBe("a.png");
+  });
+});
+

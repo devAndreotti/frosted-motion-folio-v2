@@ -36,7 +36,7 @@ const CardStack = () => {
     ...STACK_PROJECTS.map((p) => ({
       id: String(p.id),
       me: false,
-      img: p.image,
+      img: p.portrait ?? p.image,
       title: p.title,
       line: p.tagline[lang],
       type: p.id === featuredProject.id ? t.projects.casePrincipalBadge : p.type[lang],

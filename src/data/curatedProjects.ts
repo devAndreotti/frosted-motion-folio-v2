@@ -12,7 +12,10 @@ export interface CuratedProject extends Omit<Project, 'description'> {
   tagline: Localized<string>;
   long: Localized<string>;
   points: Localized<string[]>;
+  /** The gallery in the case modal (16:10 shots, the first is the cover); the cover alone when empty. */
   images: string[];
+  /** Portrait shot (3:4) for the hero cards; falls back to `image`, which those cards then crop. */
+  portrait?: string;
 }
 
 interface CurationMeta {
@@ -24,7 +27,10 @@ interface CurationMeta {
   tagline: Localized<string>;
   long: Localized<string>;
   points: Localized<string[]>;
+  /** Replaces the project's cover (16:10) from projects.ts. */
+  image?: string;
   images?: string[];
+  portrait?: string;
 }
 
 const FEATURED_META: CurationMeta = {
@@ -156,7 +162,8 @@ const LIST_META: CurationMeta[] = [
 function merge(meta: CurationMeta): CuratedProject {
   const project = projects.find((p) => p.id === meta.id);
   if (!project) throw new Error(`curatedProjects: no project with id ${meta.id} in data/projects.ts`);
-  return { ...project, ...meta, images: meta.images ?? [project.image] };
+  const image = meta.image ?? project.image;
+  return { ...project, ...meta, image, images: meta.images ?? [image] };
 }
 
 export const featuredProject: CuratedProject = merge(FEATURED_META);
