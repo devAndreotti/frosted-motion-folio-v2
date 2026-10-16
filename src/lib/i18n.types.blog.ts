@@ -53,4 +53,5 @@ export interface BlogStrings {
   newer: string;
   older: string;
   loadError: string;
+  readingMode: string;
 }

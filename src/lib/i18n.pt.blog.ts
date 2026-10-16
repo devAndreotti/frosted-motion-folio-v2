@@ -54,4 +54,5 @@ export const ptBlog: Strings['blog'] = {
   newer: 'Mais novo',
   older: 'Anterior',
   loadError: 'Não foi possível carregar este post.',
+  readingMode: 'Modo leitura',
 };

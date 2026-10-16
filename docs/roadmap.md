@@ -183,6 +183,8 @@ Ordem sugerida: ~~10~~ (feito), 12, 13, 14 (base de qualidade, pouco risco) → 
 
 **Pronto quando.** Funciona em PT e EN, com teclado, e os testes cobrem ligar, desligar e lembrar.
 
+**Status: feito (PR em rascunho).** Botão `aria-pressed` no post, Esc sai, preferência em `localStorage` com `try/catch`, PT e EN. Estilo isolado em `src/styles/reading.css` (classe `.reading` no contêiner do blog).
+
 ## 18. Novidades do site
 
 **O que fazer.** Página `/novidades` e um selo discreto no rodapé ("Novo") com a lista das mudanças visíveis ao visitante, em PT e EN, a partir de um arquivo de dados (`src/data/changelog.ts`) mantido junto com os PRs; opcionalmente alimentar o RSS. Não confundir com o `CHANGELOG.md` do kit de automação, que é interno.

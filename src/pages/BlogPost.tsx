@@ -4,9 +4,11 @@ import { ArrowLeft } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import BlogShell from '@/components/blog/BlogShell';
 import LikeBar from '@/components/blog/LikeBar';
+import ReadingModeButton from '@/components/blog/ReadingModeButton';
 import NewsletterForm from '@/components/blog/NewsletterForm';
 import { findPost, hasTranslation, loadPostBody, localize, posts } from '@/lib/blog/catalog';
 import { formatDay, neighbours } from '@/lib/blog/list';
+import { useReadingMode } from '@/hooks/useReadingMode';
 import type { TocEntry } from '@/lib/blog/markdown';
 
 const NotFound = lazy(() => import('./NotFound'));
@@ -20,6 +22,7 @@ const BlogPost = () => {
   const b = t.blog;
   const post = findPost(slug);
   const [body, setBody] = useState<Body>({ status: 'loading' });
+  const reading = useReadingMode();
 
   useEffect(() => {
     if (!post) return;
@@ -50,7 +53,7 @@ const BlogPost = () => {
   const note = lang === 'en' ? (hasTranslation(post.slug) ? b.translatedNote : b.ptOnly) : '';
 
   return (
-    <BlogShell title={`${shown.title} — Ricardo A. Gonçalves`}>
+    <BlogShell title={`${shown.title} — Ricardo A. Gonçalves`} className={reading.on ? 'reading' : undefined}>
       <div className="wrap post-layout">
         <article className="post" lang={served === 'en' ? 'en' : 'pt-BR'}>
           <Link to="/blog/" className="post-back">
@@ -69,6 +72,7 @@ const BlogPost = () => {
             ))}
           </p>
           {note && <p className="blog-note">{note}</p>}
+          <ReadingModeButton on={reading.on} onToggle={reading.toggle} />
 
           {body.status === 'ready' && <div className="prose" dangerouslySetInnerHTML={{ __html: body.html }} />}
           {body.status === 'loading' && <div className="prose-ph" aria-busy="true" />}

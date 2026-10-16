@@ -1,0 +1,8 @@
+/* Reading mode on a post (.reading is set on the blog frame by BlogPost): the bar, the "on this page"
+   index and the footer step aside, and the text gets a bigger size and a line of about 65 characters.
+   The bar keeps its space (visibility, not display) so the text does not move when the mode changes. */
+.reading-btn { margin-top: 20px; }
+.reading .nav { visibility: hidden; pointer-events: none; }
+.reading .toc, .reading .nf-foot { display: none; }
+.reading .prose { max-width: 65ch; font-size: 20px; }
+@media (max-width: 720px) { .reading .prose { font-size: 18px; } }
