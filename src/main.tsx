@@ -19,6 +19,8 @@ import './styles/eggs.css'
 import './styles/more.css'
 import './styles/img-load.css'
 import './styles/lite.css'
+import './styles/haunted.css'
+import './styles/print.css'
 
 trackImageLoading();
 initLiteMode();

@@ -191,6 +191,11 @@ export interface Strings {
     builtWith: string;
     backToTop: string;
   };
+  /** Easter eggs: the 03:17 haunted footer line and the Ctrl+P printed footer. */
+  easter: {
+    hauntedLine: string;
+    printNote: string;
+  };
   notFound: {
     badge: string;
     kicker: string;
