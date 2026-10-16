@@ -9,7 +9,8 @@
 }
 /* the dialog's picture already has its own entrance animation; the others get the sweep */
 :is(.mp-win img, .bf img, .thumb-shot img, .nc-img img, .dk-img, .about-ph):not([data-ld], [data-err]) {
-  animation: img-sweep 1.4s ease-in-out infinite;
+  /* three sweeps, not forever: lazy pictures far down the page never start loading, and an endless background-position animation repaints on the main thread every frame (heavy in Edge) */
+  animation: img-sweep 1.4s ease-in-out 3;
 }
 
 /* Failed: a quiet tile instead of a hole, the same tone as the shimmer's base. */
