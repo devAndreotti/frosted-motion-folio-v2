@@ -6,6 +6,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { contact } from '@/data/personal';
 import { LangSwitch } from '@/components/NavExtras';
 import ColorPickerPopover from '@/components/ColorPickerPopover';
+import { USES_LINK } from '@/data/uses';
 
 // The app's root on either deploy ("/" on devandreotti.com, "/frosted-motion-folio-v2/" on GitHub Pages).
 export const HOME = import.meta.env.BASE_URL;
@@ -35,6 +36,9 @@ const BlogShell = ({ title, children, className }: { title: string; children: Re
               <Link className="nl on" to="/blog/">
                 {t.nav.blog}
               </Link>
+              <Link className="nl" to="/uses">
+                {USES_LINK[lang]}
+              </Link>
             </nav>
             <a className="np" href={`${HOME}blog/rss.xml`} aria-label="RSS">
               <Rss className="ic s" />
@@ -54,6 +58,7 @@ const BlogShell = ({ title, children, className }: { title: string; children: Re
       <footer className="nf-foot">
         <span>© {new Date().getFullYear()} Ricardo A. Gonçalves</span>
         <a href={`mailto:${contact.email}`}>{contact.email}</a>
+        <Link to="/uses">{USES_LINK[lang]}</Link>
       </footer>
     </div>
   );
