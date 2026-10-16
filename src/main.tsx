@@ -16,6 +16,8 @@ import './styles/carousel.css'
 import './styles/memory-tv.css'
 import './styles/more.css'
 import './styles/img-load.css'
+import './styles/haunted.css'
+import './styles/print.css'
 
 trackImageLoading();
 createRoot(document.getElementById("root")!).render(<App />);

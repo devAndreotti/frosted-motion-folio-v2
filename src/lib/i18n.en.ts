@@ -198,6 +198,10 @@ export const en: Strings = {
     builtWith: 'built with React, Tailwind CSS, and a lot of coffee.',
     backToTop: 'Back to top',
   },
+  easter: {
+    hauntedLine: 'still awake? so is the code.',
+    printNote: 'Psst: you found the Ctrl+P easter egg.',
+  },
   notFound: {
     badge: 'Error 404',
     kicker: 'route not found',

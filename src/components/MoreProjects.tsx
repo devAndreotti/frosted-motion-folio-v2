@@ -36,6 +36,7 @@ const MoreProjects = ({ projects, onOpen }: MoreProjectsProps) => {
               </span>
               <span className="mp-b">
                 <span className="mp-n">{p.title}</span>
+                <span className="print-url">{p.liveUrl ?? p.githubUrl}</span>
                 <span className="mp-d">{p.tagline[lang]}</span>
                 <span className="tags">
                   {p.technologies.slice(0, 2).map((tech) => (
