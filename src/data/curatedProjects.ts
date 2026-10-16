@@ -33,7 +33,18 @@ interface CurationMeta {
   portrait?: string;
 }
 
+/**
+ * Photos of a case, taken for the portfolio: public/projects/<slug>/NN.webp are the 16:10 gallery shots (the first is
+ * the cover, also used for the featured card and the list thumbnail), portrait.webp is the 3:4 shot for the hero cards.
+ */
+const shots = (slug: string, numbers: string[]) => ({
+  image: `./projects/${slug}/${numbers[0]}.webp`,
+  images: numbers.map((n) => `./projects/${slug}/${n}.webp`),
+  portrait: `./projects/${slug}/portrait.webp`,
+});
+
 const FEATURED_META: CurationMeta = {
+  ...shots('self-sync-daily', ['01', '02', '03', '04', '05']),
   id: 26,
   type: { pt: 'Produto pessoal', en: 'Personal product' },
   cat: 'web',
@@ -101,6 +112,7 @@ const LIST_META: CurationMeta[] = [
     },
   },
   {
+    ...shots('ideaforge-nexus-genesis', ['01', '03', '04', '05']),
     id: 5,
     type: { pt: 'Ferramenta', en: 'Tool' },
     cat: 'tool',
