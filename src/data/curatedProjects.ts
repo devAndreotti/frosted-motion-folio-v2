@@ -74,6 +74,7 @@ const FEATURED_META: CurationMeta = {
 
 const LIST_META: CurationMeta[] = [
   {
+    ...shots('gold-portfolio-analyzer', ['01', '02', '03', '05']),
     id: 9,
     type: { pt: 'Web app', en: 'Web app' },
     cat: 'web',
