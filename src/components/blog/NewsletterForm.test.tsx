@@ -192,8 +192,11 @@ describe('NewsletterForm', () => {
       act(() => api.callback('token-1'));
       fireEvent.click(button);
       await screen.findByRole('alert');
-      expect(api.reset).toHaveBeenCalledWith('widget-1');
-      expect(button.disabled).toBe(true);
+      // the reset runs in an effect after the alert renders; React 19 may commit it a tick later
+      await waitFor(() => {
+        expect(api.reset).toHaveBeenCalledWith('widget-1');
+        expect(button.disabled).toBe(true);
+      });
     });
   });
 });
