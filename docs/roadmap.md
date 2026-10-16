@@ -2,7 +2,7 @@
 
 Este documento detalha o que ainda falta fazer. Nada aqui está implementado: cada item vira um PR próprio quando for a vez dele.
 
-Numeração mantida da lista de ideias original, para facilitar a conversa. O item 16 (painel de estatísticas) fica fora deste repositório e está no fim.
+Numeração mantida da lista de ideias original, para facilitar a conversa. O item 16 (painel de estatísticas) é outro projeto e não está neste repositório.
 
 Convenções do projeto que valem para todos os itens:
 
@@ -184,23 +184,3 @@ Ordem sugerida: 10, 12, 13, 14 (base de qualidade, pouco risco) → 11 → 1, 3,
 **O que fazer.** Página `/novidades` e um selo discreto no rodapé ("Novo") com a lista das mudanças visíveis ao visitante, em PT e EN, a partir de um arquivo de dados (`src/data/changelog.ts`) mantido junto com os PRs; opcionalmente alimentar o RSS. Não confundir com o `CHANGELOG.md` do kit de automação, que é interno.
 
 **Pronto quando.** A página lista as entradas por data, o selo some depois de visto (`localStorage`) e um teste garante que as entradas estão ordenadas.
-
----
-
-## 16. Painel de estatísticas dos meus sites (projeto separado)
-
-Fora deste repositório. A ideia é um site próprio que junta as estatísticas de todos os sites do Ricardo num lugar só.
-
-**Pontos de partida.**
-- O Umami (já usado aqui, carregado em `src/lib/track.ts`) suporta vários sites numa instalação e tem API. Esse é o caminho de menor esforço para a coleta.
-- Um Worker (Cloudflare) como camada de leitura: busca na API do Umami, guarda em cache e expõe só números agregados, sem dado pessoal.
-- Painel público, somente leitura: visitas por site e por página, origem, países, dispositivos, posts mais lidos, desempenho (LCP/INP/CLS do item 12), com intervalo de datas.
-- Coerente com a página de privacidade: sem cookies de rastreamento, sem IP guardado, e o texto de privacidade de cada site aponta para o painel.
-- Reaproveitar o design do portfólio (tokens de tema, claro e escuro) para o painel parecer da mesma família.
-
-**Perguntas em aberto.**
-- Umami hospedado por conta própria ou na nuvem? Isso define limite, custo e quem guarda os dados.
-- O painel é público ou só para o dono? (Sugestão: público para os números agregados, com uma área restrita para detalhes.)
-- Quais sites entram na primeira versão?
-
-**Dependência com este repositório.** O item 6 ("mais lidos") e o item 12 (eventos de desempenho) podem consumir esse painel quando existir. Não bloqueia nenhum dos outros itens.
