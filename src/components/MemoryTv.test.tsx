@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import MemoryTv from "./MemoryTv";
 import * as audio from "@/lib/tvAudio";
@@ -85,9 +85,9 @@ describe("MemoryTv", () => {
     vi.useRealTimers();
   });
 
-  it("hums while the TV is on with sound, clicks on the keys, and goes quiet when switched off", () => {
+  it("hums while the TV is on with sound, clicks on the keys, and goes quiet when switched off", async () => {
     renderTv();
-    expect(audio.startTvHum).toHaveBeenCalled();
+    await waitFor(() => expect(audio.startTvHum).toHaveBeenCalled());
     fireEvent.click(next());
     expect(audio.tvClick).toHaveBeenCalled();
     fireEvent.click(screen.getByRole("button", { name: "Ligar ou desligar a TV" }));
@@ -107,10 +107,11 @@ describe("MemoryTv", () => {
     expect(audio.tvClick).not.toHaveBeenCalled();
   });
 
-  it("starts muted for a visitor who muted it before", () => {
+  it("starts muted for a visitor who muted it before", async () => {
     localStorage.setItem("tv.sound", "0");
     renderTv();
     expect(screen.getByRole("button", { name: /SOM · DESLIGADO/ })).toBeTruthy();
+    await Promise.resolve();
     expect(audio.startTvHum).not.toHaveBeenCalled();
   });
 

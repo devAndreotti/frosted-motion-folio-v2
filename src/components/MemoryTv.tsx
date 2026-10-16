@@ -43,14 +43,18 @@ const MemoryTv = () => {
   // a hit (the antenna, a knock) fills the screen with static for a moment, whatever channel it is on
   useTvFx(fx, hit || channel.kind === 'error' ? 'snow' : 'grain', !off);
 
+  // the hum starts once the recordings are in, so it is the game's own CRT and not the synthesized stand-in
   useEffect(() => {
-    if (!sound) return;
-    void loadTvSounds();
-    return () => stopTvHum();
-  }, [sound]);
-  useEffect(() => {
-    if (sound && !off) startTvHum();
-    else stopTvHum();
+    if (!sound || off) {
+      stopTvHum();
+      return;
+    }
+    let alive = true;
+    void loadTvSounds().then(() => alive && startTvHum());
+    return () => {
+      alive = false;
+      stopTvHum();
+    };
   }, [sound, off]);
   useEffect(
     () => () => {
@@ -76,6 +80,7 @@ const MemoryTv = () => {
     clearTimeout(timers.current.boot);
     if (turnOn) timers.current.boot = setTimeout(() => setBoot(false), BOOT_MS);
     if (sound) (turnOn ? tvClick : tvClunk)(0.8);
+    setZap(''); // the channel flash is not part of switching on or off
     setOff(!turnOn);
     setBoot(turnOn);
     setLive(turnOn ? tv.tvOn : tv.tvOff);

@@ -72,25 +72,27 @@ button.nc { width: 100%; padding: 0; text-align: left; font: inherit; cursor: po
 .mtv-tap { position: absolute; inset: 0; z-index: 7; padding: 0; border: 0; border-radius: inherit; background: none; cursor: pointer; }
 .mtv-tap:focus-visible { outline: 2px dashed #f5c266; outline-offset: -6px; }
 
-/* a narrow column (phones): the screen on top, the controls in a strip under it */
+/* a narrow column (phones): the screen on top, the controls in a strip under it. Every control sits on one axis;
+   the "CANAL" label and the power light hang below it without taking part in the alignment. */
 @container (max-width: 429.98px) {
   .mtv-cab { flex-direction: column; align-items: stretch; gap: 12px; padding: 14px; border-radius: 18px; }
   .mtv-bezel { padding: 12px; }
-  .mtv-panel { display: grid; grid-template-columns: repeat(4, auto); grid-template-areas: 'brand brand brand brand' 'led knob chbtns pwr'; justify-content: space-between; width: 100%; gap: 10px 8px; padding: 12px 16px 14px; align-items: center; }
+  .mtv-panel { display: grid; grid-template-columns: repeat(4, auto); grid-template-areas: 'brand brand brand brand' 'led knob chbtns pwr'; justify-content: space-between; align-items: center; width: 100%; gap: 14px 6px; padding: 12px 12px 32px; }
   .mtv-brand { grid-area: brand; justify-self: center; }
-  .mtv-led { grid-area: led; min-width: 64px; padding: 4px 6px; }
-  .mtv-knobwrap { grid-area: knob; }
+  .mtv-led { grid-area: led; min-width: 56px; padding: 4px 6px; font-size: 24px; }
+  .mtv-knobwrap { grid-area: knob; position: relative; }
   .mtv-knob { width: 48px; height: 48px; }
+  .mtv-klbl { position: absolute; left: 50%; top: calc(100% + 6px); transform: translateX(-50%); white-space: nowrap; }
   .mtv-chbtns { grid-area: chbtns; width: auto; }
-  .mtv-pwrrow { grid-area: pwr; flex-direction: column; gap: 6px; width: auto; min-height: 0; }
-  .mtv-pled { position: static; margin: 0; }
+  .mtv-chbtns button { width: 38px; }
+  .mtv-pwrrow { grid-area: pwr; position: relative; width: auto; min-height: 0; }
+  .mtv-pled { left: 50%; top: calc(100% + 8px); margin: 0 0 0 -4.5px; }
   .mtv-osd { font-size: 10.5px; letter-spacing: 0.06em; }
 }
-/* very narrow (320 px phones): the +/- keys drop to their own row */
-@container (max-width: 279.98px) {
-  .mtv-panel { grid-template-columns: repeat(3, auto); grid-template-areas: 'brand brand brand' 'led knob pwr' 'chbtns chbtns chbtns'; }
-  .mtv-chbtns { justify-self: center; }
-  .mtv-pwrrow { flex-direction: row-reverse; }
+/* 340 px phones and narrower: the +/- keys get a row of their own, centered */
+@container (max-width: 299.98px) {
+  .mtv-panel { grid-template-columns: repeat(3, auto); grid-template-areas: 'brand brand brand' 'led knob pwr' 'chbtns chbtns chbtns'; justify-content: space-around; padding-bottom: 14px; row-gap: 26px; }
+  .mtv-chbtns { justify-self: center; margin-top: 4px; }
 }
 @media (max-height: 500px) { .mtv { max-width: 440px; } }
 
