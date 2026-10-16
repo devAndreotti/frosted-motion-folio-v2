@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import { EGG_EVENTS } from "@/lib/eggs";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { NOW_ALSO, NOW_PROJECTS } from "@/data/now";
@@ -95,5 +96,14 @@ describe("NowSection", () => {
     const more = screen.getByRole("link", { name: /Ver mais/ });
     expect(more.getAttribute("href")).toBe("https://github.com/devAndreotti?tab=repositories");
     expect(more.closest("li")?.className).toBe("also-more");
+  });
+
+  it("opens the same Memory Apartment TV dialog from the TV-typing easter egg event", () => {
+    renderNow();
+    expect(screen.queryByRole("dialog", { name: /TV de/ })).toBeNull();
+    act(() => {
+      window.dispatchEvent(new Event(EGG_EVENTS.openTv));
+    });
+    expect(screen.getByRole("dialog", { name: /TV de/ })).toBeTruthy();
   });
 });
