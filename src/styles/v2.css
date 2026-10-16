@@ -447,7 +447,7 @@ button.also-i { cursor: pointer; }
 @media (max-width: 720px) {
   .wrap, .nav-in { padding: 0 20px; }
   .acc-w { display: none; }
-  .hero { padding-top: 44px; }
+  .hero { padding-top: 24px; gap: 28px; }
   .lead { font-size: 17px; }
   .ctas .btn, .ctas-g { flex: 1 1 auto; }
   .vsep { display: none; }
@@ -492,6 +492,7 @@ button.also-i { cursor: pointer; }
   /* copyright: name on one line, "built with..." on the next, instead of a stray last word */
   .ft-sep { display: none; }
   .ft-b { display: block; white-space: normal; }
+  .ft { padding-bottom: 16px; }
 }
 @media (max-width: 480px) {
   /* tiles: badge over the name, so long names get the whole tile width */

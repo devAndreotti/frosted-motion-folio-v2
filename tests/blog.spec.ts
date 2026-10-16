@@ -41,3 +41,25 @@ test("the blog pages fit a phone without sideways scroll", async ({ page }) => {
     expect(theme!.x + theme!.width, `${width} ${path}`).toBeLessThanOrEqual(width);
   }
 });
+
+// The blog bar has no menu sheet: on a phone the color pill shrinks to its dot and the
+// swatches open under the bar. Picking one must change the accent, and stay on screen.
+for (const width of [320, 390, 1280]) {
+  test(`the accent color can be changed from the blog bar at ${width}px`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "dark" });
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto("blog/");
+
+    await page.getByRole("button", { name: "Escolher cor de destaque" }).click();
+    const blue = page.getByRole("button", { name: "Cor de destaque: Azul" });
+    const box = await blue.boundingBox();
+    expect(box!.x, "swatch inside the screen (left)").toBeGreaterThanOrEqual(0);
+    expect(box!.x + box!.width, "swatch inside the screen (right)").toBeLessThanOrEqual(width);
+    await blue.click();
+
+    await expect.poll(() => page.evaluate(() => localStorage.getItem("hue"))).toBe("blue");
+    await expect
+      .poll(() => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--accent").trim()))
+      .toBe("#3b82f6");
+  });
+}

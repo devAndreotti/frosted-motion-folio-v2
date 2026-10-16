@@ -8,8 +8,17 @@
 @media (max-width: 720px) {
   .blog-links, .blog-rss-t { display: none; }
 }
+/* phones: v2.css hides the color pill (the main bar keeps its swatches in the menu sheet), but this bar
+   has no menu, so it stays as a round button with just the dot; the swatches open under the bar's right edge */
+@media (max-width: 720px) {
+  .blog-nav .acc-w { display: block; position: static; }
+  .blog-nav .acc-w .np { width: 34px; padding: 0; }
+  .blog-nav .acc-w .np > span:not(.acc-dot), .blog-nav .acc-w .np > svg { display: none; }
+  .blog-nav .nav-r { gap: 6px; }
+  .blog-nav .pop { top: 72px; right: 20px; }
+}
 @media (max-width: 480px) { .blog-nav .np[aria-label='RSS'] { display: none; } }
-@media (max-width: 380px) { .blog-nav .brand-name { display: none; } }
+@media (max-width: 384px) { .blog-nav .brand-name { display: none; } }
 
 /* ---------- list ---------- */
 .blog-main { max-width: 880px; padding-top: 72px; padding-bottom: 120px; }
