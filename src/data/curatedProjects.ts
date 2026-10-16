@@ -93,6 +93,7 @@ const LIST_META: CurationMeta[] = [
     },
   },
   {
+    ...shots('chef-ai', ['01', '02', '03', '04']),
     id: 2,
     type: { pt: 'IA aplicada', en: 'Applied AI' },
     cat: 'ia',
