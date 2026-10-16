@@ -1,0 +1,83 @@
+/* Haunted 3:17 (see src/lib/haunted.ts). The ThemeContext and BackgroundLayers
+   write their colors as inline styles, so these overrides use !important to
+   win while <html data-haunted> is present. Removing the attribute gives the
+   user's own theme back, untouched. */
+
+html[data-haunted] {
+  --accent: #ef4444 !important;
+  --accent-rgb: 239 68 68 !important;
+  --accent-text: #fff5f5 !important;
+  --solid: #1c0303 !important;
+  --glass-lift: rgb(127 29 29 / 0.28) !important;
+}
+
+html[data-haunted]:not(.dark) {
+  --accent: #dc2626 !important;
+  --accent-rgb: 220 38 38 !important;
+  --accent-text: #fff5f5 !important;
+  --solid: #fff1f1 !important;
+}
+
+/* The wash: deep red in dark mode, a pale rose in light mode so text stays readable. */
+html[data-haunted] [data-testid="background-layers"] > div {
+  background: linear-gradient(135deg, #1c0303 0%, #431010 25%, #5c1414 50%, #431010 75%, #1c0303 100%) !important;
+}
+
+html[data-haunted]:not(.dark) [data-testid="background-layers"] > div {
+  background: linear-gradient(135deg, #fff1f1 0%, #fecaca 25%, #fca5a5 50%, #fecaca 75%, #fff1f1 100%) !important;
+}
+
+html[data-haunted] [data-testid="background-layers"] > div > div {
+  background: radial-gradient(circle at 20% 80%, rgb(185 28 28 / 0.35) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgb(127 29 29 / 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgb(153 27 27 / 0.25) 0%, transparent 45%) !important;
+}
+
+/* A red tint over the wash that breathes slowly. Animates only opacity, so no layout work. */
+html[data-haunted] [data-testid="background-layers"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 40%, rgb(220 38 38 / 0.22) 0%, transparent 70%);
+  animation: haunted-flicker 9s ease-in-out infinite;
+}
+
+@keyframes haunted-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  6% {
+    opacity: 0.55;
+  }
+  7% {
+    opacity: 1;
+  }
+  41% {
+    opacity: 0.8;
+  }
+  42% {
+    opacity: 1;
+  }
+  78% {
+    opacity: 0.65;
+  }
+  80% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-haunted] [data-testid="background-layers"]::after {
+    animation: none;
+  }
+}
+
+.haunted-line {
+  margin: 10px 0 0;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--accent);
+  text-align: right;
+}

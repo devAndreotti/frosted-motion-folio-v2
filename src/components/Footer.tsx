@@ -7,10 +7,12 @@ import { track } from '@/lib/track';
 import CopyEmailButton from './CopyEmailButton';
 import XLogo from './XLogo';
 import { useLocalClock } from '@/hooks/useLocalClock';
+import { useHaunted } from '@/hooks/useHaunted';
 
 const Footer = () => {
   const { t } = useLanguage();
   const time = useLocalClock();
+  const haunted = useHaunted();
 
   const links = [
     { label: t.footer.quickLinks.github, handle: contact.githubHandle, href: contact.github, icon: Github, event: 'click-github' },
@@ -93,6 +95,7 @@ const Footer = () => {
           <ArrowUp className="ic s" />
         </button>
       </footer>
+      {haunted && <p className="haunted-line">{t.easter.hauntedLine}</p>}
     </section>
   );
 };

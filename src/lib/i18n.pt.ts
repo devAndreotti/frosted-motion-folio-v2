@@ -198,6 +198,10 @@ export const pt: Strings = {
     builtWith: 'feito com React, Tailwind CSS e muito café.',
     backToTop: 'Voltar ao topo',
   },
+  easter: {
+    hauntedLine: 'ainda acordado? o código também.',
+    printNote: 'Psiu: você achou o easter egg do Ctrl+P.',
+  },
   notFound: {
     badge: 'Erro 404',
     kicker: 'rota não encontrada',

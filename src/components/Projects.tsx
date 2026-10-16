@@ -71,6 +71,7 @@ const Projects = () => {
                 </span>
               </span>
               <span className="rd">{p.description[lang]}</span>
+              <span className="print-url">{p.liveUrl ?? p.githubUrl}</span>
             </span>
             <span className="rtags">
               {p.technologies.slice(0, 3).map((tech) => (
