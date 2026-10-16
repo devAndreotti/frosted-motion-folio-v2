@@ -1,0 +1,36 @@
+/* Lite mode: <html data-lite> is set by src/lib/liteMode.ts when the visitor asks for less (Data Saver, reduced data,
+   or a nearly empty battery). Only paint changes here: no layout, no content, no motion rules, so the reduced-motion
+   rules in the other stylesheets stay as they are. Blurs go, and the glass they sat under becomes a slightly denser
+   solid tint, so text keeps its contrast over the page. */
+
+html[data-lite] *,
+html[data-lite] *::before,
+html[data-lite] *::after {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* top bar: the same tint, a little denser, so the page scrolling under it stays behind the text */
+html[data-lite] .nav {
+  background: color-mix(in oklab, var(--solid, #0a0a0a) 88%, transparent);
+}
+
+/* dialog backdrop: a darker dim instead of the blur */
+html[data-lite] .ov {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/* glass panels: the same surface tint, laid over the opaque base colour */
+html[data-lite] .glass-strong,
+html[data-lite] .glass-intense {
+  background: linear-gradient(var(--surface-2), var(--surface-2)), var(--solid, #0a0a0a);
+}
+
+html[data-lite] .dlg {
+  background: var(--solid, #0a0a0a);
+}
+
+/* caption over the hero photos, which sat on a blur */
+html[data-lite] .dk-cap {
+  background: rgba(12, 12, 16, 0.6);
+}
