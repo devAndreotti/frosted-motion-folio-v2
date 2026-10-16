@@ -109,6 +109,13 @@ export interface Strings {
     code: string;
     emptyCategory: string;
     moreProjects: (count: number) => string;
+    more: {
+      title: string;
+      subtitle: string;
+      cardAria: (title: string) => string;
+      showAll: (count: number) => string;
+      showLess: string;
+    };
   };
   caseModal: {
     whatIDid: string;

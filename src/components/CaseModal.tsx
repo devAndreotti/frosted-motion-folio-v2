@@ -1,67 +1,30 @@
-import { useEffect, useRef, useState, type FocusEvent } from 'react';
-import { motion, type PanInfo } from 'framer-motion';
-import { ArrowUpRight, Check, ChevronLeft, ChevronRight, Pause, Play, X } from 'lucide-react';
+import { useRef } from 'react';
+import { ArrowUpRight, Check, X } from 'lucide-react';
 import { CuratedProject } from '@/data/curatedProjects';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useScrollLock } from '@/hooks/useScrollLock';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
-import { useAutoAdvance } from '@/hooks/useAutoAdvance';
-import { useMediaQuery } from '@/hooks/useMediaQuery';
+import ImageCarousel from './ImageCarousel';
 
-const SWIPE_THRESHOLD = 60; // px of drag offset that counts as a deliberate swipe
-const SWIPE_VELOCITY = 500; // px/s — a fast flick counts even if the offset is short
-const SLIDE_MS = 2000; // how long each picture stays before the gallery moves on by itself
-
-/** -1/1 = advance to prev/next, 0 = snap back without changing image. */
-export function resolveSwipeDelta(offsetX: number, velocityX: number): -1 | 0 | 1 {
-  if (offsetX < -SWIPE_THRESHOLD || velocityX < -SWIPE_VELOCITY) return 1;
-  if (offsetX > SWIPE_THRESHOLD || velocityX > SWIPE_VELOCITY) return -1;
-  return 0;
-}
+export { resolveSwipeDelta } from './ImageCarousel';
 
 interface CaseModalProps {
   project: CuratedProject;
   onClose: () => void;
 }
 
-/** Full case-study detail for a project, opened from the featured card or a ranked row. */
+/**
+ * Full detail for a project, opened from the featured card, a ranked row or a card of the gallery. The ones in the
+ * gallery have no "what I did" list (empty points), so that block is left out for them.
+ */
 const CaseModal = ({ project, onClose }: CaseModalProps) => {
   const { lang, t } = useLanguage();
-  const [imgIdx, setImgIdx] = useState(0);
   const images = project.images.length > 0 ? project.images : [project.image];
-  const advance = (delta: number) => setImgIdx((prev) => (prev + delta + images.length) % images.length);
-  const multi = images.length > 1;
-
-  // The gallery turns by itself every SLIDE_MS, and stops while the pointer or the keyboard is on it, when the
-  // visitor pauses it, or for anyone who asked their system for less motion. Any move restarts the countdown.
-  const reduceMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
-  const [userPaused, setUserPaused] = useState(false);
-  const [hovered, setHovered] = useState(false);
-  const [focused, setFocused] = useState(false);
-  const autoplay = multi && !reduceMotion;
-  const playing = useAutoAdvance(() => advance(1), SLIDE_MS, autoplay && !userPaused, hovered || focused, imgIdx);
-
-  // load the other shots up front, so the first turn of the gallery never waits for the network
-  useEffect(() => {
-    images.forEach((src) => {
-      new Image().src = src;
-    });
-  }, [images]);
-
-  const onMediaBlur = (event: FocusEvent<HTMLDivElement>) => {
-    if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false);
-  };
-
-  const handleDragEnd = (_: unknown, info: PanInfo) => {
-    const delta = resolveSwipeDelta(info.offset.x, info.velocity.x);
-    if (delta !== 0) advance(delta);
-  };
+  const points = project.points[lang];
 
   const dialogRef = useRef<HTMLDivElement>(null);
   useScrollLock(true);
   useFocusTrap(true, dialogRef, onClose);
-
-  const img = <img key={imgIdx} className="dlg-img" src={images[imgIdx]} alt={t.caseModal.imageAlt(project.title, imgIdx + 1)} draggable={false} />;
 
   return (
     <div className="ov" onClick={onClose}>
@@ -76,58 +39,23 @@ const CaseModal = ({ project, onClose }: CaseModalProps) => {
           </button>
         </div>
 
-        {/* The hover/focus pause covers the whole gallery: the picture and the bar of dots under it. */}
-        <div className="dlg-gallery" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onFocus={() => setFocused(true)} onBlur={onMediaBlur}>
-          <div className="dlg-media" aria-live={playing ? 'off' : 'polite'}>
-            {multi ? (
-              <>
-                <motion.div className="cursor-grab active:cursor-grabbing" drag="x" dragConstraints={{ left: 0, right: 0 }} dragElastic={0.6} onDragEnd={handleDragEnd}>
-                  {img}
-                </motion.div>
-                <button type="button" aria-label={t.caseModal.prevImageAria} onClick={() => advance(-1)} className="np sq dlg-nav" style={{ left: 12 }}>
-                  <ChevronLeft className="ic" />
-                </button>
-                <button type="button" aria-label={t.caseModal.nextImageAria} onClick={() => advance(1)} className="np sq dlg-nav" style={{ right: 12 }}>
-                  <ChevronRight className="ic" />
-                </button>
-              </>
-            ) : (
-              img
-            )}
-          </div>
-          {multi && (
-            <div className="dlg-bar">
-              <div className="dlg-dots" role="group" aria-label={t.caseModal.imagesAria}>
-                {images.map((src, i) => (
-                  <button key={src} type="button" className="dlg-dot" aria-label={t.caseModal.goToImageAria(i + 1)} aria-current={i === imgIdx ? 'true' : undefined} onClick={() => setImgIdx(i)} />
-                ))}
-              </div>
-              {autoplay && (
-                <button
-                  type="button"
-                  className="np sq dlg-pause"
-                  aria-label={userPaused ? t.caseModal.playAria : t.caseModal.pauseAria}
-                  aria-pressed={userPaused}
-                  onClick={() => setUserPaused((paused) => !paused)}
-                >
-                  {userPaused ? <Play className="ic s" /> : <Pause className="ic s" />}
-                </button>
-              )}
-            </div>
-          )}
-        </div>
+        <ImageCarousel images={images} title={project.title} />
 
         <h3>{project.title}</h3>
         <p className="dlg-p">{project.long[lang]}</p>
-        <p className="k">{t.caseModal.whatIDid}</p>
-        <ul className="pts">
-          {project.points[lang].map((point) => (
-            <li key={point}>
-              <Check className="ic s" />
-              <span>{point}</span>
-            </li>
-          ))}
-        </ul>
+        {points.length > 0 && (
+          <>
+            <p className="k">{t.caseModal.whatIDid}</p>
+            <ul className="pts">
+              {points.map((point) => (
+                <li key={point}>
+                  <Check className="ic s" />
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
         <div className="tags" style={{ marginTop: 22 }}>
           {project.technologies.map((tech) => (
             <span key={tech} className="tag">
