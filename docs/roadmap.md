@@ -21,8 +21,8 @@ Convenções do projeto que valem para todos os itens:
 | 3 | Imagem de compartilhamento por página | Médio | 1 e o gerador de páginas | Alto |
 | 6 | Melhorias no blog | Médio | 12 (para "mais lidos") | Médio |
 | 7 | Página `/uses` | Baixo | nada | Médio |
-| 8 | "Agora" com data e arquivo | Baixo | nada | Médio |
-| 10 | Hover dos cards sem "grudar" no toque | Baixo | nada | Médio |
+| 8 | "Agora" com data e arquivo | Baixo | nada | Médio (data feita, falta o arquivo) |
+| 10 | Hover dos cards sem "grudar" no toque | Baixo | nada | Médio (feito) |
 | 11 | GIFs e animações pesadas | Médio | decisão de formato | Alto |
 | 12 | Medição de desempenho no CI | Médio | nada | Alto |
 | 13 | Auditoria de contraste e acessibilidade | Médio | nada | Alto |
@@ -104,7 +104,7 @@ Ordem sugerida: ~~10~~ (feito), 12, 13, 14 (base de qualidade, pouco risco) → 
 
 ## 8. "Agora" com data e arquivo
 
-**Obstáculo conhecido.** O texto "Atualizado em…" precisa existir em PT e EN, mas `i18n.pt.ts` e `i18n.en.ts` já estão em 299 linhas (limite de 300). Antes de fazer este item, dividir os textos por área (por exemplo, `i18n.now.ts`) ou compactar mais blocos.
+**Status: feito em parte (#79).** Os textos foram divididos por área (`i18n.pt.ts` e `i18n.en.ts` caíram de 299 para 205 linhas) e o bloco "Agora" mostra "Atualizado em <data>", a partir de `NOW_UPDATED` em `src/data/now.ts`. Falta a página `/agora` com o arquivo das versões anteriores. Atenção: `src/lib/i18n.types.ts` está em 293 linhas; o próximo texto novo pede dividir os tipos também.
 
 **Estado atual.** O bloco "Agora" vem de `src/data/now.ts` e inclui o card do Memory Apartment com a TV.
 
@@ -117,7 +117,7 @@ Ordem sugerida: ~~10~~ (feito), 12, 13, 14 (base de qualidade, pouco risco) → 
 
 ## 10. Hover dos cards sem "grudar" no toque
 
-**Status: feito no PR #78.** Todas as regras de `:hover` dos cards e linhas foram para dentro de `@media (hover: hover)`, com o foco por teclado separado, e há um teste que impede `:hover` solto em `v2.css`, `blog.css` e `more.css`. Sobrou fora: `memory-tv.css` (botões da TV) e `index.css`.
+**Status: feito (#78).** Todas as regras de `:hover` dos cards e linhas foram para dentro de `@media (hover: hover)`, com o foco por teclado separado, e há um teste que impede `:hover` solto em `v2.css`, `blog.css` e `more.css`. Sobrou fora: `memory-tv.css` (botões da TV) e `index.css`.
 
 **Problema.** Os botões já foram padronizados em `src/styles/interactive.css`, mas os cards e linhas ainda usam hover sem `@media (hover: hover)` e podem ficar levantados depois de um toque no celular.
 
