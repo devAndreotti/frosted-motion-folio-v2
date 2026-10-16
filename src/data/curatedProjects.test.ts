@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { projects } from "./projects";
 import { featuredProject, curatedProjects, CATEGORY_FILTERS } from "./curatedProjects";
@@ -27,4 +28,18 @@ describe("curatedProjects", () => {
       expect(project.images.length).toBeGreaterThan(0);
     }
   });
+
+  it("points every cover, gallery shot and portrait at a file that exists in public/", () => {
+    const missing: string[] = [];
+    for (const project of [featuredProject, ...curatedProjects]) {
+      const paths = [project.image, ...project.images, ...(project.portrait ? [project.portrait] : [])];
+      for (const src of paths) if (!existsSync(`public/${src.replace(/^\.\//, "")}`)) missing.push(`${project.title}: ${src}`);
+    }
+    expect(missing).toEqual([]);
+  });
+
+  it("keeps the cover as the first picture of the gallery", () => {
+    for (const project of [featuredProject, ...curatedProjects]) expect(project.images[0]).toBe(project.image);
+  });
 });
+

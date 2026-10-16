@@ -21,14 +21,20 @@ export const MAX_VISIBLE_DEPTH = 3;
 
 export type StackMove = 'back' | 'front';
 
+/** Phones: the same pile, fanned out 40% more, so the cards behind show more of themselves. */
+export const PHONE_SPREAD = 1.4;
+
 /**
  * Resting transform for a card at `depth` (0 = front): each step back shifts
  * down-right, tilts a little more and shrinks 4.5%, so the pile reads as one
- * deck leaning the same way.
+ * deck leaning the same way. `spread` widens the shift and the tilt (not the
+ * shrink), so a narrow screen can fan the pile out more.
  */
-export function stackTransform(depth: number): string {
+export function stackTransform(depth: number, spread = 1): string {
   const d = Math.max(0, Math.min(depth, MAX_VISIBLE_DEPTH));
-  return `translate(${d * 18}px, ${d * 12}px) rotate(${(d * 3).toFixed(1)}deg) scale(${(1 - d * 0.045).toFixed(3)})`;
+  // whole numbers stay whole ("18px"), anything else gets one decimal ("25.2px")
+  const px = (value: number) => `${Number(value.toFixed(1))}px`;
+  return `translate(${px(d * 18 * spread)}, ${px(d * 12 * spread)}) rotate(${(d * 3 * spread).toFixed(1)}deg) scale(${(1 - d * 0.045).toFixed(3)})`;
 }
 
 /** Cards further back get darker, so the front one always reads first. */

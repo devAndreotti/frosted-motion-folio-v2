@@ -70,6 +70,15 @@ describe('blog pages', () => {
     expect((form.querySelector('input[name="sites"]') as HTMLInputElement).value).toBe('devandreotti.com');
   });
 
+  it('lets the visitor change the accent color from the blog bar, as on the home page', () => {
+    renderAt('/blog/');
+    fireEvent.click(screen.getByRole('button', { name: 'Escolher cor de destaque' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Cor de destaque: Roxo' }));
+    expect(localStorage.getItem('hue')).toBe('purple');
+    // the popover closes after a pick
+    expect(screen.queryByRole('button', { name: 'Cor de destaque: Roxo' })).toBeNull();
+  });
+
   it('filters by tag, without the featured post', () => {
     renderAt('/blog/');
     fireEvent.click(screen.getByRole('button', { name: '#css' }));

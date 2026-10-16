@@ -1,7 +1,8 @@
 import { useRef } from 'react';
-import { stackDim, stackTransform } from '@/lib/cardStack';
+import { PHONE_SPREAD, stackDim, stackTransform } from '@/lib/cardStack';
 import { DECK_STEP_MS, useCardStack } from '@/hooks/useCardStack';
 import { useInView } from '@/hooks/useInView';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { CardNav, CardText, type HeroCard } from './HeroCardParts';
 
 /**
@@ -10,7 +11,12 @@ import { CardNav, CardText, type HeroCard } from './HeroCardParts';
  * the card that lands in front catches a sweep of light, and the bar under
  * the deck fills up until the next turn.
  */
+// Same width as the phone rules in hero-cards.css (the deck's own size changes there too).
+export const PHONE_QUERY = '(max-width: 720px)';
+
 const HeroDeck = ({ cards }: { cards: HeroCard[] }) => {
+  const phone = useMediaQuery(PHONE_QUERY);
+  const spread = phone ? PHONE_SPREAD : 1;
   const rootRef = useRef<HTMLDivElement>(null);
   const inView = useInView(rootRef);
   const { order, flight, moves, playing, pick, next, prev } = useCardStack(
@@ -27,7 +33,7 @@ const HeroDeck = ({ cards }: { cards: HeroCard[] }) => {
             re-inserts nodes, which would cancel their CSS transitions. */}
         {cards.map((card) => {
           const depth = order.indexOf(card.id);
-          const transform = stackTransform(depth);
+          const transform = stackTransform(depth, spread);
           const flying = flight?.id === card.id ? ` fly-${flight.kind}-${flight.n % 2 ? 'a' : 'b'}` : '';
           const arrive = moves > 0 && depth === 0 ? ` arrive-${ab}` : '';
           const style = {

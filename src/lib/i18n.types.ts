@@ -119,6 +119,10 @@ export interface Strings {
     prevImageAria: string;
     nextImageAria: string;
     imageAlt: (title: string, index: number) => string;
+    imagesAria: string;
+    goToImageAria: (index: number) => string;
+    pauseAria: string;
+    playAria: string;
   };
   timeline: {
     sectionLabel: string;

@@ -11,9 +11,11 @@ export function isAutomated(): boolean {
 /**
  * Calls `step` every `ms` while `enabled`, skipping the ticks that land in a
  * background tab or while `paused` (the hero is off screen). Never runs under
- * browser automation: it would race E2E clicks.
+ * browser automation: it would race E2E clicks. A change of `resetKey` (the
+ * slide that is showing) restarts the countdown, so a manual move is never
+ * followed by an immediate automatic one.
  */
-export function useAutoAdvance(step: () => void, ms: number, enabled: boolean, paused: boolean) {
+export function useAutoAdvance(step: () => void, ms: number, enabled: boolean, paused: boolean, resetKey?: unknown) {
   const stepRef = useRef(step);
   stepRef.current = step;
   const pausedRef = useRef(paused);
@@ -25,7 +27,7 @@ export function useAutoAdvance(step: () => void, ms: number, enabled: boolean, p
       if (!document.hidden && !pausedRef.current) stepRef.current();
     }, ms);
     return () => clearInterval(timer);
-  }, [enabled, ms]);
+  }, [enabled, ms, resetKey]);
 
   return enabled && !paused && !isAutomated();
 }
