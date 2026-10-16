@@ -205,6 +205,18 @@ export interface Strings {
     suggest: string;
     sections: Record<'projects' | 'now' | 'contact', { title: string; note: string }>;
     broken: string;
+    game: {
+      aria: string;
+      title: string;
+      hint: string;
+      start: string;
+      pressToStart: string;
+      over: string;
+      restart: string;
+      restartHint: string;
+      score: (seconds: number) => string;
+      best: (seconds: number) => string;
+    };
   };
   blog: {
     sectionLabel: string;

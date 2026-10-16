@@ -215,6 +215,18 @@ export const en: Strings = {
       contact: { title: 'Contact', note: 'Email, LinkedIn and GitHub, all in one place.' },
     },
     broken: 'Found a broken link of mine?',
+    game: {
+      aria: 'Mini game: dodge the bugs',
+      title: 'dodge the bugs',
+      hint: 'Drag the square or use ← → (A D)',
+      start: 'Start',
+      pressToStart: 'Press to start',
+      over: 'You hit a bug',
+      restart: 'Play again',
+      restartHint: 'Space, Enter or tap to restart',
+      score: (seconds) => `${seconds}s survived`,
+      best: (seconds) => `best ${seconds}s`,
+    },
   },
   blog: {
     sectionLabel: 'Writing',
