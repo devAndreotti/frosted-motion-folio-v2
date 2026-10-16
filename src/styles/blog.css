@@ -156,7 +156,7 @@
 .nv-item:last-child { border-bottom: 0; }
 .nv-t { margin: 0; font: 600 17px/1.4 var(--font-sans); color: var(--fg-1); }
 .nv-p { margin: 4px 0 0; color: var(--fg-2); font: 400 15px/1.6 var(--font-sans); }
-.nv-badge { display: inline-flex; align-items: center; min-height: 22px; padding: 0 8px; border-radius: 999px; background: var(--accent); color: var(--accent-text); font: 600 11px/1 var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; }
+.nv-badge { display: inline-flex; align-items: center; min-height: 22px; padding: 0 8px; border-radius: 999px; border: 1px solid var(--accent); background: var(--surface-2); color: var(--fg-1); font: 600 11px/1 var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; }
 /* /agora/: the current version and the archive by date */
 .ag-list, .ag-archive { list-style: none; margin: 12px 0 0; padding: 0; }
 .ag-list li, .ag-archive li { padding: 10px 0; border-bottom: 1px solid var(--border-1); }
