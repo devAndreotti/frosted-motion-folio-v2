@@ -150,3 +150,10 @@
 .nws-lang label:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
 .nws-check { display: flex; justify-content: center; flex-basis: 100%; min-height: 0; }
 @media (max-width: 640px) { .nws { padding: 22px 18px; } .nws-row .btn { width: 100%; } }
+
+/* /agora/: the current version and the archive by date */
+.ag-list, .ag-archive { list-style: none; margin: 12px 0 0; padding: 0; }
+.ag-list li, .ag-archive li { padding: 10px 0; border-bottom: 1px solid var(--border-1); }
+.ag-archive time { font: 500 13px/1.4 var(--font-mono); color: var(--fg-3); }
+.ag-archive p { margin: 4px 0 0; }
+.ag-items { font-size: 13px; color: var(--fg-3); }

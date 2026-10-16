@@ -5,6 +5,8 @@ export interface NowStrings {
   subtitle: string;
   /** "Updated on <date>", under the section subtitle. */
   updated: (date: string) => string;
+  /** Link under the date, to /agora/ (the earlier versions of this section). */
+  archiveLink: string;
   aboutLabel: string;
   aboutBody: string;
   facts: { label: string; value: string }[];
