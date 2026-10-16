@@ -315,7 +315,8 @@ export async function handleAdmin(request, env, now = Date.now(), deps = { sendM
   if (!methods) return notFound();
   if (!methods.includes(request.method)) return json({ error: 'method not allowed' }, 405, { allow: methods.join(', ') });
   if (!env.DB) return json({ error: 'database is off on this host' }, 503);
-  if ((action === 'resend' || ISSUE_ACTIONS.has(action)) && !configured(env)) return json({ error: 'mail is off on this host' }, 503);
+  // preview only renders, so it works without SMTP; the actions that send need it
+  if ((action === 'resend' || action === 'send') && !configured(env)) return json({ error: 'mail is off on this host' }, 503);
 
   if (action === 'stats') return stats(env, now);
   if (ISSUE_ACTIONS.has(action)) return issueAction(request, env, now, deps, action);

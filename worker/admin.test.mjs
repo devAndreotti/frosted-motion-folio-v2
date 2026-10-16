@@ -353,6 +353,12 @@ describe('admin', () => {
       expect(sendMail).not.toHaveBeenCalled();
     });
 
+    it('preview works without SMTP: it only renders', async () => {
+      const res = await handleAdmin(req('preview', { body: { issue: issue() } }), { ...env, SMTP_PASS: undefined }, NOW, { sendMail });
+      expect(res.status).toBe(200);
+      expect(Object.keys(await json(res)).sort()).toEqual(['en', 'pt']);
+    });
+
     it('preview answers only the languages present', async () => {
       const body = await json(await run(req('preview', { body: { issue: { pt: issue().pt } } })));
       expect(Object.keys(body)).toEqual(['pt']);
