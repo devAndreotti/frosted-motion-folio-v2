@@ -13,7 +13,7 @@ Fabio Akita was on Flow and talked about this trap. If you program with AI, you 
 probably noticed it already: every provider tries to lock you into its own little
 pen. ChatGPT's memory lives at OpenAI; Projects live at Anthropic.
 
-![Cover of the Flow episode with Fabio Akita](/blog/ai-memory-memoria-do-projeto/capa.jpg)
+![Cover of the Flow episode with Fabio Akita](/blog/ai-memory-memoria-do-projeto/capa.webp)
 
 ## The cost of switching models
 

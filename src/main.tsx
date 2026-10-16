@@ -3,6 +3,7 @@ import App from './App.tsx'
 import { initWebVitals } from './lib/vitals'
 import { decodeImage, dismissBootLoader } from './lib/bootLoader'
 import { loadUmami } from './lib/track'
+import { trackImageLoading } from './lib/imageLoad'
 import { savedHue } from './contexts/ThemeContext'
 import '@fontsource-variable/geist'
 import '@fontsource-variable/geist-mono'
@@ -11,7 +12,9 @@ import './styles/v2.css'
 import './styles/hero-cards.css'
 import './styles/blog.css'
 import './styles/more.css'
+import './styles/img-load.css'
 
+trackImageLoading();
 createRoot(document.getElementById("root")!).render(<App />);
 initWebVitals();
 // Umami only where the build is configured for it (the Cloudflare deploy, see .github/workflows/cloudflare.yml).
