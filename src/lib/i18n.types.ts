@@ -1,3 +1,6 @@
+import type { BlogStrings } from './i18n.types.blog';
+import type { NowStrings } from './i18n.types.now';
+
 export type Lang = 'pt' | 'en';
 
 export interface Localized<T> {
@@ -76,50 +79,7 @@ export interface Strings {
     reposUnit: string;
     alsoKnown: string;
   };
-  now: {
-    sectionLabel: string;
-    title: string;
-    subtitle: string;
-    /** "Updated on <date>", under the section subtitle. */
-    updated: (date: string) => string;
-    aboutLabel: string;
-    aboutBody: string;
-    facts: { label: string; value: string }[];
-    privateCode: string;
-    alsoLabel: string;
-    privateTag: string;
-    /** Closing card of "also in the oven": out to the rest of the repositories. */
-    alsoMore: string;
-    alsoMoreNote: string;
-    /** Private projects open a card: the cue on the item, and the card's labels. */
-    alsoOpen: string;
-    alsoWhat: string;
-    alsoPrivateFoot: string;
-    alsoGithub: string;
-    /** Memory Apartment's card opens a TV instead of a site. */
-    tv: {
-      open: string;
-      dialogAria: (title: string) => string;
-      screenAria: (channel: string) => string;
-      power: string;
-      next: string;
-      prev: string;
-      knob: string;
-      errTitle: string;
-      errSub: string;
-      osdDate: string;
-      osdError: string;
-      bridgeAlt: string;
-      channelError: string;
-      channelBridge: string;
-      tvOn: string;
-      tvOff: string;
-      soundOn: string;
-      soundOff: string;
-      antenna: string;
-      tap: string;
-    };
-  };
+  now: NowStrings;
   projects: {
     sectionLabel: string;
     title: string;
@@ -219,61 +179,7 @@ export interface Strings {
       best: (points: number) => string; wave: (n: number) => string; lives: (n: number) => string;
     };
   };
-  blog: {
-    sectionLabel: string;
-    teaserTitle: string;
-    teaserSub: string;
-    seeAll: string;
-    pageTitle: string;
-    pageLead: string;
-    /** Posts are written in one language; said once on the list in the other one. */
-    langNote: string;
-    translatedNote: string;
-    ptOnly: string;
-    newsletter: {
-      kicker: string;
-      title: string;
-      text: string;
-      label: string;
-      placeholder: string;
-      button: string;
-      sending: string;
-      sent: string;
-      invalid: string;
-      error: string;
-      tooMany: string;
-      privacy: string;
-      privacyLink: string;
-      langLabel: string;
-      check: string;
-    };
-    searchLabel: string;
-    searchPlaceholder: string;
-    searchButton: string;
-    searchHint: string;
-    tagsLabel: string;
-    allTags: string;
-    latest: string;
-    readPost: string;
-    postsCount: (count: number) => string;
-    empty: string;
-    emptyTag: string;
-    minutes: (count: number) => string;
-    back: string;
-    onThisPage: string;
-    helpful: string;
-    like: string;
-    liked: string;
-    likeHint: string;
-    likedHint: string;
-    likeError: string;
-    copyLink: string;
-    linkCopied: string;
-    replyEmail: string;
-    newer: string;
-    older: string;
-    loadError: string;
-  };
+  blog: BlogStrings;
   colorPicker: {
     hueLabel: (label: string) => string;
     trigger: string;
