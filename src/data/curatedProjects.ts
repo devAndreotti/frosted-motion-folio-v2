@@ -133,6 +133,7 @@ const LIST_META: CurationMeta[] = [
     },
   },
   {
+    ...shots('git-wizard-commander', ['01', '02', '04']),
     id: 30,
     type: { pt: 'Educacional', en: 'Educational' },
     cat: 'tool',
