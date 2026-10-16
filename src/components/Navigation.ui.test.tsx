@@ -43,6 +43,19 @@ describe("Navigation", () => {
     expect(within(screen.getAllByRole("group", { name: "Language" })[0]).getByRole("button", { name: "EN" }).getAttribute("aria-pressed")).toBe("true");
   });
 
+  it("moves the active mark of the PT | EN pill with the choice", () => {
+    renderNav();
+    const group = screen.getAllByRole("group", { name: "Idioma" })[0];
+    const pt = within(group).getByRole("button", { name: "PT" });
+    const en = within(group).getByRole("button", { name: "EN" });
+    expect(group.getAttribute("data-lang")).toBe("pt");
+    expect(pt.classList.contains("on")).toBe(true);
+    fireEvent.click(en);
+    expect(group.getAttribute("data-lang")).toBe("en");
+    expect(en.classList.contains("on")).toBe(true);
+    expect(pt.classList.contains("on")).toBe(false);
+  });
+
   it("opens the mobile sheet with links, language and colors, and closes on Escape", () => {
     renderNav();
     fireEvent.click(screen.getByRole("button", { name: "Abrir menu" }));
