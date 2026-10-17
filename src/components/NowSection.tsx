@@ -64,17 +64,18 @@ const ProjectCard = ({ p, lang, onOpenTv }: { p: NowProject; lang: Lang; onOpenT
       </span>
     </>
   );
-  if (p.tv) {
-    return (
-      <button type="button" className="nc glass" onClick={() => { track(`now-open-${p.id}`); onOpenTv(); }}>
-        {body}
-      </button>
-    );
-  }
+  // The whole card is one control: a cover link or button under the text (aria-label = the title). The text
+  // stays outside it, so the "ler mais" button can sit inside the card without nesting interactive elements.
+  const cover = p.tv ? (
+    <button type="button" className="nc-cover" aria-label={p.title} onClick={() => { track(`now-open-${p.id}`); onOpenTv(); }} />
+  ) : (
+    <a className="nc-cover" href={p.href} aria-label={p.title} target="_blank" rel="noopener noreferrer" onClick={() => track(`now-open-${p.id}`)} />
+  );
   return (
-    <a className="nc glass" href={p.href} target="_blank" rel="noopener noreferrer" onClick={() => track(`now-open-${p.id}`)}>
+    <div className="nc glass nc-card">
+      {cover}
       {body}
-    </a>
+    </div>
   );
 };
 

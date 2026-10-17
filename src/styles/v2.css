@@ -146,6 +146,11 @@ html.booting .rv { animation-play-state: paused; }
 .nc-d { font: 400 14px/1.55 var(--font-sans); color: var(--fg-2); }
 /* collapsed: four lines, the browser adds the ellipsis; .open lifts the clamp */
 .nc-d:not(.open) { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.nc-card { position: relative; }
+/* the card's own click target: covers the card, under the text and the "ler mais" button */
+.nc-cover { position: absolute; inset: 0; z-index: 0; margin: 0; padding: 0; border: 0; border-radius: inherit; background: none; cursor: pointer; }
+.nc-cover:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
+.nc-card .nc-more { position: relative; z-index: 1; }
 /* 44 px tall target; the text stays small, the ring is the theme's accent */
 .nc-more { align-self: flex-start; min-height: 44px; padding: 0 6px; border: 0; border-radius: 8px; background: none; color: var(--accent-ink); font: 600 13px/1 var(--font-sans); cursor: pointer; }
 .nc-more:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
