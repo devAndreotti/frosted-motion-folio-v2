@@ -19,6 +19,7 @@ const UsesCategory = ({ category, lang }: { category: Category; lang: UsesLang }
             <div className="us-top">
               <span className="us-name">{item.name}</span>
               {item.main && <span className="us-tag">{strings.mainTag}</span>}
+              {item.level && <span className="us-tag us-level">{strings.level[item.level]}</span>}
             </div>
             {item.detail && <span className="us-detail">{item.detail[lang]}</span>}
             <p className="us-why">{item.why[lang]}</p>

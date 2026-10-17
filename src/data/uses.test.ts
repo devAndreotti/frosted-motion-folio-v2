@@ -1,13 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { USES_CATEGORIES, USES_COPY, type UsesItem } from './uses/index';
+import { STACK } from './uses/stack';
 
 const allItems = (): UsesItem[] => USES_CATEGORIES.flatMap((category) => category.items);
 const allText = () =>
   JSON.stringify({ USES_CATEGORIES, USES_COPY });
 
 describe('uses data', () => {
-  it('has the six categories, each with items', () => {
-    expect(USES_CATEGORIES.map((c) => c.id)).toEqual(['hardware', 'system', 'editor', 'terminal', 'ai', 'services']);
+  it('has the seven categories, each with items', () => {
+    expect(USES_CATEGORIES.map((c) => c.id)).toEqual(['hardware', 'system', 'editor', 'terminal', 'ai', 'services', 'stack']);
     for (const category of USES_CATEGORIES) expect(category.items.length, category.id).toBeGreaterThan(0);
   });
 
@@ -36,9 +37,24 @@ describe('uses data', () => {
     expect(mains).toEqual(['Desktop Linux', 'EndeavourOS com Hyprland', 'VS Code no navegador', 'Claude Code', 'Oracle Cloud']);
   });
 
-  it('does not repeat an item name', () => {
-    const names = allItems().map((item) => item.name);
-    expect(new Set(names).size).toBe(names.length);
+  it('has the Stack section with the three levels, and only those items', () => {
+    const byLevel = (level: string) => STACK.items.filter((item) => item.level === level).map((item) => item.name);
+    expect(byLevel('daily')).toEqual(['React', 'TypeScript', 'JavaScript', 'Tailwind CSS', 'Git', 'NestJS', 'SQL', 'Vite']);
+    expect(byLevel('comfortable')).toEqual([
+      'Docker', 'React Native', 'Godot', 'Blender', 'QML', 'n8n', 'Node.js', 'Supabase', 'PostgreSQL',
+    ]);
+    expect(byLevel('learning')).toEqual(['Machine learning', 'Rust', 'AWS', 'Oracle']);
+    expect(STACK.items).toHaveLength(21);
+    expect(STACK.items.every((item) => item.level)).toBe(true);
+    expect(STACK.items.some((item) => item.main)).toBe(false);
+  });
+
+  it('does not repeat an item name within a category', () => {
+    // Docker is in both Sistema and Stack on purpose (the owner listed it under Stack): uniqueness is per category.
+    for (const category of USES_CATEGORIES) {
+      const names = category.items.map((item) => item.name);
+      expect(new Set(names).size, category.id).toBe(names.length);
+    }
   });
 
   it('keeps hosts, addresses, accounts and internal project names out of the page', () => {
