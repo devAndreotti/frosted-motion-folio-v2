@@ -1,9 +1,12 @@
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense, useState, type MouseEvent } from 'react';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { projects } from '@/data/projects';
 import { contact } from '@/data/personal';
 import { moreProjects } from '@/data/moreProjects';
 import { featuredProject, curatedProjects, CATEGORY_FILTERS, type CuratedProject, type ProjectCategory } from '@/data/curatedProjects';
+import { caseBySlug } from '@/data/cases';
+import { CASE_STATE, casePath, isPlainClick } from '@/lib/projects/caseLink';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { track } from '@/lib/track';
 import FeaturedCase from './FeaturedCase';
@@ -22,10 +25,25 @@ type Filter = ProjectCategory | 'all';
 const Projects = () => {
   const { lang, t } = useLanguage();
   const [filter, setFilter] = useState<Filter>('all');
-  const [openProject, setOpenProject] = useState<CuratedProject | null>(null);
+  // The popup lives in the address: /projetos/<slug>/ opens it, and the browser's back button closes it.
+  const { slug } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const openProject = caseBySlug(slug) ?? null;
   const openCase = (project: CuratedProject) => {
     track(`project-open-${project.id}`);
-    setOpenProject(project);
+    navigate(casePath(project.slug), { state: CASE_STATE });
+  };
+  // A plain click opens the popup here; a modified one keeps the link's own behavior (new tab).
+  const cardClick = (project: CuratedProject) => (e: MouseEvent<HTMLAnchorElement>) => {
+    if (!isPlainClick(e)) return;
+    e.preventDefault();
+    openCase(project);
+  };
+  // Opened from a card in this visit: going back closes it. Opened from a shared link: replace with the home page.
+  const closeCase = () => {
+    if ((location.state as { caseOpen?: boolean } | null)?.caseOpen) navigate(-1);
+    else navigate('/', { replace: true });
   };
 
   const inFilter = (p: CuratedProject) => filter === 'all' || p.cat === filter;
@@ -60,7 +78,7 @@ const Projects = () => {
 
       <div className="rows">
         {rows.map(({ p, n }) => (
-          <button key={p.id} type="button" className="row group" onClick={() => openCase(p)}>
+          <Link key={p.id} to={casePath(p.slug)} state={CASE_STATE} className="row group" onClick={cardClick(p)}>
             <span className="rn">{n}</span>
             <span className="min-w-0">
               <span className="rt">
@@ -95,7 +113,7 @@ const Projects = () => {
                 <img src={p.image} alt="" loading="lazy" />
               </span>
             </span>
-          </button>
+          </Link>
         ))}
         {rows.length === 0 && !showFeatured && <div className="empty">{t.projects.emptyCategory}</div>}
       </div>
@@ -111,7 +129,7 @@ const Projects = () => {
 
       {openProject && (
         <Suspense fallback={null}>
-          <CaseModal project={openProject} onClose={() => setOpenProject(null)} />
+          <CaseModal project={openProject} onClose={closeCase} />
         </Suspense>
       )}
     </section>

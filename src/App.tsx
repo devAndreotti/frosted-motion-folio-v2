@@ -15,6 +15,9 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const Privacy = lazy(() => import("./pages/Privacy"));
+const Uses = lazy(() => import("./pages/Uses"));
+const Novidades = lazy(() => import("./pages/Novidades"));
+const Agora = lazy(() => import("./pages/Agora"));
 
 const SecretKeys = () => {
   useSecretKeys();
@@ -35,6 +38,11 @@ const App = () => (
           <Route path="/blog" element={<Suspense fallback={null}><Blog /></Suspense>} />
           <Route path="/blog/:slug" element={<Suspense fallback={null}><BlogPost /></Suspense>} />
           <Route path="/privacidade" element={<Suspense fallback={null}><Privacy /></Suspense>} />
+          <Route path="/uses" element={<Suspense fallback={null}><Uses /></Suspense>} />
+          <Route path="/novidades" element={<Suspense fallback={null}><Novidades /></Suspense>} />
+          <Route path="/agora" element={<Suspense fallback={null}><Agora /></Suspense>} />
+          {/* a case opens over the home page: the same page as /, with the popup of that project (unknown slugs: 404) */}
+          <Route path="/projetos/:slug" element={<Index />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<Suspense fallback={null}><NotFound /></Suspense>} />
         </Routes>

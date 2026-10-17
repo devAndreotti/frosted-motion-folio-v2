@@ -1,6 +1,9 @@
+import type { MouseEvent } from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, Check } from 'lucide-react';
 import { featuredProject as p } from '@/data/curatedProjects';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { CASE_STATE, casePath, isPlainClick } from '@/lib/projects/caseLink';
 
 const BROWSER_TAGS = 6;
 
@@ -8,6 +11,12 @@ const BROWSER_TAGS = 6;
 const FeaturedCase = ({ onOpen }: { onOpen: () => void }) => {
   const { lang, t } = useLanguage();
   const host = p.liveUrl ? new URL(p.liveUrl).host : null;
+  // a plain click opens the popup here; a modified one keeps the link's own behavior (new tab)
+  const openHere = (e: MouseEvent<HTMLAnchorElement>) => {
+    if (!isPlainClick(e)) return;
+    e.preventDefault();
+    onOpen();
+  };
 
   return (
     <article className="feat glass">
@@ -52,10 +61,10 @@ const FeaturedCase = ({ onOpen }: { onOpen: () => void }) => {
           </div>
         </dl>
         <div className="acts">
-          <button type="button" className="btn btn-pri btn-sm" onClick={onOpen}>
+          <Link to={casePath(p.slug)} state={CASE_STATE} className="btn btn-pri btn-sm" onClick={openHere}>
             {t.projects.openCase}
             <ArrowRight className="ic s" />
-          </button>
+          </Link>
           {p.liveUrl && (
             <a className="btn btn-gh btn-sm" href={p.liveUrl} target="_blank" rel="noopener noreferrer">
               {t.projects.demo}
@@ -72,7 +81,7 @@ const FeaturedCase = ({ onOpen }: { onOpen: () => void }) => {
       </div>
 
       {/* Browser chrome so the screenshot reads as a live product, not a loose image. */}
-      <button type="button" className="bf" onClick={onOpen}>
+      <Link to={casePath(p.slug)} state={CASE_STATE} className="bf" onClick={openHere}>
         <span className="bf-bar">
           <i />
           <i />
@@ -87,7 +96,7 @@ const FeaturedCase = ({ onOpen }: { onOpen: () => void }) => {
             </span>
           ))}
         </span>
-      </button>
+      </Link>
     </article>
   );
 };

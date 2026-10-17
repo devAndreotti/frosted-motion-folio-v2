@@ -1,12 +1,12 @@
 # Roadmap: melhorias pendentes do site
 
-Este documento detalha o que ainda falta fazer. Nada aqui está implementado: cada item vira um PR próprio quando for a vez dele.
+Este documento detalha as melhorias do site. Cada item foi feito num PR próprio; a seção de cada um diz o estado (os de outubro de 2026 entraram juntos no #94).
 
 Numeração mantida da lista de ideias original, para facilitar a conversa. O item 16 (painel de estatísticas) é outro projeto e não está neste repositório.
 
 Convenções do projeto que valem para todos os itens:
 
-- Cada arquivo `.ts` ou `.tsx` tem no máximo 300 linhas (`node scripts/quality-gate.cjs check`). Os arquivos de texto `src/lib/i18n.pt.ts` e `src/lib/i18n.en.ts` já estão em 299: texto novo precisa de um arquivo novo ou de compactação.
+- Cada arquivo `.ts` ou `.tsx` tem no máximo 300 linhas (`node scripts/quality-gate.cjs check`). Os textos e os tipos do i18n são divididos por área (`i18n.pt.<área>.ts`, `i18n.en.<área>.ts`, `i18n.types.<área>.ts`): texto novo entra no arquivo da sua área.
 - A cobertura de testes só pode subir.
 - Todo texto novo existe em PT e EN.
 - Cores só pelos tokens do tema (`--accent`, `--fg-*`, `--border-*`, `--surface-*`); o site tem 7 tons de destaque e modo claro e escuro.
@@ -14,27 +14,29 @@ Convenções do projeto que valem para todos os itens:
 
 ## Resumo
 
-| # | Item | Esforço | Depende de | Valor |
-|---|---|---|---|---|
-| 1 | Página própria para cada projeto | Alto | gerador de páginas estáticas | Alto |
-| 2 | Currículo em PDF | Médio | `print.css` atual e geração no CI | Alto |
-| 3 | Imagem de compartilhamento por página | Médio | 1 e o gerador de páginas | Alto |
-| 6 | Melhorias no blog | Médio | 12 (para "mais lidos") | Médio |
-| 7 | Página `/uses` | Baixo | nada | Médio |
-| 8 | "Agora" com data e arquivo | Baixo | nada | Médio (data feita, falta o arquivo) |
-| 10 | Hover dos cards sem "grudar" no toque | Baixo | nada | Médio (feito) |
-| 11 | GIFs e animações pesadas | Médio | decisão de formato | Alto |
-| 12 | Medição de desempenho no CI | Médio | nada | Alto |
-| 13 | Auditoria de contraste e acessibilidade | Médio | nada | Alto |
-| 14 | Testes visuais automáticos | Médio | nada | Médio |
-| 17 | Modo leitura nos posts | Baixo | nada | Baixo |
-| 18 | Novidades do site (changelog) | Baixo | nada | Baixo |
+| # | Item | Esforço | Depende de | Valor | Status |
+|---|---|---|---|---|---|
+| 1 | Página própria para cada projeto | Alto | gerador de páginas estáticas | Alto | Feito |
+| 2 | Currículo em PDF | Médio | `print.css` atual e geração no CI | Alto | Pendente |
+| 3 | Imagem de compartilhamento por página | Médio | 1 e o gerador de páginas | Alto | Feito |
+| 6 | Melhorias no blog | Médio | 12 (para "mais lidos") | Médio | Feito (sem "mais lidos") |
+| 7 | Página `/uses` | Baixo | nada | Médio | Feito (conteúdo a revisar) |
+| 8 | "Agora" com data e arquivo | Baixo | nada | Médio | Feito |
+| 10 | Hover dos cards sem "grudar" no toque | Baixo | nada | Médio | Feito |
+| 11 | GIFs e animações pesadas | Médio | decisão de formato | Alto | Pendente (outros repositórios) |
+| 12 | Medição de desempenho no CI | Médio | nada | Alto | Feito (orçamento só como aviso) |
+| 13 | Auditoria de contraste e acessibilidade | Médio | nada | Alto | Em parte (dívida de contraste) |
+| 14 | Testes visuais automáticos | Médio | nada | Médio | Feito |
+| 17 | Modo leitura nos posts | Baixo | nada | Baixo | Feito |
+| 18 | Novidades do site (changelog) | Baixo | nada | Baixo | Feito |
 
-Ordem sugerida: ~~10~~ (feito), 12, 13, 14 (base de qualidade, pouco risco) → 11 → 1, 3, 2 (visibilidade) → 6, 7, 8, 17, 18.
+Falta: 2 (currículo em PDF), 11 (GIFs nos repositórios dos projetos), a correção da paleta e as verificações de teclado do 13, e "mais lidos" do 6 (depende de dados de leitura).
 
 ---
 
 ## 1. Página própria para cada projeto
+
+**Status: feito (#89, entregue no #94).** Slug em cada projeto, rota `/projetos/:slug` (PT/EN), páginas estáticas no build, link no card com popup por URL.
 
 **Problema.** Hoje o projeto abre num detalhe (`CaseModal`) sem endereço. Não dá para mandar o link de um projeto num processo seletivo, e o Google não indexa cada caso.
 
@@ -70,6 +72,8 @@ Ordem sugerida: ~~10~~ (feito), 12, 13, 14 (base de qualidade, pouco risco) → 
 
 ## 3. Imagem de compartilhamento por página
 
+**Status: feito (#92, entregue no #94).** Cada post (PT, e EN quando há tradução) tem PNG 1200×630 gerado no build (`vite-plugins/og-image.ts`, satori + resvg, fontes Geist estáticas em WOFF) em `/og/<slug>.png`; `og:image`, `og:image:*` e `twitter:*` vêm do próprio post, com a imagem do site como fallback. Projetos (item 1) ficam para depois. Falta validar no depurador do LinkedIn e no Open Graph do Facebook.
+
 **Problema.** Há uma só imagem (`public/og-image.png`) para o site todo. Ao colar um post ou um projeto no LinkedIn, WhatsApp ou Discord, aparece sempre a mesma.
 
 **O que fazer.**
@@ -83,6 +87,8 @@ Ordem sugerida: ~~10~~ (feito), 12, 13, 14 (base de qualidade, pouco risco) → 
 - Validado no depurador do LinkedIn e no Open Graph do Facebook.
 
 ## 6. Melhorias no blog
+
+**Status: feito (#90, entregue no #94).** Índice com o título atual destacado, copiar link em cada h2/h3, posts relacionados no fim, e "carregar mais" a partir de 20 posts. "Mais lidos" ficou de fora: depende de dado real (item 12).
 
 **Estado atual.** O blog tem posts em Markdown, busca, curtidas, newsletter e RSS. Há estilos de índice (`.toc`), a confirmar quanto já está pronto.
 
@@ -98,13 +104,15 @@ Ordem sugerida: ~~10~~ (feito), 12, 13, 14 (base de qualidade, pouco risco) → 
 
 ## 7. Página `/uses`
 
+**Status: feito (#86, entregue no #94).** Página, dados e testes prontos; o conteúdo ainda pede revisão do dono.
+
 **O que fazer.** Página com as ferramentas do dia a dia: editor, terminal, extensões, hardware, serviços, e o motivo de cada escolha. Dados em `src/data/uses.ts` (lista por categoria), página no padrão do `Privacy.tsx` (usa a barra do blog e a largura de leitura de 880 px). Link no rodapé e no menu do blog.
 
 **Pronto quando.** Está no sitemap, tem `<title>` próprio, funciona em PT e EN e passa na auditoria de contraste do item 13.
 
 ## 8. "Agora" com data e arquivo
 
-**Status: feito em parte (#79).** Os textos foram divididos por área (`i18n.pt.ts` e `i18n.en.ts` caíram de 299 para 205 linhas) e o bloco "Agora" mostra "Atualizado em <data>", a partir de `NOW_UPDATED` em `src/data/now.ts`. Falta a página `/agora` com o arquivo das versões anteriores. Atenção: `src/lib/i18n.types.ts` está em 293 linhas; o próximo texto novo pede dividir os tipos também.
+**Status: feito (#85, entregue no #94).** A página `/agora` mostra a versão atual e o arquivo por data (`src/data/now-archive.ts`); o link "Ver o arquivo" fica no bloco Agora da home. Os textos foram divididos por área antes, em #79.
 
 **Estado atual.** O bloco "Agora" vem de `src/data/now.ts` e inclui o card do Memory Apartment com a TV.
 
@@ -142,6 +150,8 @@ Ordem sugerida: ~~10~~ (feito), 12, 13, 14 (base de qualidade, pouco risco) → 
 
 ## 12. Medição de desempenho no CI
 
+**Status: feito (#93, entregue no #94).** Workflow `.github/workflows/lighthouse.yml` (LHCI 0.15.1 fixo, sem entrar no package.json): em PR, mobile e desktop, home, /blog/, /privacidade/ e 404, comentário único atualizado a cada push; semanal contra o site publicado. Orçamento só como aviso. Web Vitals reais (LCP, INP, CLS) já vão ao Umami por `src/lib/vitals.ts`. Linha de base em `docs/lighthouse-baseline.md` depois da primeira rodada do CI.
+
 **Estado atual.** O `web-vitals` já está nas dependências e `initWebVitals()` roda no `main.tsx`. Não há medição de Lighthouse no CI.
 
 **O que fazer.**
@@ -165,7 +175,11 @@ Ordem sugerida: ~~10~~ (feito), 12, 13, 14 (base de qualidade, pouco risco) → 
 
 **Pronto quando.** Zero violações sérias ou críticas no axe e a tabela de contraste está sem falhas.
 
+**Status: feito em parte (#84, entregue no #94).** Tabela de contraste em `src/lib/contrast.test.ts` (dívida registrada, não corrigida) e axe em `tests/a11y/axe.spec.ts`. Correções visuais ficaram de fora, ver o PR.
+
 ## 14. Testes visuais automáticos
+
+**Status: feito (#88, entregue no #94).** Bases geradas no CI (Linux) e commitadas em `tests/visual/pages.spec.ts-snapshots/`; `visual.yml` falha em diferença. Estável em 5 execuções seguidas no CI.
 
 **Problema.** Quebras de layout (como o ícone de tema fora da borda ou o desenho do "404" empurrado) só apareciam quando alguém olhava.
 
@@ -183,8 +197,12 @@ Ordem sugerida: ~~10~~ (feito), 12, 13, 14 (base de qualidade, pouco risco) → 
 
 **Pronto quando.** Funciona em PT e EN, com teclado, e os testes cobrem ligar, desligar e lembrar.
 
+**Status: feito (#83, entregue no #94).** Botão `aria-pressed` no post, Esc sai, preferência em `localStorage` com `try/catch`, PT e EN. Estilo isolado em `src/styles/reading.css` (classe `.reading` no contêiner do blog).
+
 ## 18. Novidades do site
 
 **O que fazer.** Página `/novidades` e um selo discreto no rodapé ("Novo") com a lista das mudanças visíveis ao visitante, em PT e EN, a partir de um arquivo de dados (`src/data/changelog.ts`) mantido junto com os PRs; opcionalmente alimentar o RSS. Não confundir com o `CHANGELOG.md` do kit de automação, que é interno.
 
 **Pronto quando.** A página lista as entradas por data, o selo some depois de visto (`localStorage`) e um teste garante que as entradas estão ordenadas.
+
+**Status: feito (#87, entregue no #94).** `/novidades` lista as entradas de `src/data/changelog.ts` por data, em PT e EN. O selo "Novo" aparece nos rodapés até a página ser aberta (`novidades.visto` no `localStorage`, com try/catch). Testes garantem a ordem das datas, o texto nas duas línguas e o selo. Fora desta entrega: RSS.

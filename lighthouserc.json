@@ -1,0 +1,18 @@
+{
+  "ci": {
+    "collect": {
+      "staticDistDir": "./dist-vps",
+      "numberOfRuns": 3,
+      "url": [
+        "http://localhost/",
+        "http://localhost/blog/",
+        "http://localhost/privacidade/",
+        "http://localhost/lhci-404/"
+      ],
+      "settings": {
+        "chromeFlags": "--no-sandbox --disable-gpu",
+        "onlyCategories": ["performance", "accessibility", "best-practices", "seo"]
+      }
+    }
+  }
+}

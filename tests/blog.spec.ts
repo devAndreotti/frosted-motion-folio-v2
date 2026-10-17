@@ -17,7 +17,7 @@ test("the nav leads to the blog, the list opens a post and the post leads back",
   await expect(page).toHaveURL(/\/blog\/[a-z0-9-]+\/$/);
   await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
   await expect(page.locator(".prose p").first()).toBeVisible();
-  await expect(page.getByRole("button", { name: "Copiar link" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Copiar link", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: /Curtir/ })).toHaveCount(0);
 
   await page.getByRole("link", { name: "~/blog" }).click();

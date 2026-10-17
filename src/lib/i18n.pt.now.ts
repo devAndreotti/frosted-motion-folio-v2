@@ -6,6 +6,7 @@ export const ptNow: Strings['now'] = {
   title: 'No que estou trabalhando agora.',
   subtitle: 'O que anda mais movimentado no meu GitHub. Alguns repositórios ainda são privados, e um deles tem até uma TV para ligar.',
   updated: (date) => `Atualizado em ${date}`,
+  archiveLink: 'Ver o arquivo',
   aboutLabel: 'Sobre mim',
   aboutBody:
     'Sou o Ricardo: técnico em informática e no 7º semestre de Ciência da Computação na UNIP, em Sorocaba. Aprendo construindo coisas que eu mesmo uso: ferramentas pra programar melhor, automação com IA rodando na minha própria infraestrutura e, ultimamente, um jogo de terror.',

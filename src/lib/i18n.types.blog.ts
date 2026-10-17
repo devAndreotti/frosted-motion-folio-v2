@@ -1,0 +1,61 @@
+// Strings of the blog pages and newsletter; split out of i18n.types.ts to keep it under 300 lines.
+export interface BlogStrings {
+  sectionLabel: string;
+  teaserTitle: string;
+  teaserSub: string;
+  seeAll: string;
+  pageTitle: string;
+  pageLead: string;
+  /** Posts are written in one language; said once on the list in the other one. */
+  langNote: string;
+  translatedNote: string;
+  ptOnly: string;
+  newsletter: {
+    kicker: string;
+    title: string;
+    text: string;
+    label: string;
+    placeholder: string;
+    button: string;
+    sending: string;
+    sent: string;
+    invalid: string;
+    error: string;
+    tooMany: string;
+    privacy: string;
+    privacyLink: string;
+    langLabel: string;
+    check: string;
+  };
+  searchLabel: string;
+  searchPlaceholder: string;
+  searchButton: string;
+  searchHint: string;
+  tagsLabel: string;
+  allTags: string;
+  latest: string;
+  readPost: string;
+  postsCount: (count: number) => string;
+  empty: string;
+  emptyTag: string;
+  minutes: (count: number) => string;
+  back: string;
+  onThisPage: string;
+  helpful: string;
+  like: string;
+  liked: string;
+  likeHint: string;
+  likedHint: string;
+  likeError: string;
+  copyLink: string;
+  linkCopied: string;
+  replyEmail: string;
+  newer: string;
+  older: string;
+  loadError: string;
+  readingMode: string;
+  relatedTitle: string;
+  copyHeading: string;
+  headingCopied: string;
+  loadMore: string;
+}

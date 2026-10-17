@@ -1,6 +1,8 @@
-import { useState, type CSSProperties } from 'react';
+import { useState, type CSSProperties, type MouseEvent } from 'react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import type { CuratedProject } from '@/data/curatedProjects';
+import { CASE_STATE, casePath, isPlainClick } from '@/lib/projects/caseLink';
 
 /** Cards shown before "see all". */
 export const INITIAL_CARDS = 8;
@@ -17,6 +19,12 @@ const MoreProjects = ({ projects, onOpen }: MoreProjectsProps) => {
   const [all, setAll] = useState(false);
   if (projects.length === 0) return null;
   const shown = all ? projects : projects.slice(0, INITIAL_CARDS);
+  // a plain click opens the popup here; a modified one keeps the link's own behavior (new tab)
+  const openHere = (e: MouseEvent<HTMLAnchorElement>, project: CuratedProject) => {
+    if (!isPlainClick(e)) return;
+    e.preventDefault();
+    onOpen(project);
+  };
 
   return (
     <div className="mp" aria-labelledby="h-more">
@@ -27,7 +35,7 @@ const MoreProjects = ({ projects, onOpen }: MoreProjectsProps) => {
       <ul className="mp-grid">
         {shown.map((p) => (
           <li key={p.id}>
-            <button type="button" className="mp-card glass" onClick={() => onOpen(p)} aria-label={m.cardAria(p.title)}>
+            <Link to={casePath(p.slug)} state={CASE_STATE} className="mp-card glass" onClick={(e: MouseEvent<HTMLAnchorElement>) => openHere(e, p)} aria-label={m.cardAria(p.title)}>
               <span className="mp-img" style={{ '--tint': p.tint } as CSSProperties}>
                 <img className="mp-bg" src={p.image} alt="" aria-hidden="true" loading="lazy" decoding="async" />
                 <span className="mp-win">
@@ -46,7 +54,7 @@ const MoreProjects = ({ projects, onOpen }: MoreProjectsProps) => {
                   ))}
                 </span>
               </span>
-            </button>
+            </Link>
           </li>
         ))}
       </ul>

@@ -6,12 +6,14 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { contact } from '@/data/personal';
 import { LangSwitch } from '@/components/NavExtras';
 import ColorPickerPopover from '@/components/ColorPickerPopover';
+import { USES_LINK } from '@/data/uses';
+import NovidadesBadge from '@/components/NovidadesBadge';
 
 // The app's root on either deploy ("/" on devandreotti.com, "/frosted-motion-folio-v2/" on GitHub Pages).
 export const HOME = import.meta.env.BASE_URL;
 
 /** The blog pages' frame: a slim bar (home, blog, RSS, accent color, language, theme) and a one-line footer. */
-const BlogShell = ({ title, children }: { title: string; children: ReactNode }) => {
+const BlogShell = ({ title, children, className }: { title: string; children: ReactNode; className?: string }) => {
   const { theme, toggleTheme } = useTheme();
   const { lang, setLang, t } = useLanguage();
 
@@ -20,7 +22,7 @@ const BlogShell = ({ title, children }: { title: string; children: ReactNode }) 
   }, [title]);
 
   return (
-    <div className="blog min-h-screen relative [overflow-x:clip]">
+    <div className={`blog min-h-screen relative [overflow-x:clip]${className ? ` ${className}` : ''}`}>
       <header className="nav">
         <div className="nav-in blog-nav">
           <a className="brand" href={HOME}>
@@ -34,6 +36,9 @@ const BlogShell = ({ title, children }: { title: string; children: ReactNode }) 
               </a>
               <Link className="nl on" to="/blog/">
                 {t.nav.blog}
+              </Link>
+              <Link className="nl" to="/uses">
+                {USES_LINK[lang]}
               </Link>
             </nav>
             <a className="np" href={`${HOME}blog/rss.xml`} aria-label="RSS">
@@ -54,6 +59,8 @@ const BlogShell = ({ title, children }: { title: string; children: ReactNode }) 
       <footer className="nf-foot">
         <span>© {new Date().getFullYear()} Ricardo A. Gonçalves</span>
         <a href={`mailto:${contact.email}`}>{contact.email}</a>
+        <Link to="/uses">{USES_LINK[lang]}</Link>
+        <NovidadesBadge />
       </footer>
     </div>
   );

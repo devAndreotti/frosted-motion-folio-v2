@@ -6,6 +6,7 @@ export const enNow: Strings['now'] = {
   title: "What I'm working on right now.",
   subtitle: "What's busiest on my GitHub. Some repos are still private, and one of them even has a TV to turn on.",
   updated: (date) => `Updated on ${date}`,
+  archiveLink: 'See the archive',
   aboutLabel: 'About me',
   aboutBody:
     "I'm Ricardo: an IT technician in my 7th semester of Computer Science at UNIP, in Sorocaba, Brazil. I learn by building things I use myself: tools to code better, AI automation running on my own infrastructure and, lately, a horror game.",

@@ -1,6 +1,7 @@
 import type { Strings } from './i18n.types';
 import { enBlog } from './i18n.en.blog';
 import { enNow } from './i18n.en.now';
+import { enNovidades } from './i18n.en.novidades';
 
 export const en: Strings = {
   common: {
@@ -77,6 +78,7 @@ export const en: Strings = {
     alsoKnown: 'Also in the toolbox',
   },
   now: enNow,
+  novidades: enNovidades,
   projects: {
     sectionLabel: 'Projects',
     title: 'Projects with context, decisions, and delivery.',

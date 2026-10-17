@@ -4,10 +4,15 @@ import { ArrowLeft } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import BlogShell from '@/components/blog/BlogShell';
 import LikeBar from '@/components/blog/LikeBar';
+import ReadingModeButton from '@/components/blog/ReadingModeButton';
 import NewsletterForm from '@/components/blog/NewsletterForm';
-import { findPost, hasTranslation, loadPostBody, localize, posts } from '@/lib/blog/catalog';
+import { findPost, hasTranslation, loadPostBody, localize, posts as allPosts } from '@/lib/blog/catalog';
 import { formatDay, neighbours } from '@/lib/blog/list';
+import { useReadingMode } from '@/hooks/useReadingMode';
 import type { TocEntry } from '@/lib/blog/markdown';
+import { addHeadingLinks } from '@/lib/blog/headingLinks';
+import { relatedPosts } from '@/lib/blog/related';
+import { useActiveHeading } from '@/hooks/useActiveHeading';
 
 const NotFound = lazy(() => import('./NotFound'));
 
@@ -20,6 +25,22 @@ const BlogPost = () => {
   const b = t.blog;
   const post = findPost(slug);
   const [body, setBody] = useState<Body>({ status: 'loading' });
+  const reading = useReadingMode();
+  const tocKey = body.status === 'ready' ? body.toc.map((entry) => entry.id).join('|') : '';
+  const active = useActiveHeading(tocKey);
+  const html = body.status === 'ready' ? body.html : '';
+
+  // a copy-link button on each h2/h3 of the post's text, once the text is in the page
+  useEffect(() => {
+    const root = document.querySelector<HTMLElement>('.prose');
+    if (!html || !root) return;
+    return addHeadingLinks(
+      root,
+      { copy: b.copyHeading, copied: b.headingCopied },
+      window.location.href.split('#')[0],
+      (text) => (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject(new Error('no clipboard')))
+    );
+  }, [html, b.copyHeading, b.headingCopied]);
 
   useEffect(() => {
     if (!post) return;
@@ -42,7 +63,8 @@ const BlogPost = () => {
     );
   }
 
-  const { newer, older } = neighbours(posts, post.slug);
+  const { newer, older } = neighbours(allPosts, post.slug);
+  const related = relatedPosts(allPosts, post.slug);
   const toc = body.status === 'ready' ? body.toc : [];
   const shown = localize(post, lang);
   const served = body.status === 'ready' ? body.lang : lang;
@@ -50,7 +72,7 @@ const BlogPost = () => {
   const note = lang === 'en' ? (hasTranslation(post.slug) ? b.translatedNote : b.ptOnly) : '';
 
   return (
-    <BlogShell title={`${shown.title} — Ricardo A. Gonçalves`}>
+    <BlogShell title={`${shown.title} — Ricardo A. Gonçalves`} className={reading.on ? 'reading' : undefined}>
       <div className="wrap post-layout">
         <article className="post" lang={served === 'en' ? 'en' : 'pt-BR'}>
           <Link to="/blog/" className="post-back">
@@ -69,6 +91,7 @@ const BlogPost = () => {
             ))}
           </p>
           {note && <p className="blog-note">{note}</p>}
+          <ReadingModeButton on={reading.on} onToggle={reading.toggle} />
 
           {body.status === 'ready' && <div className="prose" dangerouslySetInnerHTML={{ __html: body.html }} />}
           {body.status === 'loading' && <div className="prose-ph" aria-busy="true" />}
@@ -76,6 +99,22 @@ const BlogPost = () => {
 
           <LikeBar slug={post.slug} title={shown.title} />
           <NewsletterForm />
+
+          {related.length > 0 && (
+            <section className="post-related" aria-labelledby="post-related-h">
+              <h2 id="post-related-h">{b.relatedTitle}</h2>
+              <ul>
+                {related.map((other) => (
+                  <li key={other.slug}>
+                    <Link to={`/blog/${other.slug}/`} className="glass">
+                      <span className="k">{formatDay(other.date, lang)}</span>
+                      <span>{localize(other, lang).title}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
 
           {(newer || older) && (
             <nav className="post-nav" aria-label={b.pageTitle}>
@@ -101,7 +140,7 @@ const BlogPost = () => {
           <aside className="toc" aria-label={b.onThisPage}>
             <p className="k">{b.onThisPage}</p>
             {toc.map((entry) => (
-              <a key={entry.id} href={`#${entry.id}`}>
+              <a key={entry.id} href={`#${entry.id}`} aria-current={active === entry.id ? 'location' : undefined}>
                 {entry.text}
               </a>
             ))}

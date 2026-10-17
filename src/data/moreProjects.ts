@@ -4,12 +4,11 @@ import type { CuratedProject } from './curatedProjects';
 
 /**
  * The gallery under the ranked list: smaller projects, each with photos taken for the portfolio
- * (public/projects/<slug>/NN.webp, 16:10). A project with no `shots` is simply not in the gallery.
+ * (public/projects/<slug>/NN.webp, 16:10, the slug from projects.ts). A project with no `shots` is simply not in the gallery.
  * Facts (title, stack, links) come from projects.ts; here only the gallery's own short text and photos.
  */
 interface MoreMeta {
   id: number;
-  slug: string;
   type: Localized<string>;
   tint: string;
   description: Localized<string>;
@@ -21,7 +20,6 @@ interface MoreMeta {
 const META: MoreMeta[] = [
   {
     id: 3,
-    slug: 'financial-vision',
     type: { pt: 'Landing page', en: 'Landing page' },
     tint: '#22c55e',
     description: {
@@ -32,7 +30,6 @@ const META: MoreMeta[] = [
   },
   {
     id: 8,
-    slug: 'upa-clinic',
     type: { pt: 'Site institucional', en: 'Business site' },
     tint: '#d4a373',
     description: {
@@ -43,7 +40,6 @@ const META: MoreMeta[] = [
   },
   {
     id: 4,
-    slug: 'powder-gate',
     type: { pt: 'App web', en: 'Web app' },
     tint: '#c084fc',
     description: {
@@ -54,7 +50,6 @@ const META: MoreMeta[] = [
   },
   {
     id: 27,
-    slug: 'pokedex',
     type: { pt: 'App web', en: 'Web app' },
     tint: '#facc15',
     description: {
@@ -65,7 +60,6 @@ const META: MoreMeta[] = [
   },
   {
     id: 10,
-    slug: 'dev-tlou',
     type: { pt: 'Landing page', en: 'Landing page' },
     tint: '#4ade80',
     description: {
@@ -76,7 +70,6 @@ const META: MoreMeta[] = [
   },
   {
     id: 11,
-    slug: 'my-first-spline-project',
     type: { pt: 'Landing page 3D', en: '3D landing page' },
     tint: '#8b5cf6',
     description: {
@@ -87,7 +80,6 @@ const META: MoreMeta[] = [
   },
   {
     id: 12,
-    slug: 'starbucks',
     type: { pt: 'Landing page', en: 'Landing page' },
     tint: '#00704a',
     description: {
@@ -98,7 +90,6 @@ const META: MoreMeta[] = [
   },
   {
     id: 20,
-    slug: 'dev-one-piece',
     type: { pt: 'Landing page', en: 'Landing page' },
     tint: '#ef4444',
     description: {
@@ -109,7 +100,6 @@ const META: MoreMeta[] = [
   },
   {
     id: 14,
-    slug: 'js-background',
     type: { pt: 'Efeito visual', en: 'Visual effect' },
     tint: '#ef4444',
     description: {
@@ -120,7 +110,6 @@ const META: MoreMeta[] = [
   },
   {
     id: 17,
-    slug: 'dev-hero-selector',
     type: { pt: 'Landing page', en: 'Landing page' },
     tint: '#ef4444',
     description: {
@@ -131,7 +120,6 @@ const META: MoreMeta[] = [
   },
   {
     id: 15,
-    slug: 'gradient-cards',
     type: { pt: 'Efeito visual', en: 'Visual effect' },
     tint: '#a855f7',
     description: {
@@ -142,7 +130,6 @@ const META: MoreMeta[] = [
   },
   {
     id: 18,
-    slug: 'cubes-background',
     type: { pt: 'Efeito visual', en: 'Visual effect' },
     tint: '#38bdf8',
     description: {
@@ -153,7 +140,6 @@ const META: MoreMeta[] = [
   },
   {
     id: 16,
-    slug: 'animated-burger',
     type: { pt: 'Efeito visual', en: 'Visual effect' },
     tint: '#fb7185',
     description: {
@@ -164,7 +150,6 @@ const META: MoreMeta[] = [
   },
   {
     id: 23,
-    slug: 'soft-dropdown',
     type: { pt: 'Componente', en: 'Component' },
     tint: '#a78bfa',
     description: {
@@ -175,7 +160,6 @@ const META: MoreMeta[] = [
   },
   {
     id: 13,
-    slug: 'responsive-login',
     type: { pt: 'Componente', en: 'Component' },
     tint: '#00ff88',
     description: {
@@ -189,7 +173,8 @@ const META: MoreMeta[] = [
 function build(meta: MoreMeta): CuratedProject {
   const project = projects.find((p) => p.id === meta.id);
   if (!project) throw new Error(`moreProjects: no project with id ${meta.id} in data/projects.ts`);
-  const images = meta.shots.map((n) => `./projects/${meta.slug}/${n}.webp`);
+  // the photos sit in public/projects/<slug>/, the slug the project has in projects.ts
+  const images = meta.shots.map((n) => `./projects/${project.slug}/${n}.webp`);
   return {
     ...project,
     image: images[0],

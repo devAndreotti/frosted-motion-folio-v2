@@ -12,6 +12,8 @@
     "lint": "eslint .",
     "test": "vitest run --coverage",
     "test:coverage:ci": "vitest run --coverage",
+    "test:visual": "vite build && playwright test -c playwright.visual.config.ts",
+    "test:visual:update": "vite build && playwright test -c playwright.visual.config.ts --update-snapshots",
     "preview": "vite preview",
     "novo-post": "node scripts/novo-post.cjs",
     "predeploy": "npm run build",
@@ -34,8 +36,11 @@
     "web-vitals": "^6.2.3"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
     "@eslint/js": "^9.9.0",
+    "@fontsource/geist": "^5.3.0",
     "@playwright/test": "^1.64.0",
+    "@resvg/resvg-js": "^2.6.2",
     "@tailwindcss/typography": "^0.5.15",
     "@testing-library/react": "^16.3.3",
     "@types/node": "^22.5.5",
@@ -53,6 +58,7 @@
     "jsdom": "^30.1.2",
     "marked": "^18.1.1",
     "postcss": "^8.5.30",
+    "satori": "^0.33.5",
     "tailwindcss": "^3.4.11",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",

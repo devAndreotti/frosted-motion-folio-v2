@@ -1,5 +1,8 @@
 import type { PostMeta } from './types';
 
+/** How many posts the list shows before "carregar mais". */
+export const PAGE_SIZE = 20;
+
 /** Newest first; same day falls back to the title so the order never depends on file order. */
 export function sortPosts(posts: PostMeta[]): PostMeta[] {
   return [...posts].sort((a, b) => b.date.localeCompare(a.date) || a.title.localeCompare(b.title));

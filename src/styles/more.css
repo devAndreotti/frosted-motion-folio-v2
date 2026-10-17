@@ -3,7 +3,7 @@
 .mp-t { margin: 0; font: 600 28px/1.15 var(--font-sans); letter-spacing: -0.03em; }
 .mp-s { margin: 10px 0 0; max-width: 60ch; color: var(--fg-2); font: 400 16px/1.6 var(--font-sans); }
 .mp-grid { list-style: none; margin: 32px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
-.mp-card { display: flex; flex-direction: column; width: 100%; height: 100%; padding: 0; border-radius: 20px; overflow: hidden; text-align: left; color: var(--fg-1); cursor: pointer; transition: transform 0.25s, border-color 0.25s; }
+.mp-card { text-decoration: none; display: flex; flex-direction: column; width: 100%; height: 100%; padding: 0; border-radius: 20px; overflow: hidden; text-align: left; color: var(--fg-1); cursor: pointer; transition: transform 0.25s, border-color 0.25s; }
 @media (hover: hover) { .mp-card:hover { transform: translateY(-3px); border-color: var(--border-2); } }
 .mp-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .mp-img { position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden; border-bottom: 1px solid var(--border-1); background: linear-gradient(160deg, color-mix(in srgb, var(--tint, #8b5cf6) 40%, transparent), #130a2c 85%), #0b0b10; }
