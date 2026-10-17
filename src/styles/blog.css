@@ -188,3 +188,5 @@
 .blog-most-sub { margin: 12px 0 0; color: var(--fg-2); font: 400 15px/1.5 var(--font-sans); }
 .blog-most ol { list-style: none; margin: 8px 0 0; padding: 0; }
 .blog-most-n { flex: none; margin-left: auto; color: var(--fg-3); font: 500 13px/1 var(--font-mono); }
+/* the blog frame footer: the page links sit in one row, next to the copyright and the e-mail */
+.nf-links { display: flex; flex-wrap: wrap; gap: 4px 16px; }
