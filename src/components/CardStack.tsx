@@ -6,6 +6,7 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 import type { HeroCard } from './HeroCardParts';
 import HeroDeck from './HeroDeck';
 import HeroFan from './HeroFan';
+import { projectAsset } from '@/lib/projects/asset';
 
 // The photo plus four real projects -- the same curation as the projects
 // section, so the hero and the list below tell one story.
@@ -36,7 +37,7 @@ const CardStack = () => {
     ...STACK_PROJECTS.map((p) => ({
       id: String(p.id),
       me: false,
-      img: p.portrait ?? p.image,
+      img: projectAsset(p.portrait ?? p.image),
       title: p.title,
       line: p.tagline[lang],
       type: p.id === featuredProject.id ? t.projects.casePrincipalBadge : p.type[lang],
