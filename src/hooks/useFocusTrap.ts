@@ -25,7 +25,11 @@ export function useFocusTrap(active: boolean, containerRef: RefObject<HTMLElemen
       if (nodes.length === 0) return;
       const first = nodes[0];
       const last = nodes[nodes.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
+      // focus that has left the dialog (e.g. a click on the backdrop) comes back in at the nearest end
+      if (!container.contains(document.activeElement)) {
+        e.preventDefault();
+        (e.shiftKey ? last : first).focus();
+      } else if (e.shiftKey && document.activeElement === first) {
         e.preventDefault();
         last.focus();
       } else if (!e.shiftKey && document.activeElement === last) {

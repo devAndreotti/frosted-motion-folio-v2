@@ -104,3 +104,22 @@
     transition: color 0.2s, background-color 0.2s, border-color 0.2s, filter 0.2s, opacity 0.2s;
   }
 }
+
+/* ---------- 7. keyboard focus everywhere else: any link, button, tab-stop or role-button not listed above ---------- */
+:is(a, button, summary, [role='button'], [role='tab'], [role='option'], [tabindex='0']):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------- 8. touch targets: at least 44 x 44 px, drawn by an invisible hit area (the look does not change) ---------- */
+.lg::before {
+  content: '';
+  position: absolute;
+  inset: -9px -7px;
+}
+.h-anchor { position: relative; }
+.h-anchor::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+}

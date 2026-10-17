@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useId, useRef } from 'react';
 import { ArrowUpRight, Check, X } from 'lucide-react';
 import { CuratedProject } from '@/data/curatedProjects';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -23,12 +23,13 @@ const CaseModal = ({ project, onClose }: CaseModalProps) => {
   const points = project.points[lang];
 
   const dialogRef = useRef<HTMLDivElement>(null);
+  const titleId = useId();
   useScrollLock(true);
   useFocusTrap(true, dialogRef, onClose);
 
   return (
     <div className="ov" onClick={onClose}>
-      <div ref={dialogRef} className="dlg" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label={t.caseModal.dialogAria(project.title)}>
+      <div ref={dialogRef} className="dlg" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby={titleId}>
         <div className="dlg-h">
           <span className="chip">
             <span className="dot" style={{ background: project.tint }} />
@@ -41,7 +42,7 @@ const CaseModal = ({ project, onClose }: CaseModalProps) => {
 
         <ImageCarousel images={images} title={project.title} tint={project.tint} />
 
-        <h3>{project.title}</h3>
+        <h3 id={titleId}>{project.title}</h3>
         <p className="dlg-p">{project.long[lang]}</p>
         {points.length > 0 && (
           <>
