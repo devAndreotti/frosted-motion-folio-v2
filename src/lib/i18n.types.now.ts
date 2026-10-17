@@ -22,6 +22,9 @@ export interface NowStrings {
   alsoOpen: string;
   alsoWhat: string;
   alsoPrivateFoot: string;
+  /** Toggle under a project card's description, when the text runs past four lines. */
+  readMore: string;
+  readLess: string;
   alsoGithub: string;
   /** Memory Apartment's card opens a TV instead of a site. */
   tv: {

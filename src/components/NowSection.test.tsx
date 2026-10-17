@@ -33,8 +33,9 @@ describe("NowSection", () => {
   it("links the projects with a site out of the page, and never to a private repo", () => {
     renderNow();
     for (const p of NOW_PROJECTS.filter((x) => x.privateCode && x.href)) {
-      const card = screen.getByRole("link", { name: new RegExp(p.title) });
-      expect(card.getAttribute("href")).not.toContain("github.com");
+      const link = screen.getByRole("link", { name: new RegExp(p.title) });
+      const card = link.closest(".nc") as HTMLElement;
+      expect(link.getAttribute("href")).not.toContain("github.com");
       expect(within(card).getByText("código privado")).toBeTruthy();
     }
   });
@@ -44,9 +45,9 @@ describe("NowSection", () => {
     const project = NOW_PROJECTS.find((x) => x.tv)!;
     expect(project.href).toBeUndefined();
     expect(screen.queryByRole("link", { name: new RegExp(project.title) })).toBeNull();
-    const card = screen.getByRole("button", { name: new RegExp(project.title) });
+    const card = screen.getByRole("button", { name: new RegExp(project.title) }).closest(".nc") as HTMLElement;
     expect(within(card).getByText("código privado")).toBeTruthy();
-    fireEvent.click(card);
+    fireEvent.click(screen.getByRole("button", { name: new RegExp(project.title) }));
     const dialog = screen.getByRole("dialog", { name: /TV de/ });
     expect(within(dialog).getByRole("img", { name: /Tela da TV/ })).toBeTruthy();
     expect(dialog.querySelector("a[href]")).toBeNull();
@@ -56,7 +57,7 @@ describe("NowSection", () => {
 
   it("draws the Quality Gate checks instead of a screenshot", () => {
     renderNow();
-    const card = screen.getByRole("link", { name: /Quality Gate/ });
+    const card = screen.getByRole("link", { name: /Quality Gate/ }).closest(".nc") as HTMLElement;
     expect(within(card).getByText("Tests & ratchet")).toBeTruthy();
     expect(card.querySelector("img")).toBeNull();
   });
@@ -86,6 +87,33 @@ describe("NowSection", () => {
 
     fireEvent.click(within(card).getByRole("button", { name: "Fechar" }));
     expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("cuts a long card text with a read-more button that toggles aria-expanded, without opening the TV", () => {
+    renderNow();
+    const project = NOW_PROJECTS.find((x) => x.tv)!;
+    const card = screen.getByRole("button", { name: new RegExp(project.title) }).closest(".nc") as HTMLElement;
+    const more = within(card).getByRole("button", { name: "ler mais" });
+    expect(more.getAttribute("aria-expanded")).toBe("false");
+    const text = within(card).getByText(project.pitch.pt);
+    expect(text.getAttribute("id")).toBe(more.getAttribute("aria-controls"));
+    expect(text.className).not.toContain("open");
+
+    fireEvent.click(more);
+    expect(screen.queryByRole("dialog", { name: /TV de/ })).toBeNull();
+    expect(within(card).getByRole("button", { name: "ler menos" }).getAttribute("aria-expanded")).toBe("true");
+    expect(text.className).toContain("open");
+
+    fireEvent.click(within(card).getByRole("button", { name: "ler menos" }));
+    expect(within(card).getByRole("button", { name: "ler mais" }).getAttribute("aria-expanded")).toBe("false");
+  });
+
+  it("shows the read-more button only for descriptions long enough to run past four lines", () => {
+    renderNow();
+    for (const p of NOW_PROJECTS) {
+      const card = screen.getByText(p.pitch.pt).closest(".nc") as HTMLElement;
+      expect(within(card).queryByRole("button", { name: "ler mais" }) !== null).toBe(p.pitch.pt.length > 220);
+    }
   });
 
   it("shows the portrait for the saved site color", () => {
