@@ -118,6 +118,12 @@ export interface AlsoItem {
 
 export const NOW_ALSO: AlsoItem[] = [
   {
+    name: 'Cockpit',
+    note: { pt: 'Painel pessoal que junta, num lugar só, os números e as ações dos meus sites e projetos: visitas, newsletter, redes e comandos. Roda só dentro da minha rede.', en: 'Personal panel that brings together, in one place, the numbers and actions of my sites and projects: visits, newsletter, social and commands. Runs only inside my own network.' },
+    color: '#eab308',
+    icon: './projects/cockpit/icon.png',
+  },
+  {
     name: 'Kali Layer',
     note: { pt: 'meu lab de bug bounty numa VM Kali, com helpers e menus próprios', en: 'my bug bounty lab on a Kali VM, with custom helpers and menus' },
     color: '#e05561',

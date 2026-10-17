@@ -6,6 +6,7 @@ import { HUE_ORDER, useTheme, type Hue } from "@/contexts/ThemeContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { EGG_EVENTS } from "@/lib/eggs";
 import { SudoHire } from "./SudoHire";
+import { terminalInfoHelp, terminalInfoOutput } from "./sudoTerminalInfo";
 
 interface CommandLog {
   id: string;
@@ -35,7 +36,7 @@ export const SudoTerminal = () => {
   const [divergenceEffect, setDivergenceEffect] = useState(false);
 
   const { setHue, toggleTheme, theme } = useTheme();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const buffer = useRef("");
   const dialogRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -113,6 +114,7 @@ export const SudoTerminal = () => {
           <div className="text-white/70 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-xs">
             <div><span className="text-[var(--accent)] font-semibold">whoami</span> — Perfil de Ricardo</div>
             <div><span className="text-[var(--accent)] font-semibold">skills</span> — Stack principal</div>
+            {terminalInfoHelp(lang)}
             <div><span className="text-[var(--accent)] font-semibold">theme &lt;cor&gt;</span> — Muda tom de cor</div>
             <div><span className="text-[var(--accent)] font-semibold">mode</span> — Alterna dark/light</div>
             <div><span className="text-[var(--accent)] font-semibold">contact</span> — Links e e-mail</div>
@@ -134,7 +136,7 @@ export const SudoTerminal = () => {
       case "skills":
         output = (
           <div className="text-white/80">
-            React · Next.js · TypeScript · Node.js · Tailwind CSS · Supabase · Python · Docker · Vite
+            React · Next.js · TypeScript · Node.js · Tailwind CSS · Supabase · Docker · Vite
           </div>
         );
         break;
@@ -186,6 +188,14 @@ export const SudoTerminal = () => {
         } else {
           output = <div className="text-red-400">{t.eggs.sudoDenied}</div>;
         }
+        break;
+
+      case "projetos":
+      case "sobre":
+      case "stack":
+      case "contato":
+      case "ajuda":
+        output = terminalInfoOutput(mainCmd, lang, t.now.aboutBody);
         break;
 
       case "tuturu":

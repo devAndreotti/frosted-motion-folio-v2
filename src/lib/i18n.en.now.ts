@@ -17,7 +17,7 @@ export const enNow: Strings['now'] = {
     { label: 'Into', value: 'applied AI, DX and games' },
   ],
   privateCode: 'private code',
-  alsoLabel: 'Also in the oven',
+  alsoLabel: 'Constantly evolving',
   privateTag: 'private',
   alsoMore: 'See more',
   alsoMoreNote: 'the other repositories on GitHub',

@@ -2,13 +2,16 @@ import { useRef } from 'react';
 import { ArrowUpRight, Check, X } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { contact, personalInfo } from '@/data/personal';
-import { featuredProject, curatedProjects } from '@/data/curatedProjects';
+import { caseBySlug } from '@/data/cases';
+import type { CuratedProject } from '@/data/curatedProjects';
+import { casePath } from '@/lib/projects/caseLink';
 import { useScrollLock } from '@/hooks/useScrollLock';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import CopyEmailButton from './CopyEmailButton';
 
-// The three cases worth opening first, live links straight from the project data.
-const QUICK = [featuredProject, ...curatedProjects].filter((p) => [26, 9, 2].includes(p.id) && p.liveUrl);
+// The three cases worth opening first, in this order. Each opens its case page (/projetos/<slug>/).
+const QUICK_SLUGS = ['git-wizard-commander', 'gold-portfolio-analyzer', 'cook-app'];
+const QUICK = QUICK_SLUGS.map((slug) => caseBySlug(slug)).filter((p): p is CuratedProject => Boolean(p));
 
 /** One-screen summary for recruiters: who, what, where to look first, how to reach out. Printable. */
 const RecruiterModal = ({ onClose }: { onClose: () => void }) => {
@@ -49,7 +52,7 @@ const RecruiterModal = ({ onClose }: { onClose: () => void }) => {
         <p className="k">{t.header.recruiterQuick}</p>
         <div className="quick">
           {QUICK.map((p) => (
-            <a key={p.id} href={p.liveUrl} target="_blank" rel="noopener noreferrer">
+            <a key={p.slug} href={casePath(p.slug)} target="_blank" rel="noopener noreferrer">
               {p.title}
               <ArrowUpRight className="ic s" />
             </a>
