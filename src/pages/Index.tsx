@@ -69,7 +69,7 @@ const Index = () => {
           <div id="blog" className="sec-anchor">
             <BlogTeaser />
           </div>
-          <LazySection id="skills" minHeight={920}>
+          <LazySection id="skills" minHeight={1113}>
             <Skills />
           </LazySection>
           <LazySection id="github-activity" minHeight={700}>
