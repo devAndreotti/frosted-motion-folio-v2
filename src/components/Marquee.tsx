@@ -21,10 +21,8 @@ export const TOOLS: StackItem[] = [
   { name: 'Vite', cat: 'tool', mono: 'V', tint: '#7e22ce' },
   { name: 'Supabase', cat: 'data', mono: 'Sb', tint: '#047857' },
   { name: 'PostgreSQL', cat: 'data', mono: 'Pg', tint: '#1e40af' },
-  { name: 'Python', cat: 'lang', mono: 'Py', tint: '#a16207' },
   { name: 'n8n', cat: 'automation', mono: 'n8', tint: '#b91c1c' },
   { name: 'Git', cat: 'tool', mono: 'Gt', tint: '#c2410c' },
-  { name: 'Power BI', cat: 'data', mono: 'BI', tint: '#854d0e' },
 ];
 
 const BASE_DURATION_S = 50;

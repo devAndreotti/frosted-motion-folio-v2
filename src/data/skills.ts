@@ -48,11 +48,14 @@ export const STACK_TIERS: StackTier[] = [
     title: { pt: 'Uso diário', en: 'Daily drivers' },
     desc: { pt: 'A base de quase todo projeto que eu começo.', en: 'The base of almost every project I start.' },
     tools: [
-      { name: 'React', mono: 'R', tint: '#0e7490', areas: ['web'], matches: ['React'] },
+      { name: 'React', mono: 'Re', tint: '#0e7490', areas: ['web'], matches: ['React'] },
       { name: 'TypeScript', mono: 'TS', tint: '#1d4ed8', areas: ['web'], matches: ['TypeScript'] },
       { name: 'JavaScript', mono: 'JS', tint: '#854d0e', areas: ['web'], matches: ['JavaScript', 'JavaScript Vanilla'] },
       { name: 'Tailwind CSS', mono: 'TW', tint: '#0f766e', areas: ['web'], matches: ['Tailwind CSS'] },
       { name: 'Git', mono: 'Gt', tint: '#c2410c', areas: ['tools'], repos: true, note: { pt: 'em todo repositório', en: 'in every repository' } },
+      { name: 'NestJS', mono: 'NS', tint: '#be123c', areas: ['web'], note: { pt: 'backend', en: 'backend' } },
+      { name: 'SQL', mono: 'SQ', tint: '#4d7c0f', areas: ['data'], note: { pt: 'dados', en: 'data' } },
+      { name: 'Vite', mono: 'Vi', tint: '#7e22ce', areas: ['tools'], matches: ['Vite'] },
     ],
   },
   {
@@ -61,12 +64,15 @@ export const STACK_TIERS: StackTier[] = [
     title: { pt: 'Confortável', en: 'Comfortable' },
     desc: { pt: 'Já levei pra produção.', en: 'Shipped to production.' },
     tools: [
-      { name: 'Node.js', mono: 'N', tint: '#15803d', areas: ['web'], note: { pt: 'backend', en: 'backend' } },
+      { name: 'Docker', mono: 'Dk', tint: '#3730a3', areas: ['tools'], note: { pt: 'infra', en: 'infra' } },
+      { name: 'React Native', mono: 'RN', tint: '#0369a1', areas: ['mobile'], matches: ['React Native'] },
+      { name: 'Godot', mono: 'Go', tint: '#475569', areas: ['tools'], note: { pt: 'jogos', en: 'games' } },
+      { name: 'Blender', mono: 'Bl', tint: '#a21caf', areas: ['tools'], note: { pt: '3D', en: '3D' } },
+      { name: 'QML', mono: 'QM', tint: '#57534e', areas: ['tools'], note: { pt: 'interfaces', en: 'interfaces' } },
+      { name: 'n8n', mono: 'n8', tint: '#b91c1c', areas: ['automation', 'ai'], matches: ['n8n'] },
+      { name: 'Node.js', mono: 'No', tint: '#15803d', areas: ['web'], note: { pt: 'backend', en: 'backend' } },
       { name: 'Supabase', mono: 'Sb', tint: '#047857', areas: ['web', 'data'], matches: ['Supabase'] },
       { name: 'PostgreSQL', mono: 'Pg', tint: '#1e40af', areas: ['data'], note: { pt: 'dados', en: 'data' } },
-      { name: 'Vite', mono: 'V', tint: '#7e22ce', areas: ['tools'], matches: ['Vite'] },
-      { name: 'n8n', mono: 'n8', tint: '#b91c1c', areas: ['automation', 'ai'], matches: ['n8n'] },
-      { name: 'Gemini API', mono: 'Gm', tint: '#4338ca', areas: ['ai'], matches: ['Gemini (Modelo de IA)'] },
     ],
   },
   {
@@ -75,14 +81,13 @@ export const STACK_TIERS: StackTier[] = [
     title: { pt: 'Aprendendo', en: 'Learning' },
     desc: { pt: 'Estudando e aplicando aos poucos.', en: 'Studying and applying bit by bit.' },
     tools: [
-      { name: 'Python', mono: 'Py', tint: '#a16207', areas: ['automation', 'data'], note: { pt: 'automação', en: 'automation' } },
-      { name: 'React Native', mono: 'RN', tint: '#0369a1', areas: ['mobile'], matches: ['React Native'] },
-      { name: 'Docker', mono: 'Dk', tint: '#1d4ed8', areas: ['tools'], note: { pt: 'infra', en: 'infra' } },
-      { name: 'Power BI', mono: 'BI', tint: '#854d0e', areas: ['data'], note: { pt: 'dados', en: 'data' } },
-      { name: 'Machine Learning', mono: 'ML', tint: '#6d28d9', areas: ['ai'], note: { pt: 'IA', en: 'AI' } },
+      { name: 'Machine learning', mono: 'ML', tint: '#6d28d9', areas: ['ai'], note: { pt: 'IA', en: 'AI' } },
+      { name: 'Rust', mono: 'Rs', tint: '#9a3412', areas: ['tools'], note: { pt: 'sistemas', en: 'systems' } },
+      { name: 'AWS', mono: 'AW', tint: '#a16207', areas: ['tools'], note: { pt: 'nuvem', en: 'cloud' } },
+      { name: 'Oracle', mono: 'Or', tint: '#831843', areas: ['data'], note: { pt: 'banco de dados', en: 'database' } },
     ],
   },
 ];
 
 /** Everything else worth naming, without a tier of its own. */
-export const ALSO_KNOWN = ['SQL', 'C#', 'Java', 'Expo', 'shadcn/ui', 'Recharts', 'React Query'];
+export const ALSO_KNOWN = ['C#', 'Java', 'Expo', 'shadcn/ui', 'Recharts', 'React Query'];

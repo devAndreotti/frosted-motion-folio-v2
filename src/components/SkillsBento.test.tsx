@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { projects } from "@/data/projects";
 import { countProjectsUsing, projectsUsing } from "@/lib/stackCounts";
+import { STACK_AREAS, STACK_TIERS } from "@/data/skills";
 import SkillsBento from "./SkillsBento";
 
 const renderBento = () =>
@@ -57,5 +58,18 @@ describe("SkillsBento", () => {
     fireEvent.click(dados);
     expect(dados.getAttribute("aria-pressed")).toBe("false");
     expect(tileOf("React").className).not.toContain("off");
+  });
+
+  it("area chips count the tools in each area, and Mobile is not empty", () => {
+    renderBento();
+    const tools = STACK_TIERS.flatMap((tier) => tier.tools);
+    for (const area of STACK_AREAS) {
+      const chip = screen.getByRole("button", { name: new RegExp(`^${area.label.pt}`) });
+      const expected = tools.filter((tool) => tool.areas.includes(area.id)).length;
+      expect(chip.querySelector(".np-n")!.textContent).toBe(String(expected));
+    }
+    const mobile = screen.getByRole("button", { name: /^Mobile/ });
+    expect(mobile.querySelector(".np-n")!.textContent).toBe("1");
+    expect(tileOf("React Native").className).not.toContain("off");
   });
 });
