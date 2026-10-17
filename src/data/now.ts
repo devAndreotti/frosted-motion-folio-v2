@@ -30,12 +30,12 @@ export const NOW_UPDATED = '2026-10-16';
 export const NOW_PROJECTS: NowProject[] = [
   {
     id: 'memory-apartment',
-    title: 'Project 17: Memory Apartment',
+    title: 'Memory Apartment · em desenvolvimento',
     status: { pt: 'Em desenvolvimento', en: 'In development' },
     meta: { pt: 'PC · 2027', en: 'PC · 2027' },
     pitch: {
-      pt: 'Terror psicológico em primeira pessoa: outubro de 2003, apartamento 17 e, toda noite às 03:17, alguma coisa muda. Arquitetura impossível, anomalias e um PC dos anos 2000 que funciona dentro do jogo.',
-      en: 'First-person psychological horror: October 2003, apartment 17, and every night at 03:17 something changes. Impossible architecture, anomalies and a working early-2000s PC inside the game.',
+      pt: 'Meu primeiro jogo, e um sonho que quero tornar realidade. Terror psicológico em primeira pessoa, com investigação. Outubro de 2003. Um programador decide sair da casa dos pais e se muda para o Edifício Primavera. O apartamento tem coisas que não fazem sentido: a planta não fecha, as portas levam a lugares que não existem e anomalias se repetem sem explicação. Para entender o que está acontecendo, você só tem um celular e um PC dos anos 2000. Cada ação muda o mundo ao redor, e você pode ver as mudanças pelas janelas, na TV e no próprio computador.',
+      en: 'My first game, and a dream I want to make come true. First-person psychological horror, with investigation. October 2003. A programmer decides to leave his parents\' house and moves into Edifício Primavera. The apartment has things that don\'t make sense: the floor plan doesn\'t close, the doors lead to places that don\'t exist, and anomalies repeat without explanation. To understand what is happening, all you have is a cell phone and an early-2000s PC. Every action changes the world around you, and you can see the changes through the windows, on the TV and on the computer itself.',
     },
     tags: ['Godot 4', 'GDScript', 'Blender'],
     tv: true,

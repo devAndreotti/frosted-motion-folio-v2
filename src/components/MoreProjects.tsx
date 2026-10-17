@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import type { CuratedProject } from '@/data/curatedProjects';
 import { CASE_STATE, casePath, isPlainClick } from '@/lib/projects/caseLink';
+import { projectAsset } from '@/lib/projects/asset';
 
 /** Cards shown before "see all". */
 export const INITIAL_CARDS = 8;
@@ -37,9 +38,9 @@ const MoreProjects = ({ projects, onOpen }: MoreProjectsProps) => {
           <li key={p.id}>
             <Link to={casePath(p.slug)} state={CASE_STATE} className="mp-card glass" onClick={(e: MouseEvent<HTMLAnchorElement>) => openHere(e, p)} aria-label={m.cardAria(p.title)}>
               <span className="mp-img" style={{ '--tint': p.tint } as CSSProperties}>
-                <img className="mp-bg" src={p.image} alt="" aria-hidden="true" loading="lazy" decoding="async" />
+                <img className="mp-bg" src={projectAsset(p.image)} alt="" aria-hidden="true" loading="lazy" decoding="async" />
                 <span className="mp-win">
-                  <img src={p.image} alt="" loading="lazy" decoding="async" />
+                  <img src={projectAsset(p.image)} alt="" loading="lazy" decoding="async" />
                 </span>
               </span>
               <span className="mp-b">
