@@ -5,6 +5,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useScrollLock } from '@/hooks/useScrollLock';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import ImageCarousel from './ImageCarousel';
+import { projectAsset } from '@/lib/projects/asset';
 
 export { resolveSwipeDelta } from './ImageCarousel';
 
@@ -19,7 +20,7 @@ interface CaseModalProps {
  */
 const CaseModal = ({ project, onClose }: CaseModalProps) => {
   const { lang, t } = useLanguage();
-  const images = project.images.length > 0 ? project.images : [project.image];
+  const images = (project.images.length > 0 ? project.images : [project.image]).map(projectAsset);
   const points = project.points[lang];
 
   const dialogRef = useRef<HTMLDivElement>(null);

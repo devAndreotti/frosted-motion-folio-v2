@@ -4,6 +4,7 @@ import { ArrowRight, ArrowUpRight, Check } from 'lucide-react';
 import { featuredProject as p } from '@/data/curatedProjects';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { CASE_STATE, casePath, isPlainClick } from '@/lib/projects/caseLink';
+import { projectAsset } from '@/lib/projects/asset';
 
 const BROWSER_TAGS = 6;
 
@@ -88,7 +89,7 @@ const FeaturedCase = ({ onOpen }: { onOpen: () => void }) => {
           <i />
           {host && <span className="bf-url">{host}</span>}
         </span>
-        <img src={p.image} alt="" loading="lazy" />
+        <img src={projectAsset(p.image)} alt="" loading="lazy" />
         <span className="bf-tags">
           {p.technologies.slice(0, BROWSER_TAGS).map((tech) => (
             <span key={tech} className="bf-tag">

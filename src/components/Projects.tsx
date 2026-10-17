@@ -12,6 +12,7 @@ import { track } from '@/lib/track';
 import FeaturedCase from './FeaturedCase';
 import MoreProjects from './MoreProjects';
 import SegmentedControl from './SegmentedControl';
+import { projectAsset } from '@/lib/projects/asset';
 
 // Only opened on click, so its code stays out of the first screen's bundle.
 const CaseModal = lazy(() => import('./CaseModal'));
@@ -110,7 +111,7 @@ const Projects = () => {
                 <span>{p.liveUrl ? new URL(p.liveUrl).host : 'github.com/devAndreotti'}</span>
               </span>
               <span className="thumb-shot">
-                <img src={p.image} alt="" loading="lazy" />
+                <img src={projectAsset(p.image)} alt="" loading="lazy" />
               </span>
             </span>
           </Link>

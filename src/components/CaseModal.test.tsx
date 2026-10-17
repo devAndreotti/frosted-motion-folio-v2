@@ -52,7 +52,8 @@ describe("CaseModal gallery navigation", () => {
       </LanguageProvider>
     );
 
-    const imageSrc = () => screen.getByAltText(/Screenshot \d de Fake Project/).getAttribute("src");
+    // the picture is addressed from the site base ("/a.png" in tests), so compare the file name
+    const imageSrc = () => screen.getByAltText(/Screenshot \d de Fake Project/).getAttribute("src")?.replace(/^\//, "");
     expect(imageSrc()).toBe("a.png");
 
     fireEvent.click(screen.getByRole("button", { name: "Próxima imagem" }));
@@ -71,7 +72,8 @@ describe("CaseModal gallery autoplay", () => {
         <CaseModal project={project} onClose={vi.fn()} />
       </LanguageProvider>
     );
-  const imageSrc = () => screen.getByAltText(/Screenshot \d de Fake Project/).getAttribute("src");
+  // the picture is addressed from the site base ("/a.png" in tests), so compare the file name
+    const imageSrc = () => screen.getByAltText(/Screenshot \d de Fake Project/).getAttribute("src")?.replace(/^\//, "");
   const tick = (ms: number) =>
     act(() => {
       vi.advanceTimersByTime(ms);
