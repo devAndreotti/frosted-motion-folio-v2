@@ -27,7 +27,7 @@ describe('uses page', () => {
       expect(screen.getByRole('heading', { level: 2, name })).toBeTruthy();
     }
     expect(screen.getByText('Cloudflare')).toBeTruthy();
-    expect(screen.getByText('Atualizado em 16 de outubro de 2026.')).toBeTruthy();
+    expect(screen.getByText('Atualizado em 17 de outubro de 2026.')).toBeTruthy();
     expect(document.querySelector('main')?.getAttribute('lang')).toBe('pt-BR');
   });
 
@@ -37,7 +37,7 @@ describe('uses page', () => {
     expect(document.title).toBe('Uses — Ricardo A. Gonçalves');
     expect(screen.getByRole('heading', { level: 1, name: 'What I use day to day.' })).toBeTruthy();
     expect(screen.getByRole('heading', { level: 2, name: 'Services' })).toBeTruthy();
-    expect(screen.getByText('Updated on October 16, 2026.')).toBeTruthy();
+    expect(screen.getByText('Updated on October 17, 2026.')).toBeTruthy();
     expect(document.querySelector('main')?.getAttribute('lang')).toBe('en');
   });
 });
