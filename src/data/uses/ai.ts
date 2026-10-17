@@ -6,6 +6,7 @@ export const AI: UsesCategory = {
   items: [
     {
       name: 'Claude Code',
+      main: true,
       why: {
         pt: 'Agente de programação no terminal, usado no dia a dia dos projetos.',
         en: 'A coding agent in the terminal, used day to day on my projects.',

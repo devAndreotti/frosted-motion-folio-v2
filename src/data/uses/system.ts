@@ -13,6 +13,7 @@ export const SYSTEM: UsesCategory = {
     },
     {
       name: 'EndeavourOS com Hyprland',
+      main: true,
       why: {
         pt: 'Linux baseado em Arch, com compositor Wayland e janelas em mosaico. A barra é própria, feita em QML.',
         en: 'Arch-based Linux with a Wayland compositor and tiled windows. The status bar is my own, written in QML.',

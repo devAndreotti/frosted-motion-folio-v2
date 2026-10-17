@@ -1,5 +1,5 @@
 import type { Localized } from '@/lib/i18n';
-import type { UsesCategory, UsesLang } from './types';
+import type { UsesCategory, UsesCategoryId, UsesLang } from './types';
 import { AI } from './ai';
 import { EDITOR } from './editor';
 import { HARDWARE } from './hardware';
@@ -12,8 +12,23 @@ import { TERMINAL } from './terminal';
 // Every reason is a plain description of what the item is used for, not an opinion invented for the page.
 
 export type { UsesCategory, UsesCategoryId, UsesItem, UsesLang } from './types';
+export { USES_STRINGS, type UsesStrings } from './strings';
 
 export const USES_CATEGORIES: UsesCategory[] = [HARDWARE, SYSTEM, EDITOR, TERMINAL, AI, SERVICES];
+
+/** The jump links under the lead. A link covers one or more categories; its anchor is the id of the group on the page. */
+export interface UsesIndexGroup {
+  anchor: string;
+  categoryIds: UsesCategoryId[];
+}
+
+export const USES_INDEX: UsesIndexGroup[] = [
+  { anchor: 'hardware', categoryIds: ['hardware'] },
+  { anchor: 'sistema', categoryIds: ['system'] },
+  { anchor: 'editor-terminal', categoryIds: ['editor', 'terminal'] },
+  { anchor: 'ia', categoryIds: ['ai'] },
+  { anchor: 'servicos', categoryIds: ['services'] },
+];
 
 /** The link to the page in the site footer and the blog menu. */
 export const USES_LINK: Localized<string> = { pt: 'O que eu uso', en: 'Uses' };
