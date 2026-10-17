@@ -6,22 +6,39 @@ import { startGame, type DodgeGame } from './dodgeGame';
 const palette: DodgePalette = { accent: '#f00', bug: '#0f0', coffee: '#ff0', line: '#00f', text: '#fff', font: 'mono' };
 
 const fakeContext = () => {
-  const methods = ['setTransform', 'clearRect', 'beginPath', 'moveTo', 'lineTo', 'stroke', 'setLineDash', 'fill', 'fillRect', 'fillText', 'ellipse', 'arc', 'roundRect'];
+  const methods = ['setTransform', 'clearRect', 'beginPath', 'moveTo', 'lineTo', 'stroke', 'fill', 'fillRect', 'fillText', 'ellipse', 'arc', 'roundRect', 'save', 'restore', 'translate', 'rotate', 'scale'];
   return Object.fromEntries(methods.map((name) => [name, vi.fn()])) as unknown as CanvasRenderingContext2D & Record<string, ReturnType<typeof vi.fn>>;
 };
 
 const game = (overrides: Partial<DodgeGame> = {}): DodgeGame => ({ ...startGame(), playerX: 100, bugs: [{ x: 50, y: 20 }, { x: 300, y: 80 }], ...overrides });
 
 describe('drawDodge', () => {
-  it('clears the frame, draws the lanes, two bugs and the player square', () => {
+  it('clears the frame, draws the grid, two bugs with their trails and the player square', () => {
     const ctx = fakeContext();
     drawDodge(ctx, game(), createEffects(true), palette, 2);
 
     expect(ctx.setTransform).toHaveBeenCalledWith(2, 0, 0, 2, 0, 0);
     expect(ctx.clearRect).toHaveBeenCalledWith(-12, -12, 664, 344);
-    expect(ctx.ellipse).toHaveBeenCalledTimes(2);
+    // each bug: a body plus two faint trail bodies; and a head
+    expect(ctx.ellipse).toHaveBeenCalledTimes(6);
     expect(ctx.arc).toHaveBeenCalledTimes(2);
     expect(ctx.roundRect).toHaveBeenLastCalledWith(86, 280, 28, 28, 7);
+  });
+
+  it('under reduced motion the bugs have no trail, and nothing is rotated or pulsed', () => {
+    const ctx = fakeContext();
+    drawDodge(ctx, game(), createEffects(false), palette, 1);
+    expect(ctx.ellipse).toHaveBeenCalledTimes(2);
+    const rotations = vi.mocked(ctx.rotate).mock.calls.map((call) => call[0] as number);
+    expect(rotations.every((angle) => angle === 0)).toBe(true);
+  });
+
+  it('draws the flame under the ship and a flash over the field after a hit', () => {
+    const ctx = fakeContext();
+    const hit = applyEvent(createEffects(true), { kind: 'hit', x: 300, y: 200 }, () => 0.5);
+    drawDodge(ctx, game(), hit, palette, 1);
+    expect(ctx.fillRect).toHaveBeenCalledWith(-12, -12, 664, 344);
+    expect(ctx.moveTo).toHaveBeenCalledWith(95, 306);
   });
 
   it('draws coffee cups as their own shape, in their own colour', () => {

@@ -26,6 +26,8 @@ const COFFEE_JITTER = 6;
 export const COFFEE_BONUS = 5;
 const SLOW_SECONDS = 3; // a coffee slows the bugs for this long
 export const SLOW_SCALE = 0.45;
+const SWAY_AMP = 9; // units: how far a bug drifts sideways from where it dropped
+const SWAY_SPEED = 2.2; // radians per second
 
 export type DodgeStatus = 'ready' | 'playing' | 'over';
 
@@ -33,6 +35,8 @@ export type DodgeStatus = 'ready' | 'playing' | 'over';
 export interface Bug {
   x: number;
   y: number;
+  /** Bugs only: the drop column and the phase of their sideways drift. Missing means no drift. */
+  sway?: { base: number; phase: number };
 }
 
 /** Things that happened during the last step, for effects; the rules themselves do not use them. */
@@ -105,13 +109,21 @@ export function startGame(): DodgeGame {
 
 const dropX = (size: number, rng: Rng) => size / 2 + clamp(rng(), 0, 0.999999) * (FIELD.width - size);
 
-/** Bugs drop at a random horizontal position across the whole field. */
+/** Bugs drop at a random horizontal position across the whole field, each with its own drift. */
 export function spawnBug(rng: Rng): Bug {
-  return { x: dropX(BUG_SIZE, rng), y: -BUG_SIZE / 2 };
+  const x = dropX(BUG_SIZE, rng);
+  return { x, y: -BUG_SIZE / 2, sway: { base: x, phase: rng() * Math.PI * 2 } };
 }
 
 /** A bug dropping at a fixed horizontal position, used by pattern bursts. */
-export const bugAt = (x: number): Bug => ({ x, y: -BUG_SIZE / 2 });
+export const bugAt = (x: number): Bug => ({ x, y: -BUG_SIZE / 2, sway: { base: x, phase: x * 0.05 } });
+
+/** Moves a swaying bug sideways; with reduced motion it stays in its drop column. */
+function swayed(bug: Bug, elapsed: number, motion: boolean): Bug {
+  if (!bug.sway) return bug;
+  const offset = motion ? Math.sin(elapsed * SWAY_SPEED + bug.sway.phase) * SWAY_AMP : 0;
+  return { ...bug, x: clamp(bug.sway.base + offset, BUG_SIZE / 2, FIELD.width - BUG_SIZE / 2) };
+}
 
 /** A coffee cup drops at a random horizontal position. */
 export function spawnCoffee(rng: Rng): Bug {
@@ -186,7 +198,7 @@ function scheduleDrops(game: DodgeGame, elapsed: number, rng: Rng) {
  * Advances a running game by `dt` seconds. Games that are not playing are returned unchanged,
  * so a finished run stays frozen on screen until the caller starts a new one.
  */
-export function stepGame(game: DodgeGame, dt: number, input: DodgeInput, rng: Rng, scale = 1): DodgeGame {
+export function stepGame(game: DodgeGame, dt: number, input: DodgeInput, rng: Rng, scale = 1, motion = true): DodgeGame {
   if (game.status !== 'playing') return game;
 
   const step = clamp(dt, 0, MAX_STEP);
@@ -196,7 +208,9 @@ export function stepGame(game: DodgeGame, dt: number, input: DodgeInput, rng: Rn
   const slow = elapsed < game.slowUntil ? SLOW_SCALE : 1;
   const events: DodgeEvent[] = [];
 
-  let bugs = game.bugs.map((bug) => ({ ...bug, y: bug.y + fall * slow })).filter((bug) => bug.y - BUG_SIZE / 2 <= FIELD.height);
+  let bugs = game.bugs
+    .map((bug) => swayed({ ...bug, y: bug.y + fall * slow }, elapsed, motion))
+    .filter((bug) => bug.y - BUG_SIZE / 2 <= FIELD.height);
   let coffees = game.coffees.map((cup) => ({ ...cup, y: cup.y + fall })).filter((cup) => cup.y - COFFEE_SIZE / 2 <= FIELD.height);
 
   const scheduled = scheduleDrops(game, elapsed, rng);

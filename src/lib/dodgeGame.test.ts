@@ -58,10 +58,21 @@ describe('dodgeGame: states', () => {
 
 describe('dodgeGame: spawning and difficulty', () => {
   it('spawnBug drops from above the field, anywhere across its width', () => {
-    expect(spawnBug(fixedRng(0))).toEqual({ x: BUG_SIZE / 2, y: -BUG_SIZE / 2 });
+    expect(spawnBug(fixedRng(0))).toMatchObject({ x: BUG_SIZE / 2, y: -BUG_SIZE / 2 });
     const right = spawnBug(fixedRng(1));
     expect(right.x).toBeGreaterThan(FIELD.width - BUG_SIZE);
     expect(right.x).toBeLessThan(FIELD.width);
+  });
+
+  it('bugs drift sideways around their drop column, and stay put under reduced motion', () => {
+    const bug = spawnBug(fixedRng(0.5));
+    const game = withBugs({ ...startGame(), spawnIn: 5 }, [bug]);
+    const moved = [0.5, 1, 2, 3].map((t) => stepGame({ ...game, elapsed: t }, 0.05, NO_INPUT, FAR_RNG).bugs[0].x);
+    expect(new Set(moved.map((x) => Math.round(x))).size).toBeGreaterThan(1);
+    moved.forEach((x) => expect(Math.abs(x - bug.sway!.base)).toBeLessThanOrEqual(10));
+
+    const still = stepGame({ ...game, elapsed: 2 }, 0.05, NO_INPUT, FAR_RNG, 0.5, false);
+    expect(still.bugs[0].x).toBe(bug.sway!.base);
   });
 
   it('fall speed starts slow, ramps with time and is capped', () => {

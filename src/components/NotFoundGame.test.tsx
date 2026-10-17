@@ -30,6 +30,11 @@ const ctx = {
   roundRect: vi.fn(),
   fillRect: vi.fn(),
   fillText: vi.fn(),
+  save: vi.fn(),
+  restore: vi.fn(),
+  translate: vi.fn(),
+  rotate: vi.fn(),
+  scale: vi.fn(),
 };
 const lastPlayerX = () => {
   const call = ctx.roundRect.mock.calls.at(-1);
@@ -174,6 +179,25 @@ describe('NotFoundGame', () => {
     fireEvent.keyUp(field(), { key: 'D' });
     fireEvent.keyDown(field(), { key: 'x' });
     expect(screen.queryByRole('status')).toBeNull();
+  });
+
+  it('keeps the square moving with the arrow keys under reduced motion, after Começar', () => {
+    setReducedMotion(true);
+    vi.mocked(Math.random).mockReturnValue(0.99);
+    renderGame();
+    fireEvent.click(screen.getByRole('button', { name: 'Começar' }));
+    runFrames(2);
+    const before = lastPlayerX();
+    fireEvent.keyDown(field(), { key: 'ArrowLeft' });
+    runFrames(10);
+    fireEvent.keyUp(field(), { key: 'ArrowLeft' });
+    expect(lastPlayerX()).toBeLessThan(before);
+    expect(screen.queryByRole('status')).toBeNull();
+  });
+
+  it('shows the wave number on the header', () => {
+    renderGame();
+    expect(screen.getByText('onda 1')).toBeTruthy();
   });
 
   it('follows a drag across the field, in logical units', () => {

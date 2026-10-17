@@ -185,7 +185,7 @@ export const pt: Strings = {
       aria: 'Mini jogo: desvie dos bugs e pegue o café', title: 'desvie dos bugs', hint: 'Arraste o quadrado ou use ← → (A D). Café vale +5 e deixa os bugs lentos',
       start: 'Começar', pressToStart: 'Aperte para começar', over: 'Você bateu num bug', record: 'novo recorde!',
       restart: 'Jogar de novo', restartHint: 'Espaço, Enter ou toque para reiniciar', score: (points) => `${points} pontos`,
-      best: (points) => `recorde ${points}`, wave: (n) => `Onda ${n}!`, lives: (n) => (n === 1 ? '1 vida' : `${n} vidas`),
+      best: (points) => `recorde ${points}`, wave: (n) => `Onda ${n}!`, waveCount: (n) => `onda ${n}`, lives: (n) => (n === 1 ? '1 vida' : `${n} vidas`),
     },
   },
   blog: ptBlog,

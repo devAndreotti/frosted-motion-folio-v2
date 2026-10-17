@@ -178,7 +178,7 @@ export interface Strings {
       aria: string; title: string; hint: string;
       start: string; pressToStart: string; over: string; record: string;
       restart: string; restartHint: string; score: (points: number) => string;
-      best: (points: number) => string; wave: (n: number) => string; lives: (n: number) => string;
+      best: (points: number) => string; wave: (n: number) => string; waveCount: (n: number) => string; lives: (n: number) => string;
     };
   };
   blog: BlogStrings;
