@@ -228,6 +228,7 @@ const NowSection = () => {
           <img className="about-ph" src={`./profile/${hue}.webp`} alt="" loading="lazy" />
           <p className="k">{t.now.aboutLabel}</p>
           <p className="about-p">{t.now.aboutBody}</p>
+          <p className="about-int">{t.now.interests}</p>
           <dl className="about-f">
             {t.now.facts.map((fact) => (
               <div key={fact.label}>
