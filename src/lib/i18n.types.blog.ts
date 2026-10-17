@@ -58,4 +58,7 @@ export interface BlogStrings {
   copyHeading: string;
   headingCopied: string;
   loadMore: string;
+  mostReadTitle: string;
+  mostReadSub: string;
+  mostReadViews: (count: number) => string;
 }

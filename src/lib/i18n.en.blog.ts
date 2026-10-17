@@ -59,4 +59,7 @@ export const enBlog: Strings['blog'] = {
   copyHeading: 'Copy link to section',
   headingCopied: 'Link copied',
   loadMore: 'Load more posts',
+  mostReadTitle: 'Most read',
+  mostReadSub: 'The posts people read the most.',
+  mostReadViews: (count) => (count === 1 ? '1 read' : `${count} reads`),
 };
