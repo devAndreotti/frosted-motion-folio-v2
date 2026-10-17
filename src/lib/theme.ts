@@ -19,7 +19,10 @@ export interface ModeTokens {
   glow2: string;
   glow3: string;
   accent: string;
+  /** Text color on a solid accent fill (buttons, active pills). */
   accentText: string;
+  /** The accent as text or as a glyph on the page (links, numbers, active marks). Same hue, tuned for 4.5:1 on every stop and glass layer. */
+  accentInk: string;
   glassSurface: string;
   glassBorder: string;
   glassStrongSurface: string;
@@ -62,14 +65,14 @@ const HUE_ANGLES: Record<Exclude<Hue, 'black'>, { light: number[]; dark: number[
 // Curated per-hue accent + its contrasting text color (not derivable from
 // the gradient formula — needs to stay legible on its own as button/number
 // color regardless of the background wash).
-const ACCENTS: Record<Hue, { light: { accent: string; text: string }; dark: { accent: string; text: string } }> = {
-  black: { dark: { accent: '#e4e4e7', text: '#0a0a0a' }, light: { accent: '#18181b', text: '#fafafa' } },
-  blue: { dark: { accent: '#3b82f6', text: '#ffffff' }, light: { accent: '#2563eb', text: '#ffffff' } },
-  purple: { dark: { accent: '#a855f7', text: '#ffffff' }, light: { accent: '#9333ea', text: '#ffffff' } },
-  orange: { dark: { accent: '#f97316', text: '#1a0f00' }, light: { accent: '#ea580c', text: '#fff7ed' } },
-  red: { dark: { accent: '#ef4444', text: '#ffffff' }, light: { accent: '#dc2626', text: '#ffffff' } },
-  green: { dark: { accent: '#22c55e', text: '#052e16' }, light: { accent: '#16a34a', text: '#f0fdf4' } },
-  yellow: { dark: { accent: '#eab308', text: '#1a1400' }, light: { accent: '#ca8a04', text: '#1a1400' } },
+const ACCENTS: Record<Hue, { light: { accent: string; text: string; ink: string }; dark: { accent: string; text: string; ink: string } }> = {
+  black: { dark: { accent: '#e4e4e7', text: '#0a0a0a', ink: '#e4e4e7' }, light: { accent: '#18181b', text: '#fafafa', ink: '#18181b' } },
+  blue: { dark: { accent: '#3b82f6', text: '#0a0a0a', ink: '#c8dcfc' }, light: { accent: '#2563eb', text: '#ffffff', ink: '#1554dd' } },
+  purple: { dark: { accent: '#a855f7', text: '#0a0a0a', ink: '#cd9cfa' }, light: { accent: '#9333ea', text: '#ffffff', ink: '#7b17d8' } },
+  orange: { dark: { accent: '#f97316', text: '#1a0f00', ink: '#fdc9a4' }, light: { accent: '#ea580c', text: '#1a0f00', ink: '#a64009' } },
+  red: { dark: { accent: '#ef4444', text: '#0a0a0a', ink: '#f8a9a9' }, light: { accent: '#dc2626', text: '#ffffff', ink: '#b01d1d' } },
+  green: { dark: { accent: '#22c55e', text: '#052e16', ink: '#f1fdf5' }, light: { accent: '#16a34a', text: '#0a0a0a', ink: '#107434' } },
+  yellow: { dark: { accent: '#eab308', text: '#1a1400', ink: '#fceab3' }, light: { accent: '#ca8a04', text: '#1a1400', ink: '#865d03' } },
 };
 
 const SWATCHES: Record<Hue, string> = {
@@ -119,7 +122,7 @@ function glowColor(stop: string, alpha: number): string {
 function buildModeTokens(hue: Hue, mode: Mode): ModeTokens {
   const stops = buildStops(hue, mode);
   const [, , sky, electric, cyan] = stops;
-  const { accent, text } = ACCENTS[hue][mode];
+  const { accent, text, ink } = ACCENTS[hue][mode];
   const hueAngle = hue === 'black' ? 0 : HUE_ANGLES[hue][mode][0];
   const sat = hue === 'black' ? 0 : 35;
 
@@ -132,6 +135,7 @@ function buildModeTokens(hue: Hue, mode: Mode): ModeTokens {
     glow3: glowColor(sky, mode === 'light' ? 0.28 : 0.18),
     accent,
     accentText: text,
+    accentInk: ink,
     // Glass stays in the white family (matches the reference screenshot and
     // the project's original recipe) with just enough hue tint to feel
     // color-coordinated with the background wash, never opaque.

@@ -49,6 +49,7 @@ function backdrops(hue: Hue, mode: Mode): { name: string; color: Rgba }[] {
 function checksFor(hue: Hue, mode: Mode): Check[] {
   const theme = buildHueTheme(hue)[mode];
   const accent = parseColor(theme.accent);
+  const accentInk = parseColor(theme.accentInk);
   const accentText = parseColor(theme.accentText);
   const border = parseColor(cssToken(mode, '--border-1'));
   const out: Check[] = [];
@@ -57,7 +58,7 @@ function checksFor(hue: Hue, mode: Mode): Check[] {
       const fg = over(parseColor(cssToken(mode, token)), bg.color);
       out.push({ kind: 'texto', pair: `${token} / ${bg.name}`, ratio: contrastRatio(fg, bg.color), min: TEXT });
     }
-    out.push({ kind: 'accent', pair: `accent (texto) / ${bg.name}`, ratio: contrastRatio(accent, bg.color), min: TEXT });
+    out.push({ kind: 'accent', pair: `accentInk (texto) / ${bg.name}`, ratio: contrastRatio(accentInk, bg.color), min: TEXT });
     const edge = over(border, bg.color);
     out.push({ kind: 'borda', pair: `borda de controle (--border-1) / ${bg.name}`, ratio: contrastRatio(edge, bg.color), min: CONTROL });
   }
@@ -65,24 +66,18 @@ function checksFor(hue: Hue, mode: Mode): Check[] {
   return out;
 }
 
-// Dívida conhecida (medida em 2026-10-16): pior razão atual de cada tom, modo e tipo de par.
-// Os pares abaixo do mínimo são uma correção visual (paleta, --border-1, --fg-4, accent como texto),
-// fora do escopo do PR de auditoria; o teste só impede que piorem. Cada linha sobe quando a dívida for paga.
+// Dívida conhecida (medida em 2026-10-17): só a borda de controle no tema escuro segue abaixo de 3:1
+// (1.30 a 1.42:1). O pedido de contraste nesta rodada cobriu o tema claro; subir a borda escura deixa o
+// contorno de cada card como um traço branco forte sobre o vidro escuro, então é decisão visual do dono.
+// Cada linha sobe quando a borda escura for corrigida.
 const DEBT: Record<string, number> = {
-  'black light borda': 1.23,
-  'blue light texto': 4.36, 'blue light accent': 3.81, 'blue light borda': 1.22,
-  'purple light texto': 4.18, 'purple light accent': 3.53, 'purple light borda': 1.22,
-  'orange light texto': 4.36, 'orange light accent': 2.62, 'orange light borda': 1.22, 'orange light botao': 3.35,
-  'red light texto': 4.2, 'red light accent': 3.22, 'red light borda': 1.22,
-  'green light texto': 4.46, 'green light accent': 2.58, 'green light borda': 1.22, 'green light botao': 3.15,
-  'yellow light texto': 4.46, 'yellow light accent': 2.3, 'yellow light borda': 1.22,
-  'black dark texto': 3.87, 'black dark borda': 1.4,
-  'blue dark texto': 2.77, 'blue dark accent': 1.74, 'blue dark borda': 1.38, 'blue dark botao': 3.68,
-  'purple dark texto': 3.61, 'purple dark accent': 2.55, 'purple dark borda': 1.42, 'purple dark botao': 3.96,
-  'orange dark texto': 2.91, 'orange dark accent': 2.48, 'orange dark borda': 1.4,
-  'red dark texto': 3.25, 'red dark accent': 2.32, 'red dark borda': 1.38, 'red dark botao': 3.76,
-  'green dark texto': 2.32, 'green dark accent': 2.12, 'green dark borda': 1.3,
-  'yellow dark texto': 2.54, 'yellow dark accent': 2.86, 'yellow dark borda': 1.34,
+  'black dark borda': 1.4,
+  'blue dark borda': 1.38,
+  'purple dark borda': 1.42,
+  'orange dark borda': 1.4,
+  'red dark borda': 1.38,
+  'green dark borda': 1.3,
+  'yellow dark borda': 1.34,
 };
 
 describe('contraste dos tokens (7 tons x 2 modos)', () => {

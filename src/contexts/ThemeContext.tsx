@@ -31,6 +31,7 @@ const CSS_VAR_BY_TOKEN = {
   solid: '--solid',
   accent: '--accent',
   accentText: '--accent-text',
+  accentInk: '--accent-ink',
   glassSurface: '--surface-1',
   glassBorder: '--border-1',
   glassStrongSurface: '--surface-2',
