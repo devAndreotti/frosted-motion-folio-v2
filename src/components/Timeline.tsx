@@ -1,6 +1,4 @@
 import { useLanguage } from '@/contexts/LanguageContext';
-import { CASE_COUNT } from '@/data/curatedProjects';
-import { projects } from '@/data/projects';
 import { useHorizontalDragScroll } from '@/hooks/useHorizontalDragScroll';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { edgeFadeProps, useScrollEdges } from '@/hooks/useScrollEdges';
@@ -12,6 +10,11 @@ export function rulerSpans(years: string[], thisYear: number): number[] {
     const next = Number.isNaN(nums[i + 1]) ? thisYear : nums[i + 1];
     return Math.max(1, next - year);
   });
+}
+
+/** Ruler label: the first year of a chapter that spans several ("2024–2025" reads "2024"). */
+export function rulerLabel(year: string): string {
+  return year.match(/^\d{4}/)?.[0] ?? year;
 }
 
 /**
@@ -85,7 +88,7 @@ const Timeline = () => {
                 </span>
               ))}
             </span>
-            <span className="tl-facts">{t.footer.projectsHandle(CASE_COUNT, projects.length - CASE_COUNT)}</span>
+            <span className="tl-facts">{t.timeline.nowFacts}</span>
           </div>
         </article>
       </div>
@@ -99,7 +102,7 @@ const Timeline = () => {
           >
             <i />
             <span>
-              {stops[i].year}
+              {rulerLabel(stops[i].year)}
               {i === spans.length - 1 && <b>{now.year}</b>}
             </span>
           </div>
