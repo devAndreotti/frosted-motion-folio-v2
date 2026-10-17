@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { ArrowRight, Search } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import BlogShell from '@/components/blog/BlogShell';
+import MostRead from '@/components/blog/MostRead';
 import NewsletterForm from '@/components/blog/NewsletterForm';
 import { localize, posts as originals } from '@/lib/blog/catalog';
 import { PAGE_SIZE, collectTags, filterByTag, formatDay, groupByYear } from '@/lib/blog/list';
@@ -85,6 +86,7 @@ const Blog = () => {
         {posts.length === 0 && <p className="blog-empty">{b.empty}</p>}
         {posts.length > 0 && all.length === 0 && <p className="blog-empty">{b.emptyTag}</p>}
         {!tag && posts[0] && <Featured post={posts[0]} />}
+        {!tag && <MostRead />}
 
         {groupByYear(shown).map((group) => (
           <section key={group.year} className="blog-year" aria-labelledby={`y-${group.year}`}>

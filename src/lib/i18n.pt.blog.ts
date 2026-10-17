@@ -59,4 +59,7 @@ export const ptBlog: Strings['blog'] = {
   copyHeading: 'Copiar link da seção',
   headingCopied: 'Link copiado',
   loadMore: 'Carregar mais posts',
+  mostReadTitle: 'Mais lidos',
+  mostReadSub: 'Os posts que mais gente leu.',
+  mostReadViews: (count) => (count === 1 ? '1 leitura' : `${count} leituras`),
 };

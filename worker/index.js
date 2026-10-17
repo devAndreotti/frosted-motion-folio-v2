@@ -3,6 +3,7 @@
 //   - http:// and www. -> 301 to https://devandreotti.com (same path and query)
 //   - /api/gh/*        -> cached GitHub lookups for the browser (see github.js)
 //   - /api/likes/*     -> likes on blog posts, one per visitor (see likes.js)
+//   - /api/blog/*      -> reads of blog posts and the "Mais lidos" list, no visitor data (see views.js)
 //   - /api/newsletter/* -> newsletter sign-up, confirmation and unsubscribe (see newsletter.js)
 //   - /api/admin/*    -> the Tower panel's newsletter actions, behind a bearer token (see admin.js); 404 unless TOWER_ADMIN_TOKEN is set
 //   - /e/<event>       -> 204: the click beacons from src/lib/track.ts. Umami
@@ -16,6 +17,7 @@
 
 import { handleGithubApi } from './github.js';
 import { handleLikes, publishedSlugs } from './likes.js';
+import { handleBlog } from './views.js';
 import { handleAdmin } from './admin.js';
 import { handleNewsletter } from './newsletter.js';
 import { PROJECT_PAGE, publishedProjectSlugs } from './projects.js';
@@ -82,6 +84,7 @@ async function route(request, env, ctx) {
     return Response.redirect(url.toString(), 301);
   }
   if (url.pathname.startsWith('/api/likes/')) return handleLikes(request, env);
+  if (url.pathname.startsWith('/api/blog/')) return handleBlog(request, env);
   if (url.pathname.startsWith('/api/newsletter/')) return handleNewsletter(request, env);
   if (url.pathname.startsWith('/api/admin/')) return handleAdmin(request, env);
   if (url.pathname.startsWith('/api/')) return handleGithubApi(request, env, ctx);

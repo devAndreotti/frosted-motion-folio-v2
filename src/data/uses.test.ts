@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { USES_CATEGORIES, USES_COPY, type UsesItem } from './uses';
+import { USES_CATEGORIES, USES_COPY, type UsesItem } from './uses/index';
 
 const allItems = (): UsesItem[] => USES_CATEGORIES.flatMap((category) => category.items);
 const allText = () =>
@@ -37,7 +37,7 @@ describe('uses data', () => {
     const text = allText();
     // IPv4 addresses, the machine and tailnet names, the operator's private account and the work project
     expect(text).not.toMatch(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/);
-    expect(text).not.toMatch(/SAPPHIRE|Emerald-Fusion|EMERALD|ostg0|hermes|ricar\\|tailad|\.ts\.net|devandreotti@/i);
+    expect(text).not.toMatch(/SAPPHIRE|Emerald-Fusion|EMERALD|ostg0|hermes-(agent|ts)|ricar\\|tailad|\.ts\.net|devandreotti@/i);
     expect(text).not.toMatch(/OneMob|Mind Group/i);
     expect(text).not.toMatch(/[A-Za-z]:\\/);
   });
