@@ -31,7 +31,7 @@ export const en: Strings = {
     lead2: 'products',
     badge: 'Full Stack & AI',
     location: 'Sorocaba, Brazil',
-    paragraph: 'React, Node.js, applied AI, and automation. Every project blends design, efficiency, and a real problem worth solving.',
+    paragraph: 'React, Node.js, applied AI and automation. Each project brings design, efficiency and a real problem to solve.',
     availability: 'Available for new projects',
     ctaProjects: 'See projects',
     ctaRecruiter: 'Recruiter mode',
