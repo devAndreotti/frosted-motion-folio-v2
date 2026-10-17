@@ -9,6 +9,7 @@ import NewsletterForm from '@/components/blog/NewsletterForm';
 import { findPost, hasTranslation, loadPostBody, localize, posts as allPosts } from '@/lib/blog/catalog';
 import { formatDay, neighbours } from '@/lib/blog/list';
 import { useReadingMode } from '@/hooks/useReadingMode';
+import { recordView } from '@/lib/blog/views';
 import type { TocEntry } from '@/lib/blog/markdown';
 import { addHeadingLinks } from '@/lib/blog/headingLinks';
 import { relatedPosts } from '@/lib/blog/related';
@@ -41,6 +42,11 @@ const BlogPost = () => {
       (text) => (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject(new Error('no clipboard')))
     );
   }, [html, b.copyHeading, b.headingCopied]);
+
+  // one read per post per tab (lib/blog/views.ts); the Worker only counts posts it published
+  useEffect(() => {
+    if (post) recordView(post.slug);
+  }, [post]);
 
   useEffect(() => {
     if (!post) return;

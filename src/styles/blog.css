@@ -181,3 +181,10 @@
 
 /* "Carregar mais posts" under the archive */
 .blog-more { display: flex; justify-content: center; margin: 28px 0; }
+
+/* "Mais lidos" (MostRead): shown only once the blog has enough reads; rows reuse .blog-row */
+.blog-most { margin-top: 48px; }
+.blog-most h2 { margin: 0; padding-bottom: 10px; border-bottom: 1px solid var(--line); color: var(--fg-3); font: 500 14px/1 var(--font-mono); }
+.blog-most-sub { margin: 12px 0 0; color: var(--fg-2); font: 400 15px/1.5 var(--font-sans); }
+.blog-most ol { list-style: none; margin: 8px 0 0; padding: 0; }
+.blog-most-n { flex: none; margin-left: auto; color: var(--fg-3); font: 500 13px/1 var(--font-mono); }
