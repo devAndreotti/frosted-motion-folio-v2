@@ -3,16 +3,24 @@ import { useEffect } from "react";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { contact } from "@/data/personal";
+import { USES_LINK } from "@/data/uses";
 import NotFoundGame from "@/components/NotFoundGame";
+import NovidadesBadge from "@/components/NovidadesBadge";
 
 // The app's root on either deploy ("/" on devandreotti.com, "/frosted-motion-folio-v2/" on GitHub Pages).
 const HOME = import.meta.env.BASE_URL;
-const SECTIONS = ['projects', 'now', 'contact'] as const;
+/** The suggestions, in order: the section key (text lookup) and the path under the app root. */
+const SECTIONS = [
+  { id: 'projects', path: '#projects' },
+  { id: 'blog', path: 'blog/' },
+  { id: 'uses', path: 'uses/' },
+  { id: 'novidades', path: 'novidades/' },
+] as const;
 
 /** Unknown route: shows what was asked for and points back into the site. */
 const NotFound = () => {
   const { pathname } = useLocation();
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
   const n = t.notFound;
 
   useEffect(() => {
@@ -68,8 +76,8 @@ const NotFound = () => {
           <nav className="nf-sug" aria-label={n.suggest}>
             <span className="nf-big" aria-hidden="true">404</span>
             <p className="k">{n.suggest}</p>
-            {SECTIONS.map((id, i) => (
-              <a key={id} className="nf-s glass" href={`${HOME}#${id}`}>
+            {SECTIONS.map(({ id, path }, i) => (
+              <a key={id} className="nf-s glass" href={`${HOME}${path}`}>
                 <span className="nf-n">0{i + 1}</span>
                 <span>
                   <span className="nf-st">{n.sections[id].title}</span>
@@ -91,6 +99,13 @@ const NotFound = () => {
         <span>
           {n.broken} <a href={`mailto:${contact.email}`}>{contact.email}</a>
         </span>
+        <nav className="nf-links">
+          <a href={HOME}>{t.nav.home}</a>
+          <a href={`${HOME}blog/`}>{t.nav.blog}</a>
+          <a href={`${HOME}uses/`}>{USES_LINK[lang]}</a>
+          <a href={`${HOME}novidades/`}>{t.novidades.pageTitle}</a>
+        </nav>
+        <NovidadesBadge />
       </footer>
     </div>
   );

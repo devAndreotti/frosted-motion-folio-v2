@@ -172,7 +172,7 @@ export interface Strings {
     backHome: string;
     seeProjects: string;
     suggest: string;
-    sections: Record<'projects' | 'now' | 'contact', { title: string; note: string }>;
+    sections: Record<'projects' | 'blog' | 'uses' | 'novidades', { title: string; note: string }>;
     broken: string;
     game: {
       aria: string; title: string; hint: string;

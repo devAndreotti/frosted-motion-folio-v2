@@ -424,7 +424,8 @@ button.also-i { cursor: pointer; }
 .nf-s:focus-visible .nf-n, .nf-s:focus-visible > .ic { color: var(--accent-ink); }
 @media (hover: hover) { .nf-s:hover .nf-n, .nf-s:hover > .ic { color: var(--accent-ink); } }
 .nf-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding: 20px max(32px, calc((100% - 1240px) / 2 + 32px)); border-top: 1px solid var(--line); font: 500 12px/1.5 var(--font-mono); color: var(--fg-3); }
-.nf-foot a { color: var(--fg-1); }
+.nf-foot a { color: var(--fg-1); border-radius: 4px; }
+.nf-foot a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .nf-game { padding: 16px 18px 18px; border-radius: 20px; }
 .nf-game-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; }
 .nf-game-head .k { margin: 0; }
