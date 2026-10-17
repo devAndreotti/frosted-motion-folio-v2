@@ -3,8 +3,8 @@ import type { Localized } from '@/lib/i18n';
 // Tipos da página /uses/. Os dados ficam em um arquivo por categoria, reunidos em index.ts.
 
 export type UsesCategoryId = 'hardware' | 'system' | 'editor' | 'terminal' | 'ai' | 'services' | 'stack';
-/** How well I know a stack item: the tag on its card. daily = uso diário, expert = alta habilidade, learning = aprendendo. */
-export type UsesLevel = 'daily' | 'expert' | 'learning';
+/** How well I know a stack item: the tag on its card. daily = uso diário, comfortable = confortável, learning = aprendendo. */
+export type UsesLevel = 'daily' | 'comfortable' | 'learning';
 export type UsesLang = 'pt' | 'en';
 
 export interface UsesItem {

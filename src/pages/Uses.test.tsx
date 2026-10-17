@@ -56,7 +56,7 @@ describe('uses page', () => {
     const stack = document.getElementById('stack');
     expect(stack).toBeTruthy();
     const tags = Array.from(stack?.querySelectorAll('.us-level') ?? []).map((tag) => tag.textContent);
-    expect(tags).toEqual([...Array(3).fill('uso diário'), ...Array(3).fill('alta habilidade'), ...Array(4).fill('aprendendo')]);
+    expect(tags).toEqual([...Array(8).fill('uso diário'), ...Array(9).fill('confortável'), ...Array(4).fill('aprendendo')]);
     expect(within(stack as HTMLElement).getByText('Rust')).toBeTruthy();
   });
 
@@ -67,7 +67,7 @@ describe('uses page', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'What I use day to day.' })).toBeTruthy();
     expect(screen.getByRole('heading', { level: 2, name: 'Services' })).toBeTruthy();
     const tags = Array.from(document.querySelectorAll('#stack .us-level')).map((tag) => tag.textContent);
-    expect(tags).toEqual([...Array(3).fill('daily'), ...Array(3).fill('expert'), ...Array(4).fill('learning')]);
+    expect(tags).toEqual([...Array(8).fill('daily'), ...Array(9).fill('comfortable'), ...Array(4).fill('learning')]);
     expect(screen.getByText('Updated on October 17, 2026.')).toBeTruthy();
     expect(document.querySelector('main')?.getAttribute('lang')).toBe('en');
   });

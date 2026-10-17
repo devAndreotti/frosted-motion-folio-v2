@@ -22,13 +22,13 @@ export const USES_STRINGS: Record<UsesLang, UsesStrings> = {
     indexLabel: 'Categorias',
     editorTerminal: 'Editor e terminal',
     itemCount: (n) => (n === 1 ? '1 item' : `${n} itens`),
-    level: { daily: 'uso diário', expert: 'alta habilidade', learning: 'aprendendo' },
+    level: { daily: 'uso diário', comfortable: 'confortável', learning: 'aprendendo' },
   },
   en: {
     mainTag: 'main',
     indexLabel: 'Categories',
     editorTerminal: 'Editor and terminal',
     itemCount: (n) => (n === 1 ? '1 item' : `${n} items`),
-    level: { daily: 'daily', expert: 'expert', learning: 'learning' },
+    level: { daily: 'daily', comfortable: 'comfortable', learning: 'learning' },
   },
 };
