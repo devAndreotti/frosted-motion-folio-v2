@@ -128,6 +128,8 @@ export interface Strings {
     /** Accessible name of the scrollable list of earlier chapters. */
     pastLabel: string;
     nowTags: string[];
+    /** Footer line of the "now" card: where the rest of the work lives. */
+    nowFacts: string;
   };
   activity: {
     sectionLabel: string;

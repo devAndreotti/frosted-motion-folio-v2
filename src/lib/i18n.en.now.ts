@@ -9,7 +9,8 @@ export const enNow: Strings['now'] = {
   archiveLink: 'See the archive',
   aboutLabel: 'About me',
   aboutBody:
-    "I'm Ricardo: an IT technician in my 7th semester of Computer Science at UNIP, in Sorocaba, Brazil. I learn by building things I use myself: tools to code better, AI automation running on my own infrastructure and, lately, a horror game.",
+    "I'm Ricardo, an IT technician and Computer Science student in the 8th semester at UNIP, in Sorocaba, Brazil. I learn by building things I use myself: tools to program better, AI automation running on my own infrastructure and, now, a horror game.",
+  interests: 'Interests: applied AI, DX (developer experience), cybersecurity and games.',
   facts: [
     { label: 'Based in', value: 'Sorocaba, Brazil' },
     { label: 'Studying', value: 'Computer Science · UNIP' },

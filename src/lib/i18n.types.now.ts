@@ -9,6 +9,8 @@ export interface NowStrings {
   archiveLink: string;
   aboutLabel: string;
   aboutBody: string;
+  /** "Interests: ..." line under the about text, in the same type as the hero highlight line. */
+  interests: string;
   facts: { label: string; value: string }[];
   privateCode: string;
   alsoLabel: string;
