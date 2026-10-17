@@ -142,13 +142,14 @@
 .dark .nws-msg.bad { color: #f87171; }
 .nws-fine { margin: 0; color: var(--fg-3); font: 400 12.5px/1.5 var(--font-mono); }
 .nws-fine a { display: block; color: var(--accent-ink); text-decoration: underline; text-underline-offset: 3px; }
-.nws-lang { display: flex; align-items: center; gap: 8px; flex-basis: 100%; margin: 4px 0 0; padding: 0; border: 0; }
+.nws-lang { display: flex; align-items: center; gap: 8px; flex-basis: auto; margin: 4px 0 0; padding: 0; border: 0; }
 .nws-lang legend { float: left; margin-right: 10px; padding: 0; color: var(--fg-3); font: 500 12.5px/30px var(--font-mono); }
 .nws-lang label { display: inline-flex; align-items: center; height: 30px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--border-2); background: var(--surface-1); color: var(--fg-2); font: 600 12px/1 var(--font-mono); letter-spacing: 0.06em; cursor: pointer; }
 .nws-lang label.on { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
 .nws-lang input { position: absolute; opacity: 0; pointer-events: none; }
 .nws-lang label:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
-.nws-check { display: flex; justify-content: center; flex-basis: 100%; min-height: 0; }
+/* the Turnstile badge sits on the right of the language row (wraps to the right on narrow screens) */
+.nws-check { display: flex; justify-content: flex-end; flex-basis: auto; margin-left: auto; align-self: center; min-height: 0; }
 @media (max-width: 640px) { .nws { padding: 22px 18px; } .nws-row .btn { width: 100%; } }
 
 /* /novidades/ and the "Novo" badge in the footers. Colors are the site tokens; the badge has no hover, so it needs no media query. */
