@@ -125,7 +125,7 @@ export function useDodgeGame(fieldRef: RefObject<HTMLDivElement>, canvasRef: Ref
       if (isHidden()) return;
 
       const prev = gameRef.current;
-      const game = stepGame(prev, dt, inputRef.current, Math.random, scale);
+      const game = stepGame(prev, dt, inputRef.current, Math.random, scale, !reduced);
       gameRef.current = game;
       let effects = effectsRef.current;
       if (game !== prev) {

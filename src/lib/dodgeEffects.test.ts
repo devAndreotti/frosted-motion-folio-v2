@@ -66,6 +66,33 @@ describe('dodgeEffects: stepping', () => {
     expect(run(hit, 1).shake).toBe(0);
   });
 
+  it('a hit flashes the field and leaves a ghost that fades out', () => {
+    const hit = applyEvent(createEffects(true), hitEvent, fixedRng(0.5));
+    expect(hit.flash).toBeCloseTo(0.2);
+    expect(hit.ghosts).toEqual([{ x: 100, y: 200, life: 0.3 }]);
+    const later = run(hit, 1);
+    expect(later.flash).toBe(0);
+    expect(later.ghosts).toEqual([]);
+  });
+
+  it('coffees caught close together make a combo, and a slow catch starts again', () => {
+    let effects = applyEvent(createEffects(true), coinEvent, fixedRng(0.5));
+    expect(effects.popups.map((p) => p.text)).toEqual(['+5']);
+    effects = applyEvent(run(effects, 0.5), coinEvent, fixedRng(0.5));
+    expect(effects.popups.map((p) => p.text)).toEqual(['+5', '+5', '×2']);
+    effects = applyEvent(run(effects, 6), coinEvent, fixedRng(0.5));
+    expect(effects.combo).toBe(1);
+  });
+
+  it('under reduced motion a hit has no flash and no ghost, and a combo still shows', () => {
+    const hit = applyEvent(createEffects(false), hitEvent, fixedRng(0.5));
+    expect(hit.flash).toBe(0);
+    expect(hit.ghosts).toEqual([]);
+    const once = applyEvent(createEffects(false), coinEvent, fixedRng(0.5));
+    const twice = applyEvent(run(once, 1), coinEvent, fixedRng(0.5));
+    expect(twice.popups.map((p) => p.text)).toContain('×2');
+  });
+
   it('a long frame is capped, like the game step', () => {
     const hit = applyEvent(createEffects(true), hitEvent, fixedRng(0.5));
     expect(stepEffects(hit, 10).shake).toBeCloseTo(0.17);

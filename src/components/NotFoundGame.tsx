@@ -18,7 +18,7 @@ const NotFoundGame = () => {
       <div className="nf-game-head">
         <span className="k">{g.title}</span>
         <span className="nf-game-score">
-          {g.score(view.score)} · {g.best(view.best)} ·{' '}
+          {g.score(view.score)} · {g.best(view.best)} · <span className="nf-game-count">{g.waveCount(view.wave)}</span> ·{' '}
           <span className="nf-game-lives" role="img" aria-label={g.lives(view.lives)}>
             {Array.from({ length: LIVES }, (_, i) => (
               <span key={i} aria-hidden="true" className={i < view.lives ? 'on' : undefined}>
