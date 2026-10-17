@@ -6,7 +6,7 @@ test("unknown route renders the 404 page", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Essa página não existe." })).toBeVisible();
   await expect(page.getByText("/some/unknown/route")).toBeVisible();
   await expect(page.getByRole("link", { name: "Voltar ao início" })).toBeVisible();
-  await expect(page.getByRole("navigation", { name: "Talvez você procurasse" }).getByRole("link")).toHaveCount(3);
+  await expect(page.getByRole("navigation", { name: "Talvez você procurasse" }).getByRole("link")).toHaveCount(4);
 });
 
 test("offline page stands alone and offers a way back", async ({ page }) => {

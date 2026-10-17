@@ -176,8 +176,9 @@ export const pt: Strings = {
     suggest: 'Talvez você procurasse',
     sections: {
       projects: { title: 'Projetos', note: 'Casos com contexto, decisões e entrega.' },
-      now: { title: 'Agora', note: 'No que estou trabalhando neste momento.' },
-      contact: { title: 'Contato', note: 'E-mail, LinkedIn e GitHub, tudo num lugar.' },
+      blog: { title: 'Blog', note: 'Textos sobre o que construo e aprendo.' },
+      uses: { title: 'O que eu uso', note: 'Ferramentas do dia a dia, com o motivo de cada uma.' },
+      novidades: { title: 'Novidades', note: 'O que mudou no site.' },
     },
     broken: 'Achou um link quebrado meu?',
     game: {

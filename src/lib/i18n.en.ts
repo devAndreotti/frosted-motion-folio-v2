@@ -176,8 +176,9 @@ export const en: Strings = {
     suggest: 'Maybe you were looking for',
     sections: {
       projects: { title: 'Projects', note: 'Case studies with context, decisions and delivery.' },
-      now: { title: 'Now', note: "What I'm working on right now." },
-      contact: { title: 'Contact', note: 'Email, LinkedIn and GitHub, all in one place.' },
+      blog: { title: 'Blog', note: 'Writing about what I build and learn.' },
+      uses: { title: 'Uses', note: 'Day-to-day tools, and why I use each one.' },
+      novidades: { title: "What's new", note: 'What changed on the site.' },
     },
     broken: 'Found a broken link of mine?',
     game: {
