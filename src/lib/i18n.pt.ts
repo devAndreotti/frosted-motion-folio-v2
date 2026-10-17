@@ -31,7 +31,7 @@ export const pt: Strings = {
     lead2: 'produtos',
     badge: 'Full Stack & IA',
     location: 'Sorocaba, SP',
-    paragraph: 'React, Node.js, IA aplicada e automação. Cada projeto une design, eficiência e um problema de verdade pra resolver.',
+    paragraph: 'React, Node.js, IA aplicada e automação. Cada projeto junta design, eficiência e um problema real para resolver.',
     availability: 'Disponível para novos projetos',
     ctaProjects: 'Ver projetos',
     ctaRecruiter: 'Modo recrutador',

@@ -9,7 +9,8 @@ export const ptNow: Strings['now'] = {
   archiveLink: 'Ver o arquivo',
   aboutLabel: 'Sobre mim',
   aboutBody:
-    'Sou o Ricardo: técnico em informática e no 7º semestre de Ciência da Computação na UNIP, em Sorocaba. Aprendo construindo coisas que eu mesmo uso: ferramentas pra programar melhor, automação com IA rodando na minha própria infraestrutura e, ultimamente, um jogo de terror.',
+    'Sou o Ricardo, técnico em informática e aluno de Ciência da Computação, no 8º semestre da UNIP, em Sorocaba. Aprendo construindo coisas que eu mesmo uso: ferramentas para programar melhor, automações com IA rodando na minha própria infraestrutura e, agora, um jogo de terror.',
+  interests: 'Interesses: IA aplicada, DX (experiência de desenvolvedor), cibersegurança e jogos.',
   facts: [
     { label: 'Base', value: 'Sorocaba, SP' },
     { label: 'Formação', value: 'Ciência da Computação · UNIP' },
