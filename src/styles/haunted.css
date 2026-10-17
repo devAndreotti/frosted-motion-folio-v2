@@ -7,6 +7,7 @@ html[data-haunted] {
   --accent: #ef4444 !important;
   --accent-rgb: 239 68 68 !important;
   --accent-text: #fff5f5 !important;
+  --accent-ink: #fca5a5 !important;
   --solid: #1c0303 !important;
   --glass-lift: rgb(127 29 29 / 0.28) !important;
 }
@@ -15,6 +16,7 @@ html[data-haunted]:not(.dark) {
   --accent: #dc2626 !important;
   --accent-rgb: 220 38 38 !important;
   --accent-text: #fff5f5 !important;
+  --accent-ink: #991b1b !important;
   --solid: #fff1f1 !important;
 }
 

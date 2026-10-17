@@ -46,10 +46,12 @@ const Index = () => {
   return (
     <>
       <ScrollProgress />
+      {/* Keyboard-only: parked above the viewport until it takes focus, then shown just under the 64px nav bar on a solid
+          surface, so it never sits on top of the header's text. */}
       <a
         href="#header"
-        className="fixed left-4 top-4 z-[100] -translate-y-24 focus:translate-y-0 transition-transform glass px-4 py-2 rounded-full text-sm font-semibold"
-        style={{ color: 'var(--fg-1)' }}
+        className="fixed left-4 top-[4.5rem] z-[100] -translate-y-32 focus-visible:translate-y-0 transition-transform px-4 py-2 rounded-full text-sm font-semibold"
+        style={{ background: 'var(--solid)', color: 'var(--fg-1)', border: '1px solid var(--border-2)' }}
       >
         {t.common.skipToContent}
       </a>
