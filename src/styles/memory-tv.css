@@ -1,5 +1,3 @@
-/* The card is a button: it opens the TV on this page instead of leaving for a site. */
-button.nc { width: 100%; padding: 0; text-align: left; font: inherit; cursor: pointer; }
 
 /* The tube TV of Memory Apartment (MemoryTv), taken from the game's site. The TV is its own object, dark in both themes. */
 .mtv-wrap { container-type: inline-size; width: 100%; min-width: 0; margin-top: 20px; }
