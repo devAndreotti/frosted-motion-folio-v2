@@ -123,6 +123,7 @@ html.booting .rv { animation-play-state: paused; }
 .about-ph { display: block; width: 72px; height: 72px; border-radius: 18px; object-fit: cover; border: 1px solid var(--border-2); }
 .about .k { margin-top: 20px; }
 .about-p { margin: 0; font: 400 15.5px/1.65 var(--font-sans); color: var(--fg-2); }
+.about-int { margin: 14px 0 0; font: 400 18px/1.6 var(--font-sans); color: var(--fg-2); }
 .about-f { display: grid; gap: 10px; margin: 18px 0 0; padding-top: 16px; border-top: 1px solid var(--line); }
 .about-f div { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
 .about-f dt { font: 500 11px/1 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-3); white-space: nowrap; }
