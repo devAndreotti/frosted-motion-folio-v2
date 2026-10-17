@@ -88,6 +88,33 @@ describe("NowSection", () => {
     expect(screen.queryByRole("dialog")).toBeNull();
   });
 
+  it("cuts a long card text with a read-more button that toggles aria-expanded, without opening the TV", () => {
+    renderNow();
+    const project = NOW_PROJECTS.find((x) => x.tv)!;
+    const card = screen.getByRole("button", { name: new RegExp(project.title) });
+    const more = within(card).getByRole("button", { name: "ler mais" });
+    expect(more.getAttribute("aria-expanded")).toBe("false");
+    const text = within(card).getByText(project.pitch.pt);
+    expect(text.getAttribute("id")).toBe(more.getAttribute("aria-controls"));
+    expect(text.className).not.toContain("open");
+
+    fireEvent.click(more);
+    expect(screen.queryByRole("dialog", { name: /TV de/ })).toBeNull();
+    expect(within(card).getByRole("button", { name: "ler menos" }).getAttribute("aria-expanded")).toBe("true");
+    expect(text.className).toContain("open");
+
+    fireEvent.click(within(card).getByRole("button", { name: "ler menos" }));
+    expect(within(card).getByRole("button", { name: "ler mais" }).getAttribute("aria-expanded")).toBe("false");
+  });
+
+  it("shows the read-more button only for descriptions long enough to run past four lines", () => {
+    renderNow();
+    for (const p of NOW_PROJECTS) {
+      const card = screen.getByText(p.pitch.pt).closest("a, button") as HTMLElement;
+      expect(within(card).queryByRole("button", { name: "ler mais" }) !== null).toBe(p.pitch.pt.length > 220);
+    }
+  });
+
   it("shows the portrait for the saved site color", () => {
     localStorage.setItem("hue", "red");
     const { container } = render(

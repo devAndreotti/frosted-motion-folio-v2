@@ -23,6 +23,8 @@ export const enNow: Strings['now'] = {
   alsoOpen: 'see details',
   alsoWhat: 'What it does',
   alsoPrivateFoot: 'Private code: no public page yet.',
+  readMore: 'read more',
+  readLess: 'show less',
   alsoGithub: 'View the code on GitHub',
   tv: {
     open: 'Turn on the TV',

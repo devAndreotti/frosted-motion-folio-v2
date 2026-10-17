@@ -144,6 +144,11 @@ html.booting .rv { animation-play-state: paused; }
 .nc-meta { font: 500 11.5px/1.3 var(--font-mono); color: var(--fg-3); }
 .nc-t { font: 600 20px/1.2 var(--font-sans); letter-spacing: -0.02em; }
 .nc-d { font: 400 14px/1.55 var(--font-sans); color: var(--fg-2); }
+/* collapsed: four lines, the browser adds the ellipsis; .open lifts the clamp */
+.nc-d:not(.open) { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+/* 44 px tall target; the text stays small, the ring is the theme's accent */
+.nc-more { align-self: flex-start; min-height: 44px; padding: 0 6px; border: 0; border-radius: 8px; background: none; color: var(--accent-ink); font: 600 13px/1 var(--font-sans); cursor: pointer; }
+.nc-more:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .nc-tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .nc-link { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: auto; padding-top: 4px; color: var(--accent-ink); font: 600 13px/1.3 var(--font-sans); }
 .nc-priv { display: inline-flex; align-items: center; gap: 5px; margin-left: auto; color: var(--fg-3); font: 500 11px/1 var(--font-mono); white-space: nowrap; }

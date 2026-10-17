@@ -10,6 +10,7 @@ import { useScrollLock } from '@/hooks/useScrollLock';
 import { track } from '@/lib/track';
 import { EGG_EVENTS } from '@/lib/eggs';
 import MemoryTvDialog from './MemoryTvDialog';
+import NowDescription from './NowDescription';
 import type { Lang } from '@/lib/i18n';
 
 /** Quality Gate has no screenshot worth showing -- its card shows the checks it runs, which are this repo's own. */
@@ -42,7 +43,7 @@ const ProjectCard = ({ p, lang, onOpenTv }: { p: NowProject; lang: Lang; onOpenT
           <span className="nc-meta">{p.meta[lang]}</span>
         </span>
         <span className="nc-t">{p.title}</span>
-        <span className="nc-d">{p.pitch[lang]}</span>
+        <NowDescription text={p.pitch[lang]} />
         <span className="nc-tags">
           {p.tags.map((tag) => (
             <span key={tag} className="tag">

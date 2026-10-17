@@ -23,6 +23,8 @@ export const ptNow: Strings['now'] = {
   alsoOpen: 'ver detalhes',
   alsoWhat: 'O que faz',
   alsoPrivateFoot: 'Código privado: ainda sem página pública.',
+  readMore: 'ler mais',
+  readLess: 'ler menos',
   alsoGithub: 'Ver o código no GitHub',
   tv: {
     open: 'Ligar a TV',
