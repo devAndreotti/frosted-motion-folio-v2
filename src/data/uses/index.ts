@@ -4,6 +4,7 @@ import { AI } from './ai';
 import { EDITOR } from './editor';
 import { HARDWARE } from './hardware';
 import { SERVICES } from './services';
+import { STACK } from './stack';
 import { SYSTEM } from './system';
 import { TERMINAL } from './terminal';
 
@@ -11,10 +12,10 @@ import { TERMINAL } from './terminal';
 // names here (models, systems, tools, services): no hosts, addresses, accounts, paths or keys.
 // Every reason is a plain description of what the item is used for, not an opinion invented for the page.
 
-export type { UsesCategory, UsesCategoryId, UsesItem, UsesLang } from './types';
+export type { UsesCategory, UsesCategoryId, UsesItem, UsesLang, UsesLevel } from './types';
 export { USES_STRINGS, type UsesStrings } from './strings';
 
-export const USES_CATEGORIES: UsesCategory[] = [HARDWARE, SYSTEM, EDITOR, TERMINAL, AI, SERVICES];
+export const USES_CATEGORIES: UsesCategory[] = [HARDWARE, SYSTEM, EDITOR, TERMINAL, AI, SERVICES, STACK];
 
 /** The jump links under the lead. A link covers one or more categories; its anchor is the id of the group on the page. */
 export interface UsesIndexGroup {
@@ -28,6 +29,7 @@ export const USES_INDEX: UsesIndexGroup[] = [
   { anchor: 'editor-terminal', categoryIds: ['editor', 'terminal'] },
   { anchor: 'ia', categoryIds: ['ai'] },
   { anchor: 'servicos', categoryIds: ['services'] },
+  { anchor: 'stack', categoryIds: ['stack'] },
 ];
 
 /** The link to the page in the site footer and the blog menu. */
@@ -46,14 +48,14 @@ export const USES_COPY: Record<UsesLang, UsesCopy> = {
     title: 'O que eu uso',
     kicker: 'Uses',
     h1: 'O que eu uso no dia a dia.',
-    lead: 'Hardware, sistemas, editor, terminal, IA e serviços. Para cada item, o motivo da escolha.',
+    lead: 'Hardware, sistemas, editor, terminal, IA, serviços e stack. Para cada item, o motivo da escolha.',
     updated: 'Atualizado em 17 de outubro de 2026.',
   },
   en: {
     title: 'Uses',
     kicker: 'Uses',
     h1: 'What I use day to day.',
-    lead: 'Hardware, systems, editor, terminal, AI and services. For each item, why I picked it.',
+    lead: 'Hardware, systems, editor, terminal, AI, services and stack. For each item, why I picked it.',
     updated: 'Updated on October 17, 2026.',
   },
 };
