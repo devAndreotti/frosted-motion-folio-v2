@@ -11,6 +11,8 @@ export interface UsesItem {
   detail?: Localized<string>;
   /** What it is used for, one short line. */
   why: Localized<string>;
+  /** The main pick of its category: highlighted on the card and tagged "principal" / "main". At most one per category. */
+  main?: boolean;
 }
 
 export interface UsesCategory {

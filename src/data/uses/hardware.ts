@@ -14,6 +14,7 @@ export const HARDWARE: UsesCategory = {
     },
     {
       name: 'Desktop Linux',
+      main: true,
       detail: { pt: 'Intel Core i5-4690 · NVIDIA GeForce GTX 1060 6 GB', en: 'Intel Core i5-4690 · NVIDIA GeForce GTX 1060 6 GB' },
       why: {
         pt: 'Ambiente principal de Linux, com Hyprland, para desenvolvimento e ferramentas próprias.',

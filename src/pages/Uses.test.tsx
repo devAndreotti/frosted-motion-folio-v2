@@ -1,8 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
+import { USES_CATEGORIES } from '@/data/uses';
 import Uses from './Uses';
 
 const renderPage = () =>
@@ -29,6 +30,25 @@ describe('uses page', () => {
     expect(screen.getByText('Cloudflare')).toBeTruthy();
     expect(screen.getByText('Atualizado em 17 de outubro de 2026.')).toBeTruthy();
     expect(document.querySelector('main')?.getAttribute('lang')).toBe('pt-BR');
+  });
+
+  it('links the categories from an index, in the order of the page', () => {
+    renderPage();
+    const index = screen.getByRole('navigation', { name: 'Categorias' });
+    const links = within(index).getAllByRole('link');
+    expect(links.map((link) => link.getAttribute('href'))).toEqual(['#hardware', '#sistema', '#editor-terminal', '#ia', '#servicos']);
+    expect(links[2].textContent).toBe(`Editor e terminal${USES_CATEGORIES.filter((c) => c.id === 'editor' || c.id === 'terminal').reduce((n, c) => n + c.items.length, 0)}`);
+  });
+
+  it('counts the items of each category from the data, and tags one main pick per category', () => {
+    renderPage();
+    for (const category of USES_CATEGORIES) {
+      const heading = screen.getByRole('heading', { level: 2, name: category.label.pt });
+      expect(heading.parentElement?.querySelector('.us-count')?.textContent).toBe(
+        category.items.length === 1 ? '1 item' : `${category.items.length} itens`
+      );
+    }
+    expect(screen.getAllByText('principal')).toHaveLength(USES_CATEGORIES.filter((c) => c.items.some((i) => i.main)).length);
   });
 
   it('says the same in English', () => {

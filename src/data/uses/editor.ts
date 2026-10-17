@@ -6,6 +6,7 @@ export const EDITOR: UsesCategory = {
   items: [
     {
       name: 'VS Code no navegador',
+      main: true,
       detail: { pt: 'code-server, numa instância própria', en: 'code-server, on an instance of my own' },
       why: {
         pt: 'Edição pelo navegador, sem instalar nada no computador de onde estou.',
