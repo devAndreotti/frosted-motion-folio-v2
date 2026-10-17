@@ -6,6 +6,7 @@ export const SERVICES: UsesCategory = {
   items: [
     {
       name: 'Oracle Cloud',
+      main: true,
       detail: { pt: 'Duas VPS', en: 'Two VPS' },
       why: {
         pt: 'Servidores de uso geral para serviços e automações.',

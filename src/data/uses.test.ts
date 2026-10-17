@@ -28,6 +28,14 @@ describe('uses data', () => {
     for (const lang of ['pt', 'en'] as const) for (const value of Object.values(USES_COPY[lang])) expect(value).toBeTruthy();
   });
 
+  it('marks at most one main pick per category', () => {
+    for (const category of USES_CATEGORIES) {
+      expect(category.items.filter((item) => item.main).length, category.id).toBeLessThanOrEqual(1);
+    }
+    const mains = allItems().filter((item) => item.main).map((item) => item.name);
+    expect(mains).toEqual(['Desktop Linux', 'EndeavourOS com Hyprland', 'VS Code no navegador', 'Claude Code', 'Oracle Cloud']);
+  });
+
   it('does not repeat an item name', () => {
     const names = allItems().map((item) => item.name);
     expect(new Set(names).size).toBe(names.length);
