@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import type { UsesItem, UsesLang, UsesStrings } from '@/data/uses';
+import { useHorizontalDragScroll } from '@/hooks/useHorizontalDragScroll';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { edgeFadeProps, useScrollEdges } from '@/hooks/useScrollEdges';
 import UsesCard from './UsesCard';
 
 export interface UsesCardData {
@@ -9,19 +12,28 @@ export interface UsesCardData {
   categoryLabel: string | null;
 }
 
-/** A horizontal rail of cards with snap, prev/next buttons and position dots. The dots follow the scroll position. */
+/**
+ * A horizontal rail of cards, dragged with the mouse or finger (the same drag and release inertia as the
+ * Skills rail). The scrollbar is hidden, the edges fade where cards are hidden, and prev/next and the
+ * position dots sit on their own line below. Reduced motion turns the inertia and the smooth jumps off.
+ */
 const UsesCarousel = ({ cards, lang, strings }: { cards: UsesCardData[]; lang: UsesLang; strings: UsesStrings }) => {
+  const reduced = useMediaQuery('(prefers-reduced-motion: reduce)');
+  const drag = useHorizontalDragScroll({ redirectWheel: false, dragFactor: 1, inertia: !reduced });
+  const { edges } = useScrollEdges(drag.containerRef);
+  const railRef = drag.containerRef;
   const trackRef = useRef<HTMLUListElement>(null);
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
+    const rail = railRef.current;
     const track = trackRef.current;
-    if (!track) return undefined;
+    if (!rail || !track) return undefined;
     let frame = 0;
     // The card nearest the left edge of the rail is the current one.
     const measure = () => {
       frame = 0;
-      const left = track.getBoundingClientRect().left;
+      const left = rail.getBoundingClientRect().left;
       let best = 0;
       let bestDistance = Infinity;
       Array.from(track.children).forEach((child, position) => {
@@ -36,30 +48,42 @@ const UsesCarousel = ({ cards, lang, strings }: { cards: UsesCardData[]; lang: U
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(measure);
     };
-    track.addEventListener('scroll', onScroll, { passive: true });
+    rail.addEventListener('scroll', onScroll, { passive: true });
     measure();
     return () => {
-      track.removeEventListener('scroll', onScroll);
+      rail.removeEventListener('scroll', onScroll);
       if (frame) cancelAnimationFrame(frame);
     };
-  }, [cards.length]);
+  }, [cards.length, railRef]);
 
   const step = (direction: 1 | -1) => {
+    const rail = railRef.current;
     const track = trackRef.current;
-    if (!track) return;
+    if (!rail || !track) return;
     const target = Math.min(cards.length - 1, Math.max(0, index + direction));
     const card = track.children[target] as HTMLElement | undefined;
-    // scrollIntoView follows the CSS scroll-behavior, so reduced motion gets an instant jump.
-    card?.scrollIntoView?.({ block: 'nearest', inline: 'start' });
+    if (!card) return;
+    // Put the card at the rail's left edge. The rail has no CSS smooth scrolling (it would fight the drag), so the jump is explicit.
+    const left = card.getBoundingClientRect().left - rail.getBoundingClientRect().left + rail.scrollLeft;
+    if (typeof rail.scrollTo === 'function') rail.scrollTo({ left, behavior: reduced ? 'auto' : 'smooth' });
+    else rail.scrollLeft = left;
   };
 
   return (
     <div className="us-carousel">
-      <ul ref={trackRef} className="us-track" tabIndex={0}>
-        {cards.map((card) => (
-          <UsesCard key={card.key} card={card} lang={lang} strings={strings} />
-        ))}
-      </ul>
+      <div
+        ref={drag.containerRef}
+        className={`us-rail edge-fade${drag.isDragging ? ' drag' : ''}`}
+        tabIndex={0}
+        {...drag.handlers}
+        {...edgeFadeProps(edges)}
+      >
+        <ul ref={trackRef} className="us-track">
+          {cards.map((card) => (
+            <UsesCard key={card.key} card={card} lang={lang} strings={strings} />
+          ))}
+        </ul>
+      </div>
       <div className="us-bar">
         <span className="us-dots" aria-hidden="true">
           {cards.map((card, position) => (
