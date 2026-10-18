@@ -119,9 +119,26 @@ export interface AlsoItem {
 export const NOW_ALSO: AlsoItem[] = [
   {
     name: 'Cockpit',
-    note: { pt: 'Painel pessoal que junta, num lugar só, os números e as ações dos meus sites e projetos: visitas, newsletter, redes e comandos. Roda só dentro da minha rede.', en: 'Personal panel that brings together, in one place, the numbers and actions of my sites and projects: visits, newsletter, social and commands. Runs only inside my own network.' },
+    note: { pt: 'Painel pessoal que junta, num lugar só, os números e as ações dos meus sites.', en: 'Personal dashboard that brings together, in one place, the numbers and actions of my sites.' },
     color: '#eab308',
     icon: './projects/cockpit/icon.png',
+    details: {
+      sig: { pt: 'painel · estatísticas · ações · newsletter', en: 'dashboard · stats · actions · newsletter' },
+      status: { pt: 'Em uso', en: 'In use' },
+      meta: { pt: 'painel privado', en: 'private dashboard' },
+      pitch: {
+        pt: 'Painel pessoal que junta, num lugar só, os números e as ações dos meus sites e projetos. Mostra o que está acontecendo e deixa agir de dentro dele, sem entrar em cada ferramenta.',
+        en: 'Personal dashboard that brings together, in one place, the numbers and actions of my sites and projects. It shows what is happening and lets you act from inside it, without opening each tool.',
+      },
+      features: {
+        pt: ['Mostra visitas dos sites, lista da newsletter, e-mails enviados e redes sociais', 'Mostra o histórico, para acompanhar a evolução e não só o número do dia', 'Deixa apagar inscrito e reenviar confirmação', 'Envia a newsletter pelo próprio painel', 'Vendas e chaves do jogo ainda em demonstração, com dados fictícios'],
+        en: ['Shows site visits, the newsletter list, emails sent and social networks', 'Shows the history, to follow the trend and not just today\'s number', 'Lets you delete a subscriber and resend the confirmation', 'Sends the newsletter from the dashboard itself', 'Game sales and keys still in demo, with fictitious data'],
+      },
+      // confirmed by devAndreotti/tower: README + docs/decisions/0001-stack-e-hospedagem.md
+      stack: ['Python', 'Flask', 'Gunicorn', 'Jinja', 'SQLite'],
+      palette: { bg: '#14110a', fg: '#f5f1e6', fg2: '#d6cfbd', muted: '#948b74' },
+      mark: '▪',
+    },
   },
   {
     name: 'Kali Layer',

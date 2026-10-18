@@ -89,6 +89,19 @@ describe("NowSection", () => {
     expect(screen.queryByRole("dialog")).toBeNull();
   });
 
+  it("opens the Cockpit card from its button, with the private footer and the yellow hover color", () => {
+    renderNow();
+    const cockpit = NOW_ALSO.find((x) => x.name === "Cockpit")!;
+    const button = screen.getByRole("button", { name: /Cockpit/ });
+    expect(button.closest("li")?.style.getPropertyValue("--brand")).toBe("#eab308");
+
+    fireEvent.click(button);
+    const card = screen.getByRole("dialog", { name: "Cockpit" });
+    expect(within(card).getByText(cockpit.details!.features.pt[0])).toBeTruthy();
+    expect(within(card).getByText("projeto privado: ainda sem página pública.")).toBeTruthy();
+    expect(within(card).queryByRole("link")).toBeNull();
+  });
+
   it("cuts a long card text with a read-more button that toggles aria-expanded, without opening the TV", () => {
     renderNow();
     const project = NOW_PROJECTS.find((x) => x.tv)!;
