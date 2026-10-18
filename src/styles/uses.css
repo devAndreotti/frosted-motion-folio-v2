@@ -12,18 +12,23 @@
 .us-tab { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 16px; border: 1px solid var(--border-1); border-radius: 999px; background: var(--surface-1); color: var(--fg-2); font: 500 14px/1 var(--font-sans); cursor: pointer; }
 .us-tab[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--solid); }
 .us-tab:focus-visible,
-.us-track:focus-visible,
+.us-rail:focus-visible,
 .us-arrows button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
 .us-count { display: block; font: 500 12px/1 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--fg-3); }
 
-/* The rail: cards side by side, snapping to the start edge; a card is 82% of the rail on phones and at most 440px. */
-.us-track { list-style: none; margin: 0; padding: 4px 2px 16px; display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: thin; }
-@media (prefers-reduced-motion: no-preference) {
-  .us-track { scroll-behavior: smooth; }
+/* The rail: cards side by side in a scroller that the mouse or finger drags (useHorizontalDragScroll, with release inertia).
+   No scroll snap, which would fight that inertia, and no scrollbar: the drag, the wheel, the touch pan and the arrows move it.
+   The edges fade where cards are hidden (edge-fade). A card is 82% of the rail on phones and at most 440px. */
+.us-rail { overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
+.us-rail::-webkit-scrollbar { display: none; }
+@media (hover: hover) {
+  .us-rail { cursor: grab; }
+  .us-rail.drag { cursor: grabbing; }
 }
+.us-track { list-style: none; margin: 0; padding: 4px 2px 8px; display: flex; gap: 16px; }
 
-.us-card { flex: 0 0 min(440px, 82%); scroll-snap-align: start; box-sizing: border-box; min-width: 0; min-height: 240px; display: flex; flex-direction: column; gap: 8px; padding: 24px; border: 1px solid var(--border-1); border-radius: 22px; background: var(--surface-1); transition: border-color 0.25s; }
+.us-card { flex: 0 0 min(440px, 82%); box-sizing: border-box; min-width: 0; min-height: 240px; display: flex; flex-direction: column; gap: 8px; padding: 24px; border: 1px solid var(--border-1); border-radius: 22px; background: var(--surface-1); transition: border-color 0.25s; }
 .us-card.us-main { border-color: color-mix(in oklab, var(--accent) 55%, var(--border-1)); }
 .us-cat { font: 500 12px/1 var(--font-mono); letter-spacing: 0.07em; text-transform: uppercase; color: var(--fg-3); }
 .us-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
@@ -38,7 +43,7 @@
 }
 
 /* Bottom bar: position dots on the left, prev/next on the right. */
-.us-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.us-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 16px; }
 .us-dots { display: flex; gap: 8px; }
 .us-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--fg-3); opacity: 0.5; }
 .us-dot.on { background: var(--accent); opacity: 1; }
@@ -47,4 +52,10 @@
 
 @media (prefers-reduced-motion: reduce) {
   .us-card { transition: none; }
+}
+
+/* The /uses/ page starts closer to the bar above it (the blog pages keep their larger top space). */
+.us.blog-main { padding-top: 32px; }
+@media (max-width: 720px) {
+  .us.blog-main { padding-top: 20px; }
 }

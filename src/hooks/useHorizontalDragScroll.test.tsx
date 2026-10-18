@@ -112,4 +112,38 @@ describe("useHorizontalDragScroll", () => {
     expect(raf).not.toHaveBeenCalled();
     raf.mockRestore();
   });
+  it("with inertia, releasing a fast drag keeps the rail moving on the next frames, then stops", () => {
+    const frames: Array<(time: number) => void> = [];
+    const raf = vi.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
+      frames.push(cb);
+      return frames.length;
+    });
+    const caf = vi.spyOn(window, "cancelAnimationFrame").mockImplementation(() => undefined);
+    render(<Harness options={{ dragFactor: 1 }} />);
+    const rail = screen.getByTestId("rail");
+
+    fireEvent.pointerDown(rail, { pointerId: 7, clientX: 300, clientY: 100, button: 0 });
+    fireEvent.pointerMove(rail, { pointerId: 7, clientX: 250, clientY: 100 });
+    fireEvent.pointerMove(rail, { pointerId: 7, clientX: 200, clientY: 100 });
+    fireEvent.pointerUp(rail, { pointerId: 7, clientX: 200, clientY: 100 });
+    const atRelease = rail.scrollLeft;
+    expect(atRelease).toBe(100);
+    expect(frames).toHaveLength(1);
+
+    // Each frame moves the rail further in the drag direction, and the speed drops.
+    let now = performance.now();
+    const steps: number[] = [];
+    for (let i = 0; i < 3 && frames.length; i++) {
+      const next = frames.shift() as (time: number) => void;
+      now += 16;
+      next(now);
+      steps.push(rail.scrollLeft);
+    }
+    expect(steps[0]).toBeGreaterThan(atRelease);
+    expect(steps[1] - steps[0]).toBeLessThan(steps[0] - atRelease);
+    expect(steps[2]).toBeGreaterThan(steps[1]);
+
+    raf.mockRestore();
+    caf.mockRestore();
+  });
 });
