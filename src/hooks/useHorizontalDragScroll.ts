@@ -3,8 +3,16 @@ import { useWheelRedirect } from './useWheelRedirect';
 
 const DEFAULT_DRAG_SCROLL_FACTOR = 0.5;
 const INERTIA_MULTIPLIER = 2;
-const INERTIA_DECAY = 0.94;
-const MAX_INERTIA_VELOCITY = 1.1;
+/** Share of the speed kept per 1/60 s. Applied per elapsed time, so 120 Hz screens glide the same. */
+const INERTIA_DECAY = 0.96;
+const INERTIA_FRAME_MS = 1000 / 60;
+const MAX_INERTIA_VELOCITY = 1;
+/** A pointer that sat still this long before release gives no fling. */
+const INERTIA_STALE_MS = 80;
+
+function prefersReducedMotion(): boolean {
+  return typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
 
 interface DragScrollHandlers {
   onPointerDown: (event: ReactPointerEvent<HTMLDivElement>) => void;
@@ -103,8 +111,14 @@ export function useHorizontalDragScroll(options?: { redirectWheel?: boolean; dra
 
       const deltaTime = Math.max(1, now - previousTime);
       previousTime = now;
+      const before = containerRef.current.scrollLeft;
       containerRef.current.scrollLeft += velocity * deltaTime;
-      velocity *= INERTIA_DECAY;
+      // Already at the end of the rail: nothing moves, so stop instead of spending the decay.
+      if (containerRef.current.scrollLeft === before) {
+        inertiaFrameRef.current = null;
+        return;
+      }
+      velocity *= Math.pow(INERTIA_DECAY, deltaTime / INERTIA_FRAME_MS);
 
       if (Math.abs(velocity) < 0.015) {
         inertiaFrameRef.current = null;
@@ -218,7 +232,8 @@ export function useHorizontalDragScroll(options?: { redirectWheel?: boolean; dra
   };
 
   const finishDrag = (): void => {
-    if (inertia && dragStateRef.current.dragging && dragStateRef.current.moved) {
+    const drag = dragStateRef.current;
+    if (inertia && drag.dragging && drag.moved && performance.now() - drag.lastTimestamp <= INERTIA_STALE_MS && !prefersReducedMotion()) {
       startInertia();
     }
 
