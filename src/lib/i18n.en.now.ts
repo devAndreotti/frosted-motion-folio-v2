@@ -23,7 +23,7 @@ export const enNow: Strings['now'] = {
   alsoMoreNote: 'the other repositories on GitHub',
   alsoOpen: 'see details',
   alsoWhat: 'What it does',
-  alsoPrivateFoot: 'Private code: no public page yet.',
+  alsoPrivateFoot: 'private project: no public page yet.',
   readMore: 'read more',
   readLess: 'show less',
   alsoGithub: 'View the code on GitHub',
