@@ -146,4 +146,24 @@ describe("useHorizontalDragScroll", () => {
     raf.mockRestore();
     caf.mockRestore();
   });
+  it("a pointer that stopped well before release gives no inertia", () => {
+    const raf = vi.spyOn(window, "requestAnimationFrame");
+    let clock = 1000;
+    const now = vi.spyOn(performance, "now").mockImplementation(() => clock);
+    render(<Harness options={{ dragFactor: 1 }} />);
+    const rail = screen.getByTestId("rail");
+
+    fireEvent.pointerDown(rail, { pointerId: 8, clientX: 300, clientY: 100, button: 0 });
+    clock += 16;
+    fireEvent.pointerMove(rail, { pointerId: 8, clientX: 250, clientY: 100 });
+    clock += 16;
+    fireEvent.pointerMove(rail, { pointerId: 8, clientX: 200, clientY: 100 });
+    clock += 500;
+    fireEvent.pointerUp(rail, { pointerId: 8, clientX: 200, clientY: 100 });
+
+    expect(raf).not.toHaveBeenCalled();
+    expect(rail.scrollLeft).toBe(100);
+    now.mockRestore();
+    raf.mockRestore();
+  });
 });

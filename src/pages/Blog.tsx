@@ -49,7 +49,7 @@ const Blog = () => {
 
   return (
     <BlogShell title={BLOG_TITLE}>
-      <main className="wrap blog-main">
+      <main className="wrap blog-main bl">
         <p className="eyebrow">
           <span className="chip">~/blog</span>
         </p>
