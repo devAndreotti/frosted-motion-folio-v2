@@ -36,7 +36,7 @@ test('"Modo recrutador" opens a one-screen summary that closes again', async ({ 
   await hero.getByRole("button", { name: "Modo recrutador" }).click();
   const dialog = page.getByRole("dialog", { name: "Resumo rápido para recrutadores" });
   await expect(dialog.getByText("Resumo rápido")).toBeVisible();
-  await expect(dialog.getByRole("link", { name: /Self-Sync Daily/ })).toBeVisible();
+  await expect(dialog.getByRole("link", { name: /Git Wizard Commander/ })).toHaveAttribute("href", "/projetos/git-wizard-commander/");
 
   await dialog.getByRole("button", { name: "Fechar" }).click();
   await expect(dialog).not.toBeVisible();

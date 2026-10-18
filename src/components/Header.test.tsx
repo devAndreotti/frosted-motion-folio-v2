@@ -67,7 +67,14 @@ describe("Header", () => {
 
     const dialog = await screen.findByRole("dialog", { name: "Resumo rápido para recrutadores" });
     expect(within(dialog).getByText("Pra olhar primeiro")).toBeTruthy();
-    expect(within(dialog).getByRole("link", { name: /Self-Sync Daily/ }).getAttribute("href")).toContain("lovable.app");
+    const quick = within(dialog).getAllByRole("link").filter((a) => a.getAttribute("href")?.startsWith("/projetos/"));
+    expect(quick.map((a) => a.getAttribute("href"))).toEqual([
+      "/projetos/git-wizard-commander/",
+      "/projetos/gold-portfolio-analyzer/",
+      "/projetos/cook-app/",
+    ]);
+    expect(within(dialog).queryByText("Self-Sync Daily")).toBeNull();
+    expect(within(dialog).queryByText("Chef AI")).toBeNull();
 
     fireEvent.click(within(dialog).getByRole("button", { name: "Fechar" }));
     expect(screen.queryByRole("dialog")).toBeNull();

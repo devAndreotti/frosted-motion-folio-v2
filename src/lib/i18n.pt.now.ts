@@ -17,7 +17,7 @@ export const ptNow: Strings['now'] = {
     { label: 'Interesses', value: 'IA aplicada, DX e jogos' },
   ],
   privateCode: 'código privado',
-  alsoLabel: 'Também no forno',
+  alsoLabel: 'Em evolução constante',
   privateTag: 'privado',
   alsoMore: 'Ver mais',
   alsoMoreNote: 'os outros repositórios no GitHub',
