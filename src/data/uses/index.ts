@@ -17,19 +17,19 @@ export { USES_STRINGS, type UsesStrings } from './strings';
 
 export const USES_CATEGORIES: UsesCategory[] = [HARDWARE, SYSTEM, EDITOR, TERMINAL, AI, SERVICES, STACK];
 
-/** The jump links under the lead. A link covers one or more categories; its anchor is the id of the group on the page. */
-export interface UsesIndexGroup {
-  anchor: string;
+/** The tabs of the carousel, in page order. A tab covers one or more categories. */
+export interface UsesTab {
+  id: string;
   categoryIds: UsesCategoryId[];
 }
 
-export const USES_INDEX: UsesIndexGroup[] = [
-  { anchor: 'hardware', categoryIds: ['hardware'] },
-  { anchor: 'sistema', categoryIds: ['system'] },
-  { anchor: 'editor-terminal', categoryIds: ['editor', 'terminal'] },
-  { anchor: 'ia', categoryIds: ['ai'] },
-  { anchor: 'servicos', categoryIds: ['services'] },
-  { anchor: 'stack', categoryIds: ['stack'] },
+export const USES_TABS: UsesTab[] = [
+  { id: 'hardware', categoryIds: ['hardware'] },
+  { id: 'system', categoryIds: ['system'] },
+  { id: 'editor-terminal', categoryIds: ['editor', 'terminal'] },
+  { id: 'ai', categoryIds: ['ai'] },
+  { id: 'services', categoryIds: ['services'] },
+  { id: 'stack', categoryIds: ['stack'] },
 ];
 
 /** The link to the page in the site footer and the blog menu. */
