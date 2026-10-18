@@ -102,6 +102,14 @@ describe("NowSection", () => {
     expect(within(card).queryByRole("link")).toBeNull();
   });
 
+  it("tints the popups of Cockpit, Kali Layer and Hyprland only with their own color", () => {
+    renderNow();
+    const tinted = NOW_ALSO.filter((x) => x.details?.tint).map((x) => x.name).sort();
+    expect(tinted).toEqual(["Cockpit", "Kali Layer"]);
+    fireEvent.click(screen.getByRole("button", { name: /Cockpit/ }));
+    expect(screen.getByRole("dialog", { name: "Cockpit" }).className).toContain("tint");
+  });
+
   it("cuts a long card text with a read-more button that toggles aria-expanded, without opening the TV", () => {
     renderNow();
     const project = NOW_PROJECTS.find((x) => x.tv)!;

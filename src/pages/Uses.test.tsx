@@ -23,7 +23,7 @@ describe('uses page', () => {
   it('has its own title and the seven categories in Portuguese', () => {
     renderPage();
     expect(document.title).toBe('O que eu uso — Ricardo A. Gonçalves');
-    expect(screen.getByRole('heading', { level: 1, name: 'O que eu uso no dia a dia.' })).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 1, name: 'O que eu uso.' })).toBeTruthy();
     for (const name of ['Hardware', 'Sistema', 'Editor', 'Terminal', 'IA', 'Serviços', 'Stack']) {
       expect(screen.getByRole('heading', { level: 2, name })).toBeTruthy();
     }
@@ -64,7 +64,7 @@ describe('uses page', () => {
     localStorage.setItem('lang.picked', 'en');
     renderPage();
     expect(document.title).toBe('Uses — Ricardo A. Gonçalves');
-    expect(screen.getByRole('heading', { level: 1, name: 'What I use day to day.' })).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 1, name: 'What I use.' })).toBeTruthy();
     expect(screen.getByRole('heading', { level: 2, name: 'Services' })).toBeTruthy();
     const tags = Array.from(document.querySelectorAll('#stack .us-level')).map((tag) => tag.textContent);
     expect(tags).toEqual([...Array(8).fill('daily'), ...Array(9).fill('comfortable'), ...Array(4).fill('learning')]);

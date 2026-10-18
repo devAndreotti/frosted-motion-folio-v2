@@ -119,14 +119,17 @@ const SkillsBento = ({ repoCount = null }: { repoCount?: number | null }) => {
             })}
           </div>
         </article>
-        <article className="sk-card glass">
-          <TierHead tier={comfortable} />
-          <div className="chips">{comfortable.tools.map(chip)}</div>
-        </article>
-        <article className="sk-card sk-learn glass">
-          <TierHead tier={learning} />
-          <div className="chips">{learning.tools.map(chip)}</div>
-        </article>
+        {/* Both cards share the height of the daily block: the grid row stretches this column, and each card grows to fill it. */}
+        <div className="sk-side">
+          <article className="sk-card glass">
+            <TierHead tier={comfortable} />
+            <div className="chips">{comfortable.tools.map(chip)}</div>
+          </article>
+          <article className="sk-card sk-learn glass">
+            <TierHead tier={learning} />
+            <div className="chips">{learning.tools.map(chip)}</div>
+          </article>
+        </div>
       </div>
       <p className="sk-foot">
         {t.skills.alsoKnown}: <span className="sk-foot-b">{ALSO_KNOWN.join(' · ')}</span>

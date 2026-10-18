@@ -101,6 +101,8 @@ export interface AlsoDetails {
   face?: 'mono' | 'editorial';
   /** Bullet for the feature list. */
   mark: string;
+  /** Washes the popup background with the item's own color (a soft tint over `palette.bg`). */
+  tint?: boolean;
 }
 
 export interface AlsoItem {
@@ -138,6 +140,7 @@ export const NOW_ALSO: AlsoItem[] = [
       stack: ['Python', 'Flask', 'Gunicorn', 'Jinja', 'SQLite'],
       palette: { bg: '#14110a', fg: '#f5f1e6', fg2: '#d6cfbd', muted: '#948b74' },
       mark: '▪',
+      tint: true,
     },
   },
   {
@@ -161,6 +164,7 @@ export const NOW_ALSO: AlsoItem[] = [
       palette: { bg: '#0f0a0d', fg: '#cdd6f4', fg2: '#b4bcd6', muted: '#8a8fa8' },
       face: 'mono',
       mark: '›',
+      tint: true,
     },
   },
   {

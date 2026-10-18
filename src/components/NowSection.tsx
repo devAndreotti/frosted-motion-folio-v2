@@ -141,7 +141,7 @@ const AlsoCard = ({ item, details: d, onClose }: { item: AlsoItem; details: Also
 
   return (
     <div className="ov" onClick={onClose}>
-      <div ref={dialogRef} className={`dlg sm oc${d.face ? ` ${d.face}` : ''}`} style={palette} onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="oc-t">
+      <div ref={dialogRef} className={`dlg sm oc${d.face ? ` ${d.face}` : ''}${d.tint ? ' tint' : ''}`} style={palette} onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="oc-t">
         <button type="button" className="np sq oc-x" aria-label={t.caseModal.closeAria} onClick={onClose}>
           <X className="ic" />
         </button>
