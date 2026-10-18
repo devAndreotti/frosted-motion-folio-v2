@@ -47,14 +47,14 @@ export const USES_COPY: Record<UsesLang, UsesCopy> = {
   pt: {
     title: 'O que eu uso',
     kicker: 'Uses',
-    h1: 'O que eu uso no dia a dia.',
+    h1: 'O que eu uso.',
     lead: 'Hardware, sistemas, editor, terminal, IA, serviços e stack. Para cada item, o motivo da escolha.',
     updated: 'Atualizado em 17 de outubro de 2026.',
   },
   en: {
     title: 'Uses',
     kicker: 'Uses',
-    h1: 'What I use day to day.',
+    h1: 'What I use.',
     lead: 'Hardware, systems, editor, terminal, AI, services and stack. For each item, why I picked it.',
     updated: 'Updated on October 17, 2026.',
   },
