@@ -386,8 +386,10 @@ button.also-i { cursor: pointer; }
 .dl-i { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--surf-2); }
 .dl-t { font: 600 16px/1 var(--font-sans); }
 .dl-h { font: 500 12px/1 var(--font-mono); color: var(--fg-3); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-/* bottom bar as one pill: the copyright on the left, "back to top" inside it on the right */
-.ft { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin: 36px 0 48px; padding: 8px 8px 8px 26px; border: 1px solid var(--border-1); border-radius: 999px; background: var(--surface-1); color: var(--fg-3); font: 400 14px/1.5 var(--font-sans); }
+/* bottom bar as one pill: the copyright on the left, "back to top" inside it on the right.
+   The zone around it carries the spacing (padding), so the page background runs past the pill. */
+.ft-zone { padding: 36px 0 48px; }
+.ft { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; padding: 8px 8px 8px 26px; border: 1px solid var(--border-1); border-radius: 999px; background: var(--surface-1); color: var(--fg-3); font: 400 14px/1.5 var(--font-sans); }
 .ft button { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 18px; border: 1px solid var(--border-1); border-radius: 999px; color: var(--fg-2); font-weight: 600; }
 
 /* ---------- dialogs ---------- */
@@ -557,8 +559,10 @@ button.also-i { cursor: pointer; }
   .tl-nd { font-size: 15px; }
   .dlg { padding: 20px; }
   .dlg h3 { font-size: 28px; }
-  /* phones: the copyright on its own line, "back to top" as a full-width pill under it */
-  .ft { flex-direction: column; align-items: stretch; gap: 12px; margin-bottom: 24px; padding: 18px 16px 16px; border-radius: 24px; }
+  /* phones: the copyright on its own line, "back to top" as a full-width pill under it; the space under it
+     clears the browser's bottom bar */
+  .ft-zone { padding: 28px 0 calc(44px + env(safe-area-inset-bottom)); }
+  .ft { flex-direction: column; align-items: stretch; gap: 12px; padding: 18px 16px 16px; border-radius: 24px; }
   .ft button { justify-content: center; min-height: 48px; }
 }
 @media (max-width: 480px) {

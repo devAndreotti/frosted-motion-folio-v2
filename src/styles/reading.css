@@ -3,6 +3,6 @@
    The bar keeps its space (visibility, not display) so the text does not move when the mode changes. */
 .reading-btn { margin-top: 20px; }
 .reading .nav { visibility: hidden; pointer-events: none; }
-.reading .toc, .reading .nf-foot { display: none; }
+.reading .toc, .reading .ft-zone { display: none; }
 .reading .prose { max-width: 65ch; font-size: 20px; }
 @media (max-width: 720px) { .reading .prose { font-size: 18px; } }
