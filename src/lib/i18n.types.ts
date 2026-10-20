@@ -154,7 +154,6 @@ export interface Strings {
     projectsHandle: (cases: number, others: number) => string;
     copyright: (name: string) => string;
     /** Second half of the copyright line; its own line on phones. */
-    builtWith: string;
     backToTop: string;
   };
   /** Easter eggs: the 03:17 haunted footer line and the Ctrl+P printed footer. */

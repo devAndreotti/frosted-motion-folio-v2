@@ -8,11 +8,10 @@ import CopyEmailButton from './CopyEmailButton';
 import XLogo from './XLogo';
 import { useLocalClock } from '@/hooks/useLocalClock';
 import { useHaunted } from '@/hooks/useHaunted';
-import { USES_LINK } from '@/data/uses';
 import NovidadesBadge from './NovidadesBadge';
 
 const Footer = () => {
-  const { t, lang } = useLanguage();
+  const { t } = useLanguage();
   const time = useLocalClock();
   const haunted = useHaunted();
 
@@ -87,14 +86,6 @@ const Footer = () => {
       <footer className="ft">
         <span className="ft-c">
           <span>{t.footer.copyright(personalInfo.name)}</span>
-          <span className="ft-sep" aria-hidden="true">
-            {' — '}
-          </span>
-          <span className="ft-b">{t.footer.builtWith}</span>
-          <span className="ft-sep" aria-hidden="true">
-            {' — '}
-          </span>
-          <a href={`${import.meta.env.BASE_URL}uses/`}>{USES_LINK[lang]}</a>
           <NovidadesBadge />
         </span>
         <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
