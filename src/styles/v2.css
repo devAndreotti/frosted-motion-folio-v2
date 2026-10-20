@@ -386,9 +386,9 @@ button.also-i { cursor: pointer; }
 .dl-i { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--surf-2); }
 .dl-t { font: 600 16px/1 var(--font-sans); }
 .dl-h { font: 500 12px/1 var(--font-mono); color: var(--fg-3); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ft { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; padding: 36px 0 48px; color: var(--fg-3); font: 400 14px/1.5 var(--font-sans); }
-.ft-b { white-space: nowrap; }
-.ft button { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 2px; color: var(--fg-2); font-weight: 600; }
+/* bottom bar as one pill: the copyright on the left, "back to top" inside it on the right */
+.ft { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin: 36px 0 48px; padding: 8px 8px 8px 26px; border: 1px solid var(--border-1); border-radius: 999px; background: var(--surface-1); color: var(--fg-3); font: 400 14px/1.5 var(--font-sans); }
+.ft button { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 18px; border: 1px solid var(--border-1); border-radius: 999px; color: var(--fg-2); font-weight: 600; }
 
 /* ---------- dialogs ---------- */
 .ov { position: fixed; inset: 0; z-index: 60; display: flex; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 48px 16px; background: rgba(0, 0, 0, 0.6); animation: v2-fade 0.25s ease; }
@@ -557,10 +557,9 @@ button.also-i { cursor: pointer; }
   .tl-nd { font-size: 15px; }
   .dlg { padding: 20px; }
   .dlg h3 { font-size: 28px; }
-  /* copyright: name on one line, "built with..." on the next, instead of a stray last word */
-  .ft-sep { display: none; }
-  .ft-b { display: block; white-space: normal; }
-  .ft { padding-bottom: 16px; }
+  /* phones: the copyright on its own line, "back to top" as a full-width pill under it */
+  .ft { flex-direction: column; align-items: stretch; gap: 12px; margin-bottom: 24px; padding: 18px 16px 16px; border-radius: 24px; }
+  .ft button { justify-content: center; min-height: 48px; }
 }
 @media (max-width: 480px) {
   /* tiles: badge over the name, so long names get the whole tile width */

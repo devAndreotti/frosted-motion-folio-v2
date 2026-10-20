@@ -163,7 +163,6 @@ export const en: Strings = {
     quickLinks: { github: 'GitHub', linkedin: 'LinkedIn', instagram: 'Instagram', x: 'X', email: 'Email', projects: 'Projects' },
     projectsHandle: (cases, others) => `${cases} cases + ${others} on GitHub`,
     copyright: (name) => `© 2026 ${name}`,
-    builtWith: 'built with React, Tailwind CSS, and a lot of coffee.',
     backToTop: 'Back to top',
   },
   easter: {
