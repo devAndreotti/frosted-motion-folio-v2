@@ -3,11 +3,10 @@ import { Link, useLocation } from 'react-router-dom';
 import { Moon, Rss, Sun } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { contact } from '@/data/personal';
 import { LangSwitch } from '@/components/NavExtras';
 import ColorPickerPopover from '@/components/ColorPickerPopover';
 import { USES_LINK } from '@/data/uses';
-import NovidadesBadge from '@/components/NovidadesBadge';
+import SiteBottomBar from '@/components/SiteBottomBar';
 import { blogNavActive, type BlogNavKey } from './blogNav';
 
 // The app's root on either deploy ("/" on devandreotti.com, "/frosted-motion-folio-v2/" on GitHub Pages).
@@ -59,25 +58,9 @@ const BlogShell = ({ title, children, className }: { title: string; children: Re
 
       {children}
 
-      <footer className="nf-foot">
-        <span>© {new Date().getFullYear()} Ricardo A. Gonçalves</span>
-        <a href={`mailto:${contact.email}`}>{contact.email}</a>
-        <nav className="nf-links">
-          <a href={HOME} aria-current={current('home')}>
-            {t.nav.home}
-          </a>
-          <Link to="/blog/" aria-current={current('blog')}>
-            {t.nav.blog}
-          </Link>
-          <Link to="/uses" aria-current={current('uses')}>
-            {USES_LINK[lang]}
-          </Link>
-          <Link to="/novidades/" aria-current={current('novidades')}>
-            {t.novidades.pageTitle}
-          </Link>
-        </nav>
-        <NovidadesBadge />
-      </footer>
+      <div className="wrap">
+        <SiteBottomBar />
+      </div>
     </div>
   );
 };

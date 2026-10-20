@@ -64,17 +64,11 @@ describe('BlogShell active link', () => {
     expect(currentIn(post.container.querySelector('header') as HTMLElement)).toEqual(['Blog']);
   });
 
-  it('marks Novidades in the footer on /novidades/ and keeps the footer links', () => {
+  it('ends with the same bottom bar as the home: copyright and back to top, no link list', () => {
     const { container } = renderAt('/novidades/');
     const footer = container.querySelector('footer') as HTMLElement;
-    expect(currentIn(footer)).toEqual(['Novidades']);
-    const links = within(footer).getByRole('navigation');
-    expect(within(links).getAllByRole('link').map((a) => a.textContent)).toEqual([
-      'Início',
-      'Blog',
-      'O que eu uso',
-      'Novidades',
-    ]);
-    expect(within(footer).getAllByRole('link', { name: 'O que eu uso' })).toHaveLength(1);
+    expect(footer.className).toBe('ft');
+    expect(within(footer).getByRole('button', { name: /voltar ao topo|back to top/i })).toBeTruthy();
+    expect(within(footer).queryByRole('navigation')).toBeNull();
   });
 });

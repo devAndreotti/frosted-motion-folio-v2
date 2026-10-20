@@ -1,5 +1,5 @@
-import { ArrowRight, ArrowUp, ArrowUpRight, Clock, FileText, Github, Instagram, Linkedin, Mail } from 'lucide-react';
-import { contact, personalInfo } from '@/data/personal';
+import { ArrowRight, ArrowUpRight, Clock, FileText, Github, Instagram, Linkedin, Mail } from 'lucide-react';
+import { contact } from '@/data/personal';
 import { projects } from '@/data/projects';
 import { CASE_COUNT } from '@/data/curatedProjects';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -8,7 +8,7 @@ import CopyEmailButton from './CopyEmailButton';
 import XLogo from './XLogo';
 import { useLocalClock } from '@/hooks/useLocalClock';
 import { useHaunted } from '@/hooks/useHaunted';
-import NovidadesBadge from './NovidadesBadge';
+import SiteBottomBar from './SiteBottomBar';
 
 const Footer = () => {
   const { t } = useLanguage();
@@ -83,16 +83,7 @@ const Footer = () => {
           </nav>
         </div>
       </div>
-      <footer className="ft">
-        <span className="ft-c">
-          <span>{t.footer.copyright(personalInfo.name)}</span>
-          <NovidadesBadge />
-        </span>
-        <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-          {t.footer.backToTop}
-          <ArrowUp className="ic s" />
-        </button>
-      </footer>
+      <SiteBottomBar />
       {haunted && <p className="haunted-line">{t.easter.hauntedLine}</p>}
     </section>
   );
