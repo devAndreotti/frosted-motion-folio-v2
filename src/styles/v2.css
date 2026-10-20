@@ -390,6 +390,7 @@ button.also-i { cursor: pointer; }
    The zone around it carries the spacing (padding), so the page background runs past the pill. */
 .ft-zone { padding: 36px 0 48px; }
 .ft { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; padding: 8px 8px 8px 26px; border: 1px solid var(--border-1); border-radius: 999px; background: var(--surface-1); color: var(--fg-3); font: 400 14px/1.5 var(--font-sans); }
+.ft-c { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 10px; }
 .ft button { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 18px; border: 1px solid var(--border-1); border-radius: 999px; color: var(--fg-2); font-weight: 600; }
 
 /* ---------- dialogs ---------- */
