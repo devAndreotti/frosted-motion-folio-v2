@@ -3,7 +3,7 @@
 import json, os, cv2, numpy as np
 from PIL import Image
 OUT = 12        # px/mm dos recortes
-S = 7.0         # px/mm no atlas
+S = 6.0         # px/mm no atlas (38 adesivos cabem em 2048²; o gltf-transform reduziria um atlas maior pela metade)
 AW = 2048
 d = json.load(open('adesivos.json'))
 H_old = np.array(json.load(open('plantas/homografias.json'))['deck']['H'])

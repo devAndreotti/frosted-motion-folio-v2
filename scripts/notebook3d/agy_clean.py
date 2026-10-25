@@ -54,6 +54,9 @@ borda = np.concatenate([a[:6].reshape(-1, 3), a[-6:].reshape(-1, 3), a[:, :6].re
 c = np.median(borda, axis=0)
 dist = np.sqrt(((a - c) ** 2).sum(-1))
 alpha = np.clip((dist - 45) / (110 - 45), 0, 1)
+# tira 1 px da borda: é onde sobra o tom do fundo chroma (fio verde/magenta em volta do recorte)
+import cv2
+alpha = cv2.erode(alpha.astype(np.float32), np.ones((3, 3), np.uint8))
 # tira o vazamento da cor de fundo nas bordas
 k = int(np.argmax(c))
 outros = [i for i in range(3) if i != k]
