@@ -61,6 +61,8 @@ const Notebook3D = ({ projects, onOpen }: Notebook3DProps) => {
   const [ready, setReady] = useState(false);
   // the canvas replaces the still picture only once the first project is on its screen
   const [live, setLive] = useState(false);
+  // load error or lost GL context: the still picture stays for good
+  const [failed, setFailed] = useState(false);
   const project = projects[wrapIndex(index, projects.length)];
 
   useEffect(() => {
@@ -84,6 +86,7 @@ const Notebook3D = ({ projects, onOpen }: Notebook3DProps) => {
           backlight: light,
           reducedMotion: reducedMotion(),
           onReady: () => alive && setReady(true),
+          onError: () => alive && setFailed(true),
           onSpace: () => setLight((l) => nextBacklight(l)),
         });
       })
@@ -146,7 +149,7 @@ const Notebook3D = ({ projects, onOpen }: Notebook3DProps) => {
 
   return (
     <div className="nb3d">
-      <div ref={stage} className={`nb3d-stage${live ? ' is-live' : ''}`} role="region" aria-label={nb.stageAria} tabIndex={0} onKeyDown={onKey}>
+      <div ref={stage} className={`nb3d-stage${live && !failed ? ' is-live' : ''}`} role="region" aria-label={nb.stageAria} tabIndex={0} onKeyDown={onKey}>
         <img className="nb3d-poster" src={projectAsset(POSTER)} alt={nb.poster} loading="lazy" decoding="async" />
       </div>
       <div className="nb3d-side">

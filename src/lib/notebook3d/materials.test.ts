@@ -44,7 +44,7 @@ describe('setupBacklight', () => {
     light.set(2, '#22c55e');
     expect(keys.emissive.equals(new Color('#22c55e'))).toBe(true);
     expect(keys.emissiveIntensity).toBeGreaterThan(low);
-    const glow = halo.material as MeshBasicMaterial;
+    const glow = halo.material as unknown as MeshBasicMaterial;
     expect(glow).toBeInstanceOf(MeshBasicMaterial);
     expect(glow.visible).toBe(true);
   });
@@ -54,6 +54,6 @@ describe('setupBacklight', () => {
     const light = setupBacklight(root);
     light.set(0, '#ffffff');
     expect(keys.emissiveIntensity).toBe(0);
-    expect((halo.material as MeshBasicMaterial).visible).toBe(false);
+    expect((halo.material as unknown as MeshBasicMaterial).visible).toBe(false);
   });
 });

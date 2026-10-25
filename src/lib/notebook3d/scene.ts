@@ -27,6 +27,7 @@ export interface NotebookOptions {
   /** Fixed camera and lid angle for screenshots (degrees and meters). */
   still?: { az: number; polar: number; dist: number; lid: number };
   onReady?: () => void;
+  /** The model failed to load or the GL context was lost. */
   onError?: () => void;
   /** The space bar was clicked: on the real laptop Fn+Space cycles the backlight. */
   onSpace?: () => void;
@@ -102,6 +103,12 @@ export function createNotebook(host: HTMLElement, opts: NotebookOptions): Notebo
     if (!raf && !disposed) raf = requestAnimationFrame(frame);
   };
   controls.addEventListener('change', schedule);
+  // a lost GL context (low memory, GPU reset) leaves a blank canvas: hand the stage back to the still picture
+  const onLost = (e: Event) => {
+    e.preventDefault();
+    opts.onError?.();
+  };
+  renderer.domElement.addEventListener('webglcontextlost', onLost);
 
   const resize = () => {
     const w = host.clientWidth || 1;
@@ -198,6 +205,7 @@ export function createNotebook(host: HTMLElement, opts: NotebookOptions): Notebo
       io.disconnect();
       document.removeEventListener('visibilitychange', onVis);
       unbindSpace();
+      renderer.domElement.removeEventListener('webglcontextlost', onLost);
       controls.dispose();
       scene.traverse((o) => {
         const mesh = o as Mesh;
@@ -212,6 +220,8 @@ export function createNotebook(host: HTMLElement, opts: NotebookOptions): Notebo
       scene.environment?.dispose();
       pmrem.dispose();
       renderer.dispose();
+      // frees the GL context now instead of whenever the browser collects it (browsers cap live contexts)
+      renderer.forceContextLoss();
       renderer.domElement.remove();
     },
   };
