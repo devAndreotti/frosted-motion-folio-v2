@@ -28,6 +28,17 @@ export default defineConfig(({ mode }) => ({
     cspPlugin(),
     mode === "development" && boneyardPlugin(),
   ].filter(Boolean),
+  // three.js is only reached through the 3D laptop's dynamic import; pre-bundling it keeps the dev server from
+  // discovering it mid-session and reloading the page (which broke the axe run on the home page)
+  optimizeDeps: {
+    include: [
+      "three",
+      "three/examples/jsm/loaders/GLTFLoader.js",
+      "three/examples/jsm/libs/meshopt_decoder.module.js",
+      "three/examples/jsm/controls/OrbitControls.js",
+      "three/examples/jsm/environments/RoomEnvironment.js",
+    ],
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

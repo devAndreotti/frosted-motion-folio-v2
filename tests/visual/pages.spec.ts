@@ -16,8 +16,9 @@ for (const { name, path } of PAGES) {
     await settle(page);
     await expect(page).toHaveScreenshot(`${name}.png`, {
       fullPage: true,
-      // canvas e vídeo são efeitos de TV e fundo em loop: a comparação ignora o que eles desenham
-      mask: [page.locator("canvas, video")],
+      // canvas e vídeo são efeitos de TV e fundo em loop, e o palco do notebook 3D troca a imagem pelo canvas quando
+      // carrega: a comparação ignora o que eles desenham
+      mask: [page.locator("canvas, video, .nb3d-stage")],
     });
   });
 }
