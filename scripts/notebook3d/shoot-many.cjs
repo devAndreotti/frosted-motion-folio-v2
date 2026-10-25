@@ -4,7 +4,7 @@ const fs = require('fs');
 (async () => {
   const [lista, pasta] = process.argv.slice(2);
   const itens = JSON.parse(fs.readFileSync(lista, 'utf8'));
-  const b = await puppeteer.launch({ executablePath: '/usr/local/bin/google-chrome', headless: 'new', timeout: 150000, protocolTimeout: 300000,
+  const b = await puppeteer.launch({ executablePath: '/usr/local/bin/google-chrome', headless: 'new', timeout: 150000, protocolTimeout: 1200000,
     args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
   const fs2 = require('fs');
   let p = null;

@@ -8,7 +8,7 @@ const puppeteer = require('/home/ubuntu/staging/folio-v2/pp/node_modules/puppete
   await p.setViewport({ width: +w, height: +h, deviceScaleFactor: 1 });
   await p.evaluateOnNewDocument((hue, luz, tema) => { localStorage.setItem('hue', hue); localStorage.setItem('nb.luz', luz); localStorage.setItem('lang.picked', 'pt'); localStorage.setItem('theme', tema); }, hue, luz, tema);
   p.on('pageerror', (e) => console.log('pageerror:', e.message));
-  await p.goto('http://127.0.0.1:8098/?lang=pt', { waitUntil: 'load', timeout: 180000 });
+  await p.goto((process.env.SITE || 'http://127.0.0.1:8098/') + '?lang=pt', { waitUntil: 'load', timeout: 180000 });
   await p.waitForSelector('.nb3d', { timeout: 180000 }).catch(async () => {
     // a galeria é carregada sob demanda: rola até os projetos
     await p.evaluate(() => document.getElementById('projects')?.scrollIntoView());
