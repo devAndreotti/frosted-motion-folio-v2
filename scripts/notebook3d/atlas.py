@@ -29,10 +29,16 @@ for sup in ('lid', 'deck', 'bottom'):
         f = 'arte/%s.png' % s['id']
         if not os.path.exists(f): print('sem arte:', s['id']); continue
         art = Image.open(f).convert('RGBA')
-        if s.get('modelo_rect'):   # formas holográficas: já em mm do modelo
+        if s.get('modelo_rect'):   # caixa já medida (deck: planta deck2; tampa: mm do modelo) nas fotos novas
             X0, Y0, X1, Y1 = s['modelo_rect']
+            if not s['id'].startswith('forma'):   # adesivo impresso: encaixa mantendo a proporção da arte
+                ar = art.width / art.height
+                if (X1 - X0) / (Y1 - Y0) > ar:
+                    c = (X0 + X1) / 2; X0, X1 = c - (Y1 - Y0) * ar / 2, c + (Y1 - Y0) * ar / 2
+                else:
+                    c = (Y0 + Y1) / 2; Y0, Y1 = c - (X1 - X0) / ar / 2, c + (X1 - X0) / ar / 2
             itens.append({'id': s['id'], 'sup': sup, 'cx': round((X0 + X1) / 2, 2), 'cy': round((Y0 + Y1) / 2, 2), 'w': round(X1 - X0, 2), 'h': round(Y1 - Y0, 2),
-                          'iou': 0.0, 'holo': True, 'art': art})
+                          'iou': 0.0, 'holo': s.get('brilho', 'holo') == 'holo', 'art': art})
             continue
         x0, y0, x1, y1 = s['bbox_mm']
         meta = 'arte/%s.json' % s['id']
@@ -44,6 +50,13 @@ for sup in ('lid', 'deck', 'bottom'):
             c, e = ((x0 + x1) / 2, (y0 + y1) / 2), s['tamanho_mm']
             px0, py0, px1, py1 = c[0] - e[0] / 2, c[1] - e[1] / 2, c[0] + e[0] / 2, c[1] + e[1] / 2
         iou = 0.0
+        # mantém a proporção da arte: encaixa (contain) e centraliza na caixa medida, nunca estica
+        ar = art.width / art.height
+        bw, bh = px1 - px0, py1 - py0
+        if bw / bh > ar:
+            c = (px0 + px1) / 2; px0, px1 = c - bh * ar / 2, c + bh * ar / 2
+        else:
+            c = (py0 + py1) / 2; py0, py1 = c - bw / ar / 2, c + bw / ar / 2
         q = to_model(sup, [[px0, py0], [px1, py0], [px1, py1], [px0, py1]])
         cx, cy = q.mean(0)
         wmm = (np.linalg.norm(q[1] - q[0]) + np.linalg.norm(q[2] - q[3])) / 2

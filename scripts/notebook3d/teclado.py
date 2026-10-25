@@ -96,9 +96,13 @@ for k in keys:
         ay = {'tl': y0 + m * .8, 'tc': y0 + m * .8, 'tr': y0 + m * .8, 'bl': y1 - m - th, 'br': y1 - m - th, 'cl': (y0 + y1 - th) / 2, 'cc': (y0 + y1 - th) / 2, 'cr': (y0 + y1 - th) / 2}[pos]
         for d, c in ((dc, LEG_COR), (dl, 255)): d.text((ax - bb[0], ay - bb[1]), txt, font=f, fill=c)
 cor.save('texturas/teclas_cor.png'); luz.save('texturas/teclas_luz.png')
-# halo: luz que vaza em volta das teclas (anel borrado fora do contorno)
+# fundo iluminado: a luz sai de baixo de todas as teclas e enche o vão entre elas (as teclas tampam o meio de cada uma);
+# cai suave até ~3 mm fora do teclado
 f = np.asarray(forma, np.float32) / 255
-dil = np.asarray(forma.filter(ImageFilter.MaxFilter(int(2.4 * TPX) | 1)).filter(ImageFilter.GaussianBlur(1.2 * TPX)), np.float32) / 255
-halo = np.clip(dil - f * .85, 0, 1) ** 1.3
+cheio = np.asarray(forma.filter(ImageFilter.MaxFilter(int(3.2 * TPX) | 1)).filter(ImageFilter.GaussianBlur(1.6 * TPX)), np.float32) / 255
+halo = np.clip(cheio * 1.15, 0, 1) ** 0.8
 Image.fromarray((halo * 255).astype(np.uint8)).save('texturas/teclas_halo.png')
+# brilho das legendas (o "bloom" das letras): a máscara das legendas borrada, desenhada um pouco acima das teclas
+leg = np.asarray(luz.filter(ImageFilter.GaussianBlur(0.55 * TPX)), np.float32) / 255
+Image.fromarray((np.clip(leg * 2.2, 0, 1) * 255).astype(np.uint8)).save('texturas/teclas_brilho.png')
 print(len(keys), 'teclas; textura', W, 'x', H, 'bbox', BB)

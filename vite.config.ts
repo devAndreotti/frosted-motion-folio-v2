@@ -40,6 +40,11 @@ export default defineConfig(({ mode }) => ({
       "three/examples/jsm/controls/OrbitControls.js",
       "three/examples/jsm/environments/RoomEnvironment.js",
       "three/examples/jsm/renderers/CSS3DRenderer.js",
+      "three/examples/jsm/postprocessing/EffectComposer.js",
+      "three/examples/jsm/postprocessing/RenderPass.js",
+      "three/examples/jsm/postprocessing/UnrealBloomPass.js",
+      "three/examples/jsm/postprocessing/OutputPass.js",
+      "three/examples/jsm/postprocessing/ShaderPass.js",
     ],
   },
   resolve: {

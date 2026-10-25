@@ -63,7 +63,9 @@ M = {
     'aleta_azul': mat('aleta_azul', srgb(34, 118, 158), 0.3, 0.45),       # aletas azuis do dissipador, vistas pelas grades
     'vermelho': mat('vermelho', srgb(200, 30, 34), 0.0, 0.4),             # fundo vermelho da chave da câmera (câmera desligada)
     'lente': mat('lente', srgb(10, 12, 20), 0.6, 0.08),                   # lente da webcam
-    'capa': mat('capa', srgb(14, 14, 15), 0.0, 0.7),                      # capinha deslizante da webcam (plástico preto fosco)
+    'capa': mat('capa', srgb(14, 14, 15), 0.0, 0.7),
+    'friso': mat('friso', srgb(188, 190, 196), 0.7, 0.28),               # quina clara na borda de trás do apoio, acima da junta
+    'brilho_legendas': mat('brilho_legendas', srgb(0, 0, 0), emis='texturas/teclas_brilho.png'),   # o site troca por luz aditiva                      # capinha deslizante da webcam (plástico preto fosco)
     'traseira_topo': mat('traseira_topo', tex='texturas/traseira_topo.png', rough=0.75),
     'teclas': mat('teclas', tex='texturas/teclas_cor.png', emis='texturas/teclas_luz.png', metal=0.0, rough=0.7),
     'brilho_teclas': mat('brilho_teclas', srgb(118, 120, 126), tex='texturas/teclas_halo_rgba.png', emis='texturas/teclas_halo.png', alpha_tex=True, blend='BLEND'),
@@ -252,14 +254,23 @@ o = bpy.data.objects.new('fundo', me); scene.collection.objects.link(o); o.paren
 for sx in (-1, 1):
     a, b = sorted((sx * 126, sx * 154))
     prism('pe_frente_%s' % ('e' if sx < 0 else 'd'), fillet([(a, 29), (b, 29), (b, 36), (a, 36)], 3.4), 0.0, zfundo(32.5), bev_bot=0.5, mats=('borracha',), parent=raiz)
-prism('pe_tras', fillet([(-152, 233), (152, 233), (152, 239), (-152, 239)], 2.9), 0.0, Z0, bev_bot=0.5, mats=('borracha',), parent=raiz)
+# borracha de apoio de trás: tira embaixo do bloco traseiro que acompanha o recuo do meio
+_cam = [(-158.0, D - 5.0), (-84.0, D - 5.0), (-76.0, DR - 5.0), (76.0, DR - 5.0), (84.0, D - 5.0), (158.0, D - 5.0)]
+_fora = [(x, y + 2.6) for x, y in _cam]; _dentro = [(x, y - 2.6) for x, y in _cam]
+prism('pe_tras', fillet(_dentro + list(reversed(_fora)), [2.5, 1, 1, 1, 1, 2.5, 2.5, 1, 1, 1, 1, 2.5], 4), 0.0, Z0, bev_bot=0.6, mats=('borracha',), parent=raiz)
 
 # ---------- traseira: portas no meio recuado, grades nas asas ----------
 def tras3d(a, b, d): return (a, D - d, b)
 def meio3d(a, b, d): return (a, DR - d, b)
 ZP = 10.6
 cortes_tras, cortes_lado = [], []
-PORTAS = [('usb_a_1', 64.0, 'usb'), ('usb_a_2', 38.5, 'usb'), ('rj45', 13.0, 'rj45'), ('hdmi', -20.5, 'hdmi'), ('dc_in', -48.0, 'dc')]
+LARG = {'usb': 12.6, 'rj45': 15.8, 'hdmi': 14.4, 'dc': 11.0}
+_ordem = [('usb_a_1', 'usb'), ('usb_a_2', 'usb'), ('rj45', 'rj45'), ('hdmi', 'hdmi'), ('dc_in', 'dc')]
+_vao = (152.0 - sum(LARG[t] for _, t in _ordem)) / (len(_ordem) + 1)   # vãos iguais, inclusive nas pontas
+PORTAS, _x = [], 76.0
+for _n, _t in _ordem:
+    _x -= _vao + LARG[_t] / 2; PORTAS.append((_n, round(_x, 2), _t)); _x -= LARG[_t] / 2
+json.dump({n: x for n, x, _ in PORTAS}, open(os.path.join(BASE, 'saida/portas.json'), 'w'))
 def contorno(tipo, ca, cb):
     if tipo == 'usb': return rect(12.6, 4.8, 0.5, ca, cb)
     if tipo == 'dc': return rect(11.0, 4.6, 1.2, ca, cb)
@@ -343,7 +354,8 @@ for sx in (-1, 1):
 # topo do bloco traseiro: textura de pontinhos com as legendas das portas, e o LED branco
 plane('traseira_topo', [(-176.0, 240.5), (176.0, 240.5), (176.0, 258.0), (-176.0, 258.0)], Z_REAR + 0.02, 'traseira_topo',
       uv=((1, 1), (0, 1), (0, 0), (1, 0)), parent=raiz)
-cyl_z('led_traseira', -36.0, 255.6, Z_REAR, Z_REAR + 0.12, 0.55, 'led_branco', parent=raiz, seg=16)
+_px = dict((n, x) for n, x, _ in PORTAS)
+cyl_z('led_traseira', (_px['hdmi'] + _px['dc_in']) / 2, 255.6, Z_REAR, Z_REAR + 0.12, 0.55, 'led_branco', parent=raiz, seg=16)
 
 # ---------- teclado (cada tecla é um objeto, para afundar e tocar sozinha) ----------
 kb = json.load(open(os.path.join(BASE, 'teclado.json')))
@@ -354,6 +366,9 @@ for k in kb['keys']:
     raios = [1.1, 1.1, 1.1, 1.1, 1.1, 0.0] if k['id'] == 'enter' else 1.1
     prism('tk_' + k['id'], fillet(poly, raios, 3), Z_DECK - 0.8, Z_DECK + T_KEY, bev_top=0.45, mats=('teclas',), uv=kuv, parent=raiz, cap_bot=False)
 plane('brilho_teclas', [(bx0 + DX, by0), (bx1 + DX, by0), (bx1 + DX, by1), (bx0 + DX, by1)], Z_DECK + 0.05, 'brilho_teclas', parent=raiz)
+plane('brilho_legendas', [(bx0 + DX, by0), (bx1 + DX, by0), (bx1 + DX, by1), (bx0 + DX, by1)], Z_DECK + T_KEY + 0.08, 'brilho_legendas', parent=raiz)
+# a linha clara um pouco acima da junta: um friso fino e levemente saltado na borda de trás do apoio, entre as dobradiças
+prism('friso', fillet([(-99.0, 225.4), (99.0, 225.4), (99.0, 226.3), (-99.0, 226.3)], 0.4, 3), Z_DECK - 0.2, Z_DECK + 0.32, bev_top=0.2, mats=('friso',), parent=raiz)
 tp = fillet([(-103.6 + DX, 8.0), (16.4 + DX, 8.0), (16.4 + DX, 83.0), (-103.6 + DX, 83.0)], 4.0, 5)
 prism('touchpad_sulco', offset(tp, -0.6), Z_DECK - 0.4, Z_DECK + 0.03, mats=('furo',), parent=raiz, cap_bot=False)
 prism('touchpad', tp, Z_DECK - 0.4, Z_DECK + 0.06, bev_top=0.25, mats=('touchpad',), parent=raiz, cap_bot=False)
@@ -376,7 +391,7 @@ lid_poly = fillet(lid, [6, 2.5, 2.5, 2.5, 2.5, 6, 1.5, 1.5], 6)
 prism('tampa_casca', lid_poly, Z_LID0, Z_LID1, bev_top=1.1, bev_bot=0.6, mats=('carcaca', 'moldura'), mat_top=0, mat_side=0, mat_bot=1, parent=tampa_grp)
 for sx in (-1, 1):
     a0, a1 = sorted((sx * 101.0, sx * 149.0))
-    prism('capa_dobradica_%d' % sx, fillet([(a0, 224.0), (a1, 224.0), (a1, D_LID + 0.15), (a0, D_LID + 0.15)], 1.2, 4), Z_LID0 - 0.12, Z_LID1 + 0.22,
+    prism('capa_dobradica_%d' % sx, fillet([(a0, 231.6), (a1, 231.6), (a1, D_LID + 0.15), (a0, D_LID + 0.15)], 1.2, 4), Z_LID0 - 0.12, Z_LID1 + 0.22,
           bev_top=0.8, bev_bot=0.4, mats=('dobradica',), parent=tampa_grp)
 plane('tela', [(-172.1, 11.5), (172.1, 11.5), (172.1, 205.1), (-172.1, 205.1)], Z_LID0 - 0.05, 'tela',
       uv=((0, 1), (1, 1), (1, 0), (0, 0)), parent=tampa_grp, down=True)

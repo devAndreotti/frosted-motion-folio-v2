@@ -12,6 +12,8 @@ export interface Parts {
   shutter: Object3D[];
   /** The camera switch on the right side. */
   camSwitch: Object3D[];
+  /** The screen: a click opens the project's real page. */
+  screen: Object3D[];
 }
 
 /** Finds the keys (tk_<id>), the lid shell and its pieces, and the power button in the loaded model. */
@@ -21,14 +23,16 @@ export function findParts(root: Object3D): Parts {
   const power: Object3D[] = [];
   const shutter: Object3D[] = [];
   const camSwitch: Object3D[] = [];
+  const screen: Object3D[] = [];
   root.traverse((o) => {
     if (o.name.startsWith('tk_')) keys.set(o.name.slice(3), o as Mesh);
     else if (o.name === 'tampa_casca' || o.name.startsWith('grupo_tampa')) lid.push(o);
     else if (o.name === 'botao_power' || o.name === 'led_power') power.push(o);
     else if (o.name === 'camera_capa' || o.name === 'camera_trilho') shutter.push(o);
     else if (o.name === 'chave_camera_botao') camSwitch.push(o);
+    else if (o.name === 'tela') screen.push(o);
   });
-  return { keys, lid, power, shutter, camSwitch };
+  return { keys, lid, power, shutter, camSwitch, screen };
 }
 
 /** Pushes a key down for a moment; a key already down is left alone. */
@@ -91,6 +95,7 @@ export interface PointerHandlers {
   power(): void;
   shutter(): void;
   camSwitch(): void;
+  screen(): void;
 }
 
 /**
@@ -108,9 +113,11 @@ export function bindPointer(el: HTMLElement, camera: Camera, getParts: () => Par
     const r = el.getBoundingClientRect();
     ndc.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
     ray.setFromCamera(ndc, camera);
-    const hit = ray.intersectObjects([...parts.keys.values(), ...parts.lid, ...parts.power, ...parts.shutter, ...parts.camSwitch], false)[0];
+    const all = [...parts.keys.values(), ...parts.lid, ...parts.power, ...parts.shutter, ...parts.camSwitch, ...parts.screen];
+    const hit = ray.intersectObjects(all, false)[0];
     if (!hit) return null;
     const o = hit.object;
+    if (parts.screen.includes(o)) return { kind: 'screen' as const };
     if (parts.power.includes(o)) return { kind: 'power' as const };
     if (parts.shutter.includes(o)) return { kind: 'shutter' as const };
     if (parts.camSwitch.includes(o)) return { kind: 'camSwitch' as const };
@@ -127,6 +134,7 @@ export function bindPointer(el: HTMLElement, camera: Camera, getParts: () => Par
     else if (hit?.kind === 'power') on.power();
     else if (hit?.kind === 'shutter') on.shutter();
     else if (hit?.kind === 'camSwitch') on.camSwitch();
+    else if (hit?.kind === 'screen') on.screen();
   };
   const onMove = (ev: PointerEvent) => {
     if (ev.buttons === 0) el.style.cursor = pick(ev) ? 'pointer' : 'grab';

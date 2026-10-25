@@ -1,22 +1,20 @@
-import { ACESFilmicToneMapping, CanvasTexture, MeshBasicMaterial, PerspectiveCamera, PMREMGenerator, Scene, SRGBColorSpace, Vector3, WebGLRenderer, type Object3D } from 'three';
+import { CanvasTexture, MeshBasicMaterial, SRGBColorSpace, type Object3D } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
-import { disposeScene, prepareModel, setupBacklight, setupLed, type Backlight, type HoloState } from './materials';
+import { prepareModel, setupBacklight, setupLed, type Backlight, type HoloState } from './materials';
 import { LED_COLORS, ROOM_LIGHT, ledState, lidAt, type BacklightLevel } from './logic';
 import { createScreen, type ScreenSlide } from './screen';
 import { bindPointer, cameraToggles, findParts, makePresser, type Parts } from './interact';
 import { keyIdFromCode, keyKind } from './keymap';
 import { createKeySound } from './keysound';
-import { createLiveScreen, type LiveScreen } from './live';
-import { createRig, VIEWS, type ViewName } from './rig';
+import { createLiveScreen, type LiveScreen, type LiveTarget } from './live';
+import { createRig, createStage, disposeStage, VIEWS, type ViewName } from './rig';
+import { createGlow } from './glow';
 
 export { VIEWS, type ViewName };
 
 const OPEN = (108 * Math.PI) / 180;
 const LID_MS = 1100;
-const TARGET = new Vector3(0, 0.1, -0.15);
 const deg = (d: number) => (d * Math.PI) / 180;
 
 export interface NotebookOptions {
@@ -25,8 +23,9 @@ export interface NotebookOptions {
   backlight: BacklightLevel;
   reducedMotion: boolean;
   sound: boolean;
-  /** Put the projects' real pages on the screen (desktop only; the screenshots stay as the fallback). */
+  /** Let a click on the screen load the project's real page (desktop only); the label names its close button. */
   live: boolean;
+  closeLiveLabel: string;
   /** Fixed camera and lid angle for screenshots (degrees and meters). */
   still?: { az: number; polar: number; dist: number; lid: number; target?: [number, number, number] };
   onReady?: () => void;
@@ -34,14 +33,16 @@ export interface NotebookOptions {
   onError?: () => void;
   /** The space bar was clicked: on the real laptop Fn+Space cycles the backlight. */
   onSpace?: () => void;
-  /** The lid was opened or closed from the model (a click on it). */
+  /** The lid was opened or closed from the model (a click on it); the real page opened or closed on the screen. */
   onLid?: (open: boolean) => void;
+  onLiveChange?: (open: boolean) => void;
 }
 
 export interface NotebookHandle {
   show(slide: ScreenSlide): void;
-  /** The real page of the current project, or null for the screenshot. */
-  setLive(url: string | null, host: string, title: string): void;
+  /** The page a click on the screen opens for the current project (null: none); closes the one open. */
+  setLiveTarget(target: LiveTarget | null): void;
+  closeLive(): void;
   setBacklight(level: BacklightLevel, color: string): void;
   setLid(open: boolean): void;
   setSound(on: boolean): void;
@@ -53,28 +54,15 @@ export interface NotebookHandle {
 
 /** Mounts the Lenovo LOQ model in `host`: renders only while something moves and the stage is on screen. */
 export function createNotebook(host: HTMLElement, opts: NotebookOptions): NotebookHandle {
-  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-  const coarse = window.matchMedia?.('(pointer: coarse)').matches === true;
-  const renderer = new WebGLRenderer({ antialias: dpr <= 1, alpha: true, powerPreference: coarse ? 'low-power' : 'high-performance', preserveDrawingBuffer: !!opts.still });
-  renderer.setPixelRatio(dpr);
-  renderer.outputColorSpace = SRGBColorSpace;
-  renderer.toneMapping = ACESFilmicToneMapping;
-  host.appendChild(renderer.domElement);
-  const scene = new Scene();
-  const pmrem = new PMREMGenerator(renderer);
-  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-  const camera = new PerspectiveCamera(26, 1, 0.01, 10);
-  const controls = new OrbitControls(camera, renderer.domElement);
-  Object.assign(controls, { enableDamping: true, dampingFactor: 0.08, enablePan: false, minDistance: 0.5, maxDistance: 1.6, rotateSpeed: 0.7 });
-  controls.minPolarAngle = deg(8);
-  controls.maxPolarAngle = deg(172);
-  controls.target.copy(TARGET);
+  const { renderer, scene, pmrem, camera, controls } = createStage(host, !!opts.still);
+  const glow = createGlow(renderer, scene, camera);
   const holo: HoloState = { shift: { value: 0 } };
   const screen = createScreen();
   const screenTex = new CanvasTexture(screen.canvas);
   screenTex.colorSpace = SRGBColorSpace;
   screenTex.flipY = false;
   const screenMat = new MeshBasicMaterial({ name: 'tela', map: screenTex, toneMapped: false });
+  const screenDraw = (now: number) => ((screenTex.needsUpdate = true), screen.draw(now));
   const sound = createKeySound();
   sound.setEnabled(opts.sound);
   let backlight: Backlight | null = null;
@@ -86,19 +74,15 @@ export function createNotebook(host: HTMLElement, opts: NotebookOptions): Notebo
   let pivot: Object3D | null = null;
   let lid = 1; // 0 closed .. 1 open
   let lidMove: { from: number; to: number; start: number } | null = null;
-  let screenOn = true;
-  let busy = false;
-  let raf = 0;
-  let visible = false;
-  let fading = false;
-  let disposed = false;
-  let fitDist = 1;
+  let [screenOn, busy, visible, fading, disposed] = [true, false, false, false, false];
+  let [raf, fitDist] = [0, 1];
 
   // closing the lid puts the laptop to sleep: screen, keyboard light and power LED go dark
   const awake = () => lid > 0.98 && screenOn;
   const applyPower = () => {
     const on = awake();
     backlight?.set(on ? level : 0, color);
+    glow.setLevel(on ? level : 0, color);
     scene.environmentIntensity = ROOM_LIGHT[on ? level : 0];
     screenMat.map = on ? screenTex : null;
     screenMat.color.set(on ? '#ffffff' : '#050506');
@@ -121,12 +105,11 @@ export function createNotebook(host: HTMLElement, opts: NotebookOptions): Notebo
       moving = true;
     }
     if (fading) {
-      fading = screen.draw(now);
-      screenTex.needsUpdate = true;
+      fading = screenDraw(now);
       moving = moving || fading;
     }
     holo.shift.value = controls.getAzimuthalAngle() * 0.8 + controls.getPolarAngle() * 0.5;
-    renderer.render(scene, camera);
+    glow.render();
     live?.sync(camera, awake());
     if (moving) schedule();
   };
@@ -145,6 +128,7 @@ export function createNotebook(host: HTMLElement, opts: NotebookOptions): Notebo
     const w = host.clientWidth || 1;
     const h = host.clientHeight || 1;
     renderer.setSize(w, h, false);
+    glow.setSize(w, h);
     live?.setSize(w, h);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
@@ -158,6 +142,8 @@ export function createNotebook(host: HTMLElement, opts: NotebookOptions): Notebo
   ro?.observe(host);
   const io = new IntersectionObserver(([e]) => {
     visible = e.isIntersecting;
+    // the real page only runs while the laptop is on screen
+    if (!visible) live?.close();
     schedule();
   });
   io.observe(host);
@@ -170,8 +156,10 @@ export function createNotebook(host: HTMLElement, opts: NotebookOptions): Notebo
   const press = makePresser(schedule);
   const camera3 = cameraToggles(() => parts, schedule, () => sound.press('normal'));
   // closing turns the camera to the lid, from behind, where its stickers read the right way up; opening comes back to the front
+  let liveTarget: LiveTarget | null = null;
   const setLid = (open: boolean) => {
     lidMove = { from: lid, to: open ? 1 : 0, start: performance.now() };
+    if (!open) live?.close();
     const [az, polar] = VIEWS[open ? 'frente' : 'fechada'];
     setView(az, polar, Math.max(fitDist, camera.position.distanceTo(controls.target)), opts.reducedMotion);
   };
@@ -186,8 +174,13 @@ export function createNotebook(host: HTMLElement, opts: NotebookOptions): Notebo
       setLid(open);
       opts.onLid?.(open);
     },
+    screen() {
+      if (liveTarget && awake()) live?.open(liveTarget);
+      schedule();
+    },
     power() {
       screenOn = !screenOn;
+      if (!screenOn) live?.close();
       sound.press('normal');
       applyPower();
       schedule();
@@ -207,10 +200,17 @@ export function createNotebook(host: HTMLElement, opts: NotebookOptions): Notebo
       backlight = setupBacklight(root);
       led = setupLed(root);
       if (tela && opts.live && !opts.still) {
-        live = createLiveScreen(host, tela, (b) => {
-          busy = b;
-          applyPower();
-          schedule();
+        live = createLiveScreen(host, tela, {
+          root,
+          canvas: renderer.domElement,
+          getCamera: () => camera,
+          closeLabel: opts.closeLiveLabel,
+          onBusy: (b) => {
+            busy = b;
+            applyPower();
+            schedule();
+          },
+          onChange: (open) => (opts.onLiveChange?.(open), schedule()),
         });
       }
       // shaders compile off the main thread where the browser allows it (KHR_parallel_shader_compile), before the first frame
@@ -249,9 +249,13 @@ export function createNotebook(host: HTMLElement, opts: NotebookOptions): Notebo
       fading = true;
       schedule();
     },
-    setLive(url, hostName, title) {
-      live?.open(url, hostName, title);
+    setLiveTarget(t) {
+      liveTarget = t;
+      live?.close();
       schedule();
+    },
+    closeLive() {
+      live?.close();
     },
     setBacklight(l, c) {
       level = l;
@@ -285,15 +289,10 @@ export function createNotebook(host: HTMLElement, opts: NotebookOptions): Notebo
       renderer.domElement.removeEventListener('webglcontextlost', onLost);
       controls.dispose();
       live?.dispose();
+      glow.dispose();
       sound.dispose();
-      disposeScene(scene);
       screenTex.dispose();
-      scene.environment?.dispose();
-      pmrem.dispose();
-      renderer.dispose();
-      // frees the GL context now instead of whenever the browser collects it (browsers cap live contexts)
-      renderer.forceContextLoss();
-      renderer.domElement.remove();
+      disposeStage(renderer, scene, pmrem);
     },
   };
 }

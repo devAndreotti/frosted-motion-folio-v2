@@ -32,21 +32,23 @@ describe('setupBacklight', () => {
     const keys = new MeshStandardMaterial({ name: 'teclas' });
     root.add(new Mesh(new BoxGeometry(), keys));
     const halo = new Mesh(new BoxGeometry(), new MeshStandardMaterial({ name: 'brilho_teclas', emissiveMap: new Texture() }));
-    root.add(halo);
-    return { root, keys, halo };
+    const glow = new Mesh(new BoxGeometry(), new MeshStandardMaterial({ name: 'brilho_legendas', emissiveMap: new Texture() }));
+    root.add(halo, glow);
+    return { root, keys, halo, glow };
   };
 
   it('lights the legends and the glow with the given color, stronger on high', () => {
-    const { root, keys, halo } = scene();
+    const { root, keys, halo, glow } = scene();
     const light = setupBacklight(root);
     light.set(1, '#22c55e');
+    expect((glow.material as unknown as MeshBasicMaterial).color.equals(new Color('#22c55e'))).toBe(true);
     const low = keys.emissiveIntensity;
     light.set(2, '#22c55e');
     expect(keys.emissive.equals(new Color('#22c55e'))).toBe(true);
     expect(keys.emissiveIntensity).toBeGreaterThan(low);
-    const glow = halo.material as unknown as MeshBasicMaterial;
-    expect(glow).toBeInstanceOf(MeshBasicMaterial);
-    expect(glow.visible).toBe(true);
+    const well = halo.material as unknown as MeshBasicMaterial;
+    expect(well).toBeInstanceOf(MeshBasicMaterial);
+    expect(well.visible).toBe(true);
   });
 
   it('switches everything off at level 0', () => {

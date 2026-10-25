@@ -1,5 +1,5 @@
 import { AdditiveBlending, Color, MeshBasicMaterial, MeshPhysicalMaterial, type IUniform, type Material, type Mesh, type MeshStandardMaterial, type Object3D, type Texture } from 'three';
-import { BACKLIGHT_HALO, BACKLIGHT_LEGEND, type BacklightLevel } from './logic';
+import { BACKLIGHT_GLOW, BACKLIGHT_HALO, BACKLIGHT_LEGEND, type BacklightLevel } from './logic';
 
 /** Shared uniform: the rainbow band of the holographic stickers moves with the camera, not with time. */
 export interface HoloState {
@@ -53,7 +53,8 @@ export interface Backlight {
 
 export function setupBacklight(root: Object3D): Backlight {
   const legends: MeshStandardMaterial[] = [];
-  let halo: MeshBasicMaterial | null = null;
+  // the lit well under the keys and the glow around the legends: additive light, its shape in a grayscale mask
+  const layers: { mat: MeshBasicMaterial; levels: readonly number[] }[] = [];
   root.traverse((o) => {
     const mesh = o as Mesh;
     if (!mesh.isMesh) return;
@@ -63,11 +64,12 @@ export function setupBacklight(root: Object3D): Backlight {
       mat.toneMapped = false;
       legends.push(mat);
     }
-    if (mat?.name === 'brilho_teclas') {
-      // additive glow on the deck; the halo mask is grayscale, so it works as an alpha map (green channel)
-      halo = new MeshBasicMaterial({ name: 'brilho_teclas', alphaMap: mat.emissiveMap, transparent: true, depthWrite: false, blending: AdditiveBlending, toneMapped: false });
-      mesh.material = halo;
+    const levels = { brilho_teclas: BACKLIGHT_HALO, brilho_legendas: BACKLIGHT_GLOW }[mat?.name ?? ''];
+    if (levels) {
+      const light = new MeshBasicMaterial({ name: mat.name, alphaMap: mat.emissiveMap, transparent: true, depthWrite: false, blending: AdditiveBlending, toneMapped: false });
+      mesh.material = light;
       mesh.renderOrder = 2;
+      layers.push({ mat: light, levels });
     }
   });
   const tint = new Color();
@@ -78,10 +80,10 @@ export function setupBacklight(root: Object3D): Backlight {
         m.emissive.copy(tint);
         m.emissiveIntensity = BACKLIGHT_LEGEND[level];
       }
-      if (halo) {
-        halo.color.copy(tint);
-        halo.opacity = BACKLIGHT_HALO[level];
-        halo.visible = level > 0;
+      for (const { mat, levels } of layers) {
+        mat.color.copy(tint);
+        mat.opacity = levels[level];
+        mat.visible = level > 0;
       }
     },
   };

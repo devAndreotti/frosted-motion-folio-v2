@@ -32,6 +32,19 @@ def lan(x, y):   # ícone de rede: três quadradinhos ligados
         d.rectangle([cx + (ox - 0.55) * s, cy + (oy - 0.45) * s, cx + (ox + 0.55) * s, cy + (oy + 0.45) * s], outline=COR, width=w)
     d.line([cx, cy - 0.65 * s, cx, cy + 0.2 * s], fill=COR, width=w); d.line([cx - 1.6 * s, cy + 0.2 * s, cx + 1.6 * s, cy + 0.2 * s], fill=COR, width=w)
     d.line([cx - 1.6 * s, cy + 0.2 * s, cx - 1.6 * s, cy + 0.55 * s], fill=COR, width=w); d.line([cx + 1.6 * s, cy + 0.2 * s, cx + 1.6 * s, cy + 0.55 * s], fill=COR, width=w)
+def plug(x, y):   # ícone da entrada de carga: plugue com dois pinos
+    cx, cy = px(x), py(y); s = PX; w = max(1, int(0.22 * s))
+    d.rounded_rectangle([cx - 1.4 * s, cy - 0.7 * s, cx + 1.0 * s, cy + 0.7 * s], radius=0.3 * s, outline=COR, width=w)
+    d.line([cx + 1.0 * s, cy - 0.35 * s, cx + 1.9 * s, cy - 0.35 * s], fill=COR, width=w)
+    d.line([cx + 1.0 * s, cy + 0.35 * s, cx + 1.9 * s, cy + 0.35 * s], fill=COR, width=w)
+    d.line([cx - 1.4 * s, cy, cx - 2.4 * s, cy], fill=COR, width=w)
+import json, os
+# mesma conta do build_blend.py: 5 portas com vãos iguais (inclusive nas pontas) no meio recuado, |X| < 76
+LARG = [('usb_a_1', 12.6), ('usb_a_2', 12.6), ('rj45', 15.8), ('hdmi', 14.4), ('dc_in', 11.0)]
+vao = (152.0 - sum(w for _, w in LARG)) / (len(LARG) + 1)
+P, x = {}, 76.0
+for n, w in LARG:
+    x -= vao + w / 2; P[n] = round(x, 2); x -= w / 2
 LY = 255.0
-usb(64.0, LY); usb(38.5, LY); lan(13.0, LY); txt(-20.5, LY, 'HDMI')
-im.save('texturas/traseira_topo.png'); print(im.size)
+usb(P['usb_a_1'], LY); usb(P['usb_a_2'], LY); lan(P['rj45'], LY); txt(P['hdmi'], LY, 'HDMI'); plug(P['dc_in'], LY)
+im.save('texturas/traseira_topo.png'); print(im.size, P)

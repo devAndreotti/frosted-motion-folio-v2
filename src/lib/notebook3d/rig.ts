@@ -1,5 +1,7 @@
-import { Spherical, type PerspectiveCamera } from 'three';
-import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { ACESFilmicToneMapping, PerspectiveCamera, PMREMGenerator, Scene, Spherical, SRGBColorSpace, Vector3, WebGLRenderer } from 'three';
+import { disposeScene } from './materials';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 
 const VIEW_MS = 900;
 const deg = (d: number) => (d * Math.PI) / 180;
@@ -40,4 +42,35 @@ export function createRig(camera: PerspectiveCamera, controls: OrbitControls, re
       return true;
     },
   };
+}
+
+/** The renderer (transparent, DPR up to 1.5), a room-lit scene, the camera and its orbit controls. */
+export function createStage(host: HTMLElement, still: boolean) {
+  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+  const coarse = window.matchMedia?.('(pointer: coarse)').matches === true;
+  const renderer = new WebGLRenderer({ antialias: dpr <= 1, alpha: true, powerPreference: coarse ? 'low-power' : 'high-performance', preserveDrawingBuffer: still });
+  renderer.setPixelRatio(dpr);
+  renderer.outputColorSpace = SRGBColorSpace;
+  renderer.toneMapping = ACESFilmicToneMapping;
+  host.appendChild(renderer.domElement);
+  const scene = new Scene();
+  const pmrem = new PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  const camera = new PerspectiveCamera(26, 1, 0.01, 10);
+  const controls = new OrbitControls(camera, renderer.domElement);
+  Object.assign(controls, { enableDamping: true, dampingFactor: 0.08, enablePan: false, minDistance: 0.5, maxDistance: 1.6, rotateSpeed: 0.7 });
+  controls.minPolarAngle = deg(8);
+  controls.maxPolarAngle = deg(172);
+  controls.target.copy(new Vector3(0, 0.1, -0.15));
+  return { renderer, scene, pmrem, camera, controls };
+}
+
+/** Frees the scene, the environment map and the GL context (now, instead of whenever the browser collects it: browsers cap live contexts). */
+export function disposeStage(renderer: WebGLRenderer, scene: Scene, pmrem: PMREMGenerator) {
+  disposeScene(scene);
+  scene.environment?.dispose();
+  pmrem.dispose();
+  renderer.dispose();
+  renderer.forceContextLoss();
+  renderer.domElement.remove();
 }

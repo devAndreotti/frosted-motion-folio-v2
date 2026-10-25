@@ -8,7 +8,7 @@ import { projectAsset } from '@/lib/projects/asset';
 import { track } from '@/lib/track';
 import { hostOf, liveUrlFor, nextBacklight, parseBacklight, wrapIndex, type BacklightLevel } from '@/lib/notebook3d/logic';
 import type { NotebookHandle, ViewName } from '@/lib/notebook3d/scene';
-import NotebookControls, { type ScreenMode } from './NotebookControls';
+import NotebookControls from './NotebookControls';
 
 const GLB = './models/notebook-loq.glb';
 const POSTER = './models/notebook-loq.webp';
@@ -40,7 +40,7 @@ const webglOk = () => {
 };
 
 const reducedMotion = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true;
-// the real pages go on the screen only with a mouse and room for them; touch and narrow screens keep the screenshots
+// a click on the screen opens the real page only with a mouse and room for it; touch and narrow screens keep the screenshots
 const canLive = () => typeof window !== 'undefined' && window.matchMedia?.('(pointer: fine)').matches === true && window.innerWidth >= 900;
 
 interface Notebook3DProps {
@@ -67,10 +67,9 @@ const Notebook3D = ({ projects, onOpen }: Notebook3DProps) => {
   const [view, setView] = useState<ViewName>('frente');
   const [sound, setSound] = useState(() => load('nb.som') !== '0');
   const [desktop] = useState(canLive);
-  const [screen, setScreen] = useState<ScreenMode>(() => (load('nb.tela') === 'imagem' ? 'imagem' : 'vivo'));
   const [lidOpen, setLidOpen] = useState(true);
+  const [liveOpen, setLiveOpen] = useState(false);
   const [near, setNear] = useState(false);
-  const [seen, setSeen] = useState(false);
   const [ready, setReady] = useState(false);
   // the canvas replaces the still picture only once the first project is on its screen
   const [shown, setShown] = useState(false);
@@ -82,22 +81,8 @@ const Notebook3D = ({ projects, onOpen }: Notebook3DProps) => {
     const el = stage.current;
     if (!el || typeof IntersectionObserver === 'undefined') return;
     const io = new IntersectionObserver(([e]) => e.isIntersecting && setNear(true), { rootMargin: '400px 0px' });
-    // a live page loads only once the stage stays on screen for a moment, not while scrolling past
-    let timer = 0;
-    const io2 = new IntersectionObserver(
-      ([e]) => {
-        window.clearTimeout(timer);
-        if (e.isIntersecting) timer = window.setTimeout(() => setSeen(true), 1200);
-      },
-      { threshold: 0.4 },
-    );
     io.observe(el);
-    io2.observe(el);
-    return () => {
-      window.clearTimeout(timer);
-      io.disconnect();
-      io2.disconnect();
-    };
+    return () => io.disconnect();
   }, []);
 
   useEffect(() => {
@@ -117,10 +102,12 @@ const Notebook3D = ({ projects, onOpen }: Notebook3DProps) => {
           reducedMotion: reducedMotion(),
           sound,
           live: desktop,
+          closeLiveLabel: nb.closeLive,
           onReady: () => alive && setReady(true),
           onError: () => alive && setFailed(true),
           onSpace: () => setLight((l) => nextBacklight(l)),
           onLid: (open) => alive && setLidOpen(open),
+          onLiveChange: (open) => alive && setLiveOpen(open),
         });
       })
       .catch(() => undefined);
@@ -142,7 +129,8 @@ const Notebook3D = ({ projects, onOpen }: Notebook3DProps) => {
     img.decoding = 'async';
     img.onload = () => {
       if (!alive) return;
-      handle.current?.show({ image: img, host: hostOf(project.liveUrl ?? project.githubUrl) });
+      const hint = desktop && project.liveUrl ? nb.clickToUse : undefined;
+      handle.current?.show({ image: img, host: hostOf(project.liveUrl ?? project.githubUrl), hint });
       requestAnimationFrame(() => alive && setShown(true));
     };
     img.src = projectAsset(project.image);
@@ -152,13 +140,14 @@ const Notebook3D = ({ projects, onOpen }: Notebook3DProps) => {
     return () => {
       alive = false;
     };
-  }, [ready, project, projects, index]);
+  }, [ready, project, projects, index, desktop, nb]);
 
+  // the real page is heavy: it loads only when the screen is clicked, and unloads with the next project
   useEffect(() => {
     if (!ready || !project) return;
-    const url = liveUrlFor(project.liveUrl, desktop && seen && screen === 'vivo');
-    handle.current?.setLive(url, hostOf(project.liveUrl), nb.liveTitle(project.title));
-  }, [ready, project, desktop, seen, screen, nb]);
+    const url = liveUrlFor(project.liveUrl, desktop);
+    handle.current?.setLiveTarget(url ? { url, host: hostOf(url), title: nb.liveTitle(project.title) } : null);
+  }, [ready, project, desktop, nb]);
 
   useEffect(() => {
     handle.current?.setBacklight(light, color);
@@ -175,6 +164,7 @@ const Notebook3D = ({ projects, onOpen }: Notebook3DProps) => {
   const onKey = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.target !== e.currentTarget || e.altKey || e.ctrlKey || e.metaKey) return;
     const pressed = handle.current?.pressCode(e.code) ?? false;
+    if (e.key === 'Escape') handle.current?.closeLive();
     if (e.key === 'ArrowLeft') go(-1);
     else if (e.key === 'ArrowRight') go(1);
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || (pressed && NO_SCROLL.has(e.code))) e.preventDefault();
@@ -226,16 +216,16 @@ const Notebook3D = ({ projects, onOpen }: Notebook3DProps) => {
             setView(v);
             handle.current?.view(v);
           }}
-          screen={desktop ? screen : null}
-          onScreen={(m) => {
-            setScreen(m);
-            save('nb.tela', m);
-          }}
           lidOpen={lidOpen}
           onLid={toggleLid}
           sound={sound}
           onSound={() => setSound((s) => !s)}
         />
+        {liveOpen && (
+          <button type="button" className="btn btn-gh btn-sm nb3d-back" onClick={() => handle.current?.closeLive()}>
+            {nb.closeLive}
+          </button>
+        )}
         <p className="nb3d-hint">{nb.hint}</p>
       </div>
     </div>

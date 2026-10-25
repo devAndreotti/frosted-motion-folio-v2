@@ -7,6 +7,8 @@ const BAR = 34;
 export interface ScreenSlide {
   image: HTMLImageElement | null;
   host: string;
+  /** A pill at the bottom of the shot, e.g. "click to use the site". */
+  hint?: string;
 }
 
 /**
@@ -50,6 +52,16 @@ export function createScreen() {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(s.host, W / 2, BAR / 2 + 1);
+    if (s.hint) {
+      ctx.font = '600 20px system-ui, sans-serif';
+      const tw = ctx.measureText(s.hint).width + 44;
+      ctx.fillStyle = 'rgba(12, 13, 16, 0.78)';
+      ctx.beginPath();
+      ctx.roundRect((W - tw) / 2, H - 64, tw, 40, 20);
+      ctx.fill();
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(s.hint, W / 2, H - 43);
+    }
     ctx.globalAlpha = 1;
   }
 

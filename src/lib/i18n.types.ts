@@ -113,8 +113,8 @@ export interface Strings {
         lightLevels: [string, string, string];
         view: string;
         views: { frente: string; tampa: string; base: string };
-        screen: string;
-        screenModes: [string, string];
+        clickToUse: string;
+        closeLive: string;
         lidOpen: string;
         lidClose: string;
         sound: string;

@@ -60,9 +60,10 @@ describe("Notebook3D", () => {
     expect(localStorage.getItem("nb.som")).toBe("0");
   });
 
-  it("keeps the screenshots (no live-site switch) on a device without a fine pointer", () => {
+  it("has no screen switch: the real site opens only with a click on the screen", () => {
     renderNotebook();
     expect(screen.queryByRole("group", { name: "Tela" })).toBeNull();
+    expect(screen.getByText(/Clique na tela para abrir o site de verdade/)).toBeTruthy();
   });
 });
 

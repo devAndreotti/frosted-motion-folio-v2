@@ -5,8 +5,11 @@
 export type BacklightLevel = 0 | 1 | 2;
 
 /** Emissive strength of the key legends per level, and how strong the glow between the keys is. */
-export const BACKLIGHT_LEGEND = [0, 0.6, 1.1] as const;
-export const BACKLIGHT_HALO = [0, 0.3, 0.65] as const;
+export const BACKLIGHT_LEGEND = [0, 0.8, 1.5] as const;
+/** The lit keyboard well: light coming from under every key and filling the gaps. */
+export const BACKLIGHT_HALO = [0, 0.4, 0.85] as const;
+/** The glow (bloom) around the legends, drawn just above the keys. */
+export const BACKLIGHT_GLOW = [0, 0.55, 1] as const;
 /** The room light dims a little as the backlight goes up, so the color reads like it does at night. */
 export const ROOM_LIGHT = [0.55, 0.45, 0.34] as const;
 

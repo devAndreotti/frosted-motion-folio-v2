@@ -7,23 +7,18 @@ import SegmentedControl from './SegmentedControl';
 const LEVELS: BacklightLevel[] = [0, 1, 2];
 const VIEW_NAMES: Exclude<ViewName, 'fechada'>[] = ['frente', 'tampa', 'base'];
 
-export type ScreenMode = 'vivo' | 'imagem';
-
 interface NotebookControlsProps {
   light: BacklightLevel;
   onLight: (level: BacklightLevel) => void;
   view: ViewName;
   onView: (view: ViewName) => void;
-  /** Null when the device shows only screenshots (touch or narrow screens). */
-  screen: ScreenMode | null;
-  onScreen: (mode: ScreenMode) => void;
   lidOpen: boolean;
   onLid: () => void;
   sound: boolean;
   onSound: () => void;
 }
 
-/** The laptop's switches: keyboard light, camera view, what the screen shows, the lid and the key sounds. */
+/** The laptop's switches: keyboard light, camera view, the lid and the key sounds. */
 const NotebookControls = (p: NotebookControlsProps) => {
   const { t } = useLanguage();
   const nb = t.projects.more.notebook;
@@ -36,13 +31,6 @@ const NotebookControls = (p: NotebookControlsProps) => {
         <span className="nb3d-lbl">{nb.view}</span>
         <SegmentedControl layoutId="nb3d-view" ariaLabel={nb.view} value={p.view} onChange={p.onView}
           options={VIEW_NAMES.map((v) => ({ value: v, label: nb.views[v] }))} />
-        {p.screen && (
-          <>
-            <span className="nb3d-lbl">{nb.screen}</span>
-            <SegmentedControl layoutId="nb3d-screen" ariaLabel={nb.screen} value={p.screen} onChange={p.onScreen}
-              options={[{ value: 'vivo' as const, label: nb.screenModes[0] }, { value: 'imagem' as const, label: nb.screenModes[1] }]} />
-          </>
-        )}
       </div>
       <div className="nb3d-acts">
         <button type="button" className="btn btn-gh btn-sm" onClick={p.onLid}>
