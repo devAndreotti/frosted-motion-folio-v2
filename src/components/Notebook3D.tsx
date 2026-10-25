@@ -82,11 +82,19 @@ const Notebook3D = ({ projects, onOpen }: Notebook3DProps) => {
     const el = stage.current;
     if (!el || typeof IntersectionObserver === 'undefined') return;
     const io = new IntersectionObserver(([e]) => e.isIntersecting && setNear(true), { rootMargin: '400px 0px' });
-    // a live page loads only once the stage is really on screen, not while scrolling past
-    const io2 = new IntersectionObserver(([e]) => e.isIntersecting && setSeen(true), { threshold: 0.4 });
+    // a live page loads only once the stage stays on screen for a moment, not while scrolling past
+    let timer = 0;
+    const io2 = new IntersectionObserver(
+      ([e]) => {
+        window.clearTimeout(timer);
+        if (e.isIntersecting) timer = window.setTimeout(() => setSeen(true), 1200);
+      },
+      { threshold: 0.4 },
+    );
     io.observe(el);
     io2.observe(el);
     return () => {
+      window.clearTimeout(timer);
       io.disconnect();
       io2.disconnect();
     };

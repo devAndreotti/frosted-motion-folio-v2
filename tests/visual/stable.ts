@@ -43,6 +43,8 @@ export async function stabilize(page: Page) {
       return (seed - 1) / 2147483646;
     };
   });
+  // os sites dos projetos que o notebook 3D abre na tela (iframe) não entram na comparação: o palco já é mascarado
+  await page.route(/devandreotti\.github\.io\//, (route) => route.abort());
   await page.route(GH_PATTERN, (route) => {
     const url = route.request().url();
     const body = url.includes("contributions") ? contributions() : url.includes("events") ? events() : { public_repos: 42 };
