@@ -104,7 +104,10 @@ const Notebook3D = ({ projects, onOpen }: Notebook3DProps) => {
     const el = stage.current;
     if (!near || !el || !webglOk()) return;
     let alive = true;
-    import('@/lib/notebook3d/scene')
+    // three.js and the model start when the browser is idle, so a click right after scrolling here stays quick
+    const idle = (fn: () => void) => (typeof window.requestIdleCallback === 'function' ? window.requestIdleCallback(fn, { timeout: 2000 }) : window.setTimeout(fn, 200));
+    new Promise<void>((resolve) => idle(resolve))
+      .then(() => import('@/lib/notebook3d/scene'))
       .then(({ createNotebook }) => {
         if (!alive) return;
         handle.current = createNotebook(el, {

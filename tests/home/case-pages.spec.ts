@@ -5,6 +5,12 @@ import { moreProjects } from "../../src/data/moreProjects";
 const sample = curatedProjects[0];
 const card = moreProjects[0];
 
+// The 3D laptop above the gallery is not under test here. CI has no GPU (WebGL runs on SwiftShader, on the CPU), and setting
+// the scene up there can hold the main thread for seconds right when a card is clicked, so these tests keep its still picture.
+test.beforeEach(async ({ page }) => {
+  await page.route(/notebook-loq\.glb$/, (route) => route.abort());
+});
+
 test("a ranked row goes to the case's own address, and going back closes the popup", async ({ page }) => {
   await page.goto("");
   await page.locator("#projects").getByRole("link", { name: new RegExp(sample.title) }).click();

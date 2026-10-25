@@ -210,27 +210,35 @@ export function createNotebook(host: HTMLElement, opts: NotebookOptions): Notebo
           schedule();
         });
       }
-      scene.add(root);
-      resize();
-      const s = opts.still;
-      if (s) {
-        lid = s.lid / 108;
-        if (s.target) controls.target.set(...s.target);
-        controls.minDistance = 0.05;
-        setView(s.az, s.polar, s.dist, true);
-      } else {
-        // starts exactly like the still picture it replaces: lid open, from the front
-        setView(VIEWS.frente[0], VIEWS.frente[1], fitDist, true);
-      }
-      if (pivot) pivot.rotation.x = -OPEN * lid;
-      applyPower();
-      fading = true;
-      schedule();
-      opts.onReady?.();
+      // shaders compile off the main thread where the browser allows it (KHR_parallel_shader_compile), before the first frame
+      renderer
+        .compileAsync(root, camera, scene)
+        .catch(() => undefined)
+        .then(() => !disposed && start(root));
     },
     undefined,
     () => opts.onError?.(),
   );
+
+  function start(root: Object3D) {
+    scene.add(root);
+    resize();
+    const s = opts.still;
+    if (s) {
+      lid = s.lid / 108;
+      if (s.target) controls.target.set(...s.target);
+      controls.minDistance = 0.05;
+      setView(s.az, s.polar, s.dist, true);
+    } else {
+      // starts exactly like the still picture it replaces: lid open, from the front
+      setView(VIEWS.frente[0], VIEWS.frente[1], fitDist, true);
+    }
+    if (pivot) pivot.rotation.x = -OPEN * lid;
+    applyPower();
+    fading = true;
+    schedule();
+    opts.onReady?.();
+  }
 
   return {
     show(slide) {
