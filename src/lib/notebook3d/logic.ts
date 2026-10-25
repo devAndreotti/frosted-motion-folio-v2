@@ -40,3 +40,25 @@ export function hostOf(url: string | undefined) {
     return url;
   }
 }
+
+/** Power LED: blue while on, red while the screen is busy loading a page (the LOQ's "high load" red), off asleep or closed. */
+export type LedState = 'off' | 'on' | 'busy';
+export const LED_COLORS: Record<Exclude<LedState, 'off'>, string> = { on: '#2f7bff', busy: '#ff2b2b' };
+
+export function ledState(lidOpen: boolean, screenOn: boolean, busy: boolean): LedState {
+  if (!lidOpen || !screenOn) return 'off';
+  return busy ? 'busy' : 'on';
+}
+
+/** Lid angle (0 closed .. 1 open) at time `t` of a `ms` long move from `from` to `to`, eased in and out. */
+export function lidAt(from: number, to: number, t: number, ms: number) {
+  const p = ms <= 0 ? 1 : Math.min(1, Math.max(0, t / ms));
+  const e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+  return from + (to - from) * e;
+}
+
+/** The page shown on the laptop's screen: the live site when there is one and the device can afford it. */
+export function liveUrlFor(url: string | undefined, enabled: boolean) {
+  if (!enabled || !url) return null;
+  return /^https:\/\//.test(url) ? url : null;
+}

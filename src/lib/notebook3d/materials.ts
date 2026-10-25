@@ -1,4 +1,4 @@
-import { AdditiveBlending, Color, MeshBasicMaterial, MeshPhysicalMaterial, type IUniform, type Mesh, type MeshStandardMaterial, type Object3D } from 'three';
+import { AdditiveBlending, Color, MeshBasicMaterial, MeshPhysicalMaterial, type IUniform, type Material, type Mesh, type MeshStandardMaterial, type Object3D, type Texture } from 'three';
 import { BACKLIGHT_HALO, BACKLIGHT_LEGEND, type BacklightLevel } from './logic';
 
 /** Shared uniform: the rainbow band of the holographic stickers moves with the camera, not with time. */
@@ -84,4 +84,61 @@ export function setupBacklight(root: Object3D): Backlight {
       }
     },
   };
+}
+
+/** The power button's LED: an emissive dot whose color the scene sets (see ledState). */
+export function setupLed(root: Object3D) {
+  let led: MeshStandardMaterial | null = null;
+  root.traverse((o) => {
+    const mesh = o as Mesh;
+    if (mesh.isMesh && (mesh.material as MeshStandardMaterial)?.name === 'led') {
+      led = (mesh.material as MeshStandardMaterial).clone();
+      led.toneMapped = false;
+      mesh.material = led;
+    }
+  });
+  const tint = new Color();
+  return {
+    set(color: string | null) {
+      if (!led) return;
+      tint.set(color ?? '#000000');
+      led.color.set(color ? '#000000' : '#101012');
+      led.emissive.copy(tint);
+      led.emissiveIntensity = color ? 3 : 0;
+    },
+  };
+}
+
+/** Swaps in the holographic sticker material and the screen; sharper textures at grazing angles. Returns the screen mesh. */
+export function prepareModel(root: Object3D, holo: HoloState, screenMat: Material, aniso: number) {
+  let stickers: Material | null = null;
+  let tela: Mesh | null = null;
+  root.traverse((o) => {
+    const mesh = o as Mesh;
+    if (!mesh.isMesh) return;
+    const mat = mesh.material as MeshStandardMaterial;
+    if (mat.map && (mat.name === 'adesivos' || mat.name === 'teclas')) mat.map.anisotropy = aniso;
+    if (mat.name === 'adesivos') {
+      stickers ??= holoMaterial(mat, holo);
+      mesh.material = stickers;
+    }
+    if (mat.name === 'tela') {
+      mesh.material = screenMat;
+      tela = mesh;
+    }
+  });
+  return tela as Mesh | null;
+}
+
+/** Frees every geometry, material and texture of the scene. */
+export function disposeScene(root: Object3D) {
+  root.traverse((o) => {
+    const mesh = o as Mesh;
+    if (!mesh.isMesh) return;
+    mesh.geometry.dispose();
+    for (const m of [mesh.material].flat() as MeshStandardMaterial[]) {
+      for (const t of [m.map, m.emissiveMap, m.metalnessMap, m.roughnessMap, m.alphaMap] as (Texture | null)[]) t?.dispose();
+      m.dispose();
+    }
+  });
 }

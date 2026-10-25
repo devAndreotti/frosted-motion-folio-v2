@@ -39,6 +39,7 @@ export default defineConfig(({ mode }) => ({
       "three/examples/jsm/libs/meshopt_decoder.module.js",
       "three/examples/jsm/controls/OrbitControls.js",
       "three/examples/jsm/environments/RoomEnvironment.js",
+      "three/examples/jsm/renderers/CSS3DRenderer.js",
     ],
   },
   resolve: {

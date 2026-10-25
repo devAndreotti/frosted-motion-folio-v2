@@ -745,6 +745,114 @@
     102.8,
     17.6
    ]
+  },
+  {
+   "id": "forma_xA",
+   "fonte": "forma",
+   "brilho": "holo",
+   "desc": "recorte holográfico liso",
+   "modelo_rect": [
+    -176.1,
+    144.0,
+    -166.9,
+    161.9
+   ]
+  },
+  {
+   "id": "forma_xB",
+   "fonte": "forma",
+   "brilho": "holo",
+   "desc": "recorte holográfico liso",
+   "modelo_rect": [
+    -173.4,
+    127.4,
+    -167.3,
+    141.2
+   ]
+  },
+  {
+   "id": "forma_xC",
+   "fonte": "forma",
+   "brilho": "holo",
+   "desc": "recorte holográfico liso",
+   "modelo_rect": [
+    163.1,
+    151.2,
+    169.1,
+    170.3
+   ]
+  },
+  {
+   "id": "forma_xD",
+   "fonte": "forma",
+   "brilho": "holo",
+   "desc": "recorte holográfico liso",
+   "modelo_rect": [
+    161.1,
+    133.4,
+    169.5,
+    144.0
+   ]
+  },
+  {
+   "id": "forma_xE",
+   "fonte": "forma",
+   "brilho": "holo",
+   "desc": "recorte holográfico liso",
+   "modelo_rect": [
+    165.4,
+    118.6,
+    168.9,
+    129.0
+   ]
+  },
+  {
+   "id": "forma_xF",
+   "fonte": "forma",
+   "brilho": "holo",
+   "desc": "recorte holográfico liso",
+   "modelo_rect": [
+    95.0,
+    5.8,
+    125.6,
+    32.8
+   ]
+  },
+  {
+   "id": "forma_xG",
+   "fonte": "forma",
+   "brilho": "holo",
+   "desc": "recorte holográfico liso",
+   "modelo_rect": [
+    29.0,
+    208.9,
+    40.7,
+    221.3
+   ]
+  },
+  {
+   "id": "forma_xH",
+   "fonte": "forma",
+   "brilho": "holo",
+   "desc": "recorte holográfico liso",
+   "modelo_rect": [
+    60.7,
+    213.5,
+    81.0,
+    223.5
+   ]
+  },
+  {
+   "id": "forma_xI",
+   "fonte": "forma",
+   "brilho": "holo",
+   "desc": "recorte holográfico liso",
+   "modelo_rect": [
+    144.6,
+    205.0,
+    165.6,
+    218.0
+   ]
   }
  ],
  "bottom": [

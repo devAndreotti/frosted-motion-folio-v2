@@ -19,11 +19,16 @@ scripts refazem o GLB a partir das fotos. As fotos (~90 MB) não ficam no reposi
    - `foto_arte.py <id>`: plaquetas de fábrica, Intel/RTX, Senna e a tabela de atalhos saem do próprio recorte
      retificado (bordas pelo gradiente); o LOQ gravado vira só as letras.
    - `formas.py`: os recortes holográficos lisos saem direto da planta (fundo local por mediana).
+   - `formas_grabcut.py`: as formas que faltaram, nas fotos novas registradas na planta (GrabCut nas que têm cor;
+     contorno à mão, tirado de `grade_recorte.py`, nas pálidas).
 4. **Teclado** (`teclado.py`): layout ABNT2 medido tecla a tecla (`teclado.json`) e as texturas de cor, de luz
    (legendas, para a retroiluminação) e do halo entre as teclas.
-5. **Modelo** (`build_blend.py`, Blender 4.0 headless via `blender.sh`): corpo, bloco traseiro com portas, grades,
-   pés, dobradiças, teclas, touchpad, tampa com a saliência da webcam, tela (`tela`, trocada no site por um canvas)
-   e um decal por adesivo (`sticker_<id>`). `atlas.py` encaixa as artes num atlas 2048² e grava a máscara do filme
+5. **Modelo** (`build_blend.py`, Blender 4.0 headless via `blender.sh`): corpo com a borda de cima arredondada, bloco
+   traseiro com as portas recortadas de verdade (boolean: USB-A com língua, RJ-45 com os pinos, HDMI, energia), grades
+   dos cantos com aletas e a haste verde-água, USB-C/P2/USB-A/chave da câmera nas laterais, dobradiças com as capas
+   escuras, botão de ligar com o LED (`led_power`), cada tecla como objeto (`tk_<id>`), tampa com a saliência da webcam,
+   tela (`tela`, trocada no site por um canvas ou pela página real) e os adesivos. `traseira.py` desenha o topo do bloco
+   traseiro (pontinhos e as legendas das portas). As peças estáticas são juntadas por material antes de exportar. `atlas.py` encaixa as artes num atlas 2048² e grava a máscara do filme
    holográfico (canais R e B da textura metal/rugosidade).
 6. **GLB** (`montar.sh`): atlas → Blender → `gltf-transform optimize` (meshopt + WebP) → ~1,1 MB.
 

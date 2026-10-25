@@ -36,3 +36,30 @@ describe('notebook3d logic', () => {
     expect(hostOf('not a url')).toBe('not a url');
   });
 });
+
+describe('notebook3d power, lid and live screen', () => {
+  it('lights the power LED blue, red while loading, and turns it off asleep or closed', async () => {
+    const { ledState, LED_COLORS } = await import('./logic');
+    expect(ledState(true, true, false)).toBe('on');
+    expect(ledState(true, true, true)).toBe('busy');
+    expect(ledState(false, true, true)).toBe('off');
+    expect(ledState(true, false, false)).toBe('off');
+    expect(LED_COLORS.busy).not.toBe(LED_COLORS.on);
+  });
+
+  it('moves the lid with an eased curve that starts and ends exactly', async () => {
+    const { lidAt } = await import('./logic');
+    expect(lidAt(0, 1, 0, 900)).toBe(0);
+    expect(lidAt(0, 1, 450, 900)).toBeCloseTo(0.5);
+    expect(lidAt(1, 0, 2000, 900)).toBe(0);
+    expect(lidAt(0, 1, 10, 0)).toBe(1);
+  });
+
+  it('only puts https sites on the screen, and only when enabled', async () => {
+    const { liveUrlFor } = await import('./logic');
+    expect(liveUrlFor('https://devandreotti.github.io/pokedex', true)).toBe('https://devandreotti.github.io/pokedex');
+    expect(liveUrlFor('https://devandreotti.github.io/pokedex', false)).toBeNull();
+    expect(liveUrlFor('http://example.com', true)).toBeNull();
+    expect(liveUrlFor(undefined, true)).toBeNull();
+  });
+});

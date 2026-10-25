@@ -13,7 +13,9 @@ function mount(q: P, done: () => void) {
     color: q.color || '#ffffff',
     backlight: num('light', 0) as 0 | 1 | 2,
     reducedMotion: true,
-    still: { az: num('az', 0), polar: num('polar', 68), dist: num('dist', 0.95), lid: num('lid', 108) },
+  sound: false,
+  live: false,
+    still: { az: num('az', 0), polar: num('polar', 68), dist: num('dist', 0.95), lid: num('lid', 108), target: q.tx != null ? [num('tx', 0), num('ty', 0), num('tz', 0)] : undefined },
     onReady() {
       const img = new Image();
       img.onload = () => {

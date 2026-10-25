@@ -16,6 +16,18 @@
 @media (hover: hover) { .nb3d-arrow:hover { border-color: var(--border-2); } }
 .nb3d-tools { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 10px 12px; margin-top: 10px; }
 .nb3d-lbl { color: var(--fg-2); font: 500 13px/1.2 var(--font-sans); }
+.nb3d-acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.nb3d-acts .btn { gap: 8px; }
+/* the real page on the laptop's screen: a CSS3D layer over the canvas; only the page window takes the pointer */
+.nb3d-live { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.nb3d-live-win { display: flex; flex-direction: column; background: #0d0e11; pointer-events: auto; opacity: 0; transition: opacity 0.4s ease; backface-visibility: hidden; }
+.nb3d-live-win.is-loaded { opacity: 1; }
+.nb3d-live-bar { display: flex; align-items: center; gap: 8px; height: 34px; flex: none; padding: 0 14px; background: #1b1d22; color: #b9bdc6; font: 500 15px/1 system-ui, sans-serif; }
+.nb3d-live-bar i { width: 12px; height: 12px; border-radius: 50%; background: #ff5f57; }
+.nb3d-live-bar i:nth-child(2) { background: #febc2e; }
+.nb3d-live-bar i:nth-child(3) { background: #28c840; }
+.nb3d-live-bar span { flex: 1; margin: 0 70px 0 50px; padding: 5px 12px; border-radius: 10px; background: #2a2d34; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nb3d-live-win iframe { flex: 1; width: 100%; border: 0; background: #fff; }
 .nb3d-hint { margin: 6px 0 0; color: var(--fg-3, var(--fg-2)); font: 400 13px/1.5 var(--font-sans); }
 @media (max-width: 960px) {
   .nb3d { grid-template-columns: minmax(0, 1fr); gap: 18px; }
@@ -26,5 +38,5 @@
   .nb3d-n { font-size: 19px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .nb3d-stage canvas, .nb3d-poster, .nb3d-arrow { transition: none; }
+  .nb3d-stage canvas, .nb3d-poster, .nb3d-arrow, .nb3d-live-win { transition: none; }
 }

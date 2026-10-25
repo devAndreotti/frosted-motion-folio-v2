@@ -48,4 +48,21 @@ describe("Notebook3D", () => {
     fireEvent.click(screen.getByRole("button", { name: "Alta" }));
     expect(localStorage.getItem("nb.luz")).toBe("2");
   });
+
+  it("closes and opens the lid from its button, and turns the key sounds off for good", () => {
+    renderNotebook();
+    fireEvent.click(screen.getByRole("button", { name: "Fechar a tampa" }));
+    expect(screen.getByRole("button", { name: "Abrir a tampa" })).toBeTruthy();
+    const soundButton = screen.getByRole("button", { name: "Som das teclas" });
+    expect(soundButton.getAttribute("aria-pressed")).toBe("true");
+    fireEvent.click(soundButton);
+    expect(soundButton.getAttribute("aria-pressed")).toBe("false");
+    expect(localStorage.getItem("nb.som")).toBe("0");
+  });
+
+  it("keeps the screenshots (no live-site switch) on a device without a fine pointer", () => {
+    renderNotebook();
+    expect(screen.queryByRole("group", { name: "Tela" })).toBeNull();
+  });
 });
+

@@ -113,6 +113,12 @@ export interface Strings {
         lightLevels: [string, string, string];
         view: string;
         views: { frente: string; tampa: string; base: string };
+        screen: string;
+        screenModes: [string, string];
+        lidOpen: string;
+        lidClose: string;
+        sound: string;
+        liveTitle: (title: string) => string;
         hint: string;
       };
     };
