@@ -4,6 +4,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import type { CuratedProject } from '@/data/curatedProjects';
 import { CASE_STATE, casePath, isPlainClick } from '@/lib/projects/caseLink';
 import { projectAsset } from '@/lib/projects/asset';
+import Notebook3D from './Notebook3D';
 
 /** Cards shown before "see all". */
 export const INITIAL_CARDS = 8;
@@ -33,6 +34,7 @@ const MoreProjects = ({ projects, onOpen }: MoreProjectsProps) => {
         {m.title}
       </h3>
       <p className="mp-s">{m.subtitle}</p>
+      <Notebook3D projects={projects} onOpen={onOpen} />
       <ul className="mp-grid">
         {shown.map((p) => (
           <li key={p.id}>

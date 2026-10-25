@@ -102,6 +102,19 @@ export interface Strings {
       cardAria: (title: string) => string;
       showAll: (count: number) => string;
       showLess: string;
+      notebook: {
+        stageAria: string;
+        poster: string;
+        prev: string;
+        next: string;
+        dotAria: (i: number, title: string) => string;
+        open: string;
+        light: string;
+        lightLevels: [string, string, string];
+        view: string;
+        views: { frente: string; tampa: string; base: string };
+        hint: string;
+      };
     };
   };
   caseModal: {
