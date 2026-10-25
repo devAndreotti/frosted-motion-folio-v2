@@ -19,6 +19,8 @@ for (const { name, path } of PAGES) {
       // canvas e vídeo são efeitos de TV e fundo em loop, e o palco do notebook 3D troca a imagem pelo canvas quando
       // carrega: a comparação ignora o que eles desenham
       mask: [page.locator("canvas, video, .nb3d-stage")],
+      // a home tem ~9.600 px de altura e o notebook 3D carrega junto: dois prints iguais seguidos passam dos 5 s padrão
+      timeout: 15_000,
     });
   });
 }
