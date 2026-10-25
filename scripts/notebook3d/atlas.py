@@ -79,11 +79,15 @@ for it in itens:
     if it['holo']:
         hsv = cv2.cvtColor((rgb * 255).astype(np.uint8), cv2.COLOR_RGB2HSV).astype(np.float32) / 255
         claro = np.clip((hsv[..., 2] - 0.55) / 0.35, 0, 1) * (1 - hsv[..., 1])
-        # filme forte só onde a impressão é clara (bordas brancas/prata); sob tinta colorida ele quase não aparece
-        filme = np.clip(0.15 + 0.85 * claro, 0, 1) * (al > 0.02)
+        # os adesivos do dono são todos de filme holográfico: forte nas partes claras e nas bordas, médio sob a tinta;
+        # as formas lisas são só filme
+        base = 1.0 if it['id'].startswith('forma') else 0.45
+        filme = np.clip(base + 0.55 * claro, 0, 1) * (al > 0.02)
         mr[y:y + ph, x:x + pw, 2] = (filme * 255).astype(np.uint8)
         mr[y:y + ph, x:x + pw, 0] = (filme * 255).astype(np.uint8)   # R: máscara da iridescência
         mr[y:y + ph, x:x + pw, 1] = (np.where(al > 0.02, 0.22 + 0.25 * (1 - filme), 0.6) * 255).astype(np.uint8)
+    elif it['id'] == 'atalhos_windows':   # vinil preto brilhante, sem arco-íris
+        mr[y:y + ph, x:x + pw, 1] = np.where(al > 0.02, 38, 150).astype(np.uint8)
     u0, u1 = x / AW, (x + pw) / AW
     v1, v0 = 1 - y / AH, 1 - (y + ph) / AH   # convenção do Blender (v para cima)
     if it['sup'] == 'lid': u0, u1, v0, v1 = u1, u0, v1, v0     # tampa: 180° em relação à planta vista por trás

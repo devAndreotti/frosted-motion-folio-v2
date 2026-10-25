@@ -6,7 +6,7 @@ import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment
 import { disposeScene, prepareModel, setupBacklight, setupLed, type Backlight, type HoloState } from './materials';
 import { LED_COLORS, ROOM_LIGHT, ledState, lidAt, type BacklightLevel } from './logic';
 import { createScreen, type ScreenSlide } from './screen';
-import { bindPointer, findParts, makePresser, type Parts } from './interact';
+import { bindPointer, cameraToggles, findParts, makePresser, type Parts } from './interact';
 import { keyIdFromCode, keyKind } from './keymap';
 import { createKeySound } from './keysound';
 import { createLiveScreen, type LiveScreen } from './live';
@@ -168,6 +168,7 @@ export function createNotebook(host: HTMLElement, opts: NotebookOptions): Notebo
   const setView = rig.go;
 
   const press = makePresser(schedule);
+  const camera3 = cameraToggles(() => parts, schedule, () => sound.press('normal'));
   // closing turns the camera to the lid, from behind, where its stickers read the right way up; opening comes back to the front
   const setLid = (open: boolean) => {
     lidMove = { from: lid, to: open ? 1 : 0, start: performance.now() };
@@ -191,6 +192,8 @@ export function createNotebook(host: HTMLElement, opts: NotebookOptions): Notebo
       applyPower();
       schedule();
     },
+    shutter: camera3.shutter,
+    camSwitch: camera3.camSwitch,
   });
 
   new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).load(

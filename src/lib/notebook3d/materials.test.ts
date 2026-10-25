@@ -21,7 +21,7 @@ describe('holoMaterial', () => {
     m.onBeforeCompile(shader as never, undefined as never);
     expect(shader.uniforms.uHoloShift).toBe(state.shift);
     expect(shader.fragmentShader).toContain('holoFoil = metalnessFactor');
-    expect(shader.fragmentShader).toContain('outgoingLight += holoRainbow * holoFoil');
+    expect(shader.fragmentShader).toContain('holoRainbow * 0.55, holoFoil');
     expect(shader.fragmentShader.trim().endsWith('#include <opaque_fragment>')).toBe(true);
   });
 });

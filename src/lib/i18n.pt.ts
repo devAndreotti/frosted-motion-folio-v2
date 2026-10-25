@@ -116,7 +116,7 @@ export const pt: Strings = {
         lidClose: 'Fechar a tampa',
         sound: 'Som das teclas',
         liveTitle: (title) => `${title} aberto na tela do notebook`,
-        hint: 'É o meu notebook de verdade, com os adesivos no lugar. Arraste para girar; clique nas teclas (ou digite com ele em foco), na tampa para abrir e fechar e no botão de ligar. A barra de espaço troca a luz, como o Fn+Espaço, e a tela mostra o site de verdade: dá para rolar dentro dela.',
+        hint: 'É o meu notebook de verdade, com os adesivos no lugar. Arraste para girar; clique nas teclas (ou digite com ele em foco), na tampa para abrir e fechar, no botão de ligar, na capinha da câmera e na chave da câmera, do lado direito. A barra de espaço troca a luz, como o Fn+Espaço, e a tela mostra o site de verdade: dá para rolar dentro dela.',
       },
     },
   },

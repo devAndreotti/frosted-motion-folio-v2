@@ -116,7 +116,7 @@ export const en: Strings = {
         lidClose: 'Close the lid',
         sound: 'Key sounds',
         liveTitle: (title) => `${title} open on the laptop screen`,
-        hint: 'This is my actual laptop, stickers and all. Drag to turn it; click the keys (or type while it has focus), the lid to open and close it, and the power button. The space bar switches the light, like Fn+Space, and the screen shows the real site: you can scroll inside it.',
+        hint: 'This is my actual laptop, stickers and all. Drag to turn it; click the keys (or type while it has focus), the lid to open and close it, the power button, the webcam cover and the camera switch on the right side. The space bar switches the light, like Fn+Space, and the screen shows the real site: you can scroll inside it.',
       },
     },
   },

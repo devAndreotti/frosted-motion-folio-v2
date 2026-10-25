@@ -3,7 +3,7 @@
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 PX = 8
-X0, X1, Y0, Y1 = -176.0, 176.0, 240.5, 262.6
+X0, X1, Y0, Y1 = -176.0, 176.0, 240.5, 258.0
 W, H = int((X1 - X0) * PX), int((Y1 - Y0) * PX)
 im = Image.new('RGB', (W, H), (30, 31, 34))
 a = np.asarray(im).astype(np.int16)
@@ -32,6 +32,6 @@ def lan(x, y):   # ícone de rede: três quadradinhos ligados
         d.rectangle([cx + (ox - 0.55) * s, cy + (oy - 0.45) * s, cx + (ox + 0.55) * s, cy + (oy + 0.45) * s], outline=COR, width=w)
     d.line([cx, cy - 0.65 * s, cx, cy + 0.2 * s], fill=COR, width=w); d.line([cx - 1.6 * s, cy + 0.2 * s, cx + 1.6 * s, cy + 0.2 * s], fill=COR, width=w)
     d.line([cx - 1.6 * s, cy + 0.2 * s, cx - 1.6 * s, cy + 0.55 * s], fill=COR, width=w); d.line([cx + 1.6 * s, cy + 0.2 * s, cx + 1.6 * s, cy + 0.55 * s], fill=COR, width=w)
-LY = 259.4
-usb(45.0, LY); usb(23.0, LY); lan(1.0, LY); txt(-21.0, LY, 'HDMI')
+LY = 255.0
+usb(64.0, LY); usb(38.5, LY); lan(13.0, LY); txt(-20.5, LY, 'HDMI')
 im.save('texturas/traseira_topo.png'); print(im.size)

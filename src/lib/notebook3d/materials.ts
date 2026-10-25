@@ -36,9 +36,10 @@ export function holoMaterial(src: MeshStandardMaterial, state: HoloState) {
       .replace(
         '#include <opaque_fragment>',
         `float holoNdv = dot(normal, normalize(vViewPosition));
-        float holoBand = holoNdv * 2.4 + dot(vMapUv, vec2(7.0, 4.0)) + uHoloShift;
+        // the band runs across each sticker (dense in atlas UV) and slides as the camera turns, like real holographic film
+        float holoBand = holoNdv * 2.2 + dot(vMapUv, vec2(10.0, 6.5)) + uHoloShift;
         vec3 holoRainbow = 0.5 + 0.5 * cos(6.28318 * (holoBand + vec3(0.0, 0.33, 0.67)));
-        outgoingLight += holoRainbow * holoFoil * (0.04 + 0.3 * pow(1.0 - abs(holoNdv), 3.0));
+        outgoingLight = mix(outgoingLight, outgoingLight * 0.75 + holoRainbow * 0.55, holoFoil * (0.22 + 0.45 * pow(1.0 - abs(holoNdv), 1.5)));
         #include <opaque_fragment>`,
       );
   };
