@@ -51,6 +51,18 @@ export function createLiveScreen(host: HTMLElement, screen: Mesh, onBusy: (busy:
   frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups');
   frame.referrerPolicy = 'no-referrer';
   win.append(bar, frame);
+  // inert until the mouse is over the screen: a page loading in the background must not take the keyboard focus away
+  // from the site (an open dialog, the gallery); with the pointer on it, it scrolls and clicks like any page
+  win.inert = true;
+  const onMove = (ev: PointerEvent) => {
+    const r = win.getBoundingClientRect();
+    win.inert = !(ev.clientX >= r.left && ev.clientX <= r.right && ev.clientY >= r.top && ev.clientY <= r.bottom);
+  };
+  const onLeave = () => {
+    win.inert = true;
+  };
+  host.addEventListener('pointermove', onMove);
+  host.addEventListener('pointerleave', onLeave);
   const obj = new CSS3DObject(win);
   scene.add(obj);
   const c = corners(screen.geometry);
@@ -113,6 +125,8 @@ export function createLiveScreen(host: HTMLElement, screen: Mesh, onBusy: (busy:
     },
     dispose() {
       window.clearTimeout(timer);
+      host.removeEventListener('pointermove', onMove);
+      host.removeEventListener('pointerleave', onLeave);
       frame.removeAttribute('src');
       renderer.domElement.remove();
     },
