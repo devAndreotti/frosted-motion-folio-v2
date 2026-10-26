@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { ArrowRight, Menu, Moon, Sun, X } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -6,10 +6,11 @@ import { useGithubActivity } from '@/hooks/useGithubActivity';
 import { useEscapeKey } from '@/hooks/useEscapeKey';
 import ColorSwatchPicker from './ColorSwatchPicker';
 import ColorPickerPopover from './ColorPickerPopover';
-import SudoTerminal from './SudoTerminal';
 import { LangSwitch, RepoPill } from './NavExtras';
 import { createTripleClickDetector } from '@/lib/eggs';
 import { toggleDebug } from '@/lib/debugOverlay';
+
+const SudoTerminal = lazy(() => import('./SudoTerminal'));
 
 const GLITCH_CHARS = '#$%&01</>{}=+*';
 const GLITCH_TICKS = 10;
@@ -174,7 +175,9 @@ const Navigation = () => {
         )}
       </header>
 
-      <SudoTerminal />
+      <Suspense fallback={null}>
+        <SudoTerminal />
+      </Suspense>
     </>
   );
 };
