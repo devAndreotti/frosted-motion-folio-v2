@@ -399,6 +399,19 @@ html::-webkit-scrollbar-thumb:active {
    per WCAG 2.2.2, and every item it shows is also present, fully readable,
    in the DOM without motion. */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
   .animate-pulse-dot,
   .animate-orb-drift,
   .animate-orb-drift-reverse,
@@ -406,6 +419,15 @@ html::-webkit-scrollbar-thumb:active {
   .animate-bob,
   .shimmer {
     animation: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .glass-strong,
+  .glass-intense,
+  .glass-card-bg {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
   }
 }
 

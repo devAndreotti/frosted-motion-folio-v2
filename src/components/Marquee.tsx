@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useReducedMotion } from 'framer-motion';
 import { useInView } from '@/hooks/useInView';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useHorizontalDragScroll } from '@/hooks/useHorizontalDragScroll';
@@ -44,10 +45,11 @@ const Marquee = ({ boosted }: { boosted: boolean }) => {
   boostedRef.current = boosted;
   const pausedRef = useRef(false);
   const inView = useInView(containerRef);
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
-    // Off screen: no loop at all, not just an idle one.
-    if (!inView) return;
+    // Off screen or reduced motion preferred: no loop at all, not just an idle one.
+    if (!inView || shouldReduceMotion) return;
     let raf = 0;
     let last = performance.now();
 
@@ -69,7 +71,7 @@ const Marquee = ({ boosted }: { boosted: boolean }) => {
     return () => cancelAnimationFrame(raf);
     // containerRef/isInteracting are stable refs from the hook.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inView]);
+  }, [inView, shouldReduceMotion]);
 
   return (
     <div

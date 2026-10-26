@@ -6,6 +6,46 @@ import { test, expect } from "@playwright/test";
 // renders and resolves to either real activity cards or the graceful
 // fallback, never stays stuck loading or throws.
 test("resolves to either real activity cards or the graceful fallback", async ({ page }) => {
+  await page.route("**/api.github.com/**", async (route) => {
+    const url = route.request().url();
+    if (url.includes("/events")) {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify([
+          {
+            id: "evt-1",
+            type: "PushEvent",
+            created_at: new Date().toISOString(),
+            repo: { name: "devAndreotti/frosted-motion-folio-v2" },
+            payload: {
+              commits: [{ message: "feat: otimiza vitest e mock github" }],
+            },
+          },
+          {
+            id: "evt-2",
+            type: "PullRequestEvent",
+            created_at: new Date(Date.now() - 3600000).toISOString(),
+            repo: { name: "devAndreotti/frosted-motion-folio-v2" },
+            payload: {
+              action: "opened",
+              pull_request: { title: "Otimização de Performance e Quality Gate" },
+            },
+          },
+        ]),
+      });
+    } else {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          login: "devAndreotti",
+          public_repos: 42,
+        }),
+      });
+    }
+  });
+
   await page.goto("");
   const section = page.locator("#github-activity");
 
