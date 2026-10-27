@@ -1,7 +1,13 @@
-import { Raycaster, Vector2, type Camera, type Mesh, type Object3D } from 'three';
+import { Box3, Raycaster, Vector2, Vector3, type Camera, type Mesh, type Object3D } from 'three';
 
 const DIP = 0.0009; // how far a key goes down when pressed (m)
 const HOLD_MS = 110;
+/**
+ * How far (CSS px) from the webcam cover and the camera switch a click still reaches them: they are a few pixels
+ * across, and on a phone smaller than a fingertip.
+ */
+export const CAMERA_REACH = { mouse: 18, touch: 36 } as const;
+const reachOf = (ev: PointerEvent) => (ev.pointerType === 'touch' || ev.pointerType === 'pen' ? CAMERA_REACH.touch : CAMERA_REACH.mouse);
 
 /** The parts of the model that react to a click. */
 export interface Parts {
@@ -100,13 +106,53 @@ export interface PointerHandlers {
 
 /**
  * A click (not a drag) on a key, the lid, the power button or the camera parts calls its handler; the cursor shows what can be
- * clicked.
+ * clicked. The camera parts also answer a click a few pixels around them (more on touch), as long as they are in sight.
  * Returns the cleanup.
  */
 export function bindPointer(el: HTMLElement, camera: Camera, getParts: () => Parts | null, on: PointerHandlers) {
   const ray = new Raycaster();
+  const sight = new Raycaster();
   const ndc = new Vector2();
   const start = new Vector2();
+  const [center, eye, onScreen, toPart] = [new Vector3(), new Vector3(), new Vector3(), new Vector3()];
+  const box = new Box3();
+  /** Distance (CSS px) between the pointer and `center` as drawn; infinite when it is behind the camera. */
+  const screenDistance = (ev: PointerEvent, r: DOMRect) => {
+    onScreen.copy(center).project(camera);
+    if (onScreen.z > 1) return Infinity;
+    return Math.hypot(ev.clientX - (r.left + ((onScreen.x + 1) / 2) * r.width), ev.clientY - (r.top + ((1 - onScreen.y) / 2) * r.height));
+  };
+  /** Nothing of the model stands between the camera and `center` (with the lid closed, or seen from behind, the lid does). */
+  const inSight = (all: Object3D[], group: readonly Object3D[]) => {
+    eye.setFromMatrixPosition(camera.matrixWorld);
+    const far = toPart.subVectors(center, eye).length();
+    sight.set(eye, toPart.normalize());
+    const first = sight.intersectObjects(all, false)[0];
+    return !first || first.distance >= far - 0.003 || group.includes(first.object);
+  };
+  /** The camera part whose center is within reach of the pointer on the screen and in plain sight; the closest wins. */
+  const nearCamera = (ev: PointerEvent, parts: Parts, all: Object3D[], r: DOMRect) => {
+    const reach = reachOf(ev);
+    let best: { kind: 'shutter' | 'camSwitch'; d: number } | null = null;
+    const candidates = [
+      ['shutter', parts.shutter.find((o) => o.name === 'camera_capa') ?? parts.shutter[0], parts.shutter],
+      ['camSwitch', parts.camSwitch[0], parts.camSwitch],
+    ] as const;
+    for (const [kind, part, group] of candidates) {
+      if (!part) continue;
+      box.setFromObject(part).getCenter(center);
+      const d = screenDistance(ev, r);
+      if (d <= reach && (!best || d < best.d) && inSight(all, group)) best = { kind, d };
+    }
+    return best ? { kind: best.kind } : null;
+  };
+  /** A hit right on the power button or a camera part. */
+  const direct = (o: Object3D | undefined, parts: Parts) => {
+    if (!o) return null;
+    if (parts.power.includes(o)) return { kind: 'power' as const };
+    if (parts.shutter.includes(o)) return { kind: 'shutter' as const };
+    return parts.camSwitch.includes(o) ? { kind: 'camSwitch' as const } : null;
+  };
   const pick = (ev: PointerEvent) => {
     const parts = getParts();
     if (!parts) return null;
@@ -114,16 +160,13 @@ export function bindPointer(el: HTMLElement, camera: Camera, getParts: () => Par
     ndc.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
     ray.setFromCamera(ndc, camera);
     const all = [...parts.keys.values(), ...parts.lid, ...parts.power, ...parts.shutter, ...parts.camSwitch, ...parts.screen];
-    const hit = ray.intersectObjects(all, false)[0];
-    if (!hit) return null;
-    const o = hit.object;
+    const o = ray.intersectObjects(all, false)[0]?.object;
+    // the camera parts are tiny: a click near them (on the bezel, the screen, a key or the air) still reaches them
+    const hit = direct(o, parts) ?? nearCamera(ev, parts, all, r);
+    if (hit || !o) return hit;
     if (parts.screen.includes(o)) return { kind: 'screen' as const };
-    if (parts.power.includes(o)) return { kind: 'power' as const };
-    if (parts.shutter.includes(o)) return { kind: 'shutter' as const };
-    if (parts.camSwitch.includes(o)) return { kind: 'camSwitch' as const };
     if (parts.lid.includes(o)) return { kind: 'lid' as const };
-    const id = o.name.slice(3);
-    return { kind: 'key' as const, id, mesh: o as Mesh };
+    return { kind: 'key' as const, id: o.name.slice(3), mesh: o as Mesh };
   };
   const onDown = (ev: PointerEvent) => start.set(ev.clientX, ev.clientY);
   const onUp = (ev: PointerEvent) => {

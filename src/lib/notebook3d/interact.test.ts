@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { BoxGeometry, Group, Mesh, MeshBasicMaterial } from 'three';
-import { cameraToggles, findParts, makePresser } from './interact';
+import { BoxGeometry, Group, Mesh, MeshBasicMaterial, PerspectiveCamera, PlaneGeometry } from 'three';
+import { bindPointer, cameraToggles, findParts, makePresser } from './interact';
 
 const named = (name: string) => {
   const m = new Mesh(new BoxGeometry(), new MeshBasicMaterial());
@@ -58,5 +58,58 @@ describe('notebook3d interact', () => {
     vi.advanceTimersByTime(400);
     expect(sw.position.z).toBeCloseTo(-0.0028);
     expect(click).toHaveBeenCalledTimes(3);
+  });
+
+  describe('reach of the camera parts', () => {
+    // a 2 mm cover at the center of a 400 px stage, the lid's bezel a little behind it (or in front, when closed)
+    const stage = (lidZ: number) => {
+      const root = new Group();
+      const cover = named('camera_capa');
+      cover.scale.setScalar(0.002);
+      const lid = new Mesh(new PlaneGeometry(1, 1), new MeshBasicMaterial());
+      lid.name = 'tampa_casca';
+      lid.position.z = lidZ;
+      root.add(cover, lid);
+      root.updateMatrixWorld(true);
+      const camera = new PerspectiveCamera(30, 1, 0.01, 10);
+      camera.position.set(0, 0, 0.5);
+      camera.updateMatrixWorld(true);
+      const el = document.createElement('div');
+      el.getBoundingClientRect = () => ({ left: 0, top: 0, width: 400, height: 400, right: 400, bottom: 400, x: 0, y: 0, toJSON: () => ({}) });
+      const on = { key: vi.fn(), lid: vi.fn(), power: vi.fn(), shutter: vi.fn(), camSwitch: vi.fn(), screen: vi.fn() };
+      const parts = findParts(root);
+      bindPointer(el, camera, () => parts, on);
+      const tap = (x: number, y: number, pointerType: string) => {
+        for (const type of ['pointerdown', 'pointerup']) {
+          const ev = new MouseEvent(type, { clientX: x, clientY: y, button: 0 });
+          Object.defineProperty(ev, 'pointerType', { value: pointerType });
+          el.dispatchEvent(ev);
+        }
+      };
+      return { on, tap };
+    };
+
+    it('opens the cover with a finger a few pixels off it, on the bezel', () => {
+      const { on, tap } = stage(-0.01);
+      tap(200, 228, 'touch');
+      expect(on.shutter).toHaveBeenCalledTimes(1);
+      expect(on.lid).not.toHaveBeenCalled();
+    });
+
+    it('asks the mouse to come closer', () => {
+      const { on, tap } = stage(-0.01);
+      tap(200, 228, 'mouse');
+      expect(on.shutter).not.toHaveBeenCalled();
+      expect(on.lid).toHaveBeenCalledTimes(1);
+      tap(200, 212, 'mouse');
+      expect(on.shutter).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not reach the cover through the closed lid', () => {
+      const { on, tap } = stage(0.01);
+      tap(200, 228, 'touch');
+      expect(on.shutter).not.toHaveBeenCalled();
+      expect(on.lid).toHaveBeenCalledTimes(1);
+    });
   });
 });
