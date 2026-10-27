@@ -26,7 +26,7 @@
 3. **Parafusos**: cilindro de 2,1 mm de raio cortado 0,7 mm no corpo (ou no bloco traseiro, os dois da faixa preta), cabeça `parafuso` de 1,6 mm a 0,35 mm da face, cruz em dois quads `furo`.
 4. **Fundo vazado**: o contorno do fundo e os laços das 88 fendas e dos 10 rebaixos vão para `bmesh.ops.triangle_fill`, que preenche com os furos abertos; depois os vértices sobem para `zfundo(y) − 0,02` e as faces são viradas para baixo.
 5. **Junta de molde**: quad `furo` de 0,5 mm em Y = 240 mm.
-6. **Apoio traseiro**: três prismas de borracha em Y 232,4–239 mm, substituindo a tira que acompanhava o recuo das portas.
+6. **Apoios**: três prismas de borracha em Y 232,4–239 mm, substituindo a tira que acompanhava o recuo das portas; os pés frontais com centro medido em cada lado (a planta não é simétrica).
 7. **Saídas de som**: 3 fendas compridas por lado no chanfro (Y 25–57,4 mm), moldura `furo` e tela `aleta_azul`, no lugar das 16 fendinhas.
 
 ### 1.3 Etiqueta (`etiqueta.py`)

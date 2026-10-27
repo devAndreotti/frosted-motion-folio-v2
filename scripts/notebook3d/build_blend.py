@@ -303,10 +303,10 @@ for loop in me.loops:
     v = me.vertices[loop.vertex_index].co
     lay.data[loop.index].uv = ((H - v.x / MM) / W, 1 - (D - v.y / MM) / D)
 o = bpy.data.objects.new('fundo', me); scene.collection.objects.link(o); o.parent = raiz
-# pés de borracha (os da frente são mais altos: o fundo sobe)
-for sx in (-1, 1):
-    a, b = sorted((sx * 126, sx * 154))
-    prism('pe_frente_%s' % ('e' if sx < 0 else 'd'), fillet([(a, 29), (b, 29), (b, 36), (a, 36)], 3.4), 0.0, zfundo(32.5), bev_bot=0.5, mats=('borracha',), parent=raiz)
+# pés de borracha (os da frente são mais altos: o fundo sobe); centros medidos na planta da base, que não é simétrica
+for lado, cx, cy in (('e', -150.2, 36.6), ('d', 140.0, 32.5)):
+    a, b = cx - 14.0, cx + 14.0
+    prism('pe_frente_' + lado, fillet([(a, cy - 3.5), (b, cy - 3.5), (b, cy + 3.5), (a, cy + 3.5)], 3.4), 0.0, zfundo(cy), bev_bot=0.5, mats=('borracha',), parent=raiz)
 # borracha de apoio de trás: barra reta em 3 trechos logo à frente da faixa preta (medida na planta da base)
 for i, (a, b) in enumerate(((-152.6, -73.0), (-70.8, 65.0), (66.4, 152.6))):
     prism('pe_tras_%d' % i, fillet([(a, 232.4), (b, 232.4), (b, 239.0), (a, 239.0)], 2.4, 4), 0.0, zfundo(232.4) + 0.2, bev_bot=0.6, mats=('borracha',), parent=raiz)

@@ -18,7 +18,7 @@
 - [x] **T005**: Junta de molde entre o painel cinza e a faixa preta.
 - [x] **T006**: Grelha com bolsões de 4 mm, tela furada a 1,2 mm e dissipador (`cobre`, `aleta_azul`) ao fundo.
 - [x] **T007**: 10 parafusos Phillips rebaixados (corpo e bloco traseiro).
-- [x] **T008**: Apoio traseiro movido para a posição da planta (3 trechos); pés frontais mantidos.
+- [x] **T008**: Apoio traseiro movido para a posição da planta (3 trechos); pé frontal do lado −X centrado no pé da foto (estava espelhado do outro).
 - [x] **T009**: Saídas de som com 3 fendas compridas e tela azul em cada chanfro.
 - [x] **T010**: Fundo vazado nas fendas e nos rebaixos dos parafusos (`triangle_fill` com furos).
 
@@ -33,4 +33,4 @@
 - [x] **T014**: `npm test`, lint e `tsc` sem regressão.
 - [x] **T015**: Capturas de conferência da base (`shoot.cjs`) contra a foto real; `docs/notebook-3d/base-3d-render.jpg`.
 
-Já existiam antes desta spec e não mudaram: os adesivos holográficos da base (`touro`, `compact_disc`) e os pés frontais.
+Já existiam antes desta spec e não mudaram: os adesivos holográficos da base (`touro`, `compact_disc`).

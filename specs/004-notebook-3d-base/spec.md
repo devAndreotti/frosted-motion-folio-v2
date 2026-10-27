@@ -13,7 +13,7 @@ No PR #123 a tampa, o deck, as portas traseiras e as laterais ganharam relevo ge
 
 Já existiam e **ficam como estão**:
 - os adesivos da base (`touro`, `compact_disc` em `adesivos.json` → `bottom`, `brilho: holo`), colados como planos virados para baixo e com o mesmo `holoMaterial` dos adesivos da tampa e do apoio;
-- os pés frontais em pílula (X 126–154 mm, Y 29–36 mm), que vão da mesa (Z = 0) até o fundo.
+- os pés frontais em pílula (28 × 7 mm), que vão da mesa (Z = 0) até o fundo.
 
 ### Privacidade da etiqueta
 
@@ -50,8 +50,9 @@ Os 10 parafusos Phillips aparecem rebaixados, a borracha de trás fica onde est�
 
 **Acceptance Scenarios**:
 1. **Given** a base, **Then** há 10 parafusos (2 na faixa preta, 2 nos cantos de trás do painel cinza, 2 nas laterais, 4 na borda da frente), cada um num rebaixo de 0,7 mm com a cabeça a 0,35 mm da face e a cruz em baixo-relevo.
-2. **Given** o apoio de borracha traseiro, **Then** é uma barra reta em 3 trechos logo à frente da faixa preta (Y ≈ 232,4 a 239 mm, X ≈ −152,6 a +152,6 mm), como na planta, e não mais uma tira sob a faixa preta acompanhando o recuo das portas.
-3. **Given** as saídas de som nos chanfros laterais (Y ≈ 25 a 57 mm), **Then** são 3 fendas compridas por lado, com moldura escura e tela **azul** (`aleta_azul`), como na foto.
+2. **Given** os pés frontais, **Then** cada um fica centrado sobre o pé da foto (a planta não é simétrica: X +140 / Y 32,5 e X −150,2 / Y 36,6 mm); o do lado −X estava espelhado e deixava o contorno da foto aparecendo em volta.
+3. **Given** o apoio de borracha traseiro, **Then** é uma barra reta em 3 trechos logo à frente da faixa preta (Y ≈ 232,4 a 239 mm, X ≈ −152,6 a +152,6 mm), como na planta, e não mais uma tira sob a faixa preta acompanhando o recuo das portas.
+4. **Given** as saídas de som nos chanfros laterais (Y ≈ 25 a 57 mm), **Then** são 3 fendas compridas por lado, com moldura escura e tela **azul** (`aleta_azul`), como na foto.
 
 ---
 
