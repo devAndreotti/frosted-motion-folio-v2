@@ -34,3 +34,8 @@ scripts refazem o GLB a partir das fotos. As fotos (~90 MB) não ficam no reposi
 
 `index.html` + `entry.ts` + `shoot.cjs` são o visualizador de conferência: o mesmo `src/lib/notebook3d/scene.ts` do
 site, com câmera fixa pela URL (`az`, `polar`, `dist`, `lid`, `light`, `color`), capturado pelo Chrome headless.
+
+## Refinamento da Base Inferior (Spec 004)
+
+A especificação para modelagem da base inferior com profundidade geométrica, furações de parafusos, pés elevados e shaders holográficos está documentada em `specs/004-notebook-3d-base/`.
+As imagens de referência estão catalogadas em `docs/notebook-3d/base-*.jpg`.
