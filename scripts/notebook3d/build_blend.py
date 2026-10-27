@@ -29,7 +29,7 @@ def mat(name, cor=(0.5, 0.5, 0.5), metal=0.0, rough=0.5, tex=None, emis=None, al
     nt = m.node_tree; p = nt.nodes['Principled BSDF']
     p.inputs['Base Color'].default_value = (*cor, 1); p.inputs['Metallic'].default_value = metal; p.inputs['Roughness'].default_value = rough
     if tex:
-        t = nt.nodes.new('ShaderNodeTexImage'); t.image = img(tex)
+        t = nt.nodes.new('ShaderNodeTexImage'); t.image = img(tex) if isinstance(tex, str) else tex
         nt.links.new(t.outputs['Color'], p.inputs['Base Color'])
         if alpha_tex: nt.links.new(t.outputs['Alpha'], p.inputs['Alpha'])
     if emis:
@@ -44,6 +44,19 @@ def mat(name, cor=(0.5, 0.5, 0.5), metal=0.0, rough=0.5, tex=None, emis=None, al
     if blend == 'CLIP': m.alpha_threshold = 0.5
     return m
 def srgb(r, g, b): return tuple(((c / 255 + 0.055) / 1.055) ** 2.4 if c / 255 > 0.04045 else c / 255 / 12.92 for c in (r, g, b))
+MALHA_PASSO = 1.3     # mm entre os furos da tela da grelha de baixo
+def malha_img(n=64, furo=0.36):
+    """ladrilho da tela furada (2 colunas x 2 fileiras em colmeia): alpha 0 nos furos; UV em mm / (2p, √3p)"""
+    im = bpy.data.images.new('malha', n, n, alpha=True)
+    cs = [(0.25, 0.25), (0.75, 0.25), (0.0, 0.75), (0.5, 0.75), (1.0, 0.75), (0.25, 1.25), (0.75, 1.25), (0.25, -0.25), (0.75, -0.25)]
+    px = []
+    for j in range(n):
+        for i in range(n):
+            u, v = (i + 0.5) / n, (j + 0.5) / n
+            d = min(math.hypot((u - a) * 2, (v - b) * math.sqrt(3)) for a, b in cs)   # distância em passos
+            px += [0.03, 0.03, 0.035, 0.0 if d < furo else 1.0]
+    im.pixels = px; im.pack()
+    return im
 M = {
     'carcaca': mat('carcaca', srgb(118, 120, 126), 0.45, 0.42),          # Storm grey pintado (tampa e deck)
     'traseira': mat('traseira', srgb(38, 39, 42), 0.1, 0.55),            # bloco traseiro e dobradiças
@@ -69,7 +82,11 @@ M = {
     'traseira_topo': mat('traseira_topo', tex='texturas/traseira_topo.png', rough=0.75),
     'teclas': mat('teclas', tex='texturas/teclas_cor.png', emis='texturas/teclas_luz.png', metal=0.0, rough=0.7),
     'brilho_teclas': mat('brilho_teclas', srgb(118, 120, 126), tex='texturas/teclas_halo_rgba.png', emis='texturas/teclas_halo.png', alpha_tex=True, blend='BLEND'),
-    'fundo': mat('fundo', tex='texturas/fundo.jpg', rough=0.7),
+    # foto da base com a etiqueta trocada por dados fictícios (etiqueta.py): a original tem MO, SN e QR reais
+    'fundo': mat('fundo', tex='texturas/fundo_publico.jpg', rough=0.7),
+    'cobre': mat('cobre', srgb(176, 110, 62), 1.0, 0.38),                 # dissipador visto pela grelha de baixo
+    'parafuso': mat('parafuso', srgb(24, 24, 26), 0.6, 0.35),
+    'malha': mat('malha', tex=malha_img(), alpha_tex=True, blend='CLIP', rough=0.6),   # tela furada da grelha de baixo
 }
 if os.path.exists(os.path.join(BASE, 'texturas/adesivos.png')):
     M['adesivos'] = mat('adesivos', tex='texturas/adesivos.png', alpha_tex=True, blend='CLIP', mr='texturas/adesivos_mr.png')
@@ -240,24 +257,59 @@ DR = D - RE             # face das portas
 tras = [(-H, 238), (H, 238), (H, D), (84, D), (76, DR), (-76, DR), (-84, D), (-H, D)]
 tras_poly = fillet(tras, [1, 1, 6, 2, 3, 3, 2, 6], 5)
 traseira = prism('traseira', tras_poly, Z0, Z_REAR, bev_top=2.0, bev_bot=1.4, mats=('traseira', 'furo'), parent=raiz)
-# fundo: foto retificada da base, inclinado como a cunha
+# ---------- base: grelha com profundidade, parafusos, junta de molde (fendas e parafusos medidos por base_planta.py) ----------
+base = json.load(open(os.path.join(BASE, 'base.json')))
+G_TELA, G_FUNDO = 1.2, 4.0      # a tela furada fica 1,2 mm para dentro; o dissipador, 4 mm
+def zc(poly): return zfundo(sum(y for _, y in poly) / len(poly))
+cortes_grade = []
+for i, f in enumerate(base['fendas']):
+    cx = sum(x for x, _ in f) / len(f)
+    # o fundo do bolsão (a tampa de cima do cortador) é o dissipador: cobre embaixo das ventoinhas, aletas azuis no meio
+    cortes_grade.append(prism('corte_fenda_%02d' % i, f, zc(f) - 1.0, zc(f) + G_FUNDO, mats=('furo', 'cobre' if abs(cx) > 60 else 'aleta_azul'), mat_top=1))
+xs = [x for f in base['fendas'] for x, _ in f]; ys = [y for f in base['fendas'] for _, y in f]
+gx0, gx1, gy0, gy1 = min(xs) - 1, max(xs) + 1, min(ys) - 1, max(ys) + 1
+tela = plane('grade_tela', [(gx0, gy0), (gx1, gy0), (gx1, gy1), (gx0, gy1)], Z0, 'malha', parent=raiz, down=True,
+             uv=[(x / (2 * MALHA_PASSO), y / (math.sqrt(3) * MALHA_PASSO)) for x, y in ((gx0, gy0), (gx1, gy0), (gx1, gy1), (gx0, gy1))])
+for v in tela.data.vertices: v.co.z = (zfundo(v.co.y / MM) + G_TELA) * MM
+# parafusos Phillips: rebaixo de 0,7 mm, cabeça a 0,35 mm da face e a cruz em baixo-relevo
+P_REBAIXO, P_CABECA, P_R = 0.7, 0.35, 1.6
+cortes_paraf = {'corpo': [], 'traseira': []}
+for i, (x, y) in enumerate(base['parafusos']):
+    z = zfundo(y)
+    cortes_paraf['traseira' if y > 240 else 'corpo'].append(cyl_z('corte_parafuso_%d' % i, x, y, z - 1.0, z + P_REBAIXO, P_R + 0.5, 'furo', seg=12))
+    cyl_z('parafuso_%d' % i, x, y, z + P_CABECA, z + P_REBAIXO, P_R, 'parafuso', parent=raiz, seg=12)
+    for k, (w, h) in enumerate(((2.0, 0.36), (0.36, 2.0))):
+        plane('parafuso_cruz_%d_%d' % (i, k), [(x - w / 2, y - h / 2), (x + w / 2, y - h / 2), (x + w / 2, y + h / 2), (x - w / 2, y + h / 2)],
+              z + P_CABECA - 0.05, 'furo', parent=raiz, down=True)
+recortar(corpo, cortes_grade + cortes_paraf['corpo'])
+recortar(traseira, cortes_paraf['traseira'])
+# junta de molde entre o painel cinza e a faixa preta de trás
+plane('junta_molde', [(-H + CH_IN, 239.75), (H - CH_IN, 239.75), (H - CH_IN, 240.25), (-H + CH_IN, 240.25)], Z0 - 0.06, 'furo', parent=raiz, down=True)
+# fundo: foto retificada da base, inclinado como a cunha, com os vãos das fendas e dos parafusos abertos
 fundo_poly = fillet([(-H + CH_IN, CH_IN), (H - CH_IN, CH_IN), (H - CH_IN, D - 1.6), (-H + CH_IN, D - 1.6)], [8, 8, 5, 5])
-bm = bmesh.new(); vs = [bm.verts.new((x * MM, y * MM, (zfundo(y) - 0.02) * MM)) for x, y in reversed(fundo_poly)]
-bm.faces.new(vs); bmesh.ops.triangulate(bm, faces=list(bm.faces))
+bm = bmesh.new(); arestas = []
+furos = base['fendas'] + [[(x + (P_R + 0.5) * math.cos(a * math.pi / 6), y + (P_R + 0.5) * math.sin(a * math.pi / 6)) for a in range(12)] for x, y in base['parafusos']]
+for laco in [fundo_poly] + furos:
+    vs = [bm.verts.new((x * MM, y * MM, 0)) for x, y in laco]
+    arestas += [bm.edges.new((vs[i], vs[(i + 1) % len(vs)])) for i in range(len(vs))]
+bmesh.ops.triangle_fill(bm, use_beauty=True, use_dissolve=False, edges=arestas)
+for v in bm.verts: v.co.z = (zfundo(v.co.y / MM) - 0.02) * MM
+bm.normal_update()
+for fc in bm.faces:
+    if fc.normal.z > 0: fc.normal_flip()        # a face olha para baixo
 me = bpy.data.meshes.new('fundo'); bm.to_mesh(me); bm.free(); me.materials.append(M['fundo'])
 lay = me.uv_layers.new(name='UVMap')
 for loop in me.loops:
     v = me.vertices[loop.vertex_index].co
     lay.data[loop.index].uv = ((H - v.x / MM) / W, 1 - (D - v.y / MM) / D)
 o = bpy.data.objects.new('fundo', me); scene.collection.objects.link(o); o.parent = raiz
-# pés de borracha (os da frente são mais altos: o fundo sobe)
-for sx in (-1, 1):
-    a, b = sorted((sx * 126, sx * 154))
-    prism('pe_frente_%s' % ('e' if sx < 0 else 'd'), fillet([(a, 29), (b, 29), (b, 36), (a, 36)], 3.4), 0.0, zfundo(32.5), bev_bot=0.5, mats=('borracha',), parent=raiz)
-# borracha de apoio de trás: tira embaixo do bloco traseiro que acompanha o recuo do meio
-_cam = [(-158.0, D - 5.0), (-84.0, D - 5.0), (-76.0, DR - 5.0), (76.0, DR - 5.0), (84.0, D - 5.0), (158.0, D - 5.0)]
-_fora = [(x, y + 2.6) for x, y in _cam]; _dentro = [(x, y - 2.6) for x, y in _cam]
-prism('pe_tras', fillet(_dentro + list(reversed(_fora)), [2.5, 1, 1, 1, 1, 2.5, 2.5, 1, 1, 1, 1, 2.5], 4), 0.0, Z0, bev_bot=0.6, mats=('borracha',), parent=raiz)
+# pés de borracha (os da frente são mais altos: o fundo sobe); centros medidos na planta da base, que não é simétrica
+for lado, cx, cy in (('e', -150.2, 36.6), ('d', 140.0, 32.5)):
+    a, b = cx - 14.0, cx + 14.0
+    prism('pe_frente_' + lado, fillet([(a, cy - 3.5), (b, cy - 3.5), (b, cy + 3.5), (a, cy + 3.5)], 3.4), 0.0, zfundo(cy), bev_bot=0.5, mats=('borracha',), parent=raiz)
+# borracha de apoio de trás: barra reta em 3 trechos logo à frente da faixa preta (medida na planta da base)
+for i, (a, b) in enumerate(((-152.6, -73.0), (-70.8, 65.0), (66.4, 152.6))):
+    prism('pe_tras_%d' % i, fillet([(a, 232.4), (b, 232.4), (b, 239.0), (a, 239.0)], 2.4, 4), 0.0, zfundo(232.4) + 0.2, bev_bot=0.6, mats=('borracha',), parent=raiz)
 
 # ---------- traseira: portas no meio recuado, grades nas asas ----------
 def tras3d(a, b, d): return (a, D - d, b)
@@ -336,21 +388,23 @@ for sx in (-1, 1):
                 slab('aleta_lado_%d_%d_%d_%02d' % (sx, fila, i, j), rect(0.35, 3.0, 0.0, yc - 7.6 + j * 1.27, zc), 1.2, 4.0, lado3d(sx), 'aleta_azul', parent=raiz)
 recortar(traseira, cortes_tras)
 recortar(corpo, cortes_lado)
-# alto-falantes: fendas no chanfro de baixo, perto da frente, nos dois lados
+# alto-falantes: 3 fendas compridas no chanfro de baixo, perto da frente, com a tela azul aparecendo (medidas na planta)
+FALA_Y = (25.0, 57.4)
+def chanfro(sx, t, y, eps):
+    """ponto no chanfro de baixo: t = 0 na borda de dentro, 1 na de fora; eps afasta da superfície"""
+    zb = zfundo(y)
+    x = sx * (H - CH_IN) + sx * CH_IN * t + sx * eps * 0.7
+    return (x * MM, y * MM, (zb + CH_ALT * t - eps * 0.7) * MM)
 for sx in (-1, 1):
-    for i in range(16):
-        y0 = 14.0 + i * 2.8
-        zb = zfundo(y0)
-        p_in = (sx * (H - CH_IN), zb); p_out = (sx * H, zb + CH_ALT)
-        def em(t, dy, eps=0.06):
-            x = p_in[0] + (p_out[0] - p_in[0]) * t + sx * eps * 0.7
-            z = p_in[1] + (p_out[1] - p_in[1]) * t - eps * 0.7
-            return (x * MM, (y0 + dy) * MM, z * MM)
-        bm = bmesh.new()
-        vs = [bm.verts.new(em(0.22, 0)), bm.verts.new(em(0.82, 0)), bm.verts.new(em(0.82, 1.3)), bm.verts.new(em(0.22, 1.3))]
-        f = bm.faces.new(vs if sx > 0 else list(reversed(vs)))
-        me = bpy.data.meshes.new('alto_falante'); bm.to_mesh(me); bm.free(); me.materials.append(M['furo'])
-        ob = bpy.data.objects.new('alto_falante_%d_%02d' % (sx, i), me); scene.collection.objects.link(ob); ob.parent = raiz
+    for i, tc in enumerate((0.3, 0.5, 0.7)):
+        for nome, meia, eps, borda, material in (('moldura', 0.075, 0.05, 0.6, 'furo'), ('tela', 0.05, 0.09, 0.0, 'aleta_azul')):
+            bm = bmesh.new()
+            y0, y1 = FALA_Y[0] - borda, FALA_Y[1] + borda
+            vs = [bm.verts.new(chanfro(sx, tc - meia, y0, eps)), bm.verts.new(chanfro(sx, tc + meia, y0, eps)),
+                  bm.verts.new(chanfro(sx, tc + meia, y1, eps)), bm.verts.new(chanfro(sx, tc - meia, y1, eps))]
+            bm.faces.new(vs if sx > 0 else list(reversed(vs)))
+            me = bpy.data.meshes.new('alto_falante'); bm.to_mesh(me); bm.free(); me.materials.append(M[material])
+            ob = bpy.data.objects.new('alto_falante_%s_%d_%d' % (nome, sx, i), me); scene.collection.objects.link(ob); ob.parent = raiz
 # topo do bloco traseiro: textura de pontinhos com as legendas das portas, e o LED branco
 plane('traseira_topo', [(-176.0, 240.5), (176.0, 240.5), (176.0, 258.0), (-176.0, 258.0)], Z_REAR + 0.02, 'traseira_topo',
       uv=((1, 1), (0, 1), (0, 0), (1, 0)), parent=raiz)

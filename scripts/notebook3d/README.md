@@ -34,3 +34,10 @@ scripts refazem o GLB a partir das fotos. As fotos (~90 MB) não ficam no reposi
 
 `index.html` + `entry.ts` + `shoot.cjs` são o visualizador de conferência: o mesmo `src/lib/notebook3d/scene.ts` do
 site, com câmera fixa pela URL (`az`, `polar`, `dist`, `lid`, `light`, `color`), capturado pelo Chrome headless.
+
+## Base inferior (spec 004)
+
+`base_planta.py` mede na planta da base as 88 fendas da grelha e os 10 parafusos (`base.json`); `build_blend.py` abre a
+grelha em bolsões com tela furada e dissipador, rebaixa os parafusos e vaza o fundo nesses pontos. `etiqueta.py` troca
+MO, SN, data de fabricação e QR da etiqueta por valores fictícios (`texturas/fundo_publico.jpg`): a foto original
+tem os dados reais e não entra no GLB. Detalhes em `specs/004-notebook-3d-base/`.
