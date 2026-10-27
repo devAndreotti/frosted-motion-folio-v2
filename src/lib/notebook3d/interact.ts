@@ -57,14 +57,21 @@ export function makePresser(redraw: () => void) {
   };
 }
 
-/** Slides an object by `delta` (meters, along one axis of its parent) over a short eased move. */
+/**
+ * Slides an object to `to` (meters, along one axis of its parent) over a short eased move. A new move on the same
+ * object takes over from where the running one is, so quick clicks never leave it off its two stops.
+ */
 export function makeSlider(redraw: () => void) {
-  return (o: Object3D, axis: 'x' | 'z', delta: number, ms = 220) => {
+  const running = new WeakMap<Object3D, number>();
+  return (o: Object3D, axis: 'x' | 'z', to: number, ms = 220) => {
     const from = o.position[axis];
     const start = performance.now();
-    const step = (now: number) => {
-      const p = Math.min(1, (now - start) / ms);
-      o.position[axis] = from + delta * (1 - Math.pow(1 - p, 3));
+    const id = (running.get(o) ?? 0) + 1;
+    running.set(o, id);
+    const step = () => {
+      if (running.get(o) !== id) return;
+      const p = Math.min(1, Math.max(0, (performance.now() - start) / ms));
+      o.position[axis] = from + (to - from) * (1 - Math.pow(1 - p, 3));
       redraw();
       if (p < 1) requestAnimationFrame(step);
     };
@@ -77,19 +84,25 @@ export function cameraToggles(getParts: () => Parts | null, redraw: () => void, 
   const slide = makeSlider(redraw);
   let shutterOpen = false;
   let camOn = false;
+  // where each part rests in the model (closed, off): the moves go to fixed stops from there, never relative
+  const rest = new WeakMap<Object3D, number>();
+  const restOf = (o: Object3D, axis: 'x' | 'z') => {
+    if (!rest.has(o)) rest.set(o, o.position[axis]);
+    return rest.get(o) as number;
+  };
   return {
     shutter() {
       // the cover slides 11.5 mm along the bezel and uncovers the lens
       shutterOpen = !shutterOpen;
       const knob = getParts()?.shutter.find((o) => o.name === 'camera_capa');
-      if (knob) slide(knob, 'x', shutterOpen ? 0.0115 : -0.0115);
+      if (knob) slide(knob, 'x', restOf(knob, 'x') + (shutterOpen ? 0.0115 : 0));
       click();
     },
     camSwitch() {
       // the knob slides 2.8 mm toward the back and hides the red: camera on
       camOn = !camOn;
       const knob = getParts()?.camSwitch[0];
-      if (knob) slide(knob, 'z', camOn ? -0.0028 : 0.0028, 140);
+      if (knob) slide(knob, 'z', restOf(knob, 'z') + (camOn ? -0.0028 : 0), 140);
       click();
     },
   };

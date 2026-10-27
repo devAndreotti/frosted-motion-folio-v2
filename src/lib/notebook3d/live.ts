@@ -37,6 +37,20 @@ export interface LiveOptions {
   onChange: (open: boolean) => void;
 }
 
+/**
+ * The screen's outline as the canvas draws it, as a CSS `polygon()` in px of a `w` x `h` layer: the page layer is clipped
+ * to it, so the page never shows past the screen where the canvas is see-through (around the laptop).
+ */
+export function screenClip(points: Vector3[], camera: Camera, w: number, h: number) {
+  const p = new Vector3();
+  const px = (v: number) => `${Math.round(v * 10) / 10 + 0}px`;
+  const xy = points.map((q) => {
+    p.copy(q).project(camera);
+    return `${px(((p.x + 1) / 2) * w)} ${px(((1 - p.y) / 2) * h)}`;
+  });
+  return `polygon(${xy.join(', ')})`;
+}
+
 /** Corners of the screen quad in its own space, found by their UVs (top-left 0,0; top-right 1,0; bottom-left 0,1). */
 function corners(geo: BufferGeometry) {
   const pos = geo.getAttribute('position');
@@ -83,7 +97,8 @@ export function createLiveScreen(host: HTMLElement, screen: Mesh, o: LiveOptions
   const shot = screen.material as Material;
   const hole = new MeshBasicMaterial({ name: 'tela-furo', color: 0x000000, transparent: true, opacity: 0, blending: NoBlending });
   const c = corners(screen.geometry);
-  const [tl, tr, bl, right, up, normal, toCam] = Array.from({ length: 7 }, () => new Vector3());
+  const [tl, tr, bl, br, right, up, normal, toCam] = Array.from({ length: 8 }, () => new Vector3());
+  let [layerW, layerH] = [1, 1];
   const basis = new Matrix4();
   const ray = new Raycaster();
   const ndc = new Vector2();
@@ -149,6 +164,7 @@ export function createLiveScreen(host: HTMLElement, screen: Mesh, o: LiveOptions
       tl.copy(c.tl).applyMatrix4(screen.matrixWorld);
       tr.copy(c.tr).applyMatrix4(screen.matrixWorld);
       bl.copy(c.bl).applyMatrix4(screen.matrixWorld);
+      br.copy(tr).add(bl).sub(tl);
       right.subVectors(tr, tl);
       up.subVectors(tl, bl);
       const w = right.length();
@@ -162,9 +178,11 @@ export function createLiveScreen(host: HTMLElement, screen: Mesh, o: LiveOptions
       // CSS3DRenderer sets the element's display from `visible` on every render, so hiding goes through the object
       obj.visible = loaded && shown && facing;
       screen.material = obj.visible ? hole : shot;
+      renderer.domElement.style.clipPath = obj.visible ? screenClip([tl, tr, br, bl], camera, layerW, layerH) : '';
       renderer.render(scene, camera);
     },
     setSize(w, h) {
+      [layerW, layerH] = [w, h];
       renderer.setSize(w, h);
     },
     dispose() {
