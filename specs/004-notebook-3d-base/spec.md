@@ -2,78 +2,75 @@
 
 **Feature Branch**: `feat/spec-notebook-base-3d`  
 **Created**: 2026-10-27  
-**Status**: Ready for Implementation  
-**Input**: PR #123 (`feat/notebook-3d`), fotos reais de alta resolução (`/mnt/volume-50gb/notebook-3d/fotos/`), planta retificada (`plantas/bottom.jpg`), dados mecânicos do Lenovo LOQ 15IRH8 (PSREF 83EU).
+**Status**: Implementada  
+**Input**: PR #123 (`feat/notebook-3d`), planta retificada da base (`plantas/bottom.jpg`, 5 px/mm, fora do repositório; cópia em `docs/notebook-3d/base-planta-retificada.jpg`), fotos de referência.
 
 ---
 
 ## 1. Visão Geral e Contexto
 
-No PR #123, o portfólio introduziu o modelo 3D do notebook Lenovo LOQ 15IRH8 na galeria de experimentos. No entanto, enquanto a tampa superior, o deck do teclado, as portas traseiras e as laterais foram modeladas com relevo geométrico, chanfros e booleans precisos, a **face inferior (base / fundo)** permaneceu como um polígono plano único com textura 2D esticada (`fundo_poly` em `build_blend.py`), sem profundidade real nas grelhas térmicas, sem cavidades escareadas de parafusos e sem shaders holográficos dedicados para os adesivos da base.
+No PR #123 a tampa, o deck, as portas traseiras e as laterais ganharam relevo geométrico, mas a **face inferior** ficou como um polígono plano (`fundo` em `build_blend.py`) com a foto retificada esticada por cima: a grelha de admissão, os parafusos e a junta de molde eram só textura.
 
-Esta especificação define os requisitos de modelagem, materiais e shaders para elevar a fidelidade da base ao mesmo padrão do chassi superior.
+Já existiam e **ficam como estão**:
+- os adesivos da base (`touro`, `compact_disc` em `adesivos.json` → `bottom`, `brilho: holo`), colados como planos virados para baixo e com o mesmo `holoMaterial` dos adesivos da tampa e do apoio;
+- os pés frontais em pílula (X 126–154 mm, Y 29–36 mm), que vão da mesa (Z = 0) até o fundo.
+
+### Privacidade da etiqueta
+
+A etiqueta de fábrica tem dados de série (MO, SN, data de fabricação e um QR code que os codifica). A foto da base vira textura pública no site, então **nenhum desses dados reais pode aparecer** no GLB, nas imagens de `docs/` ou nesta especificação. O modelo, o MTM e o número Anatel são públicos (catálogo da Lenovo) e ficam.
 
 ### Referências Visuais no Repositório
-- `docs/notebook-3d/base-referencia-real.jpg`: Foto zenital de alta resolução da carcaça inferior real.
-- `docs/notebook-3d/base-adesivos-detalhe.jpg`: Close-up dos adesivos da base sob iluminação com difração óptica.
-- `docs/notebook-3d/base-etiqueta-detalhe.jpg`: Close-up da etiqueta técnica, Anatel, QR code e parafusos Phillips.
-- `docs/notebook-3d/base-planta-retificada.jpg`: Planta retificada em escala métrica (5 px/mm).
-- `docs/notebook-3d/base-modelo-atual-render.jpg`: Render da vista inferior atual (limitação 2D).
-- `docs/notebook-3d/base-comparativo-atual.jpg`: Comparativo do PR #123.
+- `docs/notebook-3d/base-referencia-real.jpg`: foto zenital da base real (dados de série pixelados).
+- `docs/notebook-3d/base-adesivos-detalhe.jpg`: close-up dos adesivos holográficos.
+- `docs/notebook-3d/base-etiqueta-detalhe.jpg`: close-up da etiqueta (dados de série pixelados), parafuso e saída de som.
+- `docs/notebook-3d/base-planta-retificada.jpg`: planta retificada (5 px/mm), já com a etiqueta fictícia.
+- `docs/notebook-3d/base-modelo-atual-render.jpg` e `base-comparativo-atual.jpg`: a base antes desta mudança.
+- `docs/notebook-3d/base-3d-render.jpg`: a base depois desta mudança, na vista "base" do site.
 
 ---
 
 ## 2. User Scenarios & Testing
 
-### User Story 1 - Geometria das Grelhas de Arrefecimento e Profundidade Interna (Priority: P1)
-Ao inspecionar a vista inferior do notebook (modo de rotação livre 360° ou atalho "Embaixo"), o usuário observa fendas de exaustão e admissão com profundidade geométrica tridimensional, revelando o filtro interno escuro e aletas de dissipação de cobre/azul sob iluminação angular.
+### User Story 1 - Grelha de admissão com profundidade (Priority: P1)
+Na vista de baixo, as 88 fendas trapezoidais da grelha são vãos de verdade: atrás delas aparece a tela furada e, mais ao fundo, o dissipador.
 
-**Why this priority**: É a maior área visual da base inferior e a principal diferença entre um plano texturizado 2D e um chassi de alta fidelidade.
-**Independent Test**: Rotação do modelo em ângulo rasante (60°–80° de incidência de luz) no visualizador Three.js (`shoot-live.cjs` ou visualizador interativo), confirmando sombras de oclusão e profundidade nas aletas sem vazamento de faces.
+**Independent Test**: captura do visualizador (`shoot.cjs`) em ângulo rasante; as fendas mostram paredes e profundidade, sem faces vazando.
 
 **Acceptance Scenarios**:
-1. **Given** a câmera apontada para a base inferior, **When** a luz direcional incide lateralmente, **Then** as fendas trapezoidais/hexagonais projetam sombras internas na malha de proteção em vez de exibirem textura estática.
-2. **Given** a camada interna de arrefecimento, **When** visualizada através das grelhas, **Then** são identificáveis as aletas de dissipação (`aleta_azul` e `cobre`) a 1,2 mm de recuo da face externa.
-3. **Given** a transição de materiais na base, **When** a seção traseira preta texturizada encontra a placa cinza grafite, **Then** há um friso físico de junta de molde (profundidade 0,3 mm, largura 0,5 mm).
+1. **Given** a câmera na base, **When** ela gira, **Then** as fendas (medidas na planta: X ≈ −157 a +153 mm, Y ≈ 128 a 205 mm) mostram paredes escuras e profundidade.
+2. **Given** o interior da grelha, **When** visto pelas fendas, **Then** há uma tela furada em colmeia a 1,2 mm da face e, a 4 mm, o dissipador: cobre embaixo das ventoinhas (|X| > 60 mm) e aletas azuis no meio.
+3. **Given** a divisa entre o painel cinza e a faixa preta de trás, **Then** há uma junta de molde escura de 0,5 mm em Y = 240 mm.
 
 ---
 
-### User Story 2 - Parafusos Phillips Escareados, Pés de Apoio e Portas Acústicas (Priority: P2)
-O usuário visualiza os elementos mecânicos funcionais da base: 10 pontos de fixação com cabeças de parafuso Phillips escareadas, pés de borracha com altura realista e saídas de som laterais com tela protetora acústica.
+### User Story 2 - Parafusos, apoio traseiro e saídas de som (Priority: P2)
+Os 10 parafusos Phillips aparecem rebaixados, a borracha de trás fica onde está na peça real e as saídas de som mostram a tela azul.
 
-**Why this priority**: Garante fidelidade tátil e visual ao hardware real Lenovo LOQ 15IRH8, eliminando a sensação de "objeto suspenso flutuante".
-**Independent Test**: Verificação das posições X/Y/Z dos 10 parafusos contra `plantas/bottom.jpg` e teste de colisão do plano da mesa com a base dos pés de borracha em Z = 0.
+**Independent Test**: `base_planta.py` gera as posições a partir da planta; a captura do visualizador confere com a foto.
 
 **Acceptance Scenarios**:
-1. **Given** a borda inferior e perímetro da base, **When** renderizados em 3D, **Then** existem 10 cavidades circulares escareadas com parafusos de cabeça Phillips preta posicionados conforme a planta:
-   - 3 na faixa superior traseira escura;
-   - 2 nos cantos superiores da placa cinza;
-   - 2 nas bordas laterais médias;
-   - 3 a 4 distribuídos na borda chanfrada frontal.
-2. **Given** os pés de borracha frontais, **When** medidos no modelo, **Then** possuem formato de pílula arredondada (comprimento ~28 mm, largura 7 mm, elevação física de 1,8 mm sobre o chanfro inclinado Z0).
-3. **Given** o pé de borracha traseiro contínuo, **When** renderizado, **Then** estende-se de X = -158 mm a +158 mm com recesso central de 4,5 mm para acompanhar a geometria das portas I/O.
-4. **Given** as saídas acústicas frontais dos alto-falantes nos chanfros laterais, **When** inspecionadas, **Then** apresentam 3 ranhuras paralelas chanfradas a 45° com tela interna turquesa (`verde_agua`).
+1. **Given** a base, **Then** há 10 parafusos (2 na faixa preta, 2 nos cantos de trás do painel cinza, 2 nas laterais, 4 na borda da frente), cada um num rebaixo de 0,7 mm com a cabeça a 0,35 mm da face e a cruz em baixo-relevo.
+2. **Given** o apoio de borracha traseiro, **Then** é uma barra reta em 3 trechos logo à frente da faixa preta (Y ≈ 232,4 a 239 mm, X ≈ −152,6 a +152,6 mm), como na planta, e não mais uma tira sob a faixa preta acompanhando o recuo das portas.
+3. **Given** as saídas de som nos chanfros laterais (Y ≈ 25 a 57 mm), **Then** são 3 fendas compridas por lado, com moldura escura e tela **azul** (`aleta_azul`), como na foto.
 
 ---
 
-### User Story 3 - Decals Nítidos com Shaders Holográficos e Etiquetas Vetorizadas (Priority: P3)
-Os adesivos personalizados da base ("Touro Vermelho" e "Compact Disc Digital Audio") e as etiquetas industriais de homologação exibem alta definição textual e reflexos especulares/holográficos idênticos aos adesivos da tampa e do apoio de pulso.
+### User Story 3 - Etiqueta sem dados reais (Priority: P1)
+A etiqueta de fábrica continua reconhecível, mas com MO, SN, data e QR fictícios.
 
-**Why this priority**: Os adesivos na base são marcas reais do notebook do autor e precisam do mesmo tratamento óptico (arco-íris holográfico dinâmico com a rotação da câmera) já implementado no PR #123.
-**Independent Test**: Inspeção da reflexão especular com rotação orbital em `src/lib/notebook3d/materials.ts`, validando a máscara holográfica do canal R/B do atlas.
+**Independent Test**: recorte da textura `fundo_publico.jpg` e do GLB; nenhum valor real legível.
 
 **Acceptance Scenarios**:
-1. **Given** o adesivo do "Touro Vermelho" (bbox na planta: [206.7, 172.7, 298.6, 239.8]), **When** a câmera orbita ao redor da base, **Then** reflete difração holográfica vinílica (iridescência degradê vermelho/magenta/ciano).
-2. **Given** o adesivo "Compact Disc Digital Audio" (bbox na planta: [275.8, 145.1, 337.0, 185.9]), **When** iluminado, **Then** reflete padrão holográfico prismático facetado (*broken glass effect*).
-3. **Given** a etiqueta de fábrica Lenovo LOQ 15IRH8, **When** aproximada a câmera, **Then** exibe texto legível nítido (`MTM: 83EU0001BR`, `SN: PEOCH5HA`, Anatel `14751-21-04076`, QR code) em vez de borrão de baixa resolução.
-4. **Given** o selo ecológico "CO2 Offset Service by Lenovo", **When** renderizado, **Then** apresenta formato de pílula verde com borda bem definida e alinhamento milimétrico logo abaixo da etiqueta principal.
+1. **Given** a textura da base, **When** gerada por `etiqueta.py`, **Then** MO, SN e data são trocados por valores sorteados (fixos no script) e o QR vira um padrão aleatório que não decodifica.
+2. **Given** `build_blend.py`, **Then** ele só usa `texturas/fundo_publico.jpg`; sem ela o build falha em vez de cair na foto original.
+3. **Given** as imagens de `docs/notebook-3d/`, **Then** os dados de série estão pixelados ou trocados pelos fictícios.
 
 ---
 
 ## 3. Requisitos Não-Funcionais
 
-- **Orçamento de Geometria**: O acréscimo de vértices na base não deve ultrapassar 4.000 triângulos adicionais.
-- **Tamanho de Payload (GLB)**: O arquivo final comprimido (`notebook-loq.glb` via meshopt + WebP) não deve crescer mais do que 80 kB (baseline atual: ~1,36 MB; teto: <= 1,44 MB).
-- **Taxa de Quadros**: 60fps sustentados em desktop e 30fps+ em mobile durante a rotação da vista inferior.
-- **Draw Calls**: Manter os novos elementos agrupados por material estático (`grupo_carcaca`, `grupo_furo`, `grupo_borracha`, `grupo_adesivos`) antes da exportação para não gerar novas draw calls avulsas no Three.js.
-- **Qualidade de Código**: Conformidade com a política do repositório (`.quality-gate/policy.json` com teto de 300 linhas por arquivo).
+- **Geometria**: no máximo 4.000 triângulos a mais. Medido: 21.763 → 25.046 (+3.283).
+- **Payload (GLB meshopt + WebP)**: no máximo 80 kB a mais. Medido: 1.324.564 → 1.356.696 bytes (+32 kB).
+- **Draw calls**: peças novas juntadas por material (`grupo_notebook_<material>`); só entram 4 primitivas novas (`cobre` e `aleta_azul` no corpo, a tela `malha` e o grupo `parafuso`).
+- **Profundidade**: o `fundo` fica 0,02 mm sob a face do corpo; o site aplica `polygonOffset` nele (`liftBase` em `materials.ts`) para não brigar com o corpo em buffers de 16 bits, e os adesivos continuam por cima.
+- **Qualidade de código**: o teto de 300 linhas por arquivo do quality gate vale para `src/`; os scripts do Blender em `scripts/notebook3d/` ficam fora dessa medida.

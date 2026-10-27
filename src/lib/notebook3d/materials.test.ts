@@ -1,6 +1,19 @@
 import { describe, expect, it } from 'vitest';
 import { BoxGeometry, Color, Group, Mesh, MeshBasicMaterial, MeshPhysicalMaterial, MeshStandardMaterial, Texture } from 'three';
-import { holoMaterial, setupBacklight } from './materials';
+import { holoMaterial, prepareModel, setupBacklight } from './materials';
+
+describe('prepareModel', () => {
+  it('pulls the base photo forward in depth, and the stickers further still', () => {
+    const root = new Group();
+    const base = new MeshStandardMaterial({ name: 'fundo' });
+    root.add(new Mesh(new BoxGeometry(), base), new Mesh(new BoxGeometry(), new MeshStandardMaterial({ name: 'adesivos' })));
+    prepareModel(root, { shift: { value: 0 } }, new MeshBasicMaterial(), 1);
+    const stickers = (root.children[1] as Mesh).material as MeshPhysicalMaterial;
+    expect(base.polygonOffset).toBe(true);
+    expect(base.polygonOffsetUnits).toBeLessThan(0);
+    expect(stickers.polygonOffsetUnits).toBeLessThan(base.polygonOffsetUnits);
+  });
+});
 
 describe('holoMaterial', () => {
   it('keeps the atlas maps, cuts the die-cut shape and limits the iridescence to the film', () => {

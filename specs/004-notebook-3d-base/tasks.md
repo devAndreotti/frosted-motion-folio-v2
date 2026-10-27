@@ -6,35 +6,31 @@
 
 ---
 
-## Fase 1 - Ativos de Referência e Mapeamento de Coordenadas
+## Fase 1 - Referências e medidas
 
-- [x] **T001**: Extrair fotos de alta resolução da parte de baixo da máquina de trabalho para o repositório (`docs/notebook-3d/base-referencia-real.jpg`, `base-adesivos-detalhe.jpg`, `base-etiqueta-detalhe.jpg`, `base-planta-retificada.jpg`).
-- [ ] **T002**: Medir as coordenadas milimétricas dos 10 parafusos Phillips contra `plantas/bottom.jpg` e exportar para `scripts/notebook3d/parafusos_base.json`.
-- [ ] **T003**: Vetorizar/retificar os perfis das fendas térmicas hexagonais/trapezoidais de admissão de ar e as caixas delimitadoras das ventoinhas internas.
-- [ ] **T004**: Recortar e isolar as artes de alta resolução da etiqueta técnica de fábrica (`LOQ 15IRH8`) e do selo `CO2 Offset Service by Lenovo`.
+- [x] **T001**: Fotos de referência da base em `docs/notebook-3d/base-*.jpg`, com os dados de série da etiqueta pixelados ou trocados pelos fictícios.
+- [x] **T002**: Posições dos 10 parafusos medidas na planta (`base_planta.py` → `base.json`).
+- [x] **T003**: Contornos das 88 fendas da grelha vetorizados (`base_planta.py` → `base.json`).
+- [x] **T004**: Etiqueta com MO, SN, data e QR fictícios (`etiqueta.py` → `texturas/fundo_publico.jpg`); o build só usa essa textura.
 
----
+## Fase 2 - Geometria (`build_blend.py`)
 
-## Fase 2 - Modelagem Geométrica no Blender (`build_blend.py`)
+- [x] **T005**: Junta de molde entre o painel cinza e a faixa preta.
+- [x] **T006**: Grelha com bolsões de 4 mm, tela furada a 1,2 mm e dissipador (`cobre`, `aleta_azul`) ao fundo.
+- [x] **T007**: 10 parafusos Phillips rebaixados (corpo e bloco traseiro).
+- [x] **T008**: Apoio traseiro movido para a posição da planta (3 trechos); pés frontais mantidos.
+- [x] **T009**: Saídas de som com 3 fendas compridas e tela azul em cada chanfro.
+- [x] **T010**: Fundo vazado nas fendas e nos rebaixos dos parafusos (`triangle_fill` com furos).
 
-- [ ] **T005**: Substituir a face plana única de `fundo` pela malha de chassi estruturada com divisão da faixa traseira preta e sulco de molde.
-- [ ] **T006**: Implementar o recorte das grelhas de ventilação com profundidade de 1,2 mm e criar a camada interna do dissipador (`aleta_azul`, `cobre`, `furo`).
-- [ ] **T007**: Implementar a função geradora das cabeças de parafuso Phillips escareadas e posicionar as 10 instâncias nos locais medidos em T002.
-- [ ] **T008**: Ajustar as cavidades de alojamento e a extrusão dos pés de borracha frontais e traseiros com bisel `bev_bot` realista.
+## Fase 3 - Site
 
----
+- [x] **T011**: `liftBase` em `materials.ts` (polygonOffset do `fundo`) e offset maior nos adesivos, com teste em `materials.test.ts`.
+- [x] **T012**: `montar.sh` com os passos novos; GLB regerado em `public/models/notebook-loq.glb`.
 
-## Fase 3 - Pipeline de Decals, Atlas e Shaders
+## Fase 4 - Validação
 
-- [ ] **T009**: Atualizar `scripts/notebook3d/adesivos.json` com as entradas completas de `touro`, `compact_disc`, `etiqueta_loq` e `selo_co2` com `sup: "bottom"`.
-- [ ] **T010**: Executar `atlas.py` para gerar o novo atlas de textura 2048² com as máscaras holográficas dos novos adesivos da base.
-- [ ] **T011**: Validar em `src/lib/notebook3d/materials.ts` a aplicação do shader holográfico para planos com normal invertida (`down=True`).
+- [x] **T013**: +3.283 triângulos (teto 4.000) e +32 kB no GLB (teto 80 kB).
+- [x] **T014**: `npm test`, lint e `tsc` sem regressão.
+- [x] **T015**: Capturas de conferência da base (`shoot.cjs`) contra a foto real; `docs/notebook-3d/base-3d-render.jpg`.
 
----
-
-## Fase 4 - Otimização de Assets, CI e Validação Visual
-
-- [ ] **T012**: Executar `scripts/notebook3d/montar.sh` para gerar `public/models/notebook-loq.glb` comprimido via `gltf-transform optimize` (meshopt + WebP).
-- [ ] **T013**: Verificar o orçamento de tamanho do arquivo GLB (delta <= 80 kB) e inspecionar contagem de triângulos via `scripts/notebook3d/glbinfo.py`.
-- [ ] **T014**: Executar `npm test` e validar testes unitários e de materiais sem regressão.
-- [ ] **T015**: Gerar captura de conferência da vista inferior via `scripts/notebook3d/shoot.cjs` e validar conformidade visual contra a foto real.
+Já existiam antes desta spec e não mudaram: os adesivos holográficos da base (`touro`, `compact_disc`) e os pés frontais.

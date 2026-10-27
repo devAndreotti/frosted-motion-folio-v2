@@ -27,6 +27,7 @@ export function holoMaterial(src: MeshStandardMaterial, state: HoloState) {
     envMapIntensity: 1.15,
     polygonOffset: true,
     polygonOffsetFactor: -2,
+    polygonOffsetUnits: -4,
   });
   m.onBeforeCompile = (shader) => {
     shader.uniforms.uHoloShift = state.shift;
@@ -112,6 +113,16 @@ export function setupLed(root: Object3D) {
   };
 }
 
+/**
+ * The base photo lies 0.02 mm under the body's bottom face: pulled forward in depth so it never z-fights with it
+ * (a 16-bit depth buffer cannot tell them apart). The stickers, pulled further, still win over it.
+ */
+export function liftBase(mat: Material) {
+  mat.polygonOffset = true;
+  mat.polygonOffsetFactor = -1;
+  mat.polygonOffsetUnits = -2;
+}
+
 /** Swaps in the holographic sticker material and the screen; sharper textures at grazing angles. Returns the screen mesh. */
 export function prepareModel(root: Object3D, holo: HoloState, screenMat: Material, aniso: number) {
   let stickers: Material | null = null;
@@ -125,6 +136,7 @@ export function prepareModel(root: Object3D, holo: HoloState, screenMat: Materia
       stickers ??= holoMaterial(mat, holo);
       mesh.material = stickers;
     }
+    if (mat.name === 'fundo') liftBase(mat);
     if (mat.name === 'tela') {
       mesh.material = screenMat;
       tela = mesh;
