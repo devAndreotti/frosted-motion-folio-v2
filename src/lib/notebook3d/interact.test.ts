@@ -9,7 +9,10 @@ const named = (name: string) => {
 };
 
 describe('notebook3d interact', () => {
-  afterEach(() => vi.useRealTimers());
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
 
   it('finds the keys by id, the lid pieces and the power button in the model', () => {
     const root = new Group();
@@ -58,6 +61,39 @@ describe('notebook3d interact', () => {
     vi.advanceTimersByTime(400);
     expect(sw.position.z).toBeCloseTo(-0.0028);
     expect(click).toHaveBeenCalledTimes(3);
+  });
+
+  it('keeps the cover on its two stops however fast it is clicked', () => {
+    // frames by hand: a 16 ms clock and the queued animation callbacks
+    let now = 0;
+    let queue: ((t: number) => void)[] = [];
+    vi.spyOn(performance, 'now').mockImplementation(() => now);
+    vi.stubGlobal('requestAnimationFrame', (cb: (t: number) => void) => queue.push(cb));
+    const frames = (n: number) => {
+      for (let i = 0; i < n; i += 1) {
+        now += 16;
+        const run = queue;
+        queue = [];
+        run.forEach((cb) => cb(now));
+      }
+    };
+    const root = new Group();
+    const knob = named('camera_capa');
+    knob.position.x = -0.0035;
+    root.add(knob);
+    const parts = findParts(root);
+    const cam = cameraToggles(() => parts, vi.fn(), vi.fn());
+    // five clicks at uneven gaps, each in the middle of the previous move: it ends open
+    for (const gap of [3, 6, 2, 5, 4]) {
+      cam.shutter();
+      frames(gap);
+    }
+    frames(30);
+    expect(knob.position.x).toBeCloseTo(-0.0035 + 0.0115);
+    cam.shutter();
+    frames(30);
+    expect(knob.position.x).toBeCloseTo(-0.0035);
+    vi.unstubAllGlobals();
   });
 
   describe('reach of the camera parts', () => {
