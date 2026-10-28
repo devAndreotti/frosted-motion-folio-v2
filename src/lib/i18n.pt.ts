@@ -102,6 +102,7 @@ export const pt: Strings = {
       notebook: {
         stageAria: 'Meu notebook em 3D, com o projeto na tela. Arraste para girar.',
         poster: 'Meu notebook Lenovo LOQ com adesivos, aberto, com um projeto na tela',
+        tap3d: 'Tocar para ver em 3D',
         prev: 'Projeto anterior',
         next: 'Próximo projeto',
         dotAria: (i, title) => `Projeto ${i}: ${title}`,

@@ -57,6 +57,9 @@ export default defineConfig(({ mode }) => ({
       output: {
         manualChunks(id) {
           if (id.includes("node_modules")) {
+            if (/node_modules[\\/]three[\\/]/.test(id)) {
+              return "vendor-three";
+            }
             if (/node_modules[\\/](react|react-dom|react-router-dom|@remix-run[\\/]router|scheduler)[\\/]/.test(id)) {
               return "vendor-react";
             }

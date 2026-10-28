@@ -102,6 +102,7 @@ export const en: Strings = {
       notebook: {
         stageAria: 'My laptop in 3D, with the project on its screen. Drag to turn it.',
         poster: 'My Lenovo LOQ laptop with stickers, open, with a project on the screen',
+        tap3d: 'Tap to view in 3D',
         prev: 'Previous project',
         next: 'Next project',
         dotAria: (i, title) => `Project ${i}: ${title}`,

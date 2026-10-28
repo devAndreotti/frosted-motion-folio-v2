@@ -86,5 +86,33 @@ describe("Notebook3D", () => {
     while (!screen.queryByText(first.title, { selector: ".nb3d-n" })) fireEvent.click(screen.getByRole("button", { name: "Próximo projeto" }));
     expect(screen.getByRole("link", { name: /Abrir o site/ }).getAttribute("href")).toBe(first.liveUrl);
   });
+
+  it("displays tap to 3D button on mobile and activates 3D on tap", () => {
+    renderNotebook();
+    const tapBtn = screen.getByRole("button", { name: "Tocar para ver em 3D" });
+    expect(tapBtn).toBeTruthy();
+    fireEvent.click(tapBtn);
+    expect(screen.queryByRole("button", { name: "Tocar para ver em 3D" })).toBeNull();
+  });
+
+  it("does not display tap to 3D button on desktop", () => {
+    const original = window.matchMedia;
+    window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+      matches: query === "(min-width: 1024px)",
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }));
+    try {
+      renderNotebook();
+      expect(screen.queryByRole("button", { name: "Tocar para ver em 3D" })).toBeNull();
+    } finally {
+      window.matchMedia = original;
+    }
+  });
 });
 

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { ArrowUpRight, Hand } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import type { CuratedProject } from '@/data/curatedProjects';
 import { buildHueTheme } from '@/lib/theme';
 import { projectAsset } from '@/lib/projects/asset';
@@ -16,32 +17,20 @@ const POSTER = './models/notebook-loq.webp';
 const NO_SCROLL = new Set(['Space', 'ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End']);
 
 const load = (key: string) => {
-  try {
-    return localStorage.getItem(key);
-  } catch {
-    return null;
-  }
+  try { return localStorage.getItem(key); } catch { return null; }
 };
 const save = (key: string, value: string) => {
-  try {
-    localStorage.setItem(key, value);
-  } catch {
-    // private mode: the choice just isn't remembered
-  }
+  try { localStorage.setItem(key, value); } catch { /* private mode */ }
 };
 
 const webglOk = () => {
   try {
     const c = document.createElement('canvas');
     return !!(c.getContext('webgl2') || c.getContext('webgl'));
-  } catch {
-    return false;
-  }
+  } catch { return false; }
 };
 
 const reducedMotion = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true;
-// a click on the screen opens the real page only with a mouse and room for it; touch and narrow screens keep the screenshots
-const canLive = () => typeof window !== 'undefined' && window.matchMedia?.('(pointer: fine)').matches === true && window.innerWidth >= 900;
 
 interface Notebook3DProps {
   projects: CuratedProject[];
@@ -67,7 +56,7 @@ const Notebook3D = ({ projects, onOpen }: Notebook3DProps) => {
   const [light, setLight] = useState<BacklightLevel>(() => parseBacklight(load('nb.luz')));
   const [view, setView] = useState<ViewName>('frente');
   const [sound, setSound] = useState(() => load('nb.som') !== '0');
-  const [desktop] = useState(canLive);
+  const desktop = useMediaQuery('(min-width: 1024px)');
   const [lidOpen, setLidOpen] = useState(true);
   const [liveOpen, setLiveOpen] = useState(false);
   const [near, setNear] = useState(false);
@@ -79,12 +68,13 @@ const Notebook3D = ({ projects, onOpen }: Notebook3DProps) => {
   const project = projects[wrapIndex(index, projects.length)];
 
   useEffect(() => {
+    if (!desktop) return;
     const el = stage.current;
     if (!el || typeof IntersectionObserver === 'undefined') return;
     const io = new IntersectionObserver(([e]) => e.isIntersecting && setNear(true), { rootMargin: '400px 0px' });
     io.observe(el);
     return () => io.disconnect();
-  }, []);
+  }, [desktop]);
 
   useEffect(() => {
     const el = stage.current;
@@ -194,6 +184,11 @@ const Notebook3D = ({ projects, onOpen }: Notebook3DProps) => {
         <div className="nb3d-view">
           <div ref={stage} className={`nb3d-stage${shown && !failed ? ' is-live' : ''}`} role="region" aria-label={nb.stageAria} tabIndex={0} onKeyDown={onKey}>
             <img className="nb3d-poster" src={projectAsset(POSTER)} alt={nb.poster} loading="lazy" decoding="async" />
+            {!desktop && !near && (
+              <button type="button" className="nb3d-tap3d" onClick={() => setNear(true)}>
+                {nb.tap3d}
+              </button>
+            )}
           </div>
           <div className="nb3d-chips" aria-hidden="true">
             <span className="nb3d-chip is-mono">
