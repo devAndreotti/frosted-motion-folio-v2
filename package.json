@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:resume": "node scripts/generate-resume.mjs",
     "build:dev": "vite build --mode development",
     "build:vps": "vite build --outDir dist-vps --base=/",
     "lint": "eslint .",

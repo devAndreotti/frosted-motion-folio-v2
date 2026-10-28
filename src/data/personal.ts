@@ -38,5 +38,5 @@ export const contact = {
   xHandle: '@devAndreotti',
   // Path of the résumé PDF in public/ (e.g. './resume.pdf'). Empty hides the résumé buttons --
   // a missing file would open the home page instead (the hosts fall back to index.html).
-  resume: '',
+  resume: './curriculo.pdf',
 };
