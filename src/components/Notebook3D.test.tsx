@@ -4,6 +4,9 @@ import Notebook3D from "./Notebook3D";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { moreProjects } from "@/data/moreProjects";
 
+const pad = (n: number) => String(n).padStart(2, "0");
+const count = (i: number) => screen.getByText(`${pad(i)} / ${pad(moreProjects.length)}`, { selector: ".nb3d-count" });
+
 const renderNotebook = (onOpen = vi.fn()) => {
   render(
     <LanguageProvider>
@@ -18,7 +21,7 @@ describe("Notebook3D", () => {
 
   it("starts on the first project, with the still picture standing in for the 3D (no WebGL here)", () => {
     renderNotebook();
-    expect(screen.getByText(`1 / ${moreProjects.length}`)).toBeTruthy();
+    expect(count(1)).toBeTruthy();
     expect(screen.getByText(moreProjects[0].title, { selector: ".nb3d-n" })).toBeTruthy();
     expect(screen.getByRole("img", { name: /notebook Lenovo LOQ/ })).toBeTruthy();
   });
@@ -31,7 +34,7 @@ describe("Notebook3D", () => {
     fireEvent.keyDown(screen.getByRole("region", { name: /notebook em 3D/ }), { key: "ArrowLeft" });
     const last = moreProjects[moreProjects.length - 1];
     expect(screen.getByText(last.title, { selector: ".nb3d-n" })).toBeTruthy();
-    expect(screen.getByText(`${moreProjects.length} / ${moreProjects.length}`)).toBeTruthy();
+    expect(count(moreProjects.length)).toBeTruthy();
   });
 
   it("opens the current project's screens", () => {
@@ -40,12 +43,21 @@ describe("Notebook3D", () => {
     expect(onOpen).toHaveBeenCalledWith(moreProjects[0]);
   });
 
-  it("remembers the keyboard light level between visits", () => {
+  it("jumps straight to a project from its thumbnail", () => {
+    renderNotebook();
+    const third = moreProjects[2];
+    const thumb = screen.getByRole("button", { name: `Projeto 3: ${third.title}` });
+    fireEvent.click(thumb);
+    expect(screen.getByText(third.title, { selector: ".nb3d-n" })).toBeTruthy();
+    expect(thumb.getAttribute("aria-current")).toBe("true");
+    expect(count(3)).toBeTruthy();
+  });
+
+  it("steps the keyboard light like Fn+Space and remembers it between visits", () => {
     localStorage.setItem("nb.luz", "1");
     renderNotebook();
-    const group = screen.getByRole("group", { name: "Luz do teclado" });
-    expect(group.querySelector('[aria-pressed="true"]')?.textContent).toBe("Baixa");
-    fireEvent.click(screen.getByRole("button", { name: "Alta" }));
+    fireEvent.click(screen.getByRole("button", { name: "Luz do teclado: Baixa" }));
+    expect(screen.getByRole("button", { name: "Luz do teclado: Alta" })).toBeTruthy();
     expect(localStorage.getItem("nb.luz")).toBe("2");
   });
 
@@ -60,10 +72,19 @@ describe("Notebook3D", () => {
     expect(localStorage.getItem("nb.som")).toBe("0");
   });
 
-  it("has no screen switch: the real site opens only with a click on the screen", () => {
+  it("has no screen switch, and lists the gestures for a touch screen", () => {
     renderNotebook();
     expect(screen.queryByRole("group", { name: "Tela" })).toBeNull();
-    expect(screen.getByText(/Clique na tela para abrir o site de verdade/)).toBeTruthy();
+    expect(screen.getByText("Mexa nele")).toBeTruthy();
+    expect(screen.getByText("Gira o notebook")).toBeTruthy();
+  });
+
+  it("links to the project's site when it has one", () => {
+    renderNotebook();
+    const first = moreProjects.find((p) => p.liveUrl);
+    if (!first) return;
+    while (!screen.queryByText(first.title, { selector: ".nb3d-n" })) fireEvent.click(screen.getByRole("button", { name: "Próximo projeto" }));
+    expect(screen.getByRole("link", { name: /Abrir o site/ }).getAttribute("href")).toBe(first.liveUrl);
   });
 });
 

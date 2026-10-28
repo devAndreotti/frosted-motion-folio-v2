@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowUpRight, Hand } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import type { CuratedProject } from '@/data/curatedProjects';
@@ -61,6 +61,7 @@ const Notebook3D = ({ projects, onOpen }: Notebook3DProps) => {
   // the dark variant's accent: on the black hue it is a near white, like the laptop's own white backlight
   const color = buildHueTheme(hue).dark.accent;
   const stage = useRef<HTMLDivElement>(null);
+  const rail = useRef<HTMLDivElement>(null);
   const handle = useRef<NotebookHandle | null>(null);
   const [index, setIndex] = useState(0);
   const [light, setLight] = useState<BacklightLevel>(() => parseBacklight(load('nb.luz')));
@@ -159,6 +160,14 @@ const Notebook3D = ({ projects, onOpen }: Notebook3DProps) => {
     save('nb.som', sound ? '1' : '0');
   }, [sound, ready]);
 
+  // the current project's thumbnail stays in view in the strip (scrolling the strip only, never the page)
+  useEffect(() => {
+    const strip = rail.current;
+    const thumb = strip?.children[wrapIndex(index, projects.length)] as HTMLElement | undefined;
+    if (!strip || !thumb || typeof strip.scrollTo !== 'function') return;
+    strip.scrollTo({ left: thumb.offsetLeft - (strip.clientWidth - thumb.clientWidth) / 2, behavior: reducedMotion() ? 'auto' : 'smooth' });
+  }, [index, projects.length]);
+
   if (!project) return null;
   const go = (step: number) => setIndex((i) => wrapIndex(i + step, projects.length));
   const onKey = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -175,58 +184,101 @@ const Notebook3D = ({ projects, onOpen }: Notebook3DProps) => {
     handle.current?.setLid(open);
     track(open ? 'notebook-abrir' : 'notebook-fechar');
   };
+  const current = wrapIndex(index, projects.length);
+  const host = hostOf(project.liveUrl ?? project.githubUrl);
+  const tips = desktop ? nb.tips.mouse : nb.tips.touch;
 
   return (
     <div className="nb3d">
-      <div ref={stage} className={`nb3d-stage${shown && !failed ? ' is-live' : ''}`} role="region" aria-label={nb.stageAria} tabIndex={0} onKeyDown={onKey}>
-        <img className="nb3d-poster" src={projectAsset(POSTER)} alt={nb.poster} loading="lazy" decoding="async" />
+      <div className="nb3d-main">
+        <div className="nb3d-view">
+          <div ref={stage} className={`nb3d-stage${shown && !failed ? ' is-live' : ''}`} role="region" aria-label={nb.stageAria} tabIndex={0} onKeyDown={onKey}>
+            <img className="nb3d-poster" src={projectAsset(POSTER)} alt={nb.poster} loading="lazy" decoding="async" />
+          </div>
+          <div className="nb3d-chips" aria-hidden="true">
+            <span className="nb3d-chip is-mono">
+              <span className={`nb3d-dot${liveOpen ? ' is-on' : ''}`} />
+              {liveOpen ? nb.statusLive : nb.statusPicture} · {host}
+            </span>
+            <span className="nb3d-chip nb3d-drag">
+              <Hand className="ic" aria-hidden="true" />
+              {nb.dragHint}
+            </span>
+          </div>
+          <NotebookControls
+            index={current}
+            total={projects.length}
+            onPrev={() => go(-1)}
+            onNext={() => go(1)}
+            light={light}
+            onLight={() => {
+              const l = nextBacklight(light);
+              setLight(l);
+              track(`notebook-luz-${l}`);
+            }}
+            view={view}
+            onView={(v) => {
+              setView(v);
+              handle.current?.view(v);
+            }}
+            lidOpen={lidOpen}
+            onLid={toggleLid}
+            sound={sound}
+            onSound={() => setSound((s) => !s)}
+          />
+        </div>
+        <div ref={rail} className="nb3d-rail" role="group" aria-label={nb.projects}>
+          {projects.map((p, i) => (
+            <button key={p.id} type="button" className="nb3d-thumb" aria-label={nb.dotAria(i + 1, p.title)} aria-current={i === current ? 'true' : undefined} onClick={() => setIndex(i)}>
+              <img src={projectAsset(p.image)} alt="" loading="lazy" decoding="async" />
+            </button>
+          ))}
+        </div>
       </div>
       <div className="nb3d-side">
-        <p className="nb3d-count" aria-live="polite">
-          {index + 1} / {projects.length}
-        </p>
-        <p className="nb3d-n">{project.title}</p>
-        <p className="nb3d-d">{project.tagline[lang]}</p>
-        <span className="tags">
-          {project.technologies.slice(0, 3).map((tech) => (
-            <span key={tech} className="tag">
-              {tech}
-            </span>
-          ))}
-        </span>
-        <div className="nb3d-nav">
-          <button type="button" className="nb3d-arrow glass" aria-label={nb.prev} onClick={() => go(-1)}>
-            <ChevronLeft className="ic s" />
-          </button>
-          <button type="button" className="btn btn-pri btn-sm" onClick={() => onOpen(project)}>
+        <div className="nb3d-info">
+          <p className="nb3d-num" aria-hidden="true">
+            {String(current + 1).padStart(2, '0')} / {String(projects.length).padStart(2, '0')}
+          </p>
+          <p className="nb3d-n">{project.title}</p>
+          <p className="nb3d-d">{project.tagline[lang]}</p>
+          <span className="tags">
+            {project.technologies.slice(0, 3).map((tech) => (
+              <span key={tech} className="tag">
+                {tech}
+              </span>
+            ))}
+          </span>
+        </div>
+        <div className="nb3d-cta">
+          <button type="button" className="btn btn-pri" onClick={() => onOpen(project)}>
             {nb.open}
           </button>
-          <button type="button" className="nb3d-arrow glass" aria-label={nb.next} onClick={() => go(1)}>
-            <ChevronRight className="ic s" />
-          </button>
+          {project.liveUrl && (
+            <a className="btn btn-gh" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+              {nb.openSite}
+              <ArrowUpRight className="ic s" aria-hidden="true" />
+            </a>
+          )}
+          {liveOpen && (
+            <button type="button" className="btn btn-gh nb3d-back" onClick={() => handle.current?.closeLive()}>
+              {nb.closeLive}
+            </button>
+          )}
         </div>
-        <NotebookControls
-          light={light}
-          onLight={(l) => {
-            setLight(l);
-            track(`notebook-luz-${l}`);
-          }}
-          view={view}
-          onView={(v) => {
-            setView(v);
-            handle.current?.view(v);
-          }}
-          lidOpen={lidOpen}
-          onLid={toggleLid}
-          sound={sound}
-          onSound={() => setSound((s) => !s)}
-        />
-        {liveOpen && (
-          <button type="button" className="btn btn-gh btn-sm nb3d-back" onClick={() => handle.current?.closeLive()}>
-            {nb.closeLive}
-          </button>
-        )}
-        <p className="nb3d-hint">{nb.hint}</p>
+        <div className="nb3d-tips">
+          <p className="nb3d-tips-t">{nb.tipsTitle}</p>
+          <dl>
+            {tips.map(([key, what]) => (
+              <div key={key} className="nb3d-tip">
+                <dt>
+                  <kbd>{key}</kbd>
+                </dt>
+                <dd>{what}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
       </div>
     </div>
   );

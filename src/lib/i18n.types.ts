@@ -119,7 +119,15 @@ export interface Strings {
         lidClose: string;
         sound: string;
         liveTitle: (title: string) => string;
-        hint: string;
+        controls: string;
+        statusLive: string;
+        statusPicture: string;
+        dragHint: string;
+        openSite: string;
+        projects: string;
+        tipsTitle: string;
+        /** Pairs of a gesture (shown as a key cap) and what it does: with a mouse, and on a touch screen. */
+        tips: { mouse: [string, string][]; touch: [string, string][] };
       };
     };
   };
