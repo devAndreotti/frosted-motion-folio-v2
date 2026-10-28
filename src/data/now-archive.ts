@@ -17,8 +17,16 @@ export const NOW_ARCHIVE: NowVersion[] = [
   {
     date: NOW_UPDATED,
     summary: {
-      pt: 'Versão atual: o Memory Apartment com a TV, o Quality Gate, o Black Hole e o Free Plaud, e seis projetos menores no forno.',
-      en: 'Current version: Memory Apartment with its TV, Quality Gate, Black Hole and Free Plaud, and six smaller projects in the oven.',
+      pt: 'Versão atual: o Memory Apartment com a TV, o Quality Gate, o Black Hole e o Crumple, e seis projetos menores no forno.',
+      en: 'Current version: Memory Apartment with its TV, Quality Gate, Black Hole and Crumple, and six smaller projects in the oven.',
+    },
+    items: ['Project 17: Memory Apartment', 'Quality Gate', 'Black Hole', 'Crumple', 'Kali Layer', 'Feed Dispatch', 'Orbitaly', 'Scriply', 'Ambiente Hyprland', 'local-llm-rtx-4gb'],
+  },
+  {
+    date: '2026-10-16',
+    summary: {
+      pt: 'Versão com o Free Plaud (TCC), Memory Apartment com a TV, Quality Gate e Black Hole, e seis projetos menores no forno.',
+      en: 'Version with Free Plaud (Thesis), Memory Apartment with TV, Quality Gate and Black Hole, and six smaller projects in the oven.',
     },
     items: ['Project 17: Memory Apartment', 'Quality Gate', 'Black Hole', 'Free Plaud', 'Kali Layer', 'Feed Dispatch', 'Orbitaly', 'Scriply', 'Ambiente Hyprland', 'local-llm-rtx-4gb'],
   },

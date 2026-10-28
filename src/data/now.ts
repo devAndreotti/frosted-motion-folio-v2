@@ -23,7 +23,7 @@ export interface NowProject {
 }
 
 /** When this list was last reviewed (ISO date); shown under the section subtitle. Update it with the list. */
-export const NOW_UPDATED = '2026-10-16';
+export const NOW_UPDATED = '2026-10-28';
 
 // What's on the workbench right now, newest first. Taken from the GitHub
 // account in Oct 2026: private repos only ever link to their public site.
@@ -70,19 +70,18 @@ export const NOW_PROJECTS: NowProject[] = [
     image: './now/black-hole.webp',
   },
   {
-    id: 'free-plaud',
-    title: 'Free Plaud',
-    status: { pt: 'TCC', en: 'Thesis' },
-    meta: { pt: 'Ciência da Computação', en: 'Computer Science' },
+    id: 'crumple',
+    title: 'Crumple',
+    status: { pt: 'Biblioteca WebGL2', en: 'WebGL2 library' },
+    meta: { pt: 'Zero dependências · ~35 KB', en: 'Zero dependencies · ~35 KB' },
     pitch: {
-      pt: 'Começou como automação de áudio → nota no Obsidian e virou meu TCC: app desktop local-first, com transcrição Whisper local e busca híbrida (BM25 + vetorial) que cita o trecho exato.',
-      en: 'It started as an audio → Obsidian note automation and became my thesis: a local-first desktop app with on-device Whisper transcription and hybrid search (BM25 + vectors) that cites the exact passage.',
+      pt: 'Papel amassado que dá para abrir: biblioteca WebGL2 sem dependências. O bilhete amassado voa até o centro da tela e se abre numa folha legível com vincos na luz, 10 tipos de papel, manchas que passam para o verso e som sintetizado.',
+      en: 'Crumpled paper you can open: a dependency-free WebGL2 library. A crumpled note flies to the center of the screen and unfolds into a readable sheet with creases catching the light, 10 paper types, stains showing through to the back and synthesized paper sounds.',
     },
-    tags: ['Python', 'Whisper', 'RAG'],
-    href: 'https://github.com/devAndreotti/free-plaud',
-    linkLabel: 'GitHub (v1)',
-    image: './now/free-plaud.webp',
-    contain: true,
+    tags: ['WebGL2', 'TypeScript', 'GLSL'],
+    href: 'https://github.com/devAndreotti/crumple',
+    linkLabel: 'GitHub',
+    image: './now/crumple.webp',
   },
 ];
 
