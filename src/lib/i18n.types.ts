@@ -105,6 +105,7 @@ export interface Strings {
       notebook: {
         stageAria: string;
         poster: string;
+        tap3d: string;
         prev: string;
         next: string;
         dotAria: (i: number, title: string) => string;
