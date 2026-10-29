@@ -1,146 +1,290 @@
-﻿# ❄️ Frosted Motion Folio — Portfólio Interativo e Dinâmico!
+# ❄️ Frosted Motion Folio
+
 <p align="center">
-  <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/devAndreotti/frosted-motion-folio-v2?color=FFF&labelColor=336699&style=flat-square">
-  <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/devAndreotti/frosted-motion-folio-v2?color=FFF&labelColor=336699&style=flat-square">
-  <img alt="GitHub License" src="https://img.shields.io/github/license/devAndreotti/devAndreotti?color=FFF&labelColor=336699&style=flat-square">
+  <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/devAndreotti/frosted-motion-folio-v2?style=flat-square&labelColor=111827&color=22c55e">
+  <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/devAndreotti/frosted-motion-folio-v2?style=flat-square&labelColor=111827&color=38bdf8">
+  <img alt="GitHub stars" src="https://img.shields.io/github/stars/devAndreotti/frosted-motion-folio-v2?style=flat-square&labelColor=111827&color=f59e0b">
+  <img alt="License MIT" src="https://img.shields.io/badge/license-MIT-eab308?style=flat-square&labelColor=111827">
 </p>
 
 <p align="center">
-  <img src="./docs/screenshots/home.png" alt="Captura de tela do Frosted Motion Folio">
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white">
+  <img alt="React" src="https://img.shields.io/badge/React-61dafb?style=flat-square&logo=react&logoColor=111827">
+  <img alt="Vite" src="https://img.shields.io/badge/Vite-646cff?style=flat-square&logo=vite&logoColor=white">
+  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind-38bdf8?style=flat-square&logo=tailwindcss&logoColor=111827">
+  <img alt="Three.js" src="https://img.shields.io/badge/Three.js-000000?style=flat-square&logo=threedotjs&logoColor=white">
+  <img alt="Playwright" src="https://img.shields.io/badge/Playwright-2EAD33?style=flat-square&logo=playwright&logoColor=white">
+  <img alt="Cloudflare Workers" src="https://img.shields.io/badge/Cloudflare_Workers-F38020?style=flat-square&logo=cloudflare&logoColor=white">
+  <img alt="Node.js" src="https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=white">
 </p>
 
-## 📋 Sobre o Projeto
-O **Frosted Motion Folio** é um portfólio pessoal moderno e interativo, desenvolvido para destacar projetos de forma fluida e responsiva.  
-Com **efeito vidro fosco**, **animações suaves** e **tema claro/escuro**, o projeto oferece uma navegação elegante e intuitiva.  
-Construído com **React**, **TypeScript**, **Tailwind CSS** e **Framer Motion**.
-
-## ⚙️ Funcionalidades Principais
-- 🎨 **Design Interativo**: Animações suaves e navegação fluida.
-- 📂 **Seções Dedicadas**: Início, Sobre, Skills, Projetos e Contato.
-- 🧩 **Apresentação de Projetos**: Cards com descrição, tecnologias e links.
-- 📱 **Design Responsivo**: Compatível com todos os tamanhos de tela.
-- ❄️ **Efeito Frosted Glass**: Visual elegante e moderno.
-- 🌗 **Tema Claro/Escuro**: Alternância automática ou manual de tema.
-- 🌐 **Bilíngue**: Abre em português ou inglês conforme o idioma do navegador, com troca manual PT | EN.
-
-<p align="center">
-  <img src="./docs/screenshots/dark.png" alt="Captura de tela - Tema Escuro">
+<p align="left">
+  <strong>Portfólio interativo de alta performance com Three.js, visual frosted glass e engenharia editorial full-stack.</strong><br />
+  Uma experiência web moderna com renderização 3D sob demanda, geração automatizada de currículo ATS em PDF, blog bilíngue com tradução autônoma por IA e newsletter na Cloudflare Edge.
 </p>
 
-<p align="center">
-  <img src="./docs/screenshots/light.png" alt="Captura de tela - Tema Claro">
-</p>
+![Banner do Frosted Motion Folio](./docs/screenshots/home.png)
 
-## 🌐 Acesse o Projeto
-👉 [**devandreotti.com**](https://devandreotti.com): publicado na Cloudflare a cada merge na `main`.
+> "Um portfólio moderno não deve ser apenas uma vitrine estática de links, mas um laboratório vivo onde engenharia de software de ponta, design imersivo e automação contínua coexistem em produção."
 
-Cópia espelho no [GitHub Pages](https://devandreotti.github.io/frosted-motion-folio-v2/).
+---
 
-## ✍️ Publicar um post
-Cada post é um arquivo Markdown em [`src/content/posts/`](./src/content/posts). Publicar é fazer commit na `main`: o build gera a página, o RSS e o sitemap.
+## Visão geral
 
-**Pelo navegador (sem instalar nada):** [**➕ criar um post novo no GitHub**](https://github.com/devAndreotti/frosted-motion-folio-v2/new/main?filename=src/content/posts/AAAA-MM-DD-meu-post.md&value=---%0Atitle%3A%20Meu%20post%0Adate%3A%20AAAA-MM-DD%0Adescription%3A%20Uma%20frase%20para%20o%20card%20e%20o%20buscador.%0Atags%3A%20%5Bblog%5D%0Adraft%3A%20false%0A---%0A%0AEscreva%20aqui.%0A). O arquivo já abre com o cabeçalho pronto: troque `AAAA-MM-DD` (no nome do arquivo e em `date`), escreva o texto e clique em *Commit changes*.
+O **Frosted Motion Folio** é uma plataforma de portfólio e blog técnico desenvolvida com foco em alta fidelidade visual, performance extrema e automação ponta a ponta.
 
-**Pelo terminal:**
+- **Notebook 3D Lenovo LOQ**: Modelo tridimensional interativo renderizado em Three.js, com iluminação dinâmica, animação da tampa, efeitos sonoros sintetizados em tempo real via Web Audio API (teclas mecânicas e som de boot) e arquitetura de performance `tap-to-3d` no mobile para evitar sobrecarga de GPU e assegurar 60 FPS consistentes.
+- **Seção Agora com Memory Apartment TV & Crumple**: Painel dinâmico de status diário e projetos em andamento inspirado na filosofia `/now`, apresentando cards com microinteração tátil de dobra (efeito Crumple) e a retrô Memory Apartment TV para exploração visual de marcos da trajetória.
+- **Modo Recrutador com Currículo ATS automatizado em PDF**: Cockpit de contratação rápida com visão resumida de senioridade e stack tecnológica, integrado ao pipeline `npm run build:resume` que compila automaticamente um currículo estruturado ATS em formato PDF (versões em português e inglês) via Satori e Resvg.
+- **Blog bilíngue com tradução autônoma por IA e newsletter D1**: Publicação ágil via Markdown com GitOps (`npm run novo-post`), rotina autônoma de tradução para inglês orquestrada por agente de IA Hermes, contador de reações e sistema de newsletter com double opt-in, anti-bot Cloudflare Turnstile e persistência no Cloudflare D1.
+- **7 Temas cromáticos com zero FOUC**: Sistema de customização visual com 7 paletas cromáticas distintas (Zinc, Rose, Blue, Green, Violet, Orange, Yellow) e alternância instantânea entre modo claro e escuro, protegido por script inline preventivo no `<head>` que elimina qualquer cintilação visual (Flash of Unstyled Content).
+
+---
+
+## Demo
+
+### Home: Tema Claro vs Tema Escuro
+
+| Tema Claro | Tema Escuro |
+| :---: | :---: |
+| <img src="./docs/screenshots/light.png" alt="Frosted Motion Folio - Tema Claro" width="100%" /> | <img src="./docs/screenshots/dark.png" alt="Frosted Motion Folio - Tema Escuro" width="100%" /> |
+
+### Notebook 3D: Desktop vs Mobile (Tap-to-3D)
+
+| Desktop (Renderização Automática & Áudio) | Mobile (Carregamento Sob Demanda Tap-to-3D) |
+| :---: | :---: |
+| <img src="./docs/screenshots/perf-mobile-3d/desktop-notebook-auto-3d.png" alt="Notebook 3D Desktop" width="100%" /> | <img src="./docs/screenshots/perf-mobile-3d/mobile-notebook-tap3d-pt.png" alt="Notebook 3D Mobile Tap-to-3D" width="100%" /> |
+
+### Seção Agora & Interatividade Crumple
+
+| Visão Geral da Seção Agora | Detalhe do Card com Efeito Crumple |
+| :---: | :---: |
+| <img src="./docs/screenshots/now-crumple/now-section-desktop.png" alt="Seção Agora Desktop" width="100%" /> | <img src="./docs/screenshots/now-crumple/card-crumple-pt.png" alt="Card Interativo Crumple" width="100%" /> |
+
+### Modo Recrutador & Currículo ATS em PDF
+
+| Currículo ATS (Gerado via Build) | Modal do Recrutador (Cockpit Rápido) |
+| :---: | :---: |
+| <img src="./docs/screenshots/resume/curriculo-ats-pt.png" alt="Currículo ATS em PDF" width="100%" /> | <img src="./docs/screenshots/resume/site-modal-recrutador-pt.png" alt="Modal do Recrutador" width="100%" /> |
+
+---
+
+## Fluxo
+
+```mermaid
+flowchart TD
+    subgraph Client["Cliente / Navegador"]
+        App["SPA React 19 + Tailwind CSS"]
+        Three["Notebook 3D Lenovo LOQ + Web Audio"]
+        Themes["Zero-FOUC Engine + 7 Temas"]
+    end
+
+    subgraph Automation["Pipelines Locais & IA"]
+        PostGen["npm run novo-post (Markdown)"]
+        Hermes["Hermes AI (Tradução Autônoma EN)"]
+        ResumeGen["npm run build:resume (Satori + Resvg ATS PDF)"]
+    end
+
+    subgraph Edge["Infraestrutura Edge (Cloudflare)"]
+        Pages["Cloudflare Pages (Static Hosting)"]
+        Worker["Cloudflare Worker (API Newsletter & Likes)"]
+        D1[("Cloudflare D1 Database")]
+        Turnstile["Cloudflare Turnstile (Anti-Bot)"]
+    end
+
+    App --> Three
+    App --> Themes
+    PostGen --> Hermes
+    Hermes --> Pages
+    ResumeGen --> Pages
+    App --> Pages
+    Pages --> Worker
+    Worker --> Turnstile
+    Worker --> D1
+
+    style App fill:#450a0a,color:#fff,stroke:#7f1d1d
+    style Three fill:#7f1d1d,color:#fff,stroke:#991b1b
+    style Themes fill:#7f1d1d,color:#fff,stroke:#991b1b
+    style PostGen fill:#b91c1c,color:#fff,stroke:#dc2626
+    style Hermes fill:#dc2626,color:#fff,stroke:#ef4444
+    style ResumeGen fill:#dc2626,color:#fff,stroke:#ef4444
+    style Pages fill:#f97316,color:#111827,stroke:#ea580c
+    style Worker fill:#f97316,color:#111827,stroke:#ea580c
+    style D1 fill:#f59e0b,color:#111827,stroke:#d97706
+    style Turnstile fill:#f59e0b,color:#111827,stroke:#d97706
+    linkStyle default stroke:#7f1d1d,stroke-width:2px
+```
+
+---
+
+## Para quem é
+
+- **Desenvolvedores Frontend & Full-Stack** que buscam referências modernas de integração entre Three.js, React 19, shaders, som sintetizado com Web Audio e Tailwind CSS em alta taxa de quadros.
+- **Recrutadores e Tech Leads** em busca de um perfil técnico transparente, com resumo executivo de competências, cockpit de habilidades e download direto de currículo calibrado para ATS.
+- **Engenheiros de Software** interessados em arquiteturas estáticas com recursos dinâmicos de Edge (Cloudflare Workers, D1 SQL, Turnstile) sem complexidade de servidores dedicados.
+- **Criadores Técnicos e Escritores** que priorizam um fluxo editorial GitOps fluido com tradução autônoma por IA e sistema de newsletter independente.
+
+---
+
+## Stack
+
+- **React 19** para construção de interfaces reativas e declarativas com Vite.
+- **TypeScript** para tipagem estática rigorosa e robustez na arquitetura do código.
+- **Vite** para build tooling ultra-rápido com Hot Module Replacement (HMR).
+- **Tailwind CSS** para estilização com classes utilitárias, design system frosted glass e tokens responsivos.
+- **Three.js** para modelagem, materiais e renderização 3D interativa do notebook com suporte a WebGL.
+- **Framer Motion** para animações declarativas, transições de páginas e gestos táteis.
+- **Playwright & Axe-Core** para testes de regressão visual automatizados e auditorias de acessibilidade.
+- **Cloudflare Workers & D1** para backend serverless edge, contagem de curtidas e gerenciamento de inscritos da newsletter.
+- **Cloudflare Turnstile** para verificação anti-bot invisível em formulários.
+- **Node.js, Satori & Resvg** para geração estática do currículo ATS padronizado em PDF e cards visuais dinâmicos.
+
+---
+
+## Pré-requisitos
+
+*   [x] **Node.js 20+** - Ambiente de execução JavaScript/TypeScript moderno.
+*   [x] **npm 10+** - Gerenciador de pacotes do projeto.
+*   [x] **Git** - Controle de versão para fluxo de trabalho GitOps e Conventional Commits.
+*   [x] **Wrangler CLI** *(opcional)* - Necessário para gerenciamento do banco D1 e deploy do Worker Cloudflare.
+
+---
+
+## Configuração
+
+### 1. Clonar e instalar dependências
+
 ```bash
-npm run novo-post -- "Título do post"            # cria o rascunho (draft: true)
-npm run novo-post -- "Título do post" --publicar # já publicado (draft: false)
-git add -A && git commit -m "post: título" && git push
+git clone https://github.com/devAndreotti/frosted-motion-folio-v2.git
+cd frosted-motion-folio-v2
+npm install
 ```
 
-- **Modelo com todos os recursos** (títulos, listas, bash, tabela, imagem, citação): [código-fonte](./src/content/posts/2026-10-15-um-blog-publicado-com-git-push.md) e [como fica publicado](https://devandreotti.com/blog/um-blog-publicado-com-git-push/). Imagens: coloque em `public/blog/<slug>/` e use `![descrição](/blog/<slug>/arquivo.jpg)`.
-- O endereço do post é o nome do arquivo sem a data: `2026-10-15-meu-post.md` vira `/blog/meu-post/`.
-- `draft: true` só aparece no `npm run dev`; o build não publica nada do rascunho.
-- **Inglês automático:** não precisa traduzir. Um cron do Hermes cria `<post>.en.md` ao lado do original, valida (blocos de código, links, imagens e estrutura idênticos), abre um PR só com esse arquivo e faz o merge quando os checks passam (`scripts/traduzir-posts.mjs`). Quem usa o site em inglês vê a versão traduzida, com o aviso "Translated from Portuguese by AI". Para corrigir uma tradução, edite o `.en.md` (ela só é refeita se o texto original mudar depois).
-- Curtidas: usam o banco D1 da Cloudflare (`wrangler.jsonc`, bloco `d1_databases`). Sem ele o botão fica escondido.
+### 2. Variáveis de ambiente
 
-## 📬 Newsletter
-Formulário no blog (`NewsletterForm`) e no fim de cada post. A inscrição tem confirmação por e-mail (double opt-in), descadastro em um clique e a lista fica no D1 (`worker/newsletter.js`, tabela `subscribers`). O e-mail de confirmação sai do próprio Worker, pelo SMTP da Oracle (`worker/smtp.js`); o formulário só aparece onde o Worker responde `/api/newsletter/status`.
+Para executar a interface do portfólio em desenvolvimento local, nenhuma variável externa é obrigatória. Para testar o ecossistema completo de Worker, newsletter e validação anti-bot Cloudflare:
 
-Ligar em produção (uma vez):
+| Variável | Descrição | Exemplo |
+|---|---|---|
+| `VITE_TURNSTILE_SITE_KEY` | Chave pública do Cloudflare Turnstile | `0x4AAAAAA...` |
+| `TURNSTILE_SECRET` | Chave secreta do Turnstile gravada no Worker | `0x4AAAAAA...` |
+| `SMTP_USER` | Usuário SMTP para disparo de confirmação de e-mail | `newsletter@dominio.com` |
+| `SMTP_PASS` | Senha ou token de autenticação SMTP | `super_secret_smtp_token` |
+| `TOWER_ADMIN_TOKEN` | Token Bearer (mínimo 32 caracteres) para rotas administrativas do Worker | `a9f8b2c3d4e5f6...` |
+
+Para provisionar os segredos no Worker da Cloudflare em produção:
+
 ```bash
-bash scripts/newsletter/set-secrets.sh   # grava SMTP_USER, SMTP_PASS (e TURNSTILE_SECRET, se estiver no arquivo) no Worker
-```
-O anti-robô é o Cloudflare Turnstile (chave pública em `wrangler.jsonc`, segredo só no Worker). A política de privacidade está em `/privacidade/` (`src/pages/Privacy.tsx`) e precisa continuar batendo com o que `worker/newsletter.js` faz. Respostas à newsletter vão para o Gmail via `Reply-To`.
-Prévia e envio pela Tower: `/api/admin/newsletter/preview` monta o e-mail nos dois idiomas sem enviar nada; `/api/admin/newsletter/send` manda uma cópia de teste (`test_to`, com `[TESTE]` no assunto) ou um lote de até 20 inscritos confirmados por chamada, e a Tower repete até `remaining` zerar. Cada envio grava na tabela `newsletter_sends` (migração `0003`) um registro por edição e por e-mail, com o hash SHA-256 do endereço e nunca o endereço. Ela é apagada junto com a inscrição, no descadastro, na exclusão pelo painel e na limpeza das inscrições não confirmadas. Um envio que ficou pela metade não é repetido. O deploy aplica as migrações D1 no `main` antes de publicar o Worker (passo `D1 migrations (main)` em `.github/workflows/cloudflare.yml`).
-Rotas de administração (`worker/admin.js`): `/api/admin/newsletter/<stats|lookup|delete|resend|preview|send>` servem o painel privado Tower, que roda no VPS e chama o Worker com `Authorization: Bearer <TOWER_ADMIN_TOKEN>`. O segredo `TOWER_ADMIN_TOKEN` (no mínimo 32 caracteres) fica só no Worker, gravado por `set-secrets.sh` ou pelo painel da Cloudflare. Sem ele, ou com um valor curto demais, essas rotas respondem 404, como se não existissem. Nenhuma resposta traz tokens de confirmação ou de descadastro.
-O visual do e-mail semanal está em `scripts/newsletter/template.mjs` (tema claro/escuro e as 7 cores do site, sorteadas por semana); veja as prévias com `node scripts/newsletter/preview.mjs <pasta>`.
-
-## 🛠 Tecnologias Utilizadas
-- **[React](https://react.dev/)** — Biblioteca JavaScript para interfaces declarativas.
-- **[TypeScript](https://www.typescriptlang.org/)** — Tipagem estática para maior robustez.
-- **[Vite](https://vitejs.dev/)** — Build tool ultrarrápida para projetos modernos.
-- **[Tailwind CSS](https://tailwindcss.com/)** — Estilização com classes utilitárias.
-- **[Framer Motion](https://www.framer.com/motion/)** — Animações fluídas e declarativas.
-- **[React Router DOM](https://reactrouter.com/en/main/start/tutorial)** — Gerenciamento de rotas no SPA.
-- **[Lucide React](https://lucide.dev/guide/packages/lucide-react)** — Ícones SVG modernos e personalizáveis.
-
-## 📂 Estrutura do Projeto
-```
-src/
-├── bones/               # Skeletons e layouts estruturais (boneyard-js)
-├── components/          # Componentes interativos (Header, Radar, Projects, Terminal...)
-├── contexts/            # Provedores de estado (LanguageContext, ThemeContext)
-├── data/                # Dados estáticos (projetos, skills, dados pessoais)
-├── hooks/               # Custom React hooks (scroll, GitHub API, navegação por teclado)
-├── lib/                 # Utilitários, configurações de animação e i18n
-├── pages/               # Páginas da aplicação (Index, NotFound)
-├── App.tsx              # Componente raiz
-└── main.tsx             # Entrypoint da aplicação React
+bash scripts/newsletter/set-secrets.sh
 ```
 
-## 🚀 Como Rodar Localmente
-1. **Clone o repositório:**
+### 3. Testar
 
-   ```bash
-   git clone https://github.com/devAndreotti/frosted-motion-folio-v2.git
-````
+```bash
+npm test
+```
 
-2. **Acesse a pasta do projeto:**
+---
 
-   ```bash
-   cd frosted-motion-folio-v2
-   ```
+## Uso
 
-3. **Instale as dependências:**
-   ```bash
-   npm install
-   # ou yarn
-   # ou bun
-   ```
+### Fluxo diário
 
-4. **Inicie o servidor de desenvolvimento:**
-   ```bash
-   npm run dev
-   # ou yarn dev
-   # ou bun dev
-   ```
-````
+1. Inicie o servidor local com `npm run dev`.
+2. Escreva ou publique um novo artigo técnico usando `npm run novo-post`.
+3. Regenere as versões em PDF do currículo ATS com `npm run build:resume`.
+4. Valide a tipagem, testes unitários e cobertura com `npm test`.
+5. Execute os testes de regressão visual com `npm run test:visual`.
+6. Gere o pacote otimizado para produção com `npm run build`.
 
-## 🖼 Testes visuais
+### Exemplo
 
-As imagens de referência ficam em `tests/visual/` e são geradas no CI (Linux). Para comparar localmente: `npm run test:visual`. Quando o layout mudar de propósito, atualize as bases com `npm run test:visual:update`, baixe o artifact `visual-snapshots` do CI e commite.
+```bash
+# Iniciar servidor de desenvolvimento (http://localhost:5173)
+npm run dev
 
-## 🔮 Melhorias Futuras
-* [ ] Adicionar novos projetos
-* [ ] Melhorar performance e fluidez das animações
-* [ ] Implementar suporte a múltiplos idiomas
+# Criar um novo rascunho de post no blog (draft: true)
+npm run novo-post -- "Engenharia de Performance com Web Workers e Three.js"
 
-## 💪 Como Contribuir
+# Criar um post publicado diretamente (draft: false)
+npm run novo-post -- "Arquitetura Edge com Cloudflare D1" --publicar
+
+# Compilar versões em PDF do currículo ATS (PT e EN)
+npm run build:resume
+
+# Executar suíte de testes unitários com cobertura
+npm test
+
+# Executar testes de regressão visual Playwright
+npm run test:visual
+
+# Compilar build final de produção
+npm run build
+```
+
+### O que fazer depois
+
+- Testar o build de produção localmente com `npm run preview`.
+- Registrar commits no padrão [Conventional Commits](https://www.conventionalcommits.org/).
+- Enviar as alterações para o GitHub e acompanhar a pipeline no GitHub Actions.
+
+---
+
+## Estrutura do projeto
+
+```text
+frosted-motion-folio-v2/
+├── docs/                 # Documentações de arquitetura, roadmaps e capturas de tela
+├── public/               # Ativos estáticos, fontes, modelos 3D e manifestos
+├── scripts/              # Utilitários de automação (currículo ATS, tradução IA, newsletter)
+├── src/
+│   ├── bones/            # Skeletons de carregamento com boneyard-js
+│   ├── components/       # Componentes React (Notebook3D, NowSection, RecruiterModal, etc.)
+│   ├── content/          # Posts do blog em Markdown e metadados
+│   ├── contexts/         # Contextos globais (tema cromático, idioma)
+│   ├── data/             # Dados estáticos de projetos, carreira e skills
+│   ├── hooks/            # Hooks customizados para scroll, Web Audio e atalhos
+│   ├── lib/              # Funções utilitárias, animações Framer Motion e i18n
+│   ├── pages/            # Páginas da aplicação (Index, Blog, Uses, 404)
+│   ├── styles/           # Folhas de estilo globais e tokens de cores
+│   ├── App.tsx           # Componente raiz com roteador e provedores
+│   └── main.tsx          # Ponto de entrada da aplicação React
+├── tests/                # Testes de regressão visual e acessibilidade com Playwright
+├── worker/               # API Edge em Cloudflare Worker com banco relacional D1
+├── LICENSE               # Licença MIT
+├── package.json          # Dependências e scripts do projeto
+└── README.md             # Documentação principal do projeto
+```
+
+---
+
+## Contribuindo
+
+Contribuições são bem-vindas! Se você deseja colaborar com melhorias, novos recursos ou correções:
+
 1. Faça um fork do repositório
-2. Crie uma branch: `git checkout -b feature/nova-feature`
-3. Commit: `git commit -m "feat: nova feature"`
-4. Push: `git push origin feature/nova-feature`
-5. Abra um Pull Request 🎉
+2. Crie uma branch para sua modificação: `git checkout -b feature/sua-feature`
+3. Commit suas alterações seguindo o padrão Conventional Commits: `git commit -m "feat: implementar suporte a nova animação"`
+4. Envie sua branch para o repositório remoto: `git push origin feature/sua-feature`
+5. Abra um Pull Request detalhando as alterações realizadas
 
-## 📝 Licença
-Este projeto está sob a licença MIT.
-Consulte o arquivo [LICENSE](https://github.com/devAndreotti/devAndreotti/blob/main/LICENSE) para mais detalhes.
+Padrões de commit aceitos:
+- `feat:` Nova funcionalidade
+- `fix:` Correção de bug
+- `docs:` Alterações na documentação
+- `style:` Ajustes de formatação sem alteração de comportamento
+- `refactor:` Refatoração de código
+- `test:` Inclusão ou ajuste de testes
+- `chore:` Tarefas de manutenção ou dependências
 
-<br>
+---
+
+## Licença
+
+Este projeto está sob a licença **MIT**. Veja o arquivo [LICENSE](./LICENSE) para detalhes.
 
 ---
 
 <p align="center">
-  Desenvolvido com ☕ por <a href="https://github.com/devAndreotti">Ricardo Andreotti Gonçalves</a> 🧑‍💻
+  Desenvolvido com ☕ por <a href="https://github.com/devAndreotti">devAndreotti</a>
 </p>
