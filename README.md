@@ -35,7 +35,7 @@ O **Frosted Motion Folio** é uma plataforma de portfólio e blog técnico desen
 
 - **Notebook 3D Lenovo LOQ**: Modelo tridimensional interativo renderizado em Three.js, com iluminação dinâmica, animação da tampa, efeitos sonoros sintetizados em tempo real via Web Audio API (teclas mecânicas e som de boot) e arquitetura de performance `tap-to-3d` no mobile para evitar sobrecarga de GPU e assegurar 60 FPS consistentes.
 - **Seção Agora com Memory Apartment TV & Crumple**: Painel dinâmico de status diário e projetos em andamento inspirado na filosofia `/now`, apresentando cards com microinteração tátil de dobra (efeito Crumple) e a retrô Memory Apartment TV para exploração visual de marcos da trajetória.
-- **Modo Recrutador com Currículo ATS automatizado em PDF**: Cockpit de contratação rápida com visão resumida de senioridade e stack tecnológica, integrado ao pipeline `npm run build:resume` que compila automaticamente um currículo estruturado ATS em formato PDF (versões em português e inglês) via Satori e Resvg.
+- **Modo Recrutador com Currículo ATS automatizado em PDF**: Cockpit de contratação rápida com visão resumida de senioridade e stack tecnológica, integrado ao pipeline `npm run build:resume` que compila automaticamente um currículo estruturado ATS em formato PDF (versões em português e inglês) via Playwright headless (`page.pdf()`), mantendo uma página A4 exata com margens de 20 mm e dados canônicos em sincronia.
 - **Blog bilíngue com tradução autônoma por IA e newsletter D1**: Publicação ágil via Markdown com GitOps (`npm run novo-post`), rotina autônoma de tradução para inglês orquestrada por agente de IA Hermes, contador de reações e sistema de newsletter com double opt-in, anti-bot Cloudflare Turnstile e persistência no Cloudflare D1.
 - **7 Temas cromáticos com zero FOUC**: Sistema de customização visual com 7 paletas cromáticas distintas (Zinc, Rose, Blue, Green, Violet, Orange, Yellow) e alternância instantânea entre modo claro e escuro, protegido por script inline preventivo no `<head>` que elimina qualquer cintilação visual (Flash of Unstyled Content).
 
@@ -67,6 +67,12 @@ O **Frosted Motion Folio** é uma plataforma de portfólio e blog técnico desen
 | :---: | :---: |
 | <img src="./docs/screenshots/resume/curriculo-ats-pt.png" alt="Currículo ATS em PDF" width="100%" /> | <img src="./docs/screenshots/resume/site-modal-recrutador-pt.png" alt="Modal do Recrutador" width="100%" /> |
 
+### Modelagem 3D & Detalhes Visuais do Lenovo LOQ
+
+| Vistas em 360° (Frente, Tampa, Perfil e Base) | Retroiluminação nas 7 Cores do Sistema |
+| :---: | :---: |
+| <img src="./docs/notebook-3d/vistas.jpg" alt="Vistas 3D do Notebook Lenovo LOQ" width="100%" /> | <img src="./docs/notebook-3d/luz-cores.jpg" alt="Retroiluminação do Teclado nas 7 Cores" width="100%" /> |
+
 ---
 
 ## Fluxo
@@ -82,7 +88,7 @@ flowchart TD
     subgraph Automation["Pipelines Locais & IA"]
         PostGen["npm run novo-post (Markdown)"]
         Hermes["Hermes AI (Tradução Autônoma EN)"]
-        ResumeGen["npm run build:resume (Satori + Resvg ATS PDF)"]
+        ResumeGen["npm run build:resume (Playwright ATS PDF)"]
     end
 
     subgraph Edge["Infraestrutura Edge (Cloudflare)"]
@@ -134,10 +140,10 @@ flowchart TD
 - **Tailwind CSS** para estilização com classes utilitárias, design system frosted glass e tokens responsivos.
 - **Three.js** para modelagem, materiais e renderização 3D interativa do notebook com suporte a WebGL.
 - **Framer Motion** para animações declarativas, transições de páginas e gestos táteis.
-- **Playwright & Axe-Core** para testes de regressão visual automatizados e auditorias de acessibilidade.
+- **Playwright & Axe-Core** para testes de regressão visual automatizados, auditorias de acessibilidade e compilação do currículo ATS em PDF (`page.pdf()`).
 - **Cloudflare Workers & D1** para backend serverless edge, contagem de curtidas e gerenciamento de inscritos da newsletter.
 - **Cloudflare Turnstile** para verificação anti-bot invisível em formulários.
-- **Node.js, Satori & Resvg** para geração estática do currículo ATS padronizado em PDF e cards visuais dinâmicos.
+- **Node.js, Satori & Resvg** para geração estática dos cards visuais dinâmicos de OpenGraph (`og-image`).
 
 ---
 
