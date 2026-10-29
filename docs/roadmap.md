@@ -17,7 +17,7 @@ Convenções do projeto que valem para todos os itens:
 | # | Item | Esforço | Depende de | Valor | Status |
 |---|---|---|---|---|---|
 | 1 | Página própria para cada projeto | Alto | gerador de páginas estáticas | Alto | Feito |
-| 2 | Currículo em PDF | Médio | `print.css` atual e geração no CI | Alto | Pendente |
+| 2 | Currículo em PDF | Médio | `print.css` atual e geração no CI | Alto | Feito |
 | 3 | Imagem de compartilhamento por página | Médio | 1 e o gerador de páginas | Alto | Feito |
 | 6 | Melhorias no blog | Médio | 12 (para "mais lidos") | Médio | Feito (sem "mais lidos") |
 | 7 | Página `/uses` | Baixo | nada | Médio | Feito (conteúdo a revisar) |
@@ -30,7 +30,7 @@ Convenções do projeto que valem para todos os itens:
 | 17 | Modo leitura nos posts | Baixo | nada | Baixo | Feito |
 | 18 | Novidades do site (changelog) | Baixo | nada | Baixo | Feito |
 
-Falta: 2 (currículo em PDF), 11 (GIFs nos repositórios dos projetos), a correção da paleta e as verificações de teclado do 13, e "mais lidos" do 6 (depende de dados de leitura).
+Falta: 11 (GIFs nos repositórios dos projetos), a correção da paleta e as verificações de teclado do 13, e "mais lidos" do 6 (depende de dados de leitura).
 
 ---
 
@@ -57,6 +57,8 @@ Falta: 2 (currículo em PDF), 11 (GIFs nos repositórios dos projetos), a corre�
 **Atenção.** O Worker do Cloudflare precisa servir essas rotas estáticas (conferir `wrangler.jsonc` e `public/_headers`).
 
 ## 2. Currículo em PDF
+
+**Status: feito.** Geração automatizada via script Playwright headless (`scripts/generate-resume.mjs`), produzindo PDFs em português (`public/curriculo.pdf`) e inglês (`public/resume.pdf`) no padrão ATS em layout vertical de coluna única, com fontes do sistema, links ativos e texto selecionável UTF-8.
 
 **Problema.** O Ctrl+P já gera um currículo limpo (`src/styles/print.css`), mas pouca gente sabe dele e ele sai com 8 páginas.
 
