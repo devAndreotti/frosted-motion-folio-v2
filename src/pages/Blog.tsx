@@ -216,8 +216,8 @@ const Blog = () => {
                     <div className="blog-card-content">
                       <div className="blog-card-meta">
                         <time dateTime={post.date}>{formatDay(post.date, lang)}</time>
-                        <span className="blog-card-dot" aria-hidden="true">·</span>
-                        <span>{b.minutes(post.minutes)}</span>
+                        <span className="blog-card-dot" aria-hidden="true">•</span>
+                        <span className="blog-card-read">{b.minutes(post.minutes)}</span>
                       </div>
                       <h3 className="blog-card-h blog-row-t">{post.title}</h3>
                       {post.description && <p className="blog-card-p">{post.description}</p>}

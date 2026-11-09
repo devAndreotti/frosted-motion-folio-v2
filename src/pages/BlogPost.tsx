@@ -110,14 +110,13 @@ const BlogPost = () => {
                 ))}
               </aside>
             )}
-
-            <LikeBar slug={post.slug} title={shown.title} />
           </header>
 
           <div className="post-body">
             {body.status === 'ready' && <div className="prose" dangerouslySetInnerHTML={{ __html: body.html }} />}
             {body.status === 'loading' && <div className="prose-ph" aria-busy="true" />}
             {body.status === 'error' && <p className="blog-empty">{b.loadError}</p>}
+            <LikeBar slug={post.slug} title={shown.title} />
           </div>
         </article>
 

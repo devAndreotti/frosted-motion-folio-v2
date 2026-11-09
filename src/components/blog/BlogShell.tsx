@@ -24,7 +24,7 @@ const BlogShell = ({ title, children, className }: { title: string; children: Re
   }, [title]);
 
   return (
-    <div className={`blog min-h-screen relative [overflow-x:clip]${className ? ` ${className}` : ''}`}>
+    <div className={`blog min-h-screen flex flex-col relative [overflow-x:clip]${className ? ` ${className}` : ''}`}>
       <header className="nav">
         <div className="nav-in blog-nav">
           <a className="brand" href={HOME}>
@@ -56,9 +56,11 @@ const BlogShell = ({ title, children, className }: { title: string; children: Re
         </div>
       </header>
 
-      {children}
+      <div className="flex-1 w-full">
+        {children}
+      </div>
 
-      <div className="wrap">
+      <div className="wrap w-full mt-auto">
         <SiteBottomBar />
       </div>
     </div>
