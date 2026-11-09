@@ -5,7 +5,7 @@ time: "16:19"
 description: My portfolio got a new version. And there are some secrets hidden there. I have always loved glassmorphism, depth interfaces, and animations that...
 tags: [linkedin, desenvolvimentoweb, react, automacao, inteligenciaartificial, cloudflare]
 draft: false
-source: 705447a99ac4
+source: f2cfdaa4f9e2
 ---
 
 *Originally published on [LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7518270888371445761/) on 10/26/2026.*

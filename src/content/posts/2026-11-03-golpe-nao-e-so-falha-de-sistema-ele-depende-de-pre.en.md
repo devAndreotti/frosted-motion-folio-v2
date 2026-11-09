@@ -5,7 +5,7 @@ time: "16:19"
 description: Scams are not just system vulnerabilities. They rely on haste, fear, and someone who sounds trustworthy on the other end of the line. I completed...
 tags: [linkedin, extensaouniversitaria, unip, segurancadigital, golpes, pix]
 draft: false
-source: d5d965e5a9b0
+source: 6aae34d3c1a5
 ---
 
 *Originally published on [LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7523333481091796992/) on 11/03/2026.*

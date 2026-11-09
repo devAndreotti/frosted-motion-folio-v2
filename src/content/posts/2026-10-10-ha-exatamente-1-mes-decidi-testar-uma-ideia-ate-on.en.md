@@ -5,7 +5,7 @@ time: "16:19"
 description: "Exactly 1 month ago, I decided to test an idea: how far could I go creating a game with AI? It was supposed to be just an experiment. It wasn't. I got attached to..."
 tags: [linkedin, gamedev, indiegame, desenvolvimentodejogos, inteligenciaartificial, godot]
 draft: false
-source: a469ed828e6e
+source: 173b32d080a4
 ---
 
 *Originally published on [LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7512846421105139712/) on 10/10/2026.*

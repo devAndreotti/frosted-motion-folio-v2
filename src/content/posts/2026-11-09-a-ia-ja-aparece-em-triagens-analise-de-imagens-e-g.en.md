@@ -5,7 +5,7 @@ time: "16:01"
 description: AI already appears in triage, medical imaging analysis, and hospital operations. But when handling clinical data, innovation must advance alongside...
 tags: [linkedin, extensaouniversitaria, unip, saudedigital, inteligenciaartificial, lgpd]
 draft: false
-source: 4f1ed3f68617
+source: a63a2eac391c
 ---
 
 *Originally published on [LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7525588351303806976/) on 11/09/2026.*
