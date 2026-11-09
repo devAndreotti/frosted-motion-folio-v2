@@ -2,6 +2,7 @@ import { ArrowRight, Rss } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { posts } from '@/lib/blog/catalog';
 import { formatDay } from '@/lib/blog/list';
+import { blogAsset } from '@/lib/blog/asset';
 
 const BLOG = `${import.meta.env.BASE_URL}blog/`;
 const SHOWN = 3;
@@ -39,7 +40,7 @@ const BlogTeaser = () => {
           <a key={post.slug} href={`${BLOG}${post.slug}/`} className="teaser-c glass">
             {post.image && (
               <div className="teaser-media">
-                <img src={post.image} alt="" className="teaser-thumb" loading="lazy" />
+                <img src={blogAsset(post.image)} alt="" className="teaser-thumb" loading="lazy" />
               </div>
             )}
             <div className="teaser-m">
