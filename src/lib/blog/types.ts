@@ -4,6 +4,8 @@ export interface PostMeta {
   title: string;
   /** YYYY-MM-DD, read as a calendar day (UTC), never shifted by the visitor's time zone. */
   date: string;
+  /** Optional publication time, e.g. "14:32" (HH:MM). */
+  time?: string;
   description: string;
   tags: string[];
   /** Reading time, at 200 words a minute, at least 1. */

@@ -1,6 +1,7 @@
 ---
 title: "A IA já aparece em triagens, análise de imagens e gestão hospitalar. Mas, quando..."
 date: 2026-11-09
+time: "16:01"
 description: "A IA já aparece em triagens, análise de imagens e gestão hospitalar. Mas, quando lida com dados clínicos, a inovação precisa caminhar junto com proteção de..."
 tags: [linkedin, extensaouniversitaria, unip, saudedigital, inteligenciaartificial, lgpd]
 draft: false

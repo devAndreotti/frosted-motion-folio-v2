@@ -1,6 +1,7 @@
 ---
 title: "Eu só precisava de um papel amassado para o meu jogo."
 date: 2026-11-02
+time: "16:19"
 description: "Eu só precisava de um papel amassado para o meu jogo. Não achei nada pronto. Então criei uma biblioteca do zero e ela é 100% procedural. Durante o..."
 tags: [linkedin, webgl, creativecoding, javascript, gamedev, opensource]
 draft: false

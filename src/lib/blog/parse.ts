@@ -6,6 +6,7 @@ import type { PostMeta } from './types';
 const FRONT = /^---\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
+const TIME = /^([01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?$/;
 const WORDS_PER_MINUTE = 200;
 
 type Value = string | string[] | boolean;
@@ -79,6 +80,13 @@ export function parsePost(file: string, raw: string): { meta: PostMeta; body: st
   if (!SLUG.test(slug)) throw fail(`slug "${slug}" must be lower-case letters, digits and hyphens`);
   if (typeof data.title !== 'string' || !data.title) throw fail('missing "title"');
   if (typeof data.date !== 'string' || !validDay(data.date)) throw fail('"date" must be YYYY-MM-DD');
+  let time: string | undefined;
+  if (data.time !== undefined && data.time !== '') {
+    if (typeof data.time !== 'string') throw fail('"time" must be HH:MM');
+    const match = data.time.trim().match(TIME);
+    if (!match) throw fail('"time" must be HH:MM');
+    time = data.time.trim().slice(0, 5);
+  }
   const tags = Array.isArray(data.tags) ? data.tags : typeof data.tags === 'string' && data.tags ? [data.tags] : [];
   const imageMatch = body.match(/!\[.*?\]\((.*?)\)/);
   const image = (typeof data.image === 'string' && data.image) || imageMatch?.[1] || undefined;
@@ -87,6 +95,7 @@ export function parsePost(file: string, raw: string): { meta: PostMeta; body: st
       slug,
       title: data.title,
       date: data.date,
+      ...(time ? { time } : {}),
       description: typeof data.description === 'string' ? data.description : '',
       tags: tags.map((tag) => tag.toLowerCase()),
       minutes: readingMinutes(body),

@@ -56,10 +56,21 @@ describe('parsePost', () => {
     expect(explicit.meta.image).toBe('/custom.png');
   });
 
+  it('extracts optional time from frontmatter', () => {
+    const withQuotes = parsePost('x.md', post('title: T\ndate: 2026-01-02\ntime: "14:32"'));
+    expect(withQuotes.meta.time).toBe('14:32');
+    const withoutQuotes = parsePost('x.md', post('title: T\ndate: 2026-01-02\ntime: 09:15'));
+    expect(withoutQuotes.meta.time).toBe('09:15');
+    const withSeconds = parsePost('x.md', post('title: T\ndate: 2026-01-02\ntime: "16:01:55"'));
+    expect(withSeconds.meta.time).toBe('16:01');
+  });
+
   it('fails the build, naming the file, for a post it cannot publish', () => {
     expect(() => parsePost('a.md', post('date: 2026-01-02'))).toThrow(/a\.md: missing "title"/);
     expect(() => parsePost('a.md', post('title: T\ndate: 2026-02-30'))).toThrow(/YYYY-MM-DD/);
     expect(() => parsePost('a.md', post('title: T\ndate: ontem'))).toThrow(/YYYY-MM-DD/);
+    expect(() => parsePost('a.md', post('title: T\ndate: 2026-01-02\ntime: 25:00'))).toThrow(/HH:MM/);
+    expect(() => parsePost('a.md', post('title: T\ndate: 2026-01-02\ntime: "invalido"'))).toThrow(/HH:MM/);
     expect(() => parsePost('Meu Post.md', post('title: T\ndate: 2026-01-02'))).toThrow(/slug/);
   });
 });

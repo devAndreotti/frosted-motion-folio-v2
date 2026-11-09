@@ -1,6 +1,7 @@
 ---
 title: I had wanted a quality gate I could run locally and in CI for a while...
 date: 2026-10-10
+time: "16:19"
 description: I had wanted a quality gate I could run locally and in CI for a while, without having to push to SonarQube or SonarCloud just to find out if something passed...
 tags: [linkedin]
 draft: false

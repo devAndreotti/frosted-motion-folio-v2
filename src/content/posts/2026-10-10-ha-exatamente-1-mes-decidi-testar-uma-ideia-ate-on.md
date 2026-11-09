@@ -1,6 +1,7 @@
 ---
 title: "Há exatamente 1 mês, decidi testar uma ideia: até onde eu conseguiria ir criando um..."
 date: 2026-10-10
+time: "16:19"
 description: "Há exatamente 1 mês, decidi testar uma ideia: até onde eu conseguiria ir criando um jogo com IA? Era para ser só um experimento. Não foi. Eu me apeguei ao..."
 tags: [linkedin, gamedev, indiegame, desenvolvimentodejogos, inteligenciaartificial, godot]
 draft: false

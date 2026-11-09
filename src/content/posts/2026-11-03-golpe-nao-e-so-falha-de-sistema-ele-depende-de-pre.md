@@ -1,6 +1,7 @@
 ---
 title: "Golpe não é só falha de sistema. Ele depende de pressa, medo e de alguém que parece..."
 date: 2026-11-03
+time: "16:19"
 description: "Golpe não é só falha de sistema. Ele depende de pressa, medo e de alguém que parece confiável do outro lado da linha. Concluí uma atividade de Extensão..."
 tags: [linkedin, extensaouniversitaria, unip, segurancadigital, golpes, pix]
 draft: false

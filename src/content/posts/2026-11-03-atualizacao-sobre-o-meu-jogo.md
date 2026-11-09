@@ -1,6 +1,7 @@
 ---
 title: "Atualização sobre o meu jogo*"
 date: 2026-11-03
+time: "16:19"
 description: "Atualização sobre o meu jogo* Uma das coisas que mais quero explorar é a sensação de estar preso em um lugar que deveria ser familiar. Estive refinando uma..."
 tags: [linkedin, gamedev, indiegame, godot, desenvolvimentodejogos, terrorpsicologico]
 draft: false

@@ -1,6 +1,7 @@
 ---
 title: AI already appears in triage, medical imaging analysis, and hospital...
 date: 2026-11-09
+time: "16:01"
 description: AI already appears in triage, medical imaging analysis, and hospital operations. But when handling clinical data, innovation must advance alongside...
 tags: [linkedin, extensaouniversitaria, unip, saudedigital, inteligenciaartificial, lgpd]
 draft: false

@@ -1,6 +1,7 @@
 ---
 title: "Meu portfólio ganhou uma nova versão. E tem alguns segredos escondidos por lá."
 date: 2026-10-26
+time: "16:19"
 description: "Meu portfólio ganhou uma nova versão. E tem alguns segredos escondidos por lá. Sempre gostei muito de glassmorfismo, interfaces com profundidade e animações..."
 tags: [linkedin, desenvolvimentoweb, react, automacao, inteligenciaartificial, cloudflare]
 draft: false

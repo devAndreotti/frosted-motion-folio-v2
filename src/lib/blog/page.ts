@@ -77,7 +77,7 @@ export function injectRoot(template: string, markup: string): string {
 }
 
 const meta = (post: PostMeta) =>
-  `<p class="post-meta"><time datetime="${post.date}">${formatDay(post.date, 'pt')}</time> · ${post.minutes} min de leitura</p>`;
+  `<p class="post-meta"><time datetime="${post.time ? `${post.date}T${post.time}` : post.date}">${formatDay(post.date, 'pt')}${post.time ? ` às ${post.time}` : ''}</time> · ${post.minutes} min de leitura</p>`;
 
 export function renderPostPage(template: string, post: PostMeta, bodyHtml: string, base: string, hasEnglish = false, image?: ShareImage): string {
   const markup =

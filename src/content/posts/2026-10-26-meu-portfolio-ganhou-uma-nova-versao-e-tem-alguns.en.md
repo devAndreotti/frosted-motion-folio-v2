@@ -1,6 +1,7 @@
 ---
 title: My portfolio got a new version. And there are some secrets hidden there.
 date: 2026-10-26
+time: "16:19"
 description: My portfolio got a new version. And there are some secrets hidden there. I have always loved glassmorphism, depth interfaces, and animations that...
 tags: [linkedin, desenvolvimentoweb, react, automacao, inteligenciaartificial, cloudflare]
 draft: false
