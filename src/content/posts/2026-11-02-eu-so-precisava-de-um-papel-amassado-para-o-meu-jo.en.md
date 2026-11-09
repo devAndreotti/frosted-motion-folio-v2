@@ -5,7 +5,7 @@ time: "16:19"
 description: I just needed a piece of crumpled paper for my game. I couldn't find anything off-the-shelf. So I built a library from scratch and it is 100% procedural. During...
 tags: [linkedin, webgl, creativecoding, javascript, gamedev, opensource]
 draft: false
-source: 487ada2fff82
+source: 6034c67840a3
 ---
 
 *Originally published on [LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7521189846770405377/) on 11/02/2026.*

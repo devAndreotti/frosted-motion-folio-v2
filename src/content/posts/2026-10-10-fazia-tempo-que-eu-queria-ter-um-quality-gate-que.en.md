@@ -5,7 +5,7 @@ time: "16:19"
 description: I had wanted a quality gate I could run locally and in CI for a while, without having to push to SonarQube or SonarCloud just to find out if something passed...
 tags: [linkedin]
 draft: false
-source: c2ce0f145967
+source: 5de3f7fc01d6
 ---
 
 *Originally published on [LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7507835706581356544/) on 10/10/2026.*

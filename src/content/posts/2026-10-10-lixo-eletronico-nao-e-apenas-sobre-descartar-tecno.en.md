@@ -5,7 +5,7 @@ time: "16:19"
 description: Electronic waste is not just about discarding technology. It involves natural resources, information security, public health, and sustainability. ...
 tags: [linkedin, extensaouniversitaria, unip, sustentabilidade, lixoeletronico, ewaste]
 draft: false
-source: 0c4fb2a542fd
+source: 324e24009b05
 ---
 
 *Originally published on [LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7506473993990926336/) on 10/10/2026.*

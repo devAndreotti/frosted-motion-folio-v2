@@ -5,7 +5,7 @@ time: "16:19"
 description: In 2023, I started following InvokeAI, one of the tools that most caught my attention for image generation and editing with local models. At the time,...
 tags: [linkedin]
 draft: false
-source: bb95640ac412
+source: 4ab7d2e7af58
 ---
 
 *Originally published on [LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7523778988717109248/) on 11/04/2026.*

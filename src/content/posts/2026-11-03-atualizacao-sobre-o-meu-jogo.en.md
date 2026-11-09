@@ -5,7 +5,7 @@ time: "16:19"
 description: Update on my game* One of the things I most want to explore is the feeling of being trapped in a place that should feel familiar. I've been refining a...
 tags: [linkedin, gamedev, indiegame, godot, desenvolvimentodejogos, terrorpsicologico]
 draft: false
-source: 4665eaa4acc8
+source: fe26575dfe02
 ---
 
 *Originally published on [LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7523398830097305602/) on 11/03/2026.*
