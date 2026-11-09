@@ -61,4 +61,11 @@ export interface BlogStrings {
   mostReadTitle: string;
   mostReadSub: string;
   mostReadViews: (count: number) => string;
+  showingTag: (count: number, tag: string) => string;
+  showingSearch: (count: number, query: string) => string;
+  showingBoth: (count: number, tag: string, query: string) => string;
+  clearFilters: string;
+  expandTags: (count: number) => string;
+  collapseTags: string;
+  searchExternal: string;
 }

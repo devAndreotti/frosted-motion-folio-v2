@@ -49,6 +49,13 @@ describe('parsePost', () => {
     expect(meta.tags).toEqual(['css']);
   });
 
+  it('extracts thumbnail image from markdown body or frontmatter', () => {
+    const { meta } = parsePost('x.md', post('title: T\ndate: 2026-01-02', 'Texto ![Foto](/blog/x/midia-1.jpg) mais texto'));
+    expect(meta.image).toBe('/blog/x/midia-1.jpg');
+    const explicit = parsePost('x.md', post('title: T\ndate: 2026-01-02\nimage: /custom.png', 'Texto'));
+    expect(explicit.meta.image).toBe('/custom.png');
+  });
+
   it('fails the build, naming the file, for a post it cannot publish', () => {
     expect(() => parsePost('a.md', post('date: 2026-01-02'))).toThrow(/a\.md: missing "title"/);
     expect(() => parsePost('a.md', post('title: T\ndate: 2026-02-30'))).toThrow(/YYYY-MM-DD/);

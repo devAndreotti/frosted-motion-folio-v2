@@ -62,4 +62,11 @@ export const enBlog: Strings['blog'] = {
   mostReadTitle: 'Most read',
   mostReadSub: 'The posts people read the most.',
   mostReadViews: (count) => (count === 1 ? '1 read' : `${count} reads`),
+  showingTag: (count, tag) => `Showing ${count} ${count === 1 ? 'post' : 'posts'} tagged #${tag}`,
+  showingSearch: (count, query) => `Showing ${count} ${count === 1 ? 'post' : 'posts'} for "${query}"`,
+  showingBoth: (count, tag, query) => `Showing ${count} ${count === 1 ? 'post' : 'posts'} tagged #${tag} for "${query}"`,
+  clearFilters: 'Clear filters',
+  expandTags: (count) => `+${count} tags`,
+  collapseTags: 'Collapse tags',
+  searchExternal: 'DuckDuckGo',
 };

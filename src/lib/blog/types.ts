@@ -10,4 +10,6 @@ export interface PostMeta {
   minutes: number;
   /** Drafts show on the dev server only: builds leave them out and ship no text for them. */
   draft: boolean;
+  /** Optional thumbnail image path (e.g. /blog/<slug>/midia-1.jpg or parsed from markdown). */
+  image?: string;
 }

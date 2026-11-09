@@ -8,7 +8,7 @@ import Blog from './Blog';
 import BlogPost from './BlogPost';
 
 const POSTS = vi.hoisted(() => {
-  const meta = (slug: string, date: string, tags: string[]): PostMeta => ({
+  const meta = (slug: string, date: string, tags: string[], image?: string): PostMeta => ({
     slug,
     title: `Post ${slug}`,
     date,
@@ -16,8 +16,13 @@ const POSTS = vi.hoisted(() => {
     tags,
     minutes: 4,
     draft: false,
+    ...(image ? { image } : {}),
   });
-  return [meta('novo', '2026-10-15', ['css', 'react']), meta('meio', '2026-03-01', ['react']), meta('velho', '2025-05-20', ['css'])];
+  return [
+    meta('novo', '2026-10-15', ['css', 'react'], '/blog/novo/midia-1.jpg'),
+    meta('meio', '2026-03-01', ['react']),
+    meta('velho', '2025-05-20', ['css']),
+  ];
 });
 
 // only 'novo' has an English version
@@ -58,16 +63,53 @@ describe('blog pages', () => {
   });
   afterEach(() => vi.unstubAllGlobals());
 
-  it('lists the posts by year with the newest featured, and searches through DuckDuckGo', () => {
+  it('lists the posts by year with newest featured, card grid, instant search, and external fallback', () => {
     renderAt('/blog/');
     expect(document.title).toBe('Escritos — Ricardo A. Gonçalves');
     expect(screen.getByRole('heading', { level: 1, name: 'Escritos' })).toBeTruthy();
     expect(screen.getByText(/Mais recente/).closest('a')?.getAttribute('href')).toBe('/blog/novo/');
     expect(screen.getByRole('heading', { name: '2026 · 2 posts' })).toBeTruthy();
     expect(screen.getByRole('heading', { name: '2025 · 1 post' })).toBeTruthy();
-    const form = screen.getByRole('search');
-    expect(form.getAttribute('action')).toBe('https://duckduckgo.com/');
-    expect((form.querySelector('input[name="sites"]') as HTMLInputElement).value).toBe('devandreotti.com');
+
+    // Cards and thumbnail verification
+    const cards = document.querySelectorAll('.blog-card');
+    expect(cards.length).toBe(3);
+    const novoCard = document.querySelector('article.blog-card a[href="/blog/novo/"]');
+    expect(novoCard?.querySelector('img')?.getAttribute('src')).toBe('/blog/novo/midia-1.jpg');
+    const velhoCard = document.querySelector('article.blog-card a[href="/blog/velho/"]');
+    expect(velhoCard?.querySelector('img')).toBeNull();
+
+    // Discrete DuckDuckGo external fallback link
+    const extLink = screen.getByRole('link', { name: /DuckDuckGo/i });
+    expect(extLink.getAttribute('href')).toContain('https://duckduckgo.com/?q=site%3Adevandreotti.com');
+    expect(extLink.getAttribute('target')).toBe('_blank');
+
+    // Instant search filtering
+    const searchInput = screen.getByRole('searchbox');
+    fireEvent.change(searchInput, { target: { value: 'velho' } });
+    expect(screen.queryByText(/Mais recente/)).toBeNull();
+    expect(screen.queryByText('Post meio')).toBeNull();
+    expect(screen.getByText('Post velho')).toBeTruthy();
+    expect(screen.getByText(/Exibindo 1 post para "velho"/)).toBeTruthy();
+
+    // Clear search
+    fireEvent.change(searchInput, { target: { value: '' } });
+    expect(screen.getByText('Post meio')).toBeTruthy();
+  });
+
+  it('searches posts in real time by description and tags', () => {
+    renderAt('/blog/');
+    const searchInput = screen.getByRole('searchbox');
+
+    // Search by description "Sobre meio"
+    fireEvent.change(searchInput, { target: { value: 'Sobre meio' } });
+    expect(screen.getByText('Post meio')).toBeTruthy();
+    expect(screen.queryByText('Post velho')).toBeNull();
+
+    // Search by tag "react"
+    fireEvent.change(searchInput, { target: { value: 'react' } });
+    expect(screen.getByText('Post meio')).toBeTruthy();
+    expect(screen.queryByText('Post velho')).toBeNull();
   });
 
   it('lets the visitor change the accent color from the blog bar, as on the home page', () => {
@@ -79,13 +121,35 @@ describe('blog pages', () => {
     expect(screen.queryByRole('button', { name: 'Cor de destaque: Roxo' })).toBeNull();
   });
 
-  it('filters by tag, without the featured post', () => {
+  it('filters by tag, without the featured post, shows active counter indicator, and clears via button', () => {
     renderAt('/blog/');
-    fireEvent.click(screen.getByRole('button', { name: '#css' }));
-    expect(screen.getByRole('button', { name: '#css' }).getAttribute('aria-pressed')).toBe('true');
+    const cssBtn = screen.getByRole('button', { name: '#css' });
+    fireEvent.click(cssBtn);
+    expect(cssBtn.getAttribute('aria-pressed')).toBe('true');
     expect(screen.queryByText(/Mais recente/)).toBeNull();
     expect(screen.queryByText('Post meio')).toBeNull();
     expect(screen.getByText('Post velho')).toBeTruthy();
+
+    // Active tag indicator and clear button
+    expect(screen.getByText('Exibindo 2 posts com a tag #css')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Limpar filtros' })).toBeTruthy();
+
+    // Toggle off by clicking the active tag pill again
+    fireEvent.click(cssBtn);
+    expect(cssBtn.getAttribute('aria-pressed')).toBe('false');
+    expect(screen.getByText('Post meio')).toBeTruthy();
+    expect(screen.queryByText('Limpar filtros')).toBeNull();
+
+    // Filter again and clear with the "Limpar filtros" button
+    fireEvent.click(cssBtn);
+    expect(screen.getByText('Exibindo 2 posts com a tag #css')).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Limpar filtros' }));
+    expect(screen.getByText('Post meio')).toBeTruthy();
+    expect(screen.queryByText('Limpar filtros')).toBeNull();
+
+    // Also verify "todos" button resets active tag
+    fireEvent.click(screen.getByRole('button', { name: '#css' }));
+    expect(screen.getByText('Exibindo 2 posts com a tag #css')).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: 'todos' }));
     expect(screen.getByText('Post meio')).toBeTruthy();
   });
@@ -132,5 +196,18 @@ describe('blog pages', () => {
   it('answers an unknown post with the 404 page', async () => {
     renderAt('/blog/nao-existe/');
     expect(await screen.findByText('/blog/nao-existe/')).toBeTruthy();
+  });
+
+  it('supports initial filter via URL and card footer tag badges', () => {
+    renderAt('/blog/?tag=react');
+    expect(screen.getByRole('button', { name: '#react' }).getAttribute('aria-pressed')).toBe('true');
+    expect(screen.queryByText('Post velho')).toBeNull();
+    expect(screen.getByText('Post meio')).toBeTruthy();
+
+    // Click tag badge on card to switch filter to #css
+    const cssBadge = screen.getByRole('button', { name: 'Tag #css' });
+    fireEvent.click(cssBadge);
+    expect(screen.getByRole('button', { name: '#css' }).getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getByText('Post velho')).toBeTruthy();
   });
 });

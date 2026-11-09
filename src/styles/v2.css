@@ -475,9 +475,6 @@ button.also-i { cursor: pointer; }
   .nf-host { display: none; }
 }
 
-/* blog and privacy pages: the bar is as wide as the reading column under it */
-.blog:has(> main.blog-main) .nav-in { max-width: 880px; }
-
 /* ---------- responsive ---------- */
 @media (max-width: 1100px) {
   .nav-pill { display: none; }
