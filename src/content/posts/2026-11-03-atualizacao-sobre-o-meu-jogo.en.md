@@ -1,6 +1,7 @@
 ---
 title: Update on my game*
 date: 2026-11-03
+time: "16:19"
 description: Update on my game* One of the things I most want to explore is the feeling of being trapped in a place that should feel familiar. I've been refining a...
 tags: [linkedin, gamedev, indiegame, godot, desenvolvimentodejogos, terrorpsicologico]
 draft: false

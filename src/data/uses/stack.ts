@@ -8,7 +8,8 @@ export const STACK: UsesCategory = {
     {
       name: 'React',
       level: 'daily',
-      why: { pt: 'Biblioteca para construir interfaces com componentes.', en: 'Library for building interfaces with components.' },
+      detail: { pt: 'React 19', en: 'React 19' },
+      why: { pt: 'Biblioteca para construir interfaces modernas com componentes reativos.', en: 'Library for building modern interfaces with reactive components.' },
     },
     {
       name: 'TypeScript',
@@ -23,7 +24,8 @@ export const STACK: UsesCategory = {
     {
       name: 'Tailwind CSS',
       level: 'daily',
-      why: { pt: 'Estilos com classes utilitárias.', en: 'Styling with utility classes.' },
+      detail: { pt: 'Design system com classes utilitárias', en: 'Design system with utility classes' },
+      why: { pt: 'Estilização ágil com classes utilitárias e tokens responsivos.', en: 'Fast styling with utility classes and responsive tokens.' },
     },
     {
       name: 'Git',
@@ -44,7 +46,8 @@ export const STACK: UsesCategory = {
     {
       name: 'Vite',
       level: 'daily',
-      why: { pt: 'Ferramenta de build e servidor de desenvolvimento.', en: 'Build tool and development server.' },
+      detail: { pt: 'Build tool ultrarrápido', en: 'Ultra-fast build tool' },
+      why: { pt: 'Ferramenta de build moderna e servidor de desenvolvimento com HMR.', en: 'Modern build tool and development server with instant HMR.' },
     },
     {
       name: 'Docker',
@@ -59,14 +62,14 @@ export const STACK: UsesCategory = {
     {
       name: 'Godot',
       level: 'comfortable',
-      detail: { pt: 'Engine de jogos', en: 'Game engine' },
+      detail: { pt: 'Godot 4 · Engine de jogos', en: 'Godot 4 · Game engine' },
       why: { pt: 'Engine dos jogos que desenvolvo.', en: 'Engine for the games I develop.' },
     },
     {
       name: 'Blender',
       level: 'comfortable',
-      detail: { pt: 'Modelagem 3D', en: '3D modeling' },
-      why: { pt: 'Modelos e cenas 3D para os jogos.', en: '3D models and scenes for the games.' },
+      detail: { pt: 'Modelagem 3D e cenas', en: '3D modeling and scenes' },
+      why: { pt: 'Modelos e cenas 3D para os jogos e projetos interativos.', en: '3D models and scenes for games and interactive projects.' },
     },
     {
       name: 'QML',

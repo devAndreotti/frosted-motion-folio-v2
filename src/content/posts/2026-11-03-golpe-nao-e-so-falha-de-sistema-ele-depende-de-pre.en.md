@@ -1,6 +1,7 @@
 ---
 title: Scams are not just system vulnerabilities. They rely on haste, fear, and...
 date: 2026-11-03
+time: "16:19"
 description: Scams are not just system vulnerabilities. They rely on haste, fear, and someone who sounds trustworthy on the other end of the line. I completed...
 tags: [linkedin, extensaouniversitaria, unip, segurancadigital, golpes, pix]
 draft: false

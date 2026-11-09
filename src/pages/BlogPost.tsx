@@ -88,7 +88,9 @@ const BlogPost = () => {
             </Link>
             <h1 className="post-h">{shown.title}</h1>
             <p className="post-meta">
-              <time dateTime={post.date}>{formatDay(post.date, lang)}</time>
+              <time dateTime={post.time ? `${post.date}T${post.time}` : post.date}>
+                {formatDay(post.date, lang)}{post.time ? (lang === 'pt' ? ` às ${post.time}` : ` at ${post.time}`) : ''}
+              </time>
               <span aria-hidden="true">·</span>
               <span>{b.minutes(shown.minutes)}</span>
               {post.tags.map((tag) => (

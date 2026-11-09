@@ -1,6 +1,7 @@
 ---
 title: Electronic waste is not just about discarding technology. It involves...
 date: 2026-10-10
+time: "16:19"
 description: Electronic waste is not just about discarding technology. It involves natural resources, information security, public health, and sustainability. ...
 tags: [linkedin, extensaouniversitaria, unip, sustentabilidade, lixoeletronico, ewaste]
 draft: false

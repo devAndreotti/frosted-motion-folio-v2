@@ -2,6 +2,7 @@ import { ArrowRight, Rss } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { posts } from '@/lib/blog/catalog';
 import { formatDay } from '@/lib/blog/list';
+import { blogAsset } from '@/lib/blog/asset';
 
 const BLOG = `${import.meta.env.BASE_URL}blog/`;
 const SHOWN = 3;
@@ -37,19 +38,27 @@ const BlogTeaser = () => {
       <div className="teaser">
         {posts.slice(0, SHOWN).map((post) => (
           <a key={post.slug} href={`${BLOG}${post.slug}/`} className="teaser-c glass">
-            <span className="teaser-m">
+            {post.image && (
+              <div className="teaser-media">
+                <img src={blogAsset(post.image)} alt="" className="teaser-thumb" loading="lazy" />
+              </div>
+            )}
+            <div className="teaser-m">
               <time dateTime={post.date}>{formatDay(post.date, lang)}</time>
-              <span>{post.minutes} min</span>
-            </span>
-            <span className="teaser-h">{post.title}</span>
-            {post.description && <span className="teaser-p">{post.description}</span>}
-            <span className="tags">
-              {post.tags.map((tag) => (
-                <span key={tag} className="tag">
-                  #{tag}
-                </span>
-              ))}
-            </span>
+              <span className="teaser-dot" aria-hidden="true">•</span>
+              <span className="teaser-read">{b.minutes(post.minutes)}</span>
+            </div>
+            <h3 className="teaser-h">{post.title}</h3>
+            {post.description && <p className="teaser-p">{post.description}</p>}
+            {post.tags.length > 0 && (
+              <div className="blog-card-tags teaser-tags">
+                {post.tags.map((tag) => (
+                  <span key={tag} className="blog-card-tag">
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            )}
           </a>
         ))}
       </div>

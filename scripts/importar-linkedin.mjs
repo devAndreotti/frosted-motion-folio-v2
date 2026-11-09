@@ -42,6 +42,21 @@ function formatDatePt(dateStr) {
   return `${d}/${m}/${y}`;
 }
 
+function extractTime(post) {
+  if (post.time && /^\d{2}:\d{2}/.test(post.time)) {
+    return post.time.slice(0, 5);
+  }
+  if (post.datetime) {
+    const match = post.datetime.match(/T(\d{2}:\d{2})/);
+    if (match) return match[1];
+  }
+  if (post.collected_at) {
+    const match = post.collected_at.match(/T(\d{2}:\d{2})/);
+    if (match) return match[1];
+  }
+  return null;
+}
+
 function normalizeAlphaNum(str) {
   return (str || '').toLowerCase().replace(/[^a-z0-9]/g, '');
 }
@@ -204,10 +219,12 @@ async function importPost(post, existingFiles, options = {}) {
 
   // Montar corpo do post limpo
   const bodyContent = cleanBody(post.content);
+  const postTime = extractTime(post);
+  const timeLine = postTime ? `\ntime: "${postTime}"` : '';
 
   let postMarkdown = `---
 title: ${safeYamlString(post.title)}
-date: ${post.date}
+date: ${post.date}${timeLine}
 description: ${safeYamlString(post.description || post.title)}
 tags: [${baseTags.join(', ')}]
 draft: false

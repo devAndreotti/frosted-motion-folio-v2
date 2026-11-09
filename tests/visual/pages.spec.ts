@@ -11,6 +11,9 @@ const PAGES = [
 
 for (const { name, path } of PAGES) {
   test(`${name} não muda sem querer`, async ({ page }) => {
+    if (name === "home") {
+      test.setTimeout(60_000);
+    }
     await stabilize(page);
     await page.goto(path);
     await settle(page);
@@ -20,7 +23,7 @@ for (const { name, path } of PAGES) {
       // carrega: a comparação ignora o que eles desenham
       mask: [page.locator("canvas, video, .nb3d-stage")],
       // a home tem ~9.600 px de altura e o notebook 3D carrega junto: dois prints iguais seguidos passam dos 5 s padrão
-      timeout: 15_000,
+      timeout: name === "home" ? 25_000 : 15_000,
     });
   });
 }

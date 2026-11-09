@@ -1,6 +1,7 @@
 ---
 title: "Lixo eletrônico não é apenas sobre descartar tecnologia. Ele envolve recursos..."
 date: 2026-10-10
+time: "16:19"
 description: "Lixo eletrônico não é apenas sobre descartar tecnologia. Ele envolve recursos naturais, segurança da informação, saúde pública e sustentabilidade. ..."
 tags: [linkedin, extensaouniversitaria, unip, sustentabilidade, lixoeletronico, ewaste]
 draft: false

@@ -6,8 +6,9 @@ import BlogShell from '@/components/blog/BlogShell';
 import MostRead from '@/components/blog/MostRead';
 import NewsletterForm from '@/components/blog/NewsletterForm';
 import { localize, posts as originals } from '@/lib/blog/catalog';
-import { PAGE_SIZE, collectTags, filterPosts, formatDay, groupByYear } from '@/lib/blog/list';
+import { PAGE_SIZE, collectTags, filterByTag, filterPosts, formatDay, groupByYear, searchPosts } from '@/lib/blog/list';
 import { BLOG_TITLE } from '@/lib/blog/page';
+import { blogAsset } from '@/lib/blog/asset';
 import type { PostMeta } from '@/lib/blog/types';
 
 // Fallback search target for external DuckDuckGo queries
@@ -210,7 +211,7 @@ const Blog = () => {
                   <Link to={`/blog/${post.slug}/`} className="blog-card-link">
                     {post.image && (
                       <div className="blog-card-media">
-                        <img src={post.image} alt="" className="blog-card-thumb" loading="lazy" />
+                        <img src={blogAsset(post.image)} alt="" className="blog-card-thumb" loading="lazy" />
                       </div>
                     )}
                     <div className="blog-card-content">

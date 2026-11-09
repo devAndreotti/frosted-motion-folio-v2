@@ -1,6 +1,7 @@
 ---
 title: "Fazia tempo que eu queria ter um quality gate que eu pudesse rodar localmente e na..."
 date: 2026-10-10
+time: "16:19"
 description: "Fazia tempo que eu queria ter um quality gate que eu pudesse rodar localmente e na CI sem depender de subir o projeto no SonarQube ou SonarCloud só para..."
 tags: [linkedin]
 draft: false

@@ -1,6 +1,7 @@
 ---
 title: "Em 2023, comecei a acompanhar o InvokeAI, uma das ferramentas que mais me chamavam..."
 date: 2026-11-04
+time: "16:19"
 description: "Em 2023, comecei a acompanhar o InvokeAI, uma das ferramentas que mais me chamavam atenção para geração e edição de imagens com modelos locais. Na época,..."
 tags: [linkedin]
 draft: false

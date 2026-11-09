@@ -1,6 +1,7 @@
 ---
 title: I just needed a piece of crumpled paper for my game.
 date: 2026-11-02
+time: "16:19"
 description: I just needed a piece of crumpled paper for my game. I couldn't find anything off-the-shelf. So I built a library from scratch and it is 100% procedural. During...
 tags: [linkedin, webgl, creativecoding, javascript, gamedev, opensource]
 draft: false

@@ -1,6 +1,7 @@
 ---
 title: "Exactly 1 month ago, I decided to test an idea: how far could I go creating a..."
 date: 2026-10-10
+time: "16:19"
 description: "Exactly 1 month ago, I decided to test an idea: how far could I go creating a game with AI? It was supposed to be just an experiment. It wasn't. I got attached to..."
 tags: [linkedin, gamedev, indiegame, desenvolvimentodejogos, inteligenciaartificial, godot]
 draft: false
