@@ -101,11 +101,15 @@ const Blog = () => {
 
         <form
           className="blog-search glass"
+          action="https://duckduckgo.com/"
+          method="get"
+          target="_blank"
           role="search"
           onSubmit={(e) => {
             e.preventDefault();
           }}
         >
+          <input type="hidden" name="sites" value={SEARCH_SITE} />
           <label htmlFor="blog-q" className="blog-search-i">
             <Search className="ic" aria-hidden="true" />
             <span className="sr-only">{b.searchLabel}</span>
@@ -202,7 +206,7 @@ const Blog = () => {
             </h2>
             <div className="blog-grid">
               {group.posts.map((post) => (
-                <article key={post.slug} className="blog-card glass">
+                <article key={post.slug} className="blog-card blog-row glass">
                   <Link to={`/blog/${post.slug}/`} className="blog-card-link">
                     {post.image && (
                       <div className="blog-card-media">
@@ -215,7 +219,7 @@ const Blog = () => {
                         <span className="blog-card-dot" aria-hidden="true">·</span>
                         <span>{b.minutes(post.minutes)}</span>
                       </div>
-                      <h3 className="blog-card-h">{post.title}</h3>
+                      <h3 className="blog-card-h blog-row-t">{post.title}</h3>
                       {post.description && <p className="blog-card-p">{post.description}</p>}
                     </div>
                   </Link>
