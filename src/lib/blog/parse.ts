@@ -80,6 +80,8 @@ export function parsePost(file: string, raw: string): { meta: PostMeta; body: st
   if (typeof data.title !== 'string' || !data.title) throw fail('missing "title"');
   if (typeof data.date !== 'string' || !validDay(data.date)) throw fail('"date" must be YYYY-MM-DD');
   const tags = Array.isArray(data.tags) ? data.tags : typeof data.tags === 'string' && data.tags ? [data.tags] : [];
+  const imageMatch = body.match(/!\[.*?\]\((.*?)\)/);
+  const image = (typeof data.image === 'string' && data.image) || imageMatch?.[1] || undefined;
   return {
     meta: {
       slug,
@@ -89,6 +91,7 @@ export function parsePost(file: string, raw: string): { meta: PostMeta; body: st
       tags: tags.map((tag) => tag.toLowerCase()),
       minutes: readingMinutes(body),
       draft: data.draft === true,
+      ...(image ? { image } : {}),
     },
     body,
   };

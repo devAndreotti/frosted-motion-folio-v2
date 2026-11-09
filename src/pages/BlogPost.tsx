@@ -80,30 +80,48 @@ const BlogPost = () => {
   return (
     <BlogShell title={`${shown.title} — Ricardo A. Gonçalves`} className={reading.on ? 'reading' : undefined}>
       <div className="wrap post-layout">
-        <article className="post" lang={served === 'en' ? 'en' : 'pt-BR'}>
-          <Link to="/blog/" className="post-back">
-            <ArrowLeft className="ic s" aria-hidden="true" />
-            {b.back}
-          </Link>
-          <h1 className="post-h">{shown.title}</h1>
-          <p className="post-meta">
-            <time dateTime={post.date}>{formatDay(post.date, lang)}</time>
-            <span aria-hidden="true">·</span>
-            <span>{b.minutes(shown.minutes)}</span>
-            {post.tags.map((tag) => (
-              <Link key={tag} to={`/blog/?tag=${encodeURIComponent(tag)}`} className="post-tag">
-                #{tag}
-              </Link>
-            ))}
-          </p>
-          {note && <p className="blog-note">{note}</p>}
-          <ReadingModeButton on={reading.on} onToggle={reading.toggle} />
+        <article className="post-split" lang={served === 'en' ? 'en' : 'pt-BR'}>
+          <header className="post-sidebar post-editorial">
+            <Link to="/blog/" className="post-back">
+              <ArrowLeft className="ic s" aria-hidden="true" />
+              {b.back}
+            </Link>
+            <h1 className="post-h">{shown.title}</h1>
+            <p className="post-meta">
+              <time dateTime={post.date}>{formatDay(post.date, lang)}</time>
+              <span aria-hidden="true">·</span>
+              <span>{b.minutes(shown.minutes)}</span>
+              {post.tags.map((tag) => (
+                <Link key={tag} to={`/blog/?tag=${encodeURIComponent(tag)}`} className="post-tag">
+                  #{tag}
+                </Link>
+              ))}
+            </p>
+            {note && <p className="blog-note">{note}</p>}
+            <ReadingModeButton on={reading.on} onToggle={reading.toggle} />
 
-          {body.status === 'ready' && <div className="prose" dangerouslySetInnerHTML={{ __html: body.html }} />}
-          {body.status === 'loading' && <div className="prose-ph" aria-busy="true" />}
-          {body.status === 'error' && <p className="blog-empty">{b.loadError}</p>}
+            {toc.length > 1 && (
+              <aside className="toc" aria-label={b.onThisPage}>
+                <p className="k">{b.onThisPage}</p>
+                {toc.map((entry) => (
+                  <a key={entry.id} href={`#${entry.id}`} aria-current={active === entry.id ? 'location' : undefined}>
+                    {entry.text}
+                  </a>
+                ))}
+              </aside>
+            )}
 
-          <LikeBar slug={post.slug} title={shown.title} />
+            <LikeBar slug={post.slug} title={shown.title} />
+          </header>
+
+          <div className="post-body">
+            {body.status === 'ready' && <div className="prose" dangerouslySetInnerHTML={{ __html: body.html }} />}
+            {body.status === 'loading' && <div className="prose-ph" aria-busy="true" />}
+            {body.status === 'error' && <p className="blog-empty">{b.loadError}</p>}
+          </div>
+        </article>
+
+        <section className="post-bottom" aria-label={b.pageTitle}>
           <NewsletterForm />
 
           {related.length > 0 && (
@@ -140,18 +158,7 @@ const BlogPost = () => {
               )}
             </nav>
           )}
-        </article>
-
-        {toc.length > 1 && (
-          <aside className="toc" aria-label={b.onThisPage}>
-            <p className="k">{b.onThisPage}</p>
-            {toc.map((entry) => (
-              <a key={entry.id} href={`#${entry.id}`} aria-current={active === entry.id ? 'location' : undefined}>
-                {entry.text}
-              </a>
-            ))}
-          </aside>
-        )}
+        </section>
       </div>
     </BlogShell>
   );

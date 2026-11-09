@@ -62,4 +62,11 @@ export const ptBlog: Strings['blog'] = {
   mostReadTitle: 'Mais lidos',
   mostReadSub: 'Os posts que mais gente leu.',
   mostReadViews: (count) => (count === 1 ? '1 leitura' : `${count} leituras`),
+  showingTag: (count, tag) => `Exibindo ${count} ${count === 1 ? 'post' : 'posts'} com a tag #${tag}`,
+  showingSearch: (count, query) => `Exibindo ${count} ${count === 1 ? 'post' : 'posts'} para "${query}"`,
+  showingBoth: (count, tag, query) => `Exibindo ${count} ${count === 1 ? 'post' : 'posts'} com a tag #${tag} para "${query}"`,
+  clearFilters: 'Limpar filtros',
+  expandTags: (count) => `+${count} tags`,
+  collapseTags: 'Recolher tags',
+  searchExternal: 'DuckDuckGo',
 };

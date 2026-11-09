@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { collectTags, filterByTag, formatDay, groupByYear, neighbours, sortPosts, visiblePosts } from './list';
+import { collectTags, filterByTag, filterPosts, formatDay, groupByYear, neighbours, searchPosts, sortPosts, visiblePosts } from './list';
 import type { PostMeta } from './types';
 
 const p = (slug: string, date: string, tags: string[] = [], draft = false): PostMeta => ({
@@ -28,6 +28,23 @@ describe('blog list', () => {
     expect(filterByTag(posts, 'react').map((post) => post.slug)).toEqual(['a', 'c']);
     expect(filterByTag(posts, null)).toBe(posts);
     expect(collectTags(posts)).toEqual(['css', 'react']);
+  });
+
+  it('searches and filters posts by query in title, description and tags', () => {
+    const list: PostMeta[] = [
+      { slug: 'p1', title: 'Aprenda React', date: '2026-01-01', description: 'Guia basico', tags: ['frontend'], minutes: 2, draft: false },
+      { slug: 'p2', title: 'Dominando CSS', date: '2026-01-02', description: 'Grid e Flex', tags: ['estilo'], minutes: 3, draft: false },
+      { slug: 'p3', title: 'TypeScript avancado', date: '2026-01-03', description: 'Tipagem de React', tags: ['ts'], minutes: 4, draft: false },
+    ];
+    // Search in title
+    expect(searchPosts(list, 'CSS').map((p) => p.slug)).toEqual(['p2']);
+    // Search in description
+    expect(searchPosts(list, 'flex').map((p) => p.slug)).toEqual(['p2']);
+    // Search in tags
+    expect(searchPosts(list, 'frontend').map((p) => p.slug)).toEqual(['p1']);
+    // Filter combined
+    expect(filterPosts(list, 'frontend', 'react').map((p) => p.slug)).toEqual(['p1']);
+    expect(filterPosts(list, 'frontend', 'css').map((p) => p.slug)).toEqual([]);
   });
 
   it('groups by year, newest year first', () => {
