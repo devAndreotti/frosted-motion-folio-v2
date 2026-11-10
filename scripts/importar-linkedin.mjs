@@ -137,23 +137,28 @@ function findExistingMatch(post, existingFiles) {
   const pTitleNorm = normalizeAlphaNum(post.title);
   const pBodyNorm = normalizeAlphaNum(post.content ? post.content.slice(0, 70) : '');
 
-  for (const f of existingFiles) {
-    if (!f.endsWith('.md') || f.endsWith('.en.md')) continue;
-    const fullPath = path.join(POSTS_DIR, f);
-    const content = fs.readFileSync(fullPath, 'utf-8');
-    const contentNorm = normalizeAlphaNum(content);
+  const checkDirs = [POSTS_DIR, path.join(ROOT_DIR, 'src/content/archive')];
+  for (const dir of checkDirs) {
+    if (!fs.existsSync(dir)) continue;
+    const files = fs.readdirSync(dir);
+    for (const f of files) {
+      if (!f.endsWith('.md') || f.endsWith('.en.md')) continue;
+      const fullPath = path.join(dir, f);
+      const content = fs.readFileSync(fullPath, 'utf-8');
+      const contentNorm = normalizeAlphaNum(content);
 
-    if (pUrl && content.toLowerCase().includes(pUrl)) {
-      return { exists: true, reason: `URL vinculada em ${f}` };
-    }
-    if (pUrn && content.toLowerCase().includes(pUrn)) {
-      return { exists: true, reason: `URN vinculada em ${f}` };
-    }
-    if (pTitleNorm && pTitleNorm.length > 25 && contentNorm.includes(pTitleNorm.slice(0, 35))) {
-      return { exists: true, reason: `título coincide com ${f}` };
-    }
-    if (pBodyNorm && pBodyNorm.length > 35 && contentNorm.includes(pBodyNorm)) {
-      return { exists: true, reason: `conteúdo coincide com ${f}` };
+      if (pUrl && content.toLowerCase().includes(pUrl)) {
+        return { exists: true, reason: `URL vinculada em ${f}` };
+      }
+      if (pUrn && content.toLowerCase().includes(pUrn)) {
+        return { exists: true, reason: `URN vinculada em ${f}` };
+      }
+      if (pTitleNorm && pTitleNorm.length > 25 && contentNorm.includes(pTitleNorm.slice(0, 35))) {
+        return { exists: true, reason: `título coincide com ${f}` };
+      }
+      if (pBodyNorm && pBodyNorm.length > 35 && contentNorm.includes(pBodyNorm)) {
+        return { exists: true, reason: `conteúdo coincide com ${f}` };
+      }
     }
   }
 

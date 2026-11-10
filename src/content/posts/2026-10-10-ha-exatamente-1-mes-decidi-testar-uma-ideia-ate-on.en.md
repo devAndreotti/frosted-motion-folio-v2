@@ -1,55 +1,57 @@
 ---
-title: "Exactly 1 month ago, I decided to test an idea: how far could I go creating a..."
+title: "Memory Apartment: Developing a Psychological Horror Game in Godot 4"
 date: 2026-10-10
 time: "16:19"
-description: "Exactly 1 month ago, I decided to test an idea: how far could I go creating a game with AI? It was supposed to be just an experiment. It wasn't. I got attached to..."
-tags: [linkedin, gamedev, indiegame, desenvolvimentodejogos, inteligenciaartificial, godot]
+description: "From narrative to technical architecture: how I am building a 3D psychological horror game set in 2003 with Godot 4, Blender and diegetic UI."
+tags: [godot, gamedev, indiegame, blender, horror]
 draft: false
-source: 173b32d080a4
+source: cf0eb6b98df8
 ---
 
 *Originally published on [LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7512846421105139712/) on 10/10/2026.*
 
-Exactly 1 month ago, I decided to test an idea: how far could I go creating a game with AI?
+I decided to test an idea that seemed improbable: how far could I go building an original 3D game by combining modern developer workflows, generative AI tools for fast prototyping, and open-source game engines.
 
-It was supposed to be just an experiment.
+What began as a weekend experiment has turned into my most ambitious project: **Memory Apartment**.
 
-It wasn't. I got attached to the project.
+## The meeting ground of narrative and engineering
 
-Before entering college, writing was one of my biggest hobbies. I created stories, characters, worlds, and situations that would probably never leave the page. *I started writing a book that I never finished.
+Before entering Computer Science college, writing fiction was one of my central creative outlets. I created intricate stories, characters, and settings that usually ended up locked away in notebooks.
 
-So I decided to combine that with what I do today: development.
+As my technical background matured, I realized programming allowed me to turn these narratives into interactive worlds:
 
-A month ago I started building my own game, using AI as part of the process to explore ideas, program, prototype, and speed up certain stages—but above all, trying to turn a story that lived in my mind into a place that someone can explore.
+> Instead of simply reading about a dark corridor or a phone ringing in the dead of night, the player has to take the step, open the door, and face the stillness of the room.
 
-The project is a 3D psychological horror game set primarily in an apartment.
+## The premise of Edifício Primavera
 
-You are a software developer working remotely from home for one of the largest companies in the world.
+The narrative puts you in the shoes of a software developer working remotely from home in early 2003:
 
-A new government takes power.
+- A new political administration takes power amid social tension and censorship;
+- You move into apartment 17 of Edifício Primavera;
+- While trying to sustain your delivery routine, subtle spatial anomalies stack up: doors looping back into the same room, unaddressed envelopes, and cassette recordings carrying your own voice.
 
-You move into apartment 17.
+## Inventory System and diegetic interface
 
-And, step by step, you realize that perhaps none of these things are disconnected.
+To deepen the vintage early-2000s atmosphere, I avoided generic floating HUD menus. The inventory was built as a physical diegetic interface inspired by *Zero Parades*, where objects carry tactile weight and technical descriptions:
 
-Some doors do not lead outside.
+```gdscript
+# Gerenciamento de itens inspecionáveis no inventário diegético
+func inspect_item(item_resource: ItemData) -> void:
+    viewport_3d_preview.display_mesh(item_resource.mesh)
+    audio_player.play_sfx(item_resource.handling_sound)
+    item_label.text = item_resource.item_name
+```
 
-People know more than they should.
+Over 200 assets have already been modeled and rendered in Blender to feed this inventory system: vintage keys, technical programming manuals, 3.5-inch floppy disks, and handwritten memos.
 
-And someone seems to have a plan for you.
+## The simulated personal computer
 
-Today, exactly one month after starting, I am working on the inventory system. The design is inspired by ZERO PARADES, and I have already generated over 200 assets to construct this interface.
+Because the story takes place in October 2003, a central gameplay mechanic is the protagonist's CRT monitor workstation. I built an in-game interface simulating an era-accurate operating system (inspired by Windows XP), featuring command prompts, chat clients, and text editors the player operates to uncover corporate conspiracies.
 
-There is still plenty to build, break, rework, and learn along the way.
-
-Yet I think that is precisely what made me love this project so much: after years, I returned to writing, but now the stories also come with code, interface, audio, 3D environments, and can be explored.
-
-In the video, a glimpse of what this first month has become.
-
-*I am currently implementing a Windows XP emulator for the character to interact with, since the game is set in the 2000s, and I plan to showcase it sometime soon.
+There is still a long roadmap of physics tuning, lighting passes, and testing ahead, but uniting storytelling, shaders, procedural sound, and code inside Godot 4 has rekindled the pure craft of worldbuilding.
 
 ---
 
-### Post media
+### Mídia da publicação
 
-![LinkedIn post media](/blog/ha-exatamente-1-mes-decidi-testar-uma-ideia-ate-on/midia-1.jpg)
+![Mídia do post no LinkedIn](/blog/ha-exatamente-1-mes-decidi-testar-uma-ideia-ate-on/midia-1.jpg)

@@ -1,39 +1,57 @@
 ---
-title: "Meu portfólio ganhou uma nova versão. E tem alguns segredos escondidos por lá."
+title: "Portfólio v2: Glassmorfismo, automações com IA e infraestrutura própria"
 date: 2026-10-26
 time: "16:19"
-description: "Meu portfólio ganhou uma nova versão. E tem alguns segredos escondidos por lá. Sempre gostei muito de glassmorfismo, interfaces com profundidade e animações..."
-tags: [linkedin, desenvolvimentoweb, react, automacao, inteligenciaartificial, cloudflare]
+description: "Como construí a nova versão do portfólio unindo design tokens adaptativos, tradução autônoma com Hermes, terminal interativo e edge na Cloudflare."
+tags: [react, tailwind, automacao, cloudflare, hermes]
 draft: false
 ---
 
 *Publicado originalmente no [LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7518270888371445761/) em 26/10/2026.*
 
-Meu portfólio ganhou uma nova versão. E tem alguns segredos escondidos por lá.
+Sempre gostei de interfaces com profundidade, camadas de vidro fosco (*frosted glass*), iluminação física e transições suaves. Para a nova versão do meu portfólio, decidi transformar essa identidade visual em um projeto de engenharia completo, unindo front-end moderno, automações inteligentes e infraestrutura própria.
 
-Sempre gostei muito de glassmorfismo, interfaces com profundidade e animações que tornam a navegação mais interessante. Resolvi levar essas ideias para a nova versão do meu portfólio, mas aproveitei para ir além do visual.
+## Muito além de uma vitrine estática
 
-Algumas coisas que estou construindo por trás da interface:
+Em vez de criar uma página convencional de links, o objetivo foi construir um espaço interativo com personalidade técnica evidente logo no primeiro carregamento:
 
-- Design e interação: uma nova experiência visual, com glassmorfismo, animações e alguns easter eggs para quem gosta de explorar cada detalhe.
+> Um bom portfólio deve ser a prova viva das habilidades que ele anuncia: se você constrói sistemas e interfaces, o próprio site precisa demonstrar isso em cada detalhe.
 
-- Infraestrutura própria: site hospedado na Cloudflare e envio de e-mails integrado à minha infraestrutura na Oracle.
+A stack une React 19, Vite, Tailwind CSS com design tokens em OKLCH, animações com Motion e Three.js para o hardware 3D no Hero.
 
-- Blog integrado: uma área para publicar textos e compartilhar aprendizados, projetos e experiências.
+## O Terminal interativo Sudo
 
-- Automação com IA: usando o Hermes, meus novos posts são detectados e ganham automaticamente uma versão em inglês, ampliando o alcance do conteúdo.
+No canto superior da interface, os visitantes podem abrir um terminal real embutido para explorar a stack, atalhos e dados públicos do projeto diretamente via linha de comando:
 
-- Newsletter: já tenho uma área funcional de inscrição com confirmação por e-mail. Agora estou pensando no formato e na frequência de envio, antes de definir o lançamento.
+```bash
+# Comandos públicos disponíveis no terminal embutido
+sudo help
+sudo stack
+sudo projetos
+```
 
+O terminal suporta navegação por histórico (setas para cima/baixo), autocompletar e respostas localizadas em português e inglês.
 
-A ideia é continuar evoluindo o projeto: não apenas como uma vitrine profissional, mas como um espaço para compartilhar o que aprendo e faço pelo caminho.
+## Pipeline autônomo com agentes Hermes
 
-Link do portfólio e do repositório nos comentários.
+A gestão de conteúdo não depende de painéis pesados de CMS:
 
+- **Publicação via Git:** Cada artigo do blog é um arquivo Markdown tipado versionado no repositório;
+- **Tradução com Agentes:** Um cronjob local do **Hermes Agent** detecta novos posts publicados em português, gera a versão correspondente em inglês e submete um Pull Request com validação estrita de estrutura (*AST shape match*);
+- **Rich Snippets Automáticos:** Geração de JSON-LD com Schema.org `BlogPosting` para indexação em buscadores;
+- **Modo Leitura Zen:** Alternância para visualização sem distrações em coluna única com atalho `<kbd>Esc</kbd>`.
+
+## Infraestrutura híbrida: Cloudflare e VPS Oracle
+
+A distribuição combina o melhor de dois mundos:
+
+- **Edge na Cloudflare:** Distribuição global com latência mínima para os assets estáticos do portfólio;
+- **Serviços na VPS Oracle:** O gerenciador de newsletter, coleta de métricas e orquestração de rotinas rodam em containers isolados no meu servidor Linux pessoal.
+
+O código-fonte completo está aberto no [GitHub](https://github.com/devAndreotti/frosted-motion-folio-v2).
 
 ---
 
 ### Mídia da publicação
 
 ![Mídia do post no LinkedIn](/blog/meu-portfolio-ganhou-uma-nova-versao-e-tem-alguns/midia-1.jpg)
-

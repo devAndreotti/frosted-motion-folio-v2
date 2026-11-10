@@ -1,46 +1,54 @@
 ---
-title: "Atualização sobre o meu jogo*"
+title: "Espaços Impossíveis: Geometria Não-Euclidiana no Godot 4"
 date: 2026-11-03
 time: "16:19"
-description: "Atualização sobre o meu jogo* Uma das coisas que mais quero explorar é a sensação de estar preso em um lugar que deveria ser familiar. Estive refinando uma..."
-tags: [linkedin, gamedev, indiegame, godot, desenvolvimentodejogos, terrorpsicologico]
+description: "Como implementei transições espaciais impossíveis e portas em loop no Godot 4 sem portais ou câmeras secundárias."
+tags: [godot, gamedev, gdscript, terrorpsicologico, indiegame]
 draft: false
 ---
 
 *Publicado originalmente no [LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7523398830097305602/) em 03/11/2026.*
 
-Atualização sobre o meu jogo*
+Uma das sensações que mais quero explorar em **Memory Apartment** é o desconforto de estar preso em um lugar que deveria ser familiar e acolhedor. Para isso, estive refinando uma mecânica de geometria não-euclidiana no apartamento 17.
 
-Uma das coisas que mais quero explorar é a sensação de estar preso em um lugar que deveria ser familiar. Estive refinando uma mecânica de geometria não euclidiana no apartamento 17.
+A premissa é direta: a porta de entrada nem sempre leva para o lado de fora.
 
-A ideia é simples: a porta de entrada nem sempre leva para fora.
+## O terror do que deveria ser familiar
 
-Em determinado momento, o jogador abre a porta esperando encontrar o corredor do prédio. Mas, no lugar dele, encontra o próprio corredor interno do apartamento.
+Em determinado momento da narrativa, o jogador destranca a porta da frente esperando encontrar o corredor de pastilhas do Edifício Primavera. No entanto, ao girar a maçaneta, depara-se com o próprio corredor interno do apartamento.
 
-Ele fecha a porta. Abre novamente.
+> O verdadeiro terror psicológico não nasce de monstros correndo atrás de você, mas da percepção gradual de que as leis da física e da arquitetura do seu quarto deixaram de operar como deveriam.
 
-O corredor continua lá.
+Ele recua, bate a porta, respira fundo e abre de novo: o corredor interno continua lá, estendendo-se em um loop claustrofóbico.
 
-O mais interessante foi pensar em como implementar isso sem que o jogador percebesse a troca acontecendo.
+## Implementando sem portais ou câmeras extras
 
-Em vez de utilizar portais ou câmeras adicionais, optei por alternar os ambientes, suas colisões e visibilidade enquanto a porta está fechada. Tudo isso é controlado pelo estado da narrativa*
+Muitos jogos resolvem transições espaciais impossíveis utilizando *stencil buffers*, render targets secundários ou portais com câmeras duplicadas. Embora funcionem bem em motores de grande porte, essas abordagens costumam dobrar o custo de renderização de luzes e sombras em tempo real.
 
-Assim, o mesmo espaço pode assumir duas configurações completamente diferentes, sem precisar carregar outro cenário e posso aplicar essa mesma lógica pronta a outros ambientes mais para frente.
+Na Godot 4, adotei uma solução mais leve e determinística: alternar nós de colisão, iluminação e visibilidade no frame exato em que a folha da porta fecha o campo de visão:
 
-E o jogador, que antes conseguia sair normalmente pela porta da frente, passa a encontrar apenas o interior do próprio apartamento.
+```gdscript
+# Alterna o ambiente atrás da porta fechada baseado no estado narrativo
+func _on_front_door_closed() -> void:
+    if narrative_state.is_anomaly_active("loop_hallway"):
+        building_corridor.visible = false
+        building_corridor.process_mode = Node.PROCESS_MODE_DISABLED
+        interior_mirror.visible = true
+        interior_mirror.process_mode = Node.PROCESS_MODE_INHERIT
+```
 
-Quero que o terror do jogo venha muito disso: não necessariamente de algo perseguindo você, mas da percepção de que as regras do ambiente deixaram de funcionar como deveriam.
+## Vantagens da alternância discreta
 
-No vídeo, um pouco dessa mecânica funcionando na Godot.
+Essa abordagem oferece benefícios claros de performance e fluxo:
 
-Ainda tenho bastante coisa para ajustar, mas estou gostando de experimentar com espaços impossíveis. Aliás, o jogo tem um teatro... Sim, um teatro. É o único espaço fora o apartamento e parte do prédio.
+- **Custo Zero de Draw Calls Extras:** Não há câmeras secundárias desenhando geometria fora da visão do jogador;
+- **Persistência de Iluminação:** A iluminação assada (lightmaps) e os probes de reflexão permanecem estáveis sem transição brusca;
+- **Reutilização Modular:** A mesma lógica de gatilho narrativo pode ser reaproveitada em armários, janelas e cômodos que mudam de tamanho.
 
-Esquisito, não? O que mais gostariam de ver?
-
+E o jogo reserva outros cenários inesperados: além do apartamento e do prédio, existe um teatro antigo escondido nas entranhas do edifício.
 
 ---
 
 ### Mídia da publicação
 
 ![Mídia do post no LinkedIn](/blog/atualizacao-sobre-o-meu-jogo/midia-1.jpg)
-
