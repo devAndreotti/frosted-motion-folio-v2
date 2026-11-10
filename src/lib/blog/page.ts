@@ -103,11 +103,27 @@ export function renderPostPage(template: string, post: PostMeta, bodyHtml: strin
       '@type': 'BlogPosting',
       headline: post.title,
       description: post.description,
-      datePublished: post.date,
+      datePublished: post.time ? `${post.date}T${post.time}:00-03:00` : `${post.date}T12:00:00Z`,
+      dateModified: post.time ? `${post.date}T${post.time}:00-03:00` : `${post.date}T12:00:00Z`,
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': blogUrl(post.slug),
+      },
       url: blogUrl(post.slug),
+      image: image?.url || (post.image ? (post.image.startsWith('http') ? post.image : `${SITE}${post.image.replace(/^\.?\//, '/')}`) : `${SITE}/og-image.png`),
       keywords: post.tags.join(', '),
       inLanguage: 'pt-BR',
-      author: { '@type': 'Person', name: 'Ricardo A. Gonçalves', url: `${SITE}/` },
+      author: {
+        '@type': 'Person',
+        name: 'Ricardo A. Gonçalves',
+        url: `${SITE}/`,
+        jobTitle: 'Desenvolvedor Full Stack',
+      },
+      publisher: {
+        '@type': 'Person',
+        name: 'Ricardo A. Gonçalves',
+        url: `${SITE}/`,
+      },
     },
   });
   return injectRoot(head, markup);
