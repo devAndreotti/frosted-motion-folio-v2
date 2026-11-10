@@ -1,49 +1,77 @@
 ---
-title: "Fazia tempo que eu queria ter um quality gate que eu pudesse rodar localmente e na..."
+title: "Quality Gate: Verificações locais e na CI sem depender de SonarCloud"
 date: 2026-10-10
 time: "16:19"
-description: "Fazia tempo que eu queria ter um quality gate que eu pudesse rodar localmente e na CI sem depender de subir o projeto no SonarQube ou SonarCloud só para..."
-tags: [linkedin]
+description: "Auditoria de vulnerabilidades, secret scan, ratchet de cobertura e lint local com SonarJS e Node/uv antes de abrir o PR."
+tags: [quality-gate, devops, ci-cd, nodejs, python]
 draft: false
 ---
 
 *Publicado originalmente no [LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7507835706581356544/) em 10/10/2026.*
 
-Fazia tempo que eu queria ter um quality gate que eu pudesse rodar localmente e na CI sem depender de subir o projeto no SonarQube ou SonarCloud só para descobrir se alguma coisa passou ou não.
+Fazia tempo que eu sentia falta de um quality gate que pudesse rodar localmente no meu terminal e na esteira de CI sem depender de subir o código para o SonarQube ou SonarCloud apenas para descobrir se algo quebrou ou se a cobertura caiu.
 
-A ideia começou depois de assistir a um vídeo do Lucas Montano: peguei as ideias por trás do que ele mostrou e fui adaptando para o que eu queria usar no dia a dia. No fim, acabou virando outro projeto:
+A ideia nasceu após acompanhar reflexões do Lucas Montano sobre governança e qualidade de software: peguei os conceitos essenciais e adaptei para o meu fluxo diário de desenvolvimento, concentrando tudo em uma CLI rápida e determinística chamada **quality-gate**.
 
-quality-gate ⚙️
+## Por que validar localmente antes da nuvem?
 
-A proposta é concentrar em um único gate várias verificações que eu normalmente faria separadas:
+Esperar o feedback da esteira remota consome minutos preciosos e polui o histórico do GitHub com commits de correção trivial (`fix: lint`, `fix: types`). Rodar as mesmas regras no terminal antes do commit elimina idas e vindas desnecessárias:
 
-• lint;
-• testes;
-• cobertura com ratchet, para impedir regressão;
-• auditoria de vulnerabilidades e licenças;
-• secret scan;
-• validação de Docker; *depende de outra ferramenta
-• diagnóstico de falhas da CI;
-• relatório automático nos PRs.
+```bash
+# Executa o gate completo no repositório atual
+npx quality-gate check --ratchet
+```
 
-Além do código em si, ele também olha para o estado do PR: checks obrigatórios, conflitos, threads não resolvidas e condição de merge.
+> O objetivo principal é transformar a qualidade em um contrato reproduzível: o que passa na máquina do desenvolvedor passa rigorosamente na CI.
 
-Tem dashboard no terminal, suporte a Node.js e Python/uv e um modo que eu particularmente queria bastante: executar o gate em um repositório da empresa sem precisar instalar ou persistir nada dentro dele.
+## Verificações concentradas no pipeline
 
-Para análise estática, integrei o SonarJS ao ESLint. Ele ajuda a pegar code smells, complexidade e outros problemas localmente.
+O gate unifica verificações que tradicionalmente ficam espalhadas em scripts e ferramentas distintas:
 
-Também coloquei um ratchet de cobertura: em vez de simplesmente definir "80% ou falhou", o gate registra o baseline e impede que a cobertura piore. Se subir, o novo valor passa a ser o mínimo esperado.
+- **Linting & Code Smells:** Integração direta com ESLint e regras do SonarJS para detectar complexidade ciclomática e vulnerabilidades estáticas;
+- **Bateria de Testes:** Execução paralela dos testes unitários e de integração;
+- **Ratchet de Cobertura:** Travamento automático contra regressão de testes;
+- **Auditoria de Dependências:** Varredura de CVEs e licenças proibidas em ecossistemas Node.js e Python (`uv`);
+- **Secret Scan Determinístico:** Detecção de credenciais, chaves privadas e tokens vazados;
+- **Docker Image Gate:** Validação estática de Dockerfile e camadas de build;
+- **Relatório de Pull Request:** Geração de sumário formatado em Markdown pronto para o GitHub Actions.
 
-Dtalhe para quem abrir o repo e rodar o scanner: existem tokens e chaves propositalmente falsos nos testes. Eles estão lá justamente para testar se o secret scan consegue encontrá-los. 😅
+## Como funciona o Ratchet de Cobertura
 
-Ainda tem coisa que quero evoluir, mas já virou uma ferramenta que consigo usar de verdade em outros projetos.
+Definir uma meta estática (como "mínimo de 80%") tem uma falha grave: se a cobertura de um módulo estiver em 95%, alguém pode adicionar 100 linhas sem teste e derrubar para 81% sem que a esteira reclame.
 
-Repo: https://lnkd.in/dY_Bd7tY
+O mecanismo de **ratchet** resolve isso registrando o índice atual como piso obrigatório:
 
+```json
+{
+  "ratchet": {
+    "lines": 94.2,
+    "statements": 93.8,
+    "functions": 95.0,
+    "branches": 91.5
+  }
+}
+```
+
+Se a cobertura subir em um PR, o novo valor passa a ser o patamar mínimo permanente. Se cair mesmo 0.1%, o gate rejeita o merge.
+
+## Execução efêmera para qualquer repositório
+
+Um dos requisitos que eu mais queria era auditar repositórios sem precisar instalar pacotes globais ou criar arquivos de lock permanentes dentro do projeto:
+
+```bash
+# Audita repositório alvo em modo efêmero sem alterar arquivos locais
+npx quality-gate audit --dir /caminho/do/projeto --strict
+```
+
+O gate inspeciona o estado do Pull Request (conflitos pendentes, checks obrigatórios da branch e threads de review não resolvidas) antes de sinalizar aprovação.
+
+*Detalhe para quem clonar o repositório e rodar os testes: existem chaves e tokens propositalmente falsos na suite de testes para validar se o scanner de segredos realmente os intercepta.*
+
+Código open source disponível no [GitHub](https://github.com/devAndreotti/quality-gate).
 
 ---
 
 ### Mídia da publicação
 
 ![Mídia do post no LinkedIn](/blog/fazia-tempo-que-eu-queria-ter-um-quality-gate-que/midia-1.jpg)
-

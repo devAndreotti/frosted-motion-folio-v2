@@ -1,47 +1,69 @@
 ---
-title: I just needed a piece of crumpled paper for my game.
+title: "Crumple: Building a procedural WebGL2 crumpled paper library from scratch"
 date: 2026-11-02
 time: "16:19"
-description: I just needed a piece of crumpled paper for my game. I couldn't find anything off-the-shelf. So I built a library from scratch and it is 100% procedural. During...
-tags: [linkedin, webgl, creativecoding, javascript, gamedev, opensource]
+description: "How I built a zero-dependency procedural WebGL2 library featuring 10 paper stocks, seed-based deformation, light creases and synthesized audio for my game."
+tags: [webgl, crumple, shaders, gamedev, javascript, opensource]
 draft: false
-source: 6034c67840a3
+source: 6a8861966b60
 ---
 
 *Originally published on [LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7521189846770405377/) on 11/02/2026.*
 
-I just needed a piece of crumpled paper for my game.
+I just needed a piece of crumpled paper for my game. I found nothing off-the-shelf that provided convincing physics without pulling gigabytes of heavy dependencies. So I built a library from scratch, 100% procedural.
 
-I couldn't find anything off-the-shelf. So I created a library from scratch, and it is 100% procedural.
+During the development of **Memory Apartment** (my psychological horror and investigation game), I encountered a critical immersion detail: the player needs to interact with notes on the floor, old memos, thermal receipts and letters that reveal the dark secrets of Edifício Primavera.
 
-During the development of Memory Apartment (my psychological horror and investigation game), I encountered a critical immersion detail: the player needs to interact with notes on the floor, old memos, thermal receipts, and letters that uncover the dark secrets of the Primavera Building.
+## The immersion challenge in Memory Apartment
 
-I didn't want a flat static texture or a pre-rendered flip animation. I wanted the paper to feel physical: flying to the center of the screen and unfolding smoothly right before the player.
+I did not want a flat 2D static texture or a rigid pre-rendered animation. I wanted the paper to feel physical: flying to the center of the screen, reacting to ambient light and unfolding smoothly right before the player.
 
-I searched for a lightweight web library to handle this. I found nothing procedural, interactive, and free of heavy dependencies.
+> If the player notices that the paper is just a flat plane with a slapped texture, the eerie atmosphere collapses instantly.
 
-The solution was to build Crumple: a procedural, generative WebGL2 library with zero external dependencies.
+Searching the ecosystem, I found no web library combining procedural geometric deformation, touch/mouse interaction and physical audio without pulling all of Three.js or heavy frameworks. The solution was creating **Crumple**: a generative WebGL2 library weighing under 37 KB (gzip) with zero external dependencies.
 
-What powers the codebase:
+## Installation and quick usage
 
-- 100% generative: mesh geometry, creases, and procedural deformations computed entirely at runtime. Using a deterministic seed, the identical crumple patterns and fold lines are reproduced reliably.
+The project was packaged for immediate use both in dedicated WebGL canvases or embedded directly into the DOM of modern websites:
 
-- 10 paper stock types: typewritten sheet, lined notebook paper, legacy continuous tractor-feed forms, thermal POS receipt, instant photo, sealed envelope, and perforated ticket stub.
+```bash
+# Instalação via NPM
+npm install @devandreotti/crumple
+```
 
-- 14 physical weathering states: burned edges, scorched paper, coffee rings, water damage, wine spills, fingerprints, adhesive scotch tape, ink stamps, and temporal aging decay.
+```typescript
+import { CrumpleScene } from '@devandreotti/crumple';
 
-- Realtime interactivity: users can unfold sheets by dragging with the mouse, inspect recto and verso sides, burn the note with 4 directional fire-propagation modes, and reveal hidden ultraviolet ink using the cursor as a spotlight.
+// Inicializa o papel sobre um container existente
+const paper = new CrumpleScene({
+  target: document.querySelector('#documento'),
+  type: 'carta_1998',
+  wear: ['coffee', 'creased'],
+  interactive: true,
+});
+```
 
-- Procedural audio: crinkling, unfolding, and combustion sound synthesis built natively with the Web Audio API, requiring zero external audio assets to load.
+## Procedural Architecture and GLSL Shaders
 
-The project is published on npm (@devandreotti/crumple) and works both directly on raw canvas (Stage) or bound seamlessly to DOM elements (Scene).
+All geometry and creasing normals are computed in real time using custom vertex and fragment shaders:
 
-Interactive playground: https://lnkd.in/d6gVAMGm
+- **100% Seed-Based Generative:** The polygon mesh, primary crease lines and micro-wrinkles use analytical noise functions. Passing the identical seed reproduces the exact crumple pattern deterministically;
+- **10 Paper Presets:** Typewritten letter, school notebook ruled paper, continuous tractor-feed forms, thermal POS receipt, instant photo, cyanotype blueprint, IBM punchcard and sealed envelope;
+- **14 Physical Weathering States:** Charred burn edges, coffee stains, water damage, wine rings, yellowed tape and aged ink stamps;
+- **Complete Interactivity:** Drag to unfold, full 3D flip (recto and verso), interactive combustion and secret invisible ink reacting to cursor illumination.
 
-GitHub repository: https://lnkd.in/dytp-QcJ
+## Synthesized Audio with the Web Audio API
+
+To keep the library bundle featherlight and avoid downloading external `.mp3` or `.wav` files, every crinkling, cracking and burning sound is generated synthetically at runtime:
+
+- Pink noise synthesis shaped by physical modeling (peaking filter tuned to 420 Hz);
+- Dynamic amplitude envelope modulated by the angular velocity of mesh unfolding;
+- Zero network requests for audio asset bundles.
+
+The package is published on NPM under [@devandreotti/crumple](https://www.npmjs.com/package/@devandreotti/crumple), open sourced on [GitHub](https://github.com/devAndreotti/crumple) with an interactive demo on the [Playground](https://devandreotti.github.io/crumple/).
 
 ---
 
-### Post media
+### Mídia da publicação
 
-![LinkedIn post media](/blog/eu-so-precisava-de-um-papel-amassado-para-o-meu-jo/midia-1.jpg)
+![Mídia do post no LinkedIn](/blog/eu-so-precisava-de-um-papel-amassado-para-o-meu-jo/midia-1.jpg)

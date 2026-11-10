@@ -1,37 +1,58 @@
 ---
-title: My portfolio got a new version. And there are some secrets hidden there.
+title: "Portfolio v2: Glassmorphism, autonomous AI workflows and self-hosted infrastructure"
 date: 2026-10-26
 time: "16:19"
-description: My portfolio got a new version. And there are some secrets hidden there. I have always loved glassmorphism, depth interfaces, and animations that...
-tags: [linkedin, desenvolvimentoweb, react, automacao, inteligenciaartificial, cloudflare]
+description: "How I built the new version of my portfolio uniting adaptive design tokens, autonomous Hermes translation, interactive terminal and Cloudflare edge."
+tags: [react, tailwind, automacao, cloudflare, hermes]
 draft: false
-source: f2cfdaa4f9e2
+source: 76b86ffc450d
 ---
 
 *Originally published on [LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7518270888371445761/) on 10/26/2026.*
 
-My portfolio got a new version. And there are some secrets hidden there.
+I have always gravitated toward interfaces with depth, frosted glass layers, physically plausible illumination, and fluid transitions. For the new version of my portfolio, I decided to turn this visual identity into an engineering-led project uniting modern frontend architecture, smart autonomous routines, and dedicated self-hosted infrastructure.
 
-I have always loved glassmorphism, depth in user interfaces, and animations that make navigation more engaging. I decided to bring these ideas into the new version of my portfolio, while taking the opportunity to go far beyond mere aesthetics.
+## Far beyond a static portfolio showcase
 
-A few things I am building behind the interface:
+Instead of assembling a conventional link tree, the goal was building an interactive space with clear technical personality right from first paint:
 
-- Design and interaction: a fresh visual experience featuring glassmorphism, motion, and hidden easter eggs for those who enjoy exploring every detail.
+> A great portfolio must be living evidence of the skills it claims: if you build systems and interfaces, the site itself must demonstrate that in every detail.
 
-- Self-hosted infrastructure: website hosted on Cloudflare and email delivery integrated into my Oracle Cloud infrastructure.
+The frontend stack unites React 19, Vite, Tailwind CSS with OKLCH design tokens, Motion animations, and Three.js driving the interactive 3D notebook stage in the Hero.
 
-- Integrated blog: dedicated section to publish essays and share lessons, projects, and experiences.
+## The interactive Sudo Terminal
 
-- AI-powered automation: powered by Hermes, newly imported posts are automatically detected and translated into English, expanding the reach of the content.
+In the top navigation area, visitors can trigger an embedded terminal to explore the stack, shortcuts, and public project details directly via command line:
 
-- Newsletter: fully functional subscription area with double opt-in email verification already in place. Now I am defining the format and cadence before scheduling the launch.
+```bash
+# Comandos públicos disponíveis no terminal embutido
+sudo help
+sudo stack
+sudo projetos
+```
 
-The vision is to continuously evolve the project: not just as a professional showcase, but as an open space to share what I learn and build along the journey.
+The terminal supports command history navigation (up/down arrow keys), autocomplete, and localized output in both Portuguese and English.
 
-Portfolio link and repository link in the comments.
+## Autonomous pipeline with Hermes agents
+
+Content management does not depend on heavy database CMS dashboards:
+
+- **Git-driven publishing:** Every blog article is a strictly typed Markdown file tracked in git version control;
+- **Agentic translation:** A local scheduled task via **Hermes Agent** detects newly published Portuguese posts, writes corresponding English editions, and opens a Pull Request with strict structural AST validation;
+- **Automated rich snippets:** Dynamic Schema.org `BlogPosting` JSON-LD generation for search engine rich results;
+- **Zen reading mode:** Distraction-free single-column reading view toggleable with `<kbd>Esc</kbd>`.
+
+## Hybrid infrastructure: Cloudflare and Oracle VPS
+
+Deployment combines edge speed with server-side control:
+
+- **Cloudflare Edge:** Global static asset distribution ensuring single-digit millisecond latency worldwide;
+- **Oracle Linux VPS:** The newsletter dispatcher, metric collection scripts, and task orchestrators run in isolated containers on my personal server.
+
+The complete codebase is open source on [GitHub](https://github.com/devAndreotti/frosted-motion-folio-v2).
 
 ---
 
-### Post media
+### Mídia da publicação
 
-![LinkedIn post media](/blog/meu-portfolio-ganhou-uma-nova-versao-e-tem-alguns/midia-1.jpg)
+![Mídia do post no LinkedIn](/blog/meu-portfolio-ganhou-uma-nova-versao-e-tem-alguns/midia-1.jpg)

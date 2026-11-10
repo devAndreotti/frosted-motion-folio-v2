@@ -1,56 +1,56 @@
 ---
-title: "Há exatamente 1 mês, decidi testar uma ideia: até onde eu conseguiria ir criando um..."
+title: "Memory Apartment: Desenvolvendo um jogo de terror psicológico em Godot 4"
 date: 2026-10-10
 time: "16:19"
-description: "Há exatamente 1 mês, decidi testar uma ideia: até onde eu conseguiria ir criando um jogo com IA? Era para ser só um experimento. Não foi. Eu me apeguei ao..."
-tags: [linkedin, gamedev, indiegame, desenvolvimentodejogos, inteligenciaartificial, godot]
+description: "Da narrativa à arquitetura técnica: como estou construindo um jogo 3D de terror psicológico ambientado em 2003 com Godot 4, Blender e interface diegética."
+tags: [godot, gamedev, indiegame, blender, horror]
 draft: false
 ---
 
 *Publicado originalmente no [LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7512846421105139712/) em 10/10/2026.*
 
-Há exatamente 1 mês, decidi testar uma ideia: até onde eu conseguiria ir criando um jogo com IA?
+Decidi testar uma ideia que parecia improvável: até onde seria possível ir criando um jogo 3D autoral combinando ferramentas modernas de desenvolvimento, modelos de IA generativa para prototipagem rápida e motores open source.
 
-Era para ser só um experimento.
+O que começou como um experimento de fim de semana transformou-se no meu projeto mais ambicioso: **Memory Apartment**.
 
-Não foi. Eu me apeguei ao projeto.
+## O encontro entre narrativa e desenvolvimento
 
-Antes de entrar na faculdade, escrever era um dos meus maiores hobbies. Criava histórias, personagens, mundos e situações que provavelmente nunca sairiam do papel. *Comecei a escrever um livro que nunca finalizei.
+Antes de ingressar na faculdade de Ciência da Computação, escrever ficção era um dos meus principais hobbies. Criava histórias, personagens e cenários complexos que costumavam ficar guardados na gaveta.
 
-Então resolvi juntar isso com o que faço hoje: desenvolvimento.
+Com o amadurecimento técnico, percebi que a programação me permitia transformar essas narrativas em experiências interativas:
 
-Há um mês comecei a criar meu próprio jogo, usando IA como parte do processo para explorar ideias, programar, prototipar e acelerar algumas etapas mas, principalmente, tentando transformar uma história que estava na minha cabeça em um lugar que alguém possa explorar.
+> Em vez de apenas ler sobre um corredor escuro ou um telefone tocando de madrugada, o jogador precisa dar o passo, abrir a porta e encarar o silêncio do ambiente.
 
-O projeto é um jogo 3D de terror psicológico ambientado principalmente em um apartamento.
+## A premissa do Edifício Primavera
 
-Você é um desenvolvedor e trabalha em home office para uma das maiores empresas do mundo.
+O enredo coloca você no papel de um desenvolvedor de software trabalhando em regime home office no início dos anos 2000:
 
-Um novo governo assume.
+- Um novo governo assume sob clima de censura e tensão social;
+- Você se muda para o apartamento 17 do Edifício Primavera;
+- Ao tentar manter sua rotina de entregas, pequenas anomalias se acumulam: portas que levam para o mesmo cômodo, correspondências sem remetente e gravações em fita K7 com a sua própria voz.
 
-Você se muda para o apartamento 17.
+## Sistema de Inventário e interface diegética
 
-E, pouco a pouco, percebe que talvez nenhuma dessas coisas seja independente.
+Para reforçar a imersão nos anos 2000, evitei menus flutuantes genéricos. O inventário foi desenhado como uma interface diegética inspirada em *Zero Parades*, onde os itens têm peso, textura física e descrições técnicas:
 
-Algumas portas não levam para fora.
+```gdscript
+# Gerenciamento de itens inspecionáveis no inventário diegético
+func inspect_item(item_resource: ItemData) -> void:
+    viewport_3d_preview.display_mesh(item_resource.mesh)
+    audio_player.play_sfx(item_resource.handling_sound)
+    item_label.text = item_resource.item_name
+```
 
-Pessoas sabem mais do que deveriam.
+Já foram modelados e renderizados mais de 200 assets no Blender para alimentar esse sistema: chaves antigas, manuais de código, disquetes de 3.5 polegadas e notas manuscritas.
 
-E alguém parece ter um plano para você.
+## O emulador de computador pessoal
 
-Hoje, exatamente um mês depois de começar, estou trabalhando no sistema de inventário. O design está sendo inspirado em ZERO PARADES e já gerei mais de 200 assets para construir essa interface.
+Como a história se passa em outubro de 2003, um dos elementos centrais da mecânica é o computador de tubo do protagonista. Desenvolvi uma interface que simula um sistema operacional da época (inspirado no Windows XP), com prompts de comando, clientes de chat e editores de texto que o jogador precisa operar para desvendar as conspirações da empresa onde trabalha.
 
-Ainda tem muita coisa para implementar, quebrar, refazer e aprender no caminho.
-
-Mas acho que foi justamente isso que me fez gostar tanto do projeto: depois de anos, voltei a escrever, só que agora as histórias também têm código, interface, som, ambientes 3D e podem ser exploradas.
-
-No vídeo, um pouco do que esse primeiro mês virou.
-
-*Estou implementando um emulador de Windows XP para o personagem interagir já que o jogo é ambientado nos anos 2000 e pretendo mostrar daqui um tempo.
-
+Ainda há um longo caminho de física, iluminação e testes pela frente, mas unir escrita literária, shaders, áudio procedural e código no Godot 4 trouxe de volta o prazer puro de construir mundos.
 
 ---
 
 ### Mídia da publicação
 
 ![Mídia do post no LinkedIn](/blog/ha-exatamente-1-mes-decidi-testar-uma-ideia-ate-on/midia-1.jpg)
-

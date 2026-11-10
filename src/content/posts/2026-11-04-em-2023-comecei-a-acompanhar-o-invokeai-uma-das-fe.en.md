@@ -1,49 +1,57 @@
 ---
-title: In 2023, I started following InvokeAI, one of the tools that most caught...
+title: "The evolution of Local Generative AI: From InvokeAI to cloud dependence"
 date: 2026-11-04
 time: "16:19"
-description: In 2023, I started following InvokeAI, one of the tools that most caught my attention for image generation and editing with local models. At the time,...
-tags: [linkedin]
+description: "Reflections on the trajectory of InvokeAI, open-source Stable Diffusion models running on local hardware and the hidden cost of SaaS centralization."
+tags: [ia, opensource, stablediffusion, invokeai, hardware]
 draft: false
-source: 4ab7d2e7af58
+source: 944a2cb36d19
 ---
 
 *Originally published on [LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7523778988717109248/) on 11/04/2026.*
 
-In 2023, I started following InvokeAI, one of the tools that most caught my attention for image generation and editing with local models.
+In 2023, I started closely following **InvokeAI**, one of the most elegant open source toolkits for image generation, inpainting, and canvas editing powered by local Stable Diffusion models.
 
-At the time, I considered InvokeAI one of the finest options for experimenting with generative AI while maintaining high creative control. It allowed working with Stable Diffusion and exploring capabilities still far removed from everyday users, such as small models generating images in under 1 minute*
+Back then, running generative models on personal hardware represented true technical sovereignty: fine-grained control over weights, seeds, samplers, and prompts without intermediaries or corporate guardrails.
 
-I followed the project from its early beginnings, but eventually drifted away from following its day-to-day progress. Recently, I discovered that in October 2025, the founding team of Invoke joined Adobe, integrating into the Firefly Foundry division.
+## The rise of AI on self-hosted hardware
 
-The hosted cloud platform was shut down, but the open source repository remains active on GitHub, maintained by longtime contributors and the community. It is fascinating to observe how this ecosystem has evolved. Tools that originated in the open source community, offering the freedom to run and customize models locally, now see their creators migrate to tech giants.
+InvokeAI stood out early thanks to its clean interface and dedicated focus on technical artists. It enabled rapid generation pipelines even on modest consumer GPUs:
 
-Technology has become widespread, but that does not necessarily mean it has become truly accessible. In many cases, we traded technical complexity for recurring subscriptions and vendor lock-in with proprietary platforms. This prompted me to reflect: how can we deliver the benefits of AI to people who do not work in tech and cannot afford expensive subscriptions?
+```bash
+# Execução local do servidor InvokeAI com aceleração CUDA
+invokeai-web --host 0.0.0.0 --port 9090
+```
 
-Many small business owners manage customer support, product photography, inventory tracking, and marketing entirely on their own, with neither the time nor the resources to automate these operations.
+Recently, the project's founding team was acquired by Adobe, integrating into the Firefly Foundry division. While the original repository remains on GitHub maintained by community contributors, the move reflects a broader industry shift.
 
-With this in mind, I completed a University Extension project in Computer Science at Universidade Paulista (UNIP), focused on applying free AI tools to small businesses. The result was an educational ebook accompanied by an explanatory infographic.
+> Technology has become widespread, but that does not mean it has become sovereign: we traded local hardware control for monthly SaaS invoices and locked vendor APIs.
 
-The material covers:
+## From open source to walled gardens
 
-- Customer service with WhatsApp Business;
-- Product photography and background removal;
-- Inventory classification with ABC Curve analysis;
-- Local SEO and presence optimization on Google;
-- LGPD compliance safeguards and validation of AI-generated responses.
+Tools born from community collaboration are steadily wrapped into proprietary cloud ecosystems. For developers and independent operators, this centralization introduces escalating API fees and deep vendor lock-in.
 
-📘 Free eBook and infographic: https://lnkd.in/dzWZ3yGZ
+The fundamental question is: how do we keep the leverage of automation and AI accessible to individuals and small teams without demanding enterprise cloud budgets?
 
-📊 Community feedback form: https://lnkd.in/d8gvxPFx
+## Practical democratization and community impact
 
-Anyone who can access the material and provide feedback will be directly contributing to this university extension activity. In 2023, my curiosity revolved around discovering what we could build with local models without depending on third-party APIs. Today, I am equally interested in how these technologies can solve real everyday problems for people who may have never heard of Stable Diffusion or InvokeAI.
+Alongside local diffusion testing, I organized a technical case study and guide focused on bringing lightweight AI into small business operations:
+
+- **Customer Care & Triage:** Structuring communication workflows using WhatsApp Business and local automations;
+- **Image Processing:** Background removal and photo catalog cleanup using efficient vision models;
+- **Inventory Classification:** Product turnover analysis using ABC Curve principles tied to simple automation scripts;
+- **Governance & Data Privacy:** Safe data handling practices and systematic verification against model hallucinations.
+
+The complete material was compiled as a [free PDF eBook](https://lnkd.in/dzWZ3yGZ), alongside an open [feedback form](https://lnkd.in/d8gvxPFx).
+
+My curiosity started with figuring out what could be built and executed locally without third-party APIs; today, the most compelling challenge is using that same sovereign technology to eliminate practical everyday friction.
 
 ---
 
-### Post media
+### Mídia da publicação
 
-![LinkedIn post media](/blog/em-2023-comecei-a-acompanhar-o-invokeai-uma-das-fe/midia-1.jpg)
+![Mídia do post no LinkedIn](/blog/em-2023-comecei-a-acompanhar-o-invokeai-uma-das-fe/midia-1.jpg)
 
-![LinkedIn post media](/blog/em-2023-comecei-a-acompanhar-o-invokeai-uma-das-fe/midia-2.jpg)
+![Mídia do post no LinkedIn](/blog/em-2023-comecei-a-acompanhar-o-invokeai-uma-das-fe/midia-2.jpg)
 
-![LinkedIn post media](/blog/em-2023-comecei-a-acompanhar-o-invokeai-uma-das-fe/midia-3.jpg)
+![Mídia do post no LinkedIn](/blog/em-2023-comecei-a-acompanhar-o-invokeai-uma-das-fe/midia-3.jpg)
