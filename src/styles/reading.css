@@ -1,8 +1,145 @@
-/* Reading mode on a post (.reading is set on the blog frame by BlogPost): the bar, the "on this page"
-   index and the footer step aside, and the text gets a bigger size and a line of about 65 characters.
-   The bar keeps its space (visibility, not display) so the text does not move when the mode changes. */
-.reading-btn { margin-top: 20px; }
-.reading .nav { visibility: hidden; pointer-events: none; }
-.reading .toc, .reading .ft-zone, .reading .post-bottom { display: none; }
-.reading .prose { max-width: 65ch; font-size: 20px; }
-@media (max-width: 720px) { .reading .prose { font-size: 18px; } }
+/* Reading mode on a post (.reading is set on the blog frame by BlogPost) */
+
+.reading-btn {
+  margin-top: 16px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reading-btn[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* Floating exit pill in reading mode */
+.reading-exit-pill {
+  position: fixed;
+  top: 20px;
+  right: 24px;
+  z-index: 120;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 9999px;
+  background: var(--card-bg, rgba(20, 20, 24, 0.9));
+  border: 1px solid var(--line, rgba(255, 255, 255, 0.15));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--fg-0, #fff);
+  font: 500 13px/1 var(--font-sans);
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reading-exit-pill:hover {
+  background: var(--accent, #6366f1);
+  border-color: var(--accent, #6366f1);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.reading-exit-pill kbd {
+  font: 600 10.5px/1 var(--font-mono, monospace);
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+/* Hide navigation and secondary distractions */
+.reading .nav {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.reading .toc,
+.reading .ft-zone,
+.reading .post-bottom,
+.reading .post-back,
+.reading .likebar {
+  display: none !important;
+}
+
+/* Transform 2-column split into centered single-column zen reader */
+.reading .post-layout {
+  max-width: 820px;
+  margin: 0 auto;
+  padding-top: 48px;
+  padding-bottom: 96px;
+}
+
+.reading .post-split {
+  display: flex;
+  flex-direction: column;
+  max-width: 68ch;
+  margin: 0 auto;
+  gap: 32px;
+  align-items: center;
+}
+
+.reading .post-editorial {
+  position: static;
+  max-height: none;
+  overflow-y: visible;
+  padding-right: 0;
+  border-right: none;
+  width: 100%;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+}
+
+.reading .post-h {
+  font: 600 clamp(30px, 4.4vw, 46px)/1.2 var(--font-sans);
+  text-align: center;
+  margin: 6px auto;
+  max-width: 26ch;
+}
+
+.reading .post-meta {
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 0 auto;
+}
+
+.reading .reading-btn {
+  margin: 8px auto 0;
+}
+
+.reading .post-body {
+  width: 100%;
+}
+
+.reading .prose {
+  max-width: 68ch;
+  margin: 0 auto;
+  font-size: 21px;
+  line-height: 1.85;
+  color: var(--fg-1);
+  letter-spacing: -0.003em;
+}
+
+.reading .prose p,
+.reading .prose li {
+  color: var(--fg-1);
+}
+
+@media (max-width: 720px) {
+  .reading .post-layout {
+    padding-top: 24px;
+    padding-bottom: 48px;
+  }
+  .reading-exit-pill {
+    top: 12px;
+    right: 12px;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  .reading .prose {
+    font-size: 18.5px;
+    line-height: 1.75;
+  }
+}
