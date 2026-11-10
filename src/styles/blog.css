@@ -100,7 +100,7 @@
   align-items: center;
   gap: 8px;
   color: var(--fg-3);
-  font: 500 13px/1 var(--font-mono);
+  font: 500 13px/1.4 var(--font-mono);
   margin-bottom: 12px;
   white-space: nowrap;
 }
@@ -110,7 +110,9 @@
   font-variant-numeric: tabular-nums;
 }
 .blog-card-dot {
-  opacity: 0.45;
+  display: inline-block;
+  margin: 0 4px;
+  opacity: 0.6;
   user-select: none;
 }
 .blog-card-read {
@@ -434,7 +436,9 @@
   white-space: nowrap;
 }
 .teaser-dot {
-  opacity: 0.45;
+  display: inline-block;
+  margin: 0 4px;
+  opacity: 0.6;
   user-select: none;
 }
 .teaser-h {
