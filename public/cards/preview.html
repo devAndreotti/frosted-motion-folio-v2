@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Preview: Artes Vetoriais SVG dos Cards de Projetos</title>
+  <title>Preview: Artes Vetoriais SVG dos Cards do Hero</title>
   <style>
     :root {
       --accent: #a855f7;
       --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-      --bg: #09080d;
-      --card-bg: #13111a;
+      --bg: #07060a;
+      --card-bg: #110f18;
       --fg-1: #ffffff;
       --fg-2: #a1a1aa;
       --border: rgba(255, 255, 255, 0.1);
@@ -63,19 +63,19 @@
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 24px;
-      max-width: 1200px;
+      max-width: 1400px;
       width: 100%;
     }
     .card-item {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 20px;
+      border-radius: 24px;
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.6);
       transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s;
     }
     .card-item:hover {
@@ -125,8 +125,8 @@
 </head>
 <body>
   <header>
-    <h1>Artes Vetoriais SVG para as Cartas do Hero</h1>
-    <p>Substituem prints de tela pequenos por ilustrações vetoriais nítidas que reagem à cor de destaque (CSS <code>var(--accent)</code>).</p>
+    <h1>Artes Vetoriais SVG dos Cards do Hero (Versão Elevada)</h1>
+    <p>Ilustrações de alta fidelidade técnica, ricas em geometria isométrica, brilho e reativas à cor ativa (CSS <code>var(--accent)</code>).</p>
     <div class="theme-bar">
       <button class="color-btn active" style="background: #a855f7;" onclick="setAccent('#a855f7', this)" title="Roxo (Padrão)"></button>
       <button class="color-btn" style="background: #3b82f6;" onclick="setAccent('#3b82f6', this)" title="Azul"></button>
@@ -143,62 +143,106 @@
       <div class="svg-container">
         <svg viewBox="0 0 360 480" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <radialGradient id="gp-glow" cx="50%" cy="40%" r="60%">
-              <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.3" />
+            <radialGradient id="gp-ambient" cx="50%" cy="38%" r="65%">
+              <stop offset="0%" stopColor="var(--accent, #eab308)" stopOpacity="0.32" />
+              <stop offset="45%" stopColor="var(--accent, #eab308)" stopOpacity="0.08" />
               <stop offset="100%" stopColor="#000000" stopOpacity="0" />
             </radialGradient>
-            <linearGradient id="gp-gold" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#fef08a" /><stop offset="40%" stopColor="#eab308" /><stop offset="100%" stopColor="#854d0e" />
+            <radialGradient id="gp-gleam" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.9" />
+              <stop offset="30%" stopColor="#fef08a" stopOpacity="0.6" />
+              <stop offset="100%" stopColor="#eab308" stopOpacity="0" />
+            </radialGradient>
+            <linearGradient id="gp-gold-top" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#fffbeb" /><stop offset="35%" stopColor="#fef08a" /><stop offset="70%" stopColor="#eab308" /><stop offset="100%" stopColor="#ca8a04" />
             </linearGradient>
-            <linearGradient id="gp-curve" x1="0" y1="1" x2="1" y2="0">
-              <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.2" /><stop offset="100%" stopColor="var(--accent)" stopOpacity="1" />
+            <linearGradient id="gp-gold-side" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#ca8a04" /><stop offset="50%" stopColor="#a16207" /><stop offset="100%" stopColor="#713f12" />
             </linearGradient>
-            <pattern id="gp-grid" width="24" height="24" patternUnits="userSpaceOnUse">
-              <path d="M 24 0 L 0 0 0 24" fill="none" stroke="rgba(255, 255, 255, 0.05)" strokeWidth="1" />
+            <linearGradient id="gp-gold-face" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#eab308" /><stop offset="50%" stopColor="#ca8a04" /><stop offset="100%" stopColor="#854d0e" />
+            </linearGradient>
+            <linearGradient id="gp-curve-grad" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0%" stopColor="var(--accent, #eab308)" stopOpacity="0.2" /><stop offset="50%" stopColor="#fde047" stopOpacity="0.85" /><stop offset="100%" stopColor="#ffffff" stopOpacity="1" />
+            </linearGradient>
+            <linearGradient id="gp-area-grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="var(--accent, #eab308)" stopOpacity="0.24" /><stop offset="100%" stopColor="var(--accent, #eab308)" stopOpacity="0" />
+            </linearGradient>
+            <pattern id="gp-isometric-grid" width="30" height="17.32" patternUnits="userSpaceOnUse">
+              <path d="M 0 8.66 L 15 0 L 30 8.66 L 15 17.32 Z" fill="none" stroke="rgba(255, 255, 255, 0.04)" strokeWidth="0.8" />
             </pattern>
           </defs>
-          <rect width="360" height="480" fill="#0d0c07" />
-          <rect width="360" height="480" fill="url(#gp-grid)" />
-          <circle cx="180" cy="200" r="160" fill="url(#gp-glow)" />
-          <circle cx="180" cy="190" r="130" stroke="rgba(234, 179, 8, 0.15)" strokeWidth="1" strokeDasharray="4 6" />
-          <g transform="translate(32, 36)">
-            <rect width="118" height="24" rx="12" fill="rgba(234, 179, 8, 0.12)" stroke="rgba(234, 179, 8, 0.3)" />
-            <circle cx="12" cy="12" r="4" fill="var(--accent)" />
-            <text x="24" y="16" fill="#fef08a" fontSize="10.5" fontFamily="var(--font-mono)" fontWeight="600">YIELD +18.4%</text>
+          <rect width="360" height="480" fill="#0b0a06" />
+          <rect width="360" height="480" fill="url(#gp-isometric-grid)" />
+          <circle cx="180" cy="190" r="165" fill="url(#gp-ambient)" />
+          <circle cx="180" cy="180" r="138" stroke="rgba(234, 179, 8, 0.16)" strokeWidth="1" strokeDasharray="3 6" />
+          <circle cx="180" cy="180" r="105" stroke="rgba(255, 255, 255, 0.08)" strokeWidth="1" />
+          <g transform="translate(28, 30)">
+            <rect width="134" height="26" rx="13" fill="rgba(234, 179, 8, 0.12)" stroke="rgba(234, 179, 8, 0.35)" />
+            <circle cx="14" cy="13" r="4" fill="var(--accent, #eab308)" />
+            <text x="26" y="17" fill="#fef08a" fontSize="10.5" fontFamily="var(--font-mono)" fontWeight="700">YIELD +18.42%</text>
           </g>
-          <g opacity="0.65" transform="translate(40, 110)">
-            <line x1="20" y1="20" x2="20" y2="90" stroke="rgba(234, 179, 8, 0.4)" strokeWidth="1" />
-            <rect x="15" y="38" width="10" height="35" rx="2" fill="url(#gp-gold)" />
-            <line x1="55" y1="10" x2="55" y2="85" stroke="rgba(34, 197, 94, 0.4)" strokeWidth="1" />
-            <rect x="50" y="24" width="10" height="44" rx="2" fill="#22c55e" opacity="0.8" />
-            <line x1="90" y1="30" x2="90" y2="105" stroke="rgba(234, 179, 8, 0.4)" strokeWidth="1" />
-            <rect x="85" y="48" width="10" height="28" rx="2" fill="url(#gp-gold)" />
+          <g transform="translate(304, 43)">
+            <circle r="18" fill="none" stroke="rgba(255, 255, 255, 0.1)" strokeWidth="4" />
+            <circle r="18" fill="none" stroke="#eab308" strokeWidth="4" strokeDasharray="70 120" strokeDashoffset="25" />
+            <circle r="18" fill="none" stroke="#22c55e" strokeWidth="4" strokeDasharray="35 120" strokeDashoffset="-45" />
+            <text x="0" y="3" textAnchor="middle" fill="#fef08a" fontSize="8" fontFamily="var(--font-mono)" fontWeight="700">AU</text>
           </g>
-          <path d="M 32 300 Q 90 290 140 240 T 250 160 T 328 100" stroke="url(#gp-curve)" strokeWidth="3.5" strokeLinecap="round" />
-          <circle cx="140" cy="240" r="5" fill="#fef08a" stroke="#ca8a04" strokeWidth="2" />
-          <circle cx="250" cy="160" r="5" fill="#fef08a" stroke="#ca8a04" strokeWidth="2" />
-          <circle cx="328" cy="100" r="6" fill="#ffffff" stroke="var(--accent)" strokeWidth="2.5" />
+          <g opacity="0.6" transform="translate(32, 90)">
+            <line x1="0" y1="30" x2="296" y2="30" stroke="rgba(255, 255, 255, 0.05)" strokeWidth="1" strokeDasharray="2 4" />
+            <line x1="0" y1="70" x2="296" y2="70" stroke="rgba(255, 255, 255, 0.05)" strokeWidth="1" strokeDasharray="2 4" />
+            <line x1="24" y1="15" x2="24" y2="95" stroke="rgba(234, 179, 8, 0.5)" strokeWidth="1.2" />
+            <rect x="18" y="34" width="12" height="42" rx="2" fill="url(#gp-gold-top)" />
+            <line x1="68" y1="8" x2="68" y2="80" stroke="rgba(34, 197, 94, 0.6)" strokeWidth="1.2" />
+            <rect x="62" y="20" width="12" height="46" rx="2" fill="#22c55e" opacity="0.9" />
+            <line x1="112" y1="25" x2="112" y2="105" stroke="rgba(234, 179, 8, 0.5)" strokeWidth="1.2" />
+            <rect x="106" y="45" width="12" height="34" rx="2" fill="url(#gp-gold-face)" />
+            <line x1="262" y1="12" x2="262" y2="78" stroke="rgba(34, 197, 94, 0.6)" strokeWidth="1.2" />
+            <rect x="256" y="18" width="12" height="40" rx="2" fill="#22c55e" opacity="0.9" />
+          </g>
+          <path d="M 28 305 C 80 295, 120 280, 160 225 C 200 170, 250 145, 332 88 L 332 325 L 28 325 Z" fill="url(#gp-area-grad)" />
+          <path d="M 28 305 C 80 295, 120 280, 160 225 C 200 170, 250 145, 332 88" stroke="url(#gp-curve-grad)" strokeWidth="3.2" strokeLinecap="round" />
+          <circle cx="160" cy="225" r="5" fill="#fef08a" stroke="#a16207" strokeWidth="2" />
+          <circle cx="260" cy="140" r="5.5" fill="#fef08a" stroke="#ca8a04" strokeWidth="2" />
+          <circle cx="332" cy="88" r="7" fill="#ffffff" stroke="var(--accent, #eab308)" strokeWidth="2.5" />
+          <circle cx="332" cy="88" r="14" fill="url(#gp-gleam)" />
           <g transform="translate(180, 205)">
-            <polygon points="0,-32 58,-14 0,6 -58,-14" fill="#fef08a" opacity="0.95" />
-            <polygon points="58,-14 58,16 0,36 0,6" fill="#ca8a04" />
-            <polygon points="-58,-14 0,6 0,36 -58,16" fill="#854d0e" />
-            <line x1="0" y1="6" x2="0" y2="36" stroke="#fef08a" strokeWidth="1.5" opacity="0.6" />
-            <text x="0" y="-10" textAnchor="middle" fill="#854d0e" fontSize="8" fontFamily="var(--font-mono)" fontWeight="700">AU 999.9</text>
+            <g transform="translate(-40, 20)">
+              <polygon points="0,-16 48,-2 0,12 -48,-2" fill="url(#gp-gold-top)" opacity="0.8" />
+              <polygon points="48,-2 48,16 0,30 0,12" fill="url(#gp-gold-side)" />
+              <polygon points="-48,-2 0,12 0,30 -48,16" fill="url(#gp-gold-face)" />
+            </g>
+            <g transform="translate(40, 20)">
+              <polygon points="0,-16 48,-2 0,12 -48,-2" fill="url(#gp-gold-top)" opacity="0.8" />
+              <polygon points="48,-2 48,16 0,30 0,12" fill="url(#gp-gold-side)" />
+              <polygon points="-48,-2 0,12 0,30 -48,16" fill="url(#gp-gold-face)" />
+            </g>
+            <g transform="translate(0, -6)">
+              <polygon points="0,-24 64,-5 0,14 -64,-5" fill="url(#gp-gold-top)" />
+              <polygon points="64,-5 64,18 0,37 0,14" fill="url(#gp-gold-side)" />
+              <polygon points="-64,-5 0,14 0,37 -64,18" fill="url(#gp-gold-face)" />
+              <line x1="0" y1="14" x2="0" y2="37" stroke="#ffffff" strokeWidth="1.5" opacity="0.6" />
+              <text x="0" y="-3" textAnchor="middle" fill="#713f12" fontSize="9" fontFamily="var(--font-mono)" fontWeight="800">FINE GOLD 999.9</text>
+              <circle cx="64" cy="-5" r="9" fill="url(#gp-gleam)" />
+            </g>
           </g>
-          <g transform="translate(32, 360)">
-            <rect width="296" height="58" rx="14" fill="rgba(20, 18, 12, 0.75)" stroke="rgba(234, 179, 8, 0.25)" />
-            <text x="18" y="24" fill="rgba(255, 255, 255, 0.5)" fontSize="10" fontFamily="var(--font-mono)">PORTFOLIO RISK</text>
-            <text x="18" y="44" fill="#fef08a" fontSize="14" fontFamily="var(--font-mono)" fontWeight="700">SHARPE 2.45</text>
-            <line x1="148" y1="12" x2="148" y2="46" stroke="rgba(255, 255, 255, 0.1)" />
-            <text x="166" y="24" fill="rgba(255, 255, 255, 0.5)" fontSize="10" fontFamily="var(--font-mono)">ALLOCATION</text>
-            <text x="166" y="44" fill="var(--accent)" fontSize="14" fontFamily="var(--font-mono)" fontWeight="700">BALANCED</text>
+          <g transform="translate(28, 355)">
+            <rect width="304" height="66" rx="16" fill="rgba(20, 18, 12, 0.85)" stroke="rgba(234, 179, 8, 0.28)" />
+            <text x="18" y="24" fill="rgba(255, 255, 255, 0.45)" fontSize="9.5" fontFamily="var(--font-mono)">MAX SHARPE</text>
+            <text x="18" y="46" fill="#fef08a" fontSize="15" fontFamily="var(--font-mono)" fontWeight="700">2.45</text>
+            <line x1="105" y1="14" x2="105" y2="52" stroke="rgba(255, 255, 255, 0.1)" />
+            <text x="122" y="24" fill="rgba(255, 255, 255, 0.45)" fontSize="9.5" fontFamily="var(--font-mono)">VOLATILITY</text>
+            <text x="122" y="46" fill="#22c55e" fontSize="15" fontFamily="var(--font-mono)" fontWeight="700">4.18%</text>
+            <line x1="208" y1="14" x2="208" y2="52" stroke="rgba(255, 255, 255, 0.1)" />
+            <text x="224" y="24" fill="rgba(255, 255, 255, 0.45)" fontSize="9.5" fontFamily="var(--font-mono)">FRONTIER</text>
+            <text x="224" y="46" fill="var(--accent, #eab308)" fontSize="15" fontFamily="var(--font-mono)" fontWeight="700">OPTIMAL</text>
           </g>
         </svg>
       </div>
       <div class="card-info">
         <span class="badge">CASE PRINCIPAL</span>
         <h3 class="title">Gold Portfolio Analyzer</h3>
-        <p class="sub">Curvas de risco, alocação de ativos e simulação de rentabilidade.</p>
+        <p class="sub">Stack de barras de ouro 3D isométrico, curva de rendimento e candlesticks.</p>
       </div>
     </div>
 
@@ -207,48 +251,58 @@
       <div class="svg-container">
         <svg viewBox="0 0 360 480" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <radialGradient id="ss-glow" cx="50%" cy="45%" r="65%">
-              <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.35" />
+            <radialGradient id="ss-ambient" cx="50%" cy="42%" r="65%">
+              <stop offset="0%" stopColor="var(--accent, #3b82f6)" stopOpacity="0.35" />
+              <stop offset="50%" stopColor="var(--accent, #3b82f6)" stopOpacity="0.07" />
               <stop offset="100%" stopColor="#000000" stopOpacity="0" />
             </radialGradient>
-            <linearGradient id="ss-wave" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#38bdf8" /><stop offset="50%" stopColor="var(--accent)" /><stop offset="100%" stopColor="#818cf8" />
+            <linearGradient id="ss-wave-a" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#38bdf8" /><stop offset="50%" stopColor="var(--accent, #3b82f6)" /><stop offset="100%" stopColor="#c084fc" />
             </linearGradient>
-            <pattern id="ss-grid" width="24" height="24" patternUnits="userSpaceOnUse">
-              <circle cx="12" cy="12" r="1" fill="rgba(255, 255, 255, 0.08)" />
+            <linearGradient id="ss-sun-core" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#fde047" /><stop offset="100%" stopColor="#ea580c" />
+            </linearGradient>
+            <pattern id="ss-dot-grid" width="22" height="22" patternUnits="userSpaceOnUse">
+              <circle cx="11" cy="11" r="1.1" fill="rgba(255, 255, 255, 0.07)" />
             </pattern>
           </defs>
-          <rect width="360" height="480" fill="#080c16" />
-          <rect width="360" height="480" fill="url(#ss-grid)" />
-          <circle cx="180" cy="210" r="160" fill="url(#ss-glow)" />
-          <g transform="translate(32, 36)">
-            <rect width="132" height="24" rx="12" fill="rgba(59, 130, 246, 0.15)" stroke="rgba(59, 130, 246, 0.3)" />
-            <circle cx="14" cy="12" r="4" fill="#38bdf8" />
-            <text x="26" y="16" fill="#bfdbfe" fontSize="10" fontFamily="var(--font-mono)" fontWeight="600">FOCUS 25:00 MIN</text>
+          <rect width="360" height="480" fill="#060913" />
+          <rect width="360" height="480" fill="url(#ss-dot-grid)" />
+          <circle cx="180" cy="195" r="165" fill="url(#ss-ambient)" />
+          <g transform="translate(28, 30)">
+            <rect width="144" height="26" rx="13" fill="rgba(59, 130, 246, 0.15)" stroke="rgba(59, 130, 246, 0.35)" />
+            <circle cx="14" cy="13" r="4" fill="#38bdf8" />
+            <text x="26" y="17" fill="#bfdbfe" fontSize="10.5" fontFamily="var(--font-mono)" fontWeight="700">SYNCED · 25:00 MIN</text>
           </g>
-          <g transform="translate(180, 200)">
-            <circle r="115" stroke="rgba(59, 130, 246, 0.2)" strokeWidth="1.5" strokeDasharray="3 6" />
-            <circle r="92" stroke="rgba(255, 255, 255, 0.1)" strokeWidth="1" />
-            <circle cx="0" cy="-115" r="7" fill="#fbbf24" stroke="#d97706" strokeWidth="2" />
-            <polygon points="0,-42 36,-21 36,21 0,42 -36,21 -36,-21" fill="rgba(30, 58, 138, 0.6)" stroke="#60a5fa" strokeWidth="2" />
-            <circle r="10" fill="#ffffff" />
-            <circle r="4" fill="var(--accent)" />
+          <g transform="translate(180, 195)">
+            <circle r="122" stroke="rgba(59, 130, 246, 0.18)" strokeWidth="1" strokeDasharray="2 6" />
+            <circle r="102" stroke="rgba(255, 255, 255, 0.08)" strokeWidth="1.2" />
+            <path d="M 0 -102 A 102 102 0 0 1 72 -72 L 0 0 Z" fill="rgba(56, 189, 248, 0.12)" stroke="rgba(56, 189, 248, 0.4)" strokeWidth="1.5" />
+            <circle cx="0" cy="-122" r="9" fill="url(#ss-sun-core)" />
+            <path d="M -5 120 A 7 7 0 0 0 5 129 A 5 5 0 0 1 -5 120" fill="#93c5fd" />
+            <polygon points="0,-45 39,-22 39,22 0,45 -39,22 -39,-22" fill="rgba(15, 23, 42, 0.9)" stroke="#60a5fa" strokeWidth="2.2" />
+            <polygon points="0,-32 28,-16 28,16 0,32 -28,16 -28,-16" fill="rgba(59, 130, 246, 0.25)" stroke="#38bdf8" strokeWidth="1" />
+            <circle r="12" fill="#ffffff" />
+            <circle r="5" fill="var(--accent, #3b82f6)" />
           </g>
-          <path d="M 28 320 C 70 280, 110 350, 160 300 C 210 250, 260 340, 332 290" stroke="url(#ss-wave)" strokeWidth="3" strokeLinecap="round" />
-          <g transform="translate(32, 370)">
-            <rect width="296" height="52" rx="12" fill="rgba(15, 23, 42, 0.8)" stroke="rgba(59, 130, 246, 0.25)" />
-            <rect x="18" y="16" width="18" height="18" rx="5" fill="rgba(59, 130, 246, 0.2)" stroke="#60a5fa" />
-            <path d="M 22 25 L 25 28 L 32 20" stroke="#93c5fd" strokeWidth="2" strokeLinecap="round" />
-            <text x="44" y="29" fill="#f1f5f9" fontSize="12" fontFamily="var(--font-sans)" fontWeight="500">Deep Work Session</text>
-            <rect x="216" y="16" width="64" height="20" rx="10" fill="rgba(56, 189, 248, 0.15)" />
-            <text x="248" y="30" textAnchor="middle" fill="#38bdf8" fontSize="10.5" fontFamily="var(--font-mono)" fontWeight="700">84%</text>
+          <path d="M 28 318 C 72 265, 115 365, 168 290 C 215 220, 265 345, 332 278" stroke="url(#ss-wave-a)" strokeWidth="3.4" strokeLinecap="round" />
+          <g transform="translate(28, 355)">
+            <rect width="304" height="66" rx="16" fill="rgba(15, 23, 42, 0.88)" stroke="rgba(59, 130, 246, 0.3)" />
+            <rect x="18" y="18" width="28" height="28" rx="8" fill="rgba(59, 130, 246, 0.2)" stroke="#60a5fa" strokeWidth="1.5" />
+            <path d="M 24 32 L 29 37 L 38 26" stroke="#93c5fd" strokeWidth="2.4" strokeLinecap="round" />
+            <text x="56" y="30" fill="#f8fafc" fontSize="13" fontFamily="var(--font-sans)" fontWeight="600">Sprint Review & Architecture</text>
+            <text x="56" y="47" fill="rgba(148, 163, 184, 0.8)" fontSize="10.5" fontFamily="var(--font-mono)">HABIT STREAK · 28 DAYS</text>
+            <g transform="translate(236, 20)">
+              <rect width="52" height="24" rx="12" fill="rgba(56, 189, 248, 0.16)" stroke="rgba(56, 189, 248, 0.3)" />
+              <text x="26" y="16" textAnchor="middle" fill="#38bdf8" fontSize="11" fontFamily="var(--font-mono)" fontWeight="700">92%</text>
+            </g>
           </g>
         </svg>
       </div>
       <div class="card-info">
         <span class="badge">PRODUTIVIDADE</span>
         <h3 class="title">Self-Sync Daily</h3>
-        <p class="sub">Rotina de foco, relógio circadiano e diário de energia diária.</p>
+        <p class="sub">Relógio circadiano orbital 24h, setor de foco ativo e onda de energia biológica.</p>
       </div>
     </div>
 
@@ -257,37 +311,49 @@
       <div class="svg-container">
         <svg viewBox="0 0 360 480" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <radialGradient id="ca-glow" cx="50%" cy="42%" r="65%">
-              <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.32" />
+            <radialGradient id="ca-ambient" cx="50%" cy="40%" r="65%">
+              <stop offset="0%" stopColor="var(--accent, #22c55e)" stopOpacity="0.35" />
+              <stop offset="50%" stopColor="var(--accent, #22c55e)" stopOpacity="0.07" />
               <stop offset="100%" stopColor="#000000" stopOpacity="0" />
             </radialGradient>
-            <pattern id="ca-grid" width="24" height="24" patternUnits="userSpaceOnUse">
-              <path d="M 24 0 L 0 0 0 24" fill="none" stroke="rgba(34, 197, 94, 0.06)" strokeWidth="1" />
+            <linearGradient id="ca-blade-grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#f0fdf4" /><stop offset="35%" stopColor="#86efac" /><stop offset="70%" stopColor="#22c55e" /><stop offset="100%" stopColor="#14532d" />
+            </linearGradient>
+            <linearGradient id="ca-glass-dome" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#86efac" stopOpacity="0.35" /><stop offset="60%" stopColor="#22c55e" stopOpacity="0.12" /><stop offset="100%" stopColor="#14532d" stopOpacity="0.4" />
+            </linearGradient>
+            <pattern id="ca-grid-fine" width="24" height="24" patternUnits="userSpaceOnUse">
+              <path d="M 24 0 L 0 0 0 24" fill="none" stroke="rgba(34, 197, 94, 0.05)" strokeWidth="0.8" />
             </pattern>
           </defs>
-          <rect width="360" height="480" fill="#051009" />
-          <rect width="360" height="480" fill="url(#ca-grid)" />
-          <circle cx="180" cy="200" r="160" fill="url(#ca-glow)" />
-          <g transform="translate(32, 36)">
-            <rect width="138" height="24" rx="12" fill="rgba(34, 197, 94, 0.15)" stroke="rgba(34, 197, 94, 0.35)" />
-            <circle cx="14" cy="12" r="4" fill="#4ade80" />
-            <text x="26" y="16" fill="#bbf7d0" fontSize="10" fontFamily="var(--font-mono)" fontWeight="600">MODEL: GEMINI AI</text>
+          <rect width="360" height="480" fill="#040d07" />
+          <rect width="360" height="480" fill="url(#ca-grid-fine)" />
+          <circle cx="180" cy="190" r="165" fill="url(#ca-ambient)" />
+          <g transform="translate(28, 30)">
+            <rect width="144" height="26" rx="13" fill="rgba(34, 197, 94, 0.15)" stroke="rgba(34, 197, 94, 0.35)" />
+            <circle cx="14" cy="13" r="4" fill="#4ade80" />
+            <text x="26" y="17" fill="#bbf7d0" fontSize="10.5" fontFamily="var(--font-mono)" fontWeight="700">MODEL · GEMINI AI</text>
           </g>
-          <g transform="translate(180, 205)">
-            <ellipse cx="0" cy="42" rx="76" ry="12" fill="rgba(22, 101, 52, 0.6)" stroke="#4ade80" strokeWidth="1.8" />
-            <line x1="-80" y1="44" x2="80" y2="44" stroke="#86efac" strokeWidth="2" strokeLinecap="round" />
-            <path d="M -60 38 C -60 -20, 60 -20, 60 38 Z" fill="rgba(34, 197, 94, 0.2)" stroke="#86efac" strokeWidth="2.2" />
-            <circle cx="0" cy="-24" r="7" fill="#86efac" stroke="#15803d" strokeWidth="2" />
-            <path d="M -35,-8 Q -30,-8 -30,-14 Q -30,-8 -25,-8 Q -30,-8 -30,-2 Q -30,-8 -35,-8 Z" fill="#bbf7d0" />
-            <path d="M 32,5 Q 36,5 36,0 Q 36,5 40,5 Q 36,5 36,10 Q 36,5 32,5 Z" fill="#bbf7d0" />
+          <g opacity="0.55" stroke="rgba(74, 222, 128, 0.4)" strokeWidth="1.2">
+            <line x1="45" y1="110" x2="105" y2="150" /><line x1="105" y1="150" x2="180" y2="120" /><line x1="180" y1="120" x2="255" y2="150" /><line x1="255" y1="150" x2="315" y2="110" />
+            <line x1="105" y1="150" x2="135" y2="240" /><line x1="255" y1="150" x2="225" y2="240" /><line x1="135" y1="240" x2="180" y2="290" /><line x1="225" y1="240" x2="180" y2="290" />
           </g>
-          <g transform="translate(32, 360)">
-            <rect width="296" height="58" rx="14" fill="rgba(8, 28, 16, 0.85)" stroke="rgba(74, 222, 128, 0.3)" />
-            <text x="18" y="24" fill="rgba(187, 247, 208, 0.6)" fontSize="10" fontFamily="var(--font-mono)">INPUT INGREDIENTS</text>
-            <text x="18" y="44" fill="#f0fdf4" fontSize="13" fontFamily="var(--font-mono)" fontWeight="600">TOMATO · BASIL · PASTA</text>
-            <g transform="translate(242, 18)">
-              <rect width="40" height="22" rx="6" fill="#22c55e" />
-              <text x="20" y="15" textAnchor="middle" fill="#052e16" fontSize="10.5" fontFamily="var(--font-mono)" fontWeight="700">GEN</text>
+          <g transform="translate(180, 195)">
+            <ellipse cx="0" cy="50" rx="88" ry="15" fill="rgba(20, 83, 45, 0.7)" stroke="#4ade80" strokeWidth="2" />
+            <line x1="-92" y1="52" x2="92" y2="52" stroke="#86efac" strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M -70 46 C -70 -26, 70 -26, 70 46 Z" fill="url(#ca-glass-dome)" stroke="#86efac" strokeWidth="2.4" />
+            <circle cx="0" cy="-30" r="8" fill="#86efac" stroke="#14532d" strokeWidth="2.2" />
+            <g transform="translate(0, 12) rotate(-32)">
+              <path d="M -2,-38 L 10,-35 L 12,18 L -2,22 Z" fill="url(#ca-blade-grad)" stroke="#ffffff" strokeWidth="0.8" />
+              <rect x="-4" y="22" width="7" height="22" rx="2.5" fill="#0f291e" stroke="#22c55e" strokeWidth="1" />
+            </g>
+          </g>
+          <g transform="translate(28, 355)">
+            <rect width="304" height="66" rx="16" fill="rgba(8, 28, 16, 0.9)" stroke="rgba(74, 222, 128, 0.3)" />
+            <text x="18" y="51" fill="#f0fdf4" fontSize="13.5" fontFamily="var(--font-mono)" fontWeight="700">PESTO DI POMODORO</text>
+            <g transform="translate(244, 20)">
+              <rect width="44" height="26" rx="8" fill="#22c55e" />
+              <text x="22" y="17" textAnchor="middle" fill="#052e16" fontSize="11" fontFamily="var(--font-mono)" fontWeight="800">GEN</text>
             </g>
           </g>
         </svg>
@@ -295,7 +361,7 @@
       <div class="card-info">
         <span class="badge">IA APLICADA</span>
         <h3 class="title">Chef AI</h3>
-        <p class="sub">Geração generativa de receitas guiada por ingredientes e n8n.</p>
+        <p class="sub">Cloche gastronômico de vidro, faca Damascus flutuante e rede de sinapses.</p>
       </div>
     </div>
 
@@ -304,45 +370,108 @@
       <div class="svg-container">
         <svg viewBox="0 0 360 480" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <radialGradient id="gw-glow" cx="50%" cy="40%" r="65%">
-              <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.35" />
+            <radialGradient id="gw-ambient" cx="50%" cy="38%" r="65%">
+              <stop offset="0%" stopColor="var(--accent, #a855f7)" stopOpacity="0.35" />
+              <stop offset="50%" stopColor="var(--accent, #a855f7)" stopOpacity="0.08" />
               <stop offset="100%" stopColor="#000000" stopOpacity="0" />
             </radialGradient>
-            <pattern id="gw-grid" width="24" height="24" patternUnits="userSpaceOnUse">
-              <path d="M 24 0 L 0 0 0 24" fill="none" stroke="rgba(168, 85, 247, 0.08)" strokeWidth="1" />
+            <linearGradient id="gw-main-branch" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#c084fc" /><stop offset="50%" stopColor="var(--accent, #a855f7)" /><stop offset="100%" stopColor="#6366f1" />
+            </linearGradient>
+            <linearGradient id="gw-feat-branch" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#38bdf8" /><stop offset="100%" stopColor="#0284c7" />
+            </linearGradient>
+            <pattern id="gw-tech-grid" width="22" height="22" patternUnits="userSpaceOnUse">
+              <path d="M 22 0 L 0 0 0 22" fill="none" stroke="rgba(168, 85, 247, 0.06)" strokeWidth="0.8" />
             </pattern>
           </defs>
-          <rect width="360" height="480" fill="#0c0615" />
-          <rect width="360" height="480" fill="url(#gw-grid)" />
-          <circle cx="180" cy="190" r="160" fill="url(#gw-glow)" />
-          <g transform="translate(32, 36)">
-            <rect width="138" height="24" rx="12" fill="rgba(168, 85, 247, 0.16)" stroke="rgba(168, 85, 247, 0.35)" />
-            <circle cx="14" cy="12" r="4" fill="#c084fc" />
-            <text x="26" y="16" fill="#f3e8ff" fontSize="10" fontFamily="var(--font-mono)" fontWeight="600">BRANCH: MAIN</text>
+          <rect width="360" height="480" fill="#090412" />
+          <rect width="360" height="480" fill="url(#gw-tech-grid)" />
+          <circle cx="180" cy="190" r="165" fill="url(#gw-ambient)" />
+          <g transform="translate(28, 30)">
+            <rect width="148" height="26" rx="13" fill="rgba(168, 85, 247, 0.16)" stroke="rgba(168, 85, 247, 0.35)" />
+            <circle cx="14" cy="13" r="4" fill="#c084fc" />
+            <text x="26" y="17" fill="#f3e8ff" fontSize="10.5" fontFamily="var(--font-mono)" fontWeight="700">BRANCH · MAIN (v2.4)</text>
           </g>
-          <g transform="translate(100, 110)">
-            <line x1="30" y1="20" x2="30" y2="200" stroke="var(--accent)" strokeWidth="3" strokeLinecap="round" />
-            <path d="M 30 60 C 90 60, 110 90, 110 120 C 110 150, 90 170, 30 170" fill="none" stroke="#38bdf8" strokeWidth="2.5" strokeLinecap="round" />
-            <circle cx="30" cy="20" r="8" fill="#c084fc" />
-            <circle cx="30" cy="60" r="7" fill="#e9d5ff" />
-            <circle cx="30" cy="170" r="9" fill="#ffffff" stroke="var(--accent)" strokeWidth="3" />
-            <circle cx="110" cy="95" r="7" fill="#7dd3fc" />
-            <circle cx="110" cy="135" r="7" fill="#38bdf8" />
+          <g transform="translate(80, 95)">
+            <line x1="40" y1="10" x2="40" y2="230" stroke="url(#gw-main-branch)" strokeWidth="3.2" strokeLinecap="round" />
+            <path d="M 40 55 C 110 55, 125 90, 125 125 C 125 160, 105 190, 40 190" fill="none" stroke="url(#gw-feat-branch)" strokeWidth="2.8" strokeLinecap="round" />
+            <circle cx="40" cy="15" r="7.5" fill="#c084fc" stroke="#581c87" strokeWidth="2.5" />
+            <circle cx="40" cy="55" r="7" fill="#e9d5ff" stroke="#7e22ce" strokeWidth="2" />
+            <circle cx="40" cy="120" r="7" fill="#e9d5ff" stroke="#7e22ce" strokeWidth="2" />
+            <circle cx="40" cy="190" r="10" fill="#ffffff" stroke="var(--accent, #a855f7)" strokeWidth="3" />
+            <circle cx="40" cy="190" r="16" fill="none" stroke="rgba(192, 132, 252, 0.4)" strokeWidth="1" strokeDasharray="2 3" />
+            <circle cx="125" cy="95" r="7.5" fill="#7dd3fc" stroke="#0369a1" strokeWidth="2" />
+            <circle cx="125" cy="145" r="7.5" fill="#38bdf8" stroke="#0284c7" strokeWidth="2" />
           </g>
-          <g transform="translate(32, 355)">
-            <rect width="296" height="66" rx="14" fill="rgba(20, 10, 36, 0.85)" stroke="rgba(168, 85, 247, 0.3)" />
+          <g transform="translate(268, 255)">
+            <circle r="34" stroke="rgba(192, 132, 252, 0.2)" strokeWidth="1" strokeDasharray="3 4" />
+            <polygon points="0,-22 15,-8 22,0 15,8 0,22 -15,8 -22,0 -15,-8" fill="rgba(168, 85, 247, 0.12)" stroke="#c084fc" strokeWidth="1.5" />
+            <circle r="5" fill="#ffffff" />
+          </g>
+          <g transform="translate(28, 350)">
+            <rect width="304" height="72" rx="16" fill="rgba(16, 8, 30, 0.9)" stroke="rgba(168, 85, 247, 0.35)" />
             <circle cx="18" cy="18" r="3.5" fill="#ef4444" />
-            <circle cx="28" cy="18" r="3.5" fill="#f59e0b" />
-            <circle cx="38" cy="18" r="3.5" fill="#10b981" />
-            <text x="18" y="42" fill="#c084fc" fontSize="12" fontFamily="var(--font-mono)" fontWeight="600">$ git wizard --cast-merge</text>
-            <text x="18" y="56" fill="rgba(243, 232, 255, 0.6)" fontSize="9.5" fontFamily="var(--font-mono)">[OK] 4 files changed, 0 regressions</text>
+            <circle cx="30" cy="18" r="3.5" fill="#f59e0b" />
+            <circle cx="42" cy="18" r="3.5" fill="#10b981" />
+            <text x="18" y="44" fill="#c084fc" fontSize="12.5" fontFamily="var(--font-mono)" fontWeight="700">❯ git wizard merge --ff</text>
+            <text x="18" y="60" fill="#a7f3d0" fontSize="10" fontFamily="var(--font-mono)">✔ Fast-forward 29621d9..327b3ad (0 conflicts)</text>
           </g>
         </svg>
       </div>
       <div class="card-info">
         <span class="badge">DEV TOOLS</span>
         <h3 class="title">Git Wizard Commander</h3>
-        <p class="sub">Simulador interativo de árvores de commit, merges e comandos CLI.</p>
+        <p class="sub">Grafo DAG de branches, nós de merge com halo e terminal macOS interativo.</p>
+      </div>
+    </div>
+
+    <!-- Card 5: Personal Monogram Card -->
+    <div class="card-item">
+      <div class="svg-container">
+        <svg viewBox="0 0 360 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="pa-ambient" cx="50%" cy="36%" r="68%">
+              <stop offset="0%" stopColor="var(--accent, #a855f7)" stopOpacity="0.38" />
+              <stop offset="50%" stopColor="var(--accent, #a855f7)" stopOpacity="0.08" />
+              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+            </radialGradient>
+            <linearGradient id="pa-box-border" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.8" />
+              <stop offset="50%" stopColor="var(--accent, #a855f7)" />
+              <stop offset="100%" stopColor="#3b82f6" />
+            </linearGradient>
+            <pattern id="pa-circuit-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+              <path d="M 24 0 L 0 0 0 24" fill="none" stroke="rgba(255, 255, 255, 0.05)" strokeWidth="0.8" />
+              <circle cx="12" cy="12" r="1.2" fill="rgba(255, 255, 255, 0.1)" />
+            </pattern>
+          </defs>
+          <rect width="360" height="480" fill="#08070d" />
+          <rect width="360" height="480" fill="url(#pa-circuit-grid)" />
+          <circle cx="180" cy="180" r="165" fill="url(#pa-ambient)" />
+          <g transform="translate(28, 30)">
+            <rect width="156" height="26" rx="13" fill="rgba(168, 85, 247, 0.16)" stroke="rgba(168, 85, 247, 0.35)" />
+            <circle cx="14" cy="13" r="4" fill="#22c55e" />
+            <text x="26" y="17" fill="#f3e8ff" fontSize="10.5" fontFamily="var(--font-mono)" fontWeight="700">AVAILABLE FOR PROJECTS</text>
+          </g>
+          <g transform="translate(180, 185)">
+            <circle r="124" stroke="rgba(168, 85, 247, 0.2)" strokeWidth="1" strokeDasharray="3 6" />
+            <circle r="102" stroke="rgba(255, 255, 255, 0.1)" strokeWidth="1.2" />
+            <rect x="-56" y="-56" width="112" height="112" rx="30" fill="rgba(18, 16, 26, 0.85)" stroke="url(#pa-box-border)" strokeWidth="2.2" />
+            <text x="0" y="17" textAnchor="middle" fill="#ffffff" fontSize="48" fontFamily="var(--font-sans)" fontWeight="800">RA</text>
+          </g>
+          <g transform="translate(28, 345)">
+            <rect width="304" height="78" rx="18" fill="rgba(16, 14, 24, 0.88)" stroke="rgba(168, 85, 247, 0.32)" />
+            <text x="20" y="28" fill="#ffffff" fontSize="16" fontFamily="var(--font-sans)" fontWeight="700">Ricardo Andreotti</text>
+            <text x="20" y="47" fill="var(--accent, #a855f7)" fontSize="11" fontFamily="var(--font-mono)" fontWeight="700">FULL STACK · WEBGL · RUST & GODOT 4</text>
+            <text x="20" y="66" fill="rgba(255, 255, 255, 0.55)" fontSize="11" fontFamily="var(--font-sans)">Técnico & Ciência da Computação (UNIP)</text>
+          </g>
+        </svg>
+      </div>
+      <div class="card-info">
+        <span class="badge">IDENTITY CARD</span>
+        <h3 class="title">Ricardo Andreotti</h3>
+        <p class="sub">Monograma vetorial [RA], grid de circuitos e status de engenharia.</p>
       </div>
     </div>
   </div>
