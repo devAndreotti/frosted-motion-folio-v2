@@ -65,7 +65,9 @@ describe("Header", () => {
     renderHeader();
     fireEvent.click(screen.getByRole("button", { name: /Modo recrutador/ }));
 
-    const dialog = await screen.findByRole("dialog", { name: "Resumo rápido para recrutadores" });
+    // The modal is a lazy chunk: on a cold, coverage-instrumented run its import plus the hero's first
+    // render under jsdom can pass the 1 s findBy default (main already sat at ~1 s on CI).
+    const dialog = await screen.findByRole("dialog", { name: "Resumo rápido para recrutadores" }, { timeout: 3000 });
     expect(within(dialog).getByText("Pra olhar primeiro")).toBeTruthy();
     const quick = within(dialog).getAllByRole("link").filter((a) => a.getAttribute("href")?.startsWith("/projetos/"));
     expect(quick.map((a) => a.getAttribute("href"))).toEqual([
