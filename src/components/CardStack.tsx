@@ -7,10 +7,11 @@ import type { HeroCard } from './HeroCardParts';
 import HeroDeck from './HeroDeck';
 import HeroFan from './HeroFan';
 import { projectAsset } from '@/lib/projects/asset';
+import { getProjectCardSvg } from './ProjectCardArt';
 
 // The photo plus four real projects -- the same curation as the projects
 // section, so the hero and the list below tell one story.
-const STACK_PROJECT_IDS = [26, 9, 2, 30];
+const STACK_PROJECT_IDS = [9, 26, 2, 30];
 const ALL_CURATED = [featuredProject, ...curatedProjects];
 const STACK_PROJECTS = STACK_PROJECT_IDS.map((id) => ALL_CURATED.find((p) => p.id === id)!);
 
@@ -38,6 +39,7 @@ const CardStack = () => {
       id: String(p.id),
       me: false,
       img: projectAsset(p.portrait ?? p.image),
+      svg: getProjectCardSvg(p.id),
       title: p.title,
       line: p.tagline[lang],
       type: p.id === featuredProject.id ? t.projects.casePrincipalBadge : p.type[lang],

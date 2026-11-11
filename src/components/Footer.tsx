@@ -29,11 +29,7 @@ const Footer = () => {
       <div className="ctc glass">
         <div>
           <div className="eyebrow">
-            <span className="avail" style={{ margin: 0 }}>
-              <span className="pulse" />
-              {t.header.availability}
-            </span>
-            <span className="np fix">
+            <span className="np fix" style={{ margin: 0 }}>
               <Clock className="ic" />
               <span className="tabular-nums">{t.footer.localTime(time)}</span>
             </span>

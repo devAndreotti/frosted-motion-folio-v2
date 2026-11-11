@@ -27,6 +27,8 @@
 .fan-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .fan-img { position: relative; display: block; flex: none; height: 58%; overflow: hidden; border-bottom: 1px solid var(--border-1); }
 .fan-img img { display: block; width: 112%; max-width: none; height: 100%; margin-left: -6%; object-fit: cover; object-position: 0 0; }
+.fan-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.fan-svg svg { width: 100%; height: 100%; display: block; object-fit: cover; }
 .fan-b { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding: 16px 18px; }
 .fan-card.me .fan-img { height: 100%; border-bottom: 0; }
 .fan-card.me .fan-img img { object-position: center 18%; }
@@ -66,6 +68,8 @@
 .dk-card { position: absolute; left: 0; top: 0; width: 280px; height: 384px; padding: 0; border-radius: 26px; overflow: hidden; border: 1px solid var(--border-2); background: var(--solid, #0a0a0a); color: #fff; text-align: left; cursor: pointer; transform-origin: 30% 100%; box-shadow: 0 34px 70px -30px rgba(0, 0, 0, 0.7), inset 0 1px var(--hl); transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.5s; }
 .dk-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .dk-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 0 0; transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.dk-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.dk-svg svg { width: 100%; height: 100%; display: block; object-fit: cover; }
 .dk-card.me .dk-img { object-position: center 18%; }
 @media (hover: hover) { .dk-card:hover .dk-img { transform: scale(1.04); } }
 .dk-scrim { position: absolute; left: 0; right: 0; bottom: 0; height: 62%; background: linear-gradient(to top, rgba(6, 6, 10, 0.92), rgba(6, 6, 10, 0.35) 55%, rgba(6, 6, 10, 0)); }

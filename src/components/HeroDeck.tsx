@@ -52,7 +52,7 @@ const HeroDeck = ({ cards }: { cards: HeroCard[] }) => {
               className={`dk-card${card.me ? ' me' : ''}${flying}${arrive}`}
               style={style}
             >
-              <img className="dk-img" src={card.img} alt="" draggable={false} />
+              {card.svg ? <span className="dk-svg">{card.svg}</span> : <img className="dk-img" src={card.img} alt="" draggable={false} />}
               <span className="dk-scrim" />
               <span className="dk-cap">
                 <CardText card={card} />

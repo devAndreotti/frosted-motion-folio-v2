@@ -16,7 +16,7 @@
 .mp-n { font: 600 17px/1.25 var(--font-sans); letter-spacing: -0.01em; }
 .mp-d { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: var(--fg-2); font: 400 14px/1.5 var(--font-sans); }
 .mp-b .tags { margin-top: auto; padding-top: 4px; }
-.mp-more { display: flex; justify-content: center; margin-top: 28px; }
+.mp-more { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; margin-top: 28px; }
 @media (max-width: 720px) {
   .mp { margin-top: 56px; }
   .mp-t { font-size: 24px; }

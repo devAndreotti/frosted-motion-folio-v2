@@ -537,7 +537,7 @@ button.also-i { cursor: pointer; }
   .sk-bar { flex-direction: column; align-items: flex-start; }
   .af { flex-wrap: nowrap; overflow-x: auto; max-width: calc(100% + 10px); padding: 5px; margin: -5px; scrollbar-width: none; }
   .af::-webkit-scrollbar { display: none; }
-  .hm-scroll { -webkit-mask-image: linear-gradient(90deg, transparent, #000 28px); mask-image: linear-gradient(90deg, transparent, #000 28px); }
+  .hm-scroll { -webkit-mask-image: linear-gradient(90deg, transparent, #000 28px, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(90deg, transparent, #000 28px, #000 calc(100% - 28px), transparent); }
   .tile-num { font-size: 24px; }
   .tiles { gap: 8px; }
   .tile { padding: 10px; gap: 8px; }
