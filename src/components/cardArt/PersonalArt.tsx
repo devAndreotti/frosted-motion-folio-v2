@@ -110,7 +110,7 @@ export const PersonalCardArt = memo(function PersonalCardArt() {
 
       <rect width="360" height="480" fill={u('vig')} />
 
-      <g transform="translate(24 410)" fontFamily={MONO} fontSize="8" letterSpacing="0.14em">
+      <g className="card-art-hud" transform="translate(24 410)" fontFamily={MONO} fontSize="8" letterSpacing="0.14em">
         <rect width="312" height="1" fill={u('hl')} opacity="0.5" />
         <text y="24" fill="#fff" fillOpacity="0.36">05 — IDENTITY</text>
         <text x="312" y="24" textAnchor="end" fill={LIT} fillOpacity="0.7">SYS · GFX · WEB</text>
@@ -118,7 +118,7 @@ export const PersonalCardArt = memo(function PersonalCardArt() {
       </g>
 
       {/* identity HUD */}
-      <g transform="translate(24 306)">
+      <g className="card-art-hud" transform="translate(24 306)">
         <rect width="312" height="76" rx="16" fill="#100e18" fillOpacity="0.88" stroke={LIT} strokeOpacity="0.3" />
         <rect x="20" width="272" height="1" fill={u('hl')} />
         <text x="20" y="29" fill="#fff" fontSize="17" fontFamily={SANS} fontWeight="700" letterSpacing="-0.01em">Ricardo Andreotti</text>

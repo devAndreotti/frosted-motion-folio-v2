@@ -34,6 +34,17 @@
 .fan-card.me .fan-img img { object-position: center 18%; }
 .fan-card.me .fan-b { position: absolute; left: 0; right: 0; bottom: 0; padding: 18px; background: linear-gradient(to top, rgba(6, 6, 10, 0.9), rgba(6, 6, 10, 0)); color: #fff; }
 .fan-card.me .hc-s { color: rgba(255, 255, 255, 0.8); }
+/* project cards with vector art: the art fills the card, the text sits on a dark panel at its foot
+   (a solid panel, not backdrop-filter: these cards rotate and blur would re-render every frame) */
+.fan-card.art .fan-img { height: 100%; border-bottom: 0; }
+.fan-card.art .fan-img::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 58%; background: linear-gradient(to top, rgba(6, 6, 10, 0.88), rgba(6, 6, 10, 0)); pointer-events: none; }
+.fan-card.art .fan-b { position: absolute; left: 8px; right: 8px; bottom: 8px; gap: 5px; padding: 10px 12px 11px; border-radius: 13px; border: 1px solid rgba(255, 255, 255, 0.14); background: rgba(10, 10, 14, 0.8); box-shadow: inset 0 1px rgba(255, 255, 255, 0.08); color: #fff; }
+.fan-card.art .tc, .fan-card.art .hc-s { color: rgba(255, 255, 255, 0.78); }
+.fan-card.art .tc { font-size: 10px; }
+.fan-card.art .hc-t { font-size: 14px; }
+.fan-card.art .hc-s { font-size: 11.5px; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+/* the card's own caption takes the art's foot, so the art's HUD and footer stay for the standalone art only */
+.fan-card.art .card-art-hud, .dk-card .card-art-hud { display: none; }
 
 .fan-card.mv-a { animation: fan-mv-a 0.8s cubic-bezier(0.22, 0.8, 0.2, 1) both; }
 .fan-card.mv-b { animation: fan-mv-b 0.8s cubic-bezier(0.22, 0.8, 0.2, 1) both; }
@@ -60,8 +71,18 @@
 .fan-card.wr-b { animation: fan-wr-b 0.9s cubic-bezier(0.4, 0, 0.2, 1) both; }
 @keyframes fan-wr-a { 0% { transform: var(--tf0); opacity: var(--op0); } 38% { transform: var(--tf0) translateY(70px) scale(0.82); opacity: 0; } 62% { transform: var(--tf) translateY(70px) scale(0.82); opacity: 0; } 100% { transform: var(--tf); opacity: var(--op1); } }
 @keyframes fan-wr-b { 0% { transform: var(--tf0); opacity: var(--op0); } 38% { transform: var(--tf0) translateY(70px) scale(0.82); opacity: 0; } 62% { transform: var(--tf) translateY(70px) scale(0.82); opacity: 0; } 100% { transform: var(--tf); opacity: var(--op1); } }
-@media (min-width: 1200px) { .fan { --cw: 238px; --ch: 342px; --step: 9deg; --lift: 20px; } }
-@media (min-width: 1400px) { .fan { --cw: 264px; --ch: 380px; --step: 11deg; --drop: 14px; --lift: 22px; } }
+@media (min-width: 1200px) {
+  .fan { --cw: 238px; --ch: 342px; --step: 9deg; --lift: 20px; }
+  .fan-card.art .fan-b { left: 10px; right: 10px; bottom: 10px; gap: 6px; padding: 12px 14px 13px; border-radius: 15px; }
+  .fan-card.art .tc { font-size: 11px; }
+  .fan-card.art .hc-t { font-size: 17.5px; }
+  .fan-card.art .hc-s { font-size: 13px; -webkit-line-clamp: 2; }
+}
+@media (min-width: 1400px) {
+  .fan { --cw: 264px; --ch: 380px; --step: 11deg; --drop: 14px; --lift: 22px; }
+  .fan-card.art .hc-t { font-size: 19px; }
+  .fan-card.art .fan-b { left: 12px; right: 12px; bottom: 12px; padding: 14px 16px 15px; }
+}
 
 /* ---------- deck ---------- */
 .dk { position: relative; isolation: isolate; width: 360px; height: 450px; }

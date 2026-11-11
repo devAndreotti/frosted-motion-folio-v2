@@ -160,7 +160,7 @@ export const GoldPortfolioCardArt = memo(function GoldPortfolioCardArt() {
 
       <rect width="360" height="480" fill={u('vig')} />
 
-      <g transform="translate(24 410)" fontFamily={MONO} fontSize="8" letterSpacing="0.14em">
+      <g className="card-art-hud" transform="translate(24 410)" fontFamily={MONO} fontSize="8" letterSpacing="0.14em">
         <rect width="312" height="1" fill={u('hl')} opacity="0.5" />
         <text y="24" fill="#fff" fillOpacity="0.36">01 — QUANT FINANCE</text>
         <text x="312" y="24" textAnchor="end" fill={LIT} fillOpacity="0.7">XAU · USD</text>
@@ -168,7 +168,7 @@ export const GoldPortfolioCardArt = memo(function GoldPortfolioCardArt() {
       </g>
 
       {/* metrics HUD */}
-      <g transform="translate(24 312)" fontFamily={MONO}>
+      <g className="card-art-hud" transform="translate(24 312)" fontFamily={MONO}>
         <rect width="312" height="66" rx="16" fill="#120e07" fillOpacity="0.82" stroke="#eab308" strokeOpacity="0.26" />
         <rect x="20" width="272" height="1" fill={u('hl')} />
         <g fontSize="8.5" fill="#fff" fillOpacity="0.48" letterSpacing="0.1em">

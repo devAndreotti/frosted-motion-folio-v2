@@ -109,7 +109,7 @@ export const GitWizardCardArt = memo(function GitWizardCardArt() {
 
       <rect width="360" height="480" fill={u('vig')} />
 
-      <g transform="translate(24 410)" fontFamily={MONO} fontSize="8" letterSpacing="0.14em">
+      <g className="card-art-hud" transform="translate(24 410)" fontFamily={MONO} fontSize="8" letterSpacing="0.14em">
         <rect width="312" height="1" fill={u('hl')} opacity="0.5" />
         <text y="24" fill="#fff" fillOpacity="0.36">04 — CLI SPELLBOOK</text>
         <text x="312" y="24" textAnchor="end" fill={LIT} fillOpacity="0.7">DAG · FF-ONLY</text>
@@ -117,7 +117,7 @@ export const GitWizardCardArt = memo(function GitWizardCardArt() {
       </g>
 
       {/* macOS terminal */}
-      <g transform="translate(24 306)" fontFamily={MONO}>
+      <g className="card-art-hud" transform="translate(24 306)" fontFamily={MONO}>
         <rect width="312" height="76" rx="14" fill="#0d0818" fillOpacity="0.92" stroke={LIT} strokeOpacity="0.3" />
         <path d="M0 14 A14 14 0 0 1 14 0 H298 A14 14 0 0 1 312 14 V22 H0 Z" fill="#fff" fillOpacity="0.045" />
         <rect x="20" width="272" height="1" fill={u('hl')} />

@@ -167,7 +167,7 @@ export const ChefAiCardArt = memo(function ChefAiCardArt() {
 
       <rect width="360" height="480" fill={u('vig')} />
 
-      <g transform="translate(24 410)" fontFamily={MONO} fontSize="8" letterSpacing="0.14em">
+      <g className="card-art-hud" transform="translate(24 410)" fontFamily={MONO} fontSize="8" letterSpacing="0.14em">
         <rect width="312" height="1" fill={u('hl')} opacity="0.5" />
         <text y="24" fill="#fff" fillOpacity="0.36">03 — GENERATIVE KITCHEN</text>
         <text x="312" y="24" textAnchor="end" fill={LIT} fillOpacity="0.7">GEMINI + N8N</text>
@@ -175,7 +175,7 @@ export const ChefAiCardArt = memo(function ChefAiCardArt() {
       </g>
 
       {/* generation console */}
-      <g transform="translate(24 312)">
+      <g className="card-art-hud" transform="translate(24 312)">
         <rect width="312" height="66" rx="16" fill="#06140c" fillOpacity="0.88" stroke={LIT} strokeOpacity="0.3" />
         <rect x="20" width="272" height="1" fill={u('hl')} />
         <text x="18" y="22" fill="#fff" fillOpacity="0.45" fontSize="8" fontFamily={MONO} letterSpacing="0.1em">OUTPUT · RECIPE #042</text>

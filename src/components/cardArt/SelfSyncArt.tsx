@@ -146,7 +146,7 @@ export const SelfSyncCardArt = memo(function SelfSyncCardArt() {
 
       <rect width="360" height="480" fill={u('vig')} />
 
-      <g transform="translate(24 410)" fontFamily={MONO} fontSize="8" letterSpacing="0.14em">
+      <g className="card-art-hud" transform="translate(24 410)" fontFamily={MONO} fontSize="8" letterSpacing="0.14em">
         <rect width="312" height="1" fill={u('hl')} opacity="0.5" />
         <text y="24" fill="#fff" fillOpacity="0.36">02 — CIRCADIAN PLANNER</text>
         <text x="312" y="24" textAnchor="end" fill={LIT} fillOpacity="0.7">24H · 96 SLOTS</text>
@@ -154,7 +154,7 @@ export const SelfSyncCardArt = memo(function SelfSyncCardArt() {
       </g>
 
       {/* habit HUD */}
-      <g transform="translate(24 312)">
+      <g className="card-art-hud" transform="translate(24 312)">
         <rect width="312" height="66" rx="16" fill="#0a1024" fillOpacity="0.86" stroke={LIT} strokeOpacity="0.3" />
         <rect x="20" width="272" height="1" fill={u('hl')} />
         <rect x="16" y="17" width="32" height="32" rx="10" fill={ACC} fillOpacity="0.2" stroke={LIT} strokeOpacity="0.55" />
