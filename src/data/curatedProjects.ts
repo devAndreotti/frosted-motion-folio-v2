@@ -44,53 +44,53 @@ const shots = (slug: string, numbers: string[]) => ({
 });
 
 const FEATURED_META: CurationMeta = {
-  ...shots('self-sync-daily', ['01', '02', '03', '04', '05']),
-  id: 26,
-  type: { pt: 'Produto pessoal', en: 'Personal product' },
+  ...shots('gold-portfolio-analyzer', ['01', '02', '03', '05']),
+  id: 9,
+  type: { pt: 'Web app', en: 'Web app' },
   cat: 'web',
-  tint: '#3b82f6',
+  tint: '#eab308',
   description: {
-    pt: 'Nasceu de um problema meu: eu tentava vários apps de produtividade e nenhum unia tempo, energia e reflexão no mesmo lugar.',
-    en: 'Born from a problem of my own: I tried several productivity apps and none of them combined time, energy, and reflection in one place.',
+    pt: 'Ferramenta inteligente de análise e otimização de carteiras de investimento, construída com foco em mercado brasileiro, diversificação inteligente e recomendações personalizadas.',
+    en: 'Smart tool for analyzing and optimizing investment portfolios, built with a focus on the Brazilian market, smart diversification, and personalized recommendations.',
   },
-  tagline: { pt: 'Planner, energia e diário num lugar só.', en: 'Planner, energy log and journal in one place.' },
+  tagline: { pt: 'Carteira, risco e diversificação em gráficos.', en: 'Portfolio, risk and diversification in charts.' },
   long: {
-    pt: 'Nasceu de um problema meu: eu tentava vários apps de produtividade e nenhum unia tempo, energia e reflexão no mesmo lugar. O Self-Sync Daily junta um planner de tarefas, registro de energia ao longo do dia e um diário curto de reflexão, com autenticação real e dados persistidos por usuário.',
-    en: 'Born from a problem of my own: I tried several productivity apps and none of them combined time, energy, and reflection in one place. Self-Sync Daily brings together a task planner, an energy log throughout the day, and a short reflection journal, with real authentication and per-user persisted data.',
+    pt: 'Ferramenta para simular alocação de carteira com ativos do mercado brasileiro, visualizando risco e diversificação em gráficos interativos — pensada pra quem quer entender a própria carteira sem depender de planilha solta.',
+    en: 'A tool to simulate portfolio allocation with Brazilian market assets, visualizing risk and diversification through interactive charts — built for anyone who wants to understand their own portfolio without relying on a loose spreadsheet.',
   },
   points: {
-    pt: [
-      'Modelagem do banco e regras de acesso por usuário no Supabase (RLS).',
-      'Dashboard de hábitos com gráficos de energia ao longo da semana.',
-      'Onboarding guiado e estado persistido entre sessões.',
-    ],
-    en: [
-      'Database modeling and per-user access rules in Supabase (RLS).',
-      'Habit dashboard with energy charts across the week.',
-      'Guided onboarding and state persisted between sessions.',
-    ],
+    pt: ['Cálculo de diversificação e risco por classe de ativo.', 'Gráficos interativos com Recharts.', 'Interface responsiva pensada pra uso rápido no celular.'],
+    en: ['Diversification and risk calculation per asset class.', 'Interactive charts with Recharts.', 'Responsive interface built for quick use on mobile.'],
   },
 };
 
 const LIST_META: CurationMeta[] = [
   {
-    ...shots('gold-portfolio-analyzer', ['01', '02', '03', '05']),
-    id: 9,
-    type: { pt: 'Web app', en: 'Web app' },
+    ...shots('self-sync-daily', ['01', '02', '03', '04', '05']),
+    id: 26,
+    type: { pt: 'Produto pessoal', en: 'Personal product' },
     cat: 'web',
-    tint: '#eab308',
+    tint: '#3b82f6',
     description: {
-      pt: 'Ferramenta inteligente de análise e otimização de carteiras de investimento, construída com foco em mercado brasileiro, diversificação inteligente e recomendações personalizadas.',
-      en: 'Smart tool for analyzing and optimizing investment portfolios, built with a focus on the Brazilian market, smart diversification, and personalized recommendations.',
+      pt: 'Nasceu de um problema meu: eu tentava vários apps de produtividade e nenhum unia tempo, energia e reflexão no mesmo lugar.',
+      en: 'Born from a problem of my own: I tried several productivity apps and none of them combined time, energy, and reflection in one place.',
     },
-    tagline: { pt: 'Carteira, risco e diversificação em gráficos.', en: 'Portfolio, risk and diversification in charts.' },
+    tagline: { pt: 'Planner, energia e diário num lugar só.', en: 'Planner, energy log and journal in one place.' },
     long: {
-      pt: 'Ferramenta para simular alocação de carteira com ativos do mercado brasileiro, visualizando risco e diversificação em gráficos interativos — pensada pra quem quer entender a própria carteira sem depender de planilha solta.',
-      en: 'A tool to simulate portfolio allocation with Brazilian market assets, visualizing risk and diversification through interactive charts — built for anyone who wants to understand their own portfolio without relying on a loose spreadsheet.',
+      pt: 'Nasceu de um problema meu: eu tentava vários apps de produtividade e nenhum unia tempo, energia e reflexão no mesmo lugar. O Self-Sync Daily junta um planner de tarefas, registro de energia ao longo do dia e um diário curto de reflexão, com autenticação real e dados persistidos por usuário.',
+      en: 'Born from a problem of my own: I tried several productivity apps and none of them combined time, energy, and reflection in one place. Self-Sync Daily brings together a task planner, an energy log throughout the day, and a short reflection journal, with real authentication and per-user persisted data.',
     },
     points: {
-      pt: ['Cálculo de diversificação e risco por classe de ativo.', 'Gráficos interativos com Recharts.', 'Interface responsiva pensada pra uso rápido no celular.'],
-      en: ['Diversification and risk calculation per asset class.', 'Interactive charts with Recharts.', 'Responsive interface built for quick use on mobile.'],
+      pt: [
+        'Modelagem do banco e regras de acesso por usuário no Supabase (RLS).',
+        'Dashboard de hábitos com gráficos de energia ao longo da semana.',
+        'Onboarding guiado e estado persistido entre sessões.',
+      ],
+      en: [
+        'Database modeling and per-user access rules in Supabase (RLS).',
+        'Habit dashboard with energy charts across the week.',
+        'Guided onboarding and state persisted between sessions.',
+      ],
     },
   },
   {

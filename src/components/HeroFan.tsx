@@ -48,7 +48,7 @@ const HeroFan = ({ cards }: { cards: HeroCard[] }) => {
               style={style}
             >
               <span className="fan-img">
-                <img src={card.img} alt="" draggable={false} />
+                {card.svg ? <span className="fan-svg">{card.svg}</span> : <img src={card.img} alt="" draggable={false} />}
               </span>
               <span className="fan-b">
                 <CardText card={card} />

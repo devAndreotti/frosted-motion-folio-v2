@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Preview: Artes Vetoriais SVG dos Cards de Projetos</title>
+  <style>
+    :root {
+      --accent: #a855f7;
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      --bg: #09080d;
+      --card-bg: #13111a;
+      --fg-1: #ffffff;
+      --fg-2: #a1a1aa;
+      --border: rgba(255, 255, 255, 0.1);
+    }
+    body {
+      margin: 0;
+      padding: 32px 20px;
+      background: var(--bg);
+      color: var(--fg-1);
+      font-family: var(--font-sans);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      max-width: 900px;
+      width: 100%;
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    p {
+      margin: 0;
+      color: var(--fg-2);
+      font-size: 15px;
+    }
+    .theme-bar {
+      display: flex;
+      gap: 10px;
+      margin: 20px auto 0;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .color-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .color-btn:hover, .color-btn.active {
+      transform: scale(1.18);
+      border-color: #fff;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      max-width: 1200px;
+      width: 100%;
+    }
+    .card-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s;
+    }
+    .card-item:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+    }
+    .svg-container {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      background: #000;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .svg-container svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .card-info {
+      padding: 16px 18px 20px;
+      border-top: 1px solid var(--border);
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: color-mix(in srgb, var(--accent) 20%, transparent);
+      color: var(--accent);
+      font: 600 11px/1 var(--font-mono);
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+    }
+    .title {
+      font-size: 17px;
+      font-weight: 600;
+      margin: 0 0 4px;
+    }
+    .sub {
+      font-size: 13.5px;
+      color: var(--fg-2);
+      margin: 0;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Artes Vetoriais SVG para as Cartas do Hero</h1>
+    <p>Substituem prints de tela pequenos por ilustrações vetoriais nítidas que reagem à cor de destaque (CSS <code>var(--accent)</code>).</p>
+    <div class="theme-bar">
+      <button class="color-btn active" style="background: #a855f7;" onclick="setAccent('#a855f7', this)" title="Roxo (Padrão)"></button>
+      <button class="color-btn" style="background: #3b82f6;" onclick="setAccent('#3b82f6', this)" title="Azul"></button>
+      <button class="color-btn" style="background: #eab308;" onclick="setAccent('#eab308', this)" title="Amarelo / Ouro"></button>
+      <button class="color-btn" style="background: #22c55e;" onclick="setAccent('#22c55e', this)" title="Verde"></button>
+      <button class="color-btn" style="background: #ef4444;" onclick="setAccent('#ef4444', this)" title="Vermelho"></button>
+      <button class="color-btn" style="background: #f97316;" onclick="setAccent('#f97316', this)" title="Laranja"></button>
+    </div>
+  </header>
+
+  <div class="grid">
+    <!-- Card 1: Gold Portfolio Analyzer -->
+    <div class="card-item">
+      <div class="svg-container">
+        <svg viewBox="0 0 360 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="gp-glow" cx="50%" cy="40%" r="60%">
+              <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.3" />
+              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+            </radialGradient>
+            <linearGradient id="gp-gold" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#fef08a" /><stop offset="40%" stopColor="#eab308" /><stop offset="100%" stopColor="#854d0e" />
+            </linearGradient>
+            <linearGradient id="gp-curve" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.2" /><stop offset="100%" stopColor="var(--accent)" stopOpacity="1" />
+            </linearGradient>
+            <pattern id="gp-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+              <path d="M 24 0 L 0 0 0 24" fill="none" stroke="rgba(255, 255, 255, 0.05)" strokeWidth="1" />
+            </pattern>
+          </defs>
+          <rect width="360" height="480" fill="#0d0c07" />
+          <rect width="360" height="480" fill="url(#gp-grid)" />
+          <circle cx="180" cy="200" r="160" fill="url(#gp-glow)" />
+          <circle cx="180" cy="190" r="130" stroke="rgba(234, 179, 8, 0.15)" strokeWidth="1" strokeDasharray="4 6" />
+          <g transform="translate(32, 36)">
+            <rect width="118" height="24" rx="12" fill="rgba(234, 179, 8, 0.12)" stroke="rgba(234, 179, 8, 0.3)" />
+            <circle cx="12" cy="12" r="4" fill="var(--accent)" />
+            <text x="24" y="16" fill="#fef08a" fontSize="10.5" fontFamily="var(--font-mono)" fontWeight="600">YIELD +18.4%</text>
+          </g>
+          <g opacity="0.65" transform="translate(40, 110)">
+            <line x1="20" y1="20" x2="20" y2="90" stroke="rgba(234, 179, 8, 0.4)" strokeWidth="1" />
+            <rect x="15" y="38" width="10" height="35" rx="2" fill="url(#gp-gold)" />
+            <line x1="55" y1="10" x2="55" y2="85" stroke="rgba(34, 197, 94, 0.4)" strokeWidth="1" />
+            <rect x="50" y="24" width="10" height="44" rx="2" fill="#22c55e" opacity="0.8" />
+            <line x1="90" y1="30" x2="90" y2="105" stroke="rgba(234, 179, 8, 0.4)" strokeWidth="1" />
+            <rect x="85" y="48" width="10" height="28" rx="2" fill="url(#gp-gold)" />
+          </g>
+          <path d="M 32 300 Q 90 290 140 240 T 250 160 T 328 100" stroke="url(#gp-curve)" strokeWidth="3.5" strokeLinecap="round" />
+          <circle cx="140" cy="240" r="5" fill="#fef08a" stroke="#ca8a04" strokeWidth="2" />
+          <circle cx="250" cy="160" r="5" fill="#fef08a" stroke="#ca8a04" strokeWidth="2" />
+          <circle cx="328" cy="100" r="6" fill="#ffffff" stroke="var(--accent)" strokeWidth="2.5" />
+          <g transform="translate(180, 205)">
+            <polygon points="0,-32 58,-14 0,6 -58,-14" fill="#fef08a" opacity="0.95" />
+            <polygon points="58,-14 58,16 0,36 0,6" fill="#ca8a04" />
+            <polygon points="-58,-14 0,6 0,36 -58,16" fill="#854d0e" />
+            <line x1="0" y1="6" x2="0" y2="36" stroke="#fef08a" strokeWidth="1.5" opacity="0.6" />
+            <text x="0" y="-10" textAnchor="middle" fill="#854d0e" fontSize="8" fontFamily="var(--font-mono)" fontWeight="700">AU 999.9</text>
+          </g>
+          <g transform="translate(32, 360)">
+            <rect width="296" height="58" rx="14" fill="rgba(20, 18, 12, 0.75)" stroke="rgba(234, 179, 8, 0.25)" />
+            <text x="18" y="24" fill="rgba(255, 255, 255, 0.5)" fontSize="10" fontFamily="var(--font-mono)">PORTFOLIO RISK</text>
+            <text x="18" y="44" fill="#fef08a" fontSize="14" fontFamily="var(--font-mono)" fontWeight="700">SHARPE 2.45</text>
+            <line x1="148" y1="12" x2="148" y2="46" stroke="rgba(255, 255, 255, 0.1)" />
+            <text x="166" y="24" fill="rgba(255, 255, 255, 0.5)" fontSize="10" fontFamily="var(--font-mono)">ALLOCATION</text>
+            <text x="166" y="44" fill="var(--accent)" fontSize="14" fontFamily="var(--font-mono)" fontWeight="700">BALANCED</text>
+          </g>
+        </svg>
+      </div>
+      <div class="card-info">
+        <span class="badge">CASE PRINCIPAL</span>
+        <h3 class="title">Gold Portfolio Analyzer</h3>
+        <p class="sub">Curvas de risco, alocação de ativos e simulação de rentabilidade.</p>
+      </div>
+    </div>
+
+    <!-- Card 2: Self-Sync Daily -->
+    <div class="card-item">
+      <div class="svg-container">
+        <svg viewBox="0 0 360 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="ss-glow" cx="50%" cy="45%" r="65%">
+              <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.35" />
+              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+            </radialGradient>
+            <linearGradient id="ss-wave" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#38bdf8" /><stop offset="50%" stopColor="var(--accent)" /><stop offset="100%" stopColor="#818cf8" />
+            </linearGradient>
+            <pattern id="ss-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+              <circle cx="12" cy="12" r="1" fill="rgba(255, 255, 255, 0.08)" />
+            </pattern>
+          </defs>
+          <rect width="360" height="480" fill="#080c16" />
+          <rect width="360" height="480" fill="url(#ss-grid)" />
+          <circle cx="180" cy="210" r="160" fill="url(#ss-glow)" />
+          <g transform="translate(32, 36)">
+            <rect width="132" height="24" rx="12" fill="rgba(59, 130, 246, 0.15)" stroke="rgba(59, 130, 246, 0.3)" />
+            <circle cx="14" cy="12" r="4" fill="#38bdf8" />
+            <text x="26" y="16" fill="#bfdbfe" fontSize="10" fontFamily="var(--font-mono)" fontWeight="600">FOCUS 25:00 MIN</text>
+          </g>
+          <g transform="translate(180, 200)">
+            <circle r="115" stroke="rgba(59, 130, 246, 0.2)" strokeWidth="1.5" strokeDasharray="3 6" />
+            <circle r="92" stroke="rgba(255, 255, 255, 0.1)" strokeWidth="1" />
+            <circle cx="0" cy="-115" r="7" fill="#fbbf24" stroke="#d97706" strokeWidth="2" />
+            <polygon points="0,-42 36,-21 36,21 0,42 -36,21 -36,-21" fill="rgba(30, 58, 138, 0.6)" stroke="#60a5fa" strokeWidth="2" />
+            <circle r="10" fill="#ffffff" />
+            <circle r="4" fill="var(--accent)" />
+          </g>
+          <path d="M 28 320 C 70 280, 110 350, 160 300 C 210 250, 260 340, 332 290" stroke="url(#ss-wave)" strokeWidth="3" strokeLinecap="round" />
+          <g transform="translate(32, 370)">
+            <rect width="296" height="52" rx="12" fill="rgba(15, 23, 42, 0.8)" stroke="rgba(59, 130, 246, 0.25)" />
+            <rect x="18" y="16" width="18" height="18" rx="5" fill="rgba(59, 130, 246, 0.2)" stroke="#60a5fa" />
+            <path d="M 22 25 L 25 28 L 32 20" stroke="#93c5fd" strokeWidth="2" strokeLinecap="round" />
+            <text x="44" y="29" fill="#f1f5f9" fontSize="12" fontFamily="var(--font-sans)" fontWeight="500">Deep Work Session</text>
+            <rect x="216" y="16" width="64" height="20" rx="10" fill="rgba(56, 189, 248, 0.15)" />
+            <text x="248" y="30" textAnchor="middle" fill="#38bdf8" fontSize="10.5" fontFamily="var(--font-mono)" fontWeight="700">84%</text>
+          </g>
+        </svg>
+      </div>
+      <div class="card-info">
+        <span class="badge">PRODUTIVIDADE</span>
+        <h3 class="title">Self-Sync Daily</h3>
+        <p class="sub">Rotina de foco, relógio circadiano e diário de energia diária.</p>
+      </div>
+    </div>
+
+    <!-- Card 3: Chef AI -->
+    <div class="card-item">
+      <div class="svg-container">
+        <svg viewBox="0 0 360 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="ca-glow" cx="50%" cy="42%" r="65%">
+              <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.32" />
+              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+            </radialGradient>
+            <pattern id="ca-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+              <path d="M 24 0 L 0 0 0 24" fill="none" stroke="rgba(34, 197, 94, 0.06)" strokeWidth="1" />
+            </pattern>
+          </defs>
+          <rect width="360" height="480" fill="#051009" />
+          <rect width="360" height="480" fill="url(#ca-grid)" />
+          <circle cx="180" cy="200" r="160" fill="url(#ca-glow)" />
+          <g transform="translate(32, 36)">
+            <rect width="138" height="24" rx="12" fill="rgba(34, 197, 94, 0.15)" stroke="rgba(34, 197, 94, 0.35)" />
+            <circle cx="14" cy="12" r="4" fill="#4ade80" />
+            <text x="26" y="16" fill="#bbf7d0" fontSize="10" fontFamily="var(--font-mono)" fontWeight="600">MODEL: GEMINI AI</text>
+          </g>
+          <g transform="translate(180, 205)">
+            <ellipse cx="0" cy="42" rx="76" ry="12" fill="rgba(22, 101, 52, 0.6)" stroke="#4ade80" strokeWidth="1.8" />
+            <line x1="-80" y1="44" x2="80" y2="44" stroke="#86efac" strokeWidth="2" strokeLinecap="round" />
+            <path d="M -60 38 C -60 -20, 60 -20, 60 38 Z" fill="rgba(34, 197, 94, 0.2)" stroke="#86efac" strokeWidth="2.2" />
+            <circle cx="0" cy="-24" r="7" fill="#86efac" stroke="#15803d" strokeWidth="2" />
+            <path d="M -35,-8 Q -30,-8 -30,-14 Q -30,-8 -25,-8 Q -30,-8 -30,-2 Q -30,-8 -35,-8 Z" fill="#bbf7d0" />
+            <path d="M 32,5 Q 36,5 36,0 Q 36,5 40,5 Q 36,5 36,10 Q 36,5 32,5 Z" fill="#bbf7d0" />
+          </g>
+          <g transform="translate(32, 360)">
+            <rect width="296" height="58" rx="14" fill="rgba(8, 28, 16, 0.85)" stroke="rgba(74, 222, 128, 0.3)" />
+            <text x="18" y="24" fill="rgba(187, 247, 208, 0.6)" fontSize="10" fontFamily="var(--font-mono)">INPUT INGREDIENTS</text>
+            <text x="18" y="44" fill="#f0fdf4" fontSize="13" fontFamily="var(--font-mono)" fontWeight="600">TOMATO · BASIL · PASTA</text>
+            <g transform="translate(242, 18)">
+              <rect width="40" height="22" rx="6" fill="#22c55e" />
+              <text x="20" y="15" textAnchor="middle" fill="#052e16" fontSize="10.5" fontFamily="var(--font-mono)" fontWeight="700">GEN</text>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <div class="card-info">
+        <span class="badge">IA APLICADA</span>
+        <h3 class="title">Chef AI</h3>
+        <p class="sub">Geração generativa de receitas guiada por ingredientes e n8n.</p>
+      </div>
+    </div>
+
+    <!-- Card 4: Git Wizard Commander -->
+    <div class="card-item">
+      <div class="svg-container">
+        <svg viewBox="0 0 360 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="gw-glow" cx="50%" cy="40%" r="65%">
+              <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.35" />
+              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+            </radialGradient>
+            <pattern id="gw-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+              <path d="M 24 0 L 0 0 0 24" fill="none" stroke="rgba(168, 85, 247, 0.08)" strokeWidth="1" />
+            </pattern>
+          </defs>
+          <rect width="360" height="480" fill="#0c0615" />
+          <rect width="360" height="480" fill="url(#gw-grid)" />
+          <circle cx="180" cy="190" r="160" fill="url(#gw-glow)" />
+          <g transform="translate(32, 36)">
+            <rect width="138" height="24" rx="12" fill="rgba(168, 85, 247, 0.16)" stroke="rgba(168, 85, 247, 0.35)" />
+            <circle cx="14" cy="12" r="4" fill="#c084fc" />
+            <text x="26" y="16" fill="#f3e8ff" fontSize="10" fontFamily="var(--font-mono)" fontWeight="600">BRANCH: MAIN</text>
+          </g>
+          <g transform="translate(100, 110)">
+            <line x1="30" y1="20" x2="30" y2="200" stroke="var(--accent)" strokeWidth="3" strokeLinecap="round" />
+            <path d="M 30 60 C 90 60, 110 90, 110 120 C 110 150, 90 170, 30 170" fill="none" stroke="#38bdf8" strokeWidth="2.5" strokeLinecap="round" />
+            <circle cx="30" cy="20" r="8" fill="#c084fc" />
+            <circle cx="30" cy="60" r="7" fill="#e9d5ff" />
+            <circle cx="30" cy="170" r="9" fill="#ffffff" stroke="var(--accent)" strokeWidth="3" />
+            <circle cx="110" cy="95" r="7" fill="#7dd3fc" />
+            <circle cx="110" cy="135" r="7" fill="#38bdf8" />
+          </g>
+          <g transform="translate(32, 355)">
+            <rect width="296" height="66" rx="14" fill="rgba(20, 10, 36, 0.85)" stroke="rgba(168, 85, 247, 0.3)" />
+            <circle cx="18" cy="18" r="3.5" fill="#ef4444" />
+            <circle cx="28" cy="18" r="3.5" fill="#f59e0b" />
+            <circle cx="38" cy="18" r="3.5" fill="#10b981" />
+            <text x="18" y="42" fill="#c084fc" fontSize="12" fontFamily="var(--font-mono)" fontWeight="600">$ git wizard --cast-merge</text>
+            <text x="18" y="56" fill="rgba(243, 232, 255, 0.6)" fontSize="9.5" fontFamily="var(--font-mono)">[OK] 4 files changed, 0 regressions</text>
+          </g>
+        </svg>
+      </div>
+      <div class="card-info">
+        <span class="badge">DEV TOOLS</span>
+        <h3 class="title">Git Wizard Commander</h3>
+        <p class="sub">Simulador interativo de árvores de commit, merges e comandos CLI.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function setAccent(color, btn) {
+      document.documentElement.style.setProperty('--accent', color);
+      document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+  </script>
+</body>
+</html>
