@@ -7,7 +7,7 @@ import { USES_LINK } from "@/data/uses";
 import NotFoundGame from "@/components/NotFoundGame";
 import NovidadesBadge from "@/components/NovidadesBadge";
 
-// The app's root on either deploy ("/" on devandreotti.com, "/frosted-motion-folio-v2/" on GitHub Pages).
+// The app's root on either deploy ("/" on devandreotti.com, "/motion-folio/" on GitHub Pages).
 const HOME = import.meta.env.BASE_URL;
 /** The suggestions, in order: the section key (text lookup) and the path under the app root. */
 const SECTIONS = [

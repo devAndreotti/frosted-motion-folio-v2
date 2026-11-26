@@ -10,7 +10,7 @@ Este blog não tem painel nem login. Cada post é um arquivo Markdown em
 `src/content/posts/`, e publicar é fazer commit e `git push` na `main`.
 
 Este post também é o **modelo**: ele usa tudo o que o blog suporta. Compare o
-texto que você está lendo com o [arquivo-fonte no GitHub](https://github.com/devAndreotti/frosted-motion-folio-v2/blob/main/src/content/posts/2026-10-15-um-blog-publicado-com-git-push.md).
+texto que você está lendo com o [arquivo-fonte no GitHub](https://github.com/devAndreotti/motion-folio/blob/main/src/content/posts/2026-10-15-um-blog-publicado-com-git-push.md).
 
 ## Como um arquivo vira página
 

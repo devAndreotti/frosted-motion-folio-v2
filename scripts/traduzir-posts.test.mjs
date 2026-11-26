@@ -102,3 +102,23 @@ describe('pending', () => {
     expect(englishName('2026-10-15-x.md')).toBe('2026-10-15-x.en.md');
   });
 });
+
+describe('allowedFiles', async () => {
+  const { allowedFiles } = await import('./traduzir-posts.mjs');
+  it('traducao/* só aceita .en.md de posts', () => {
+    const re = allowedFiles('traducao/2026-11-26-x');
+    expect(re.test('src/content/posts/2026-10-15-x.en.md')).toBe(true);
+    expect(re.test('src/content/posts/2026-10-15-x.md')).toBe(false);
+  });
+  it('post/* aceita posts, archive e mídia do blog, e nada mais', () => {
+    const re = allowedFiles('post/linkedin-sync-20261126-210000');
+    expect(re.test('src/content/posts/2026-10-15-x.md')).toBe(true);
+    expect(re.test('src/content/archive/2026-10-15-x.md')).toBe(true);
+    expect(re.test('public/blog/x/midia-1.jpg')).toBe(true);
+    expect(re.test('scripts/traduzir-posts.mjs')).toBe(false);
+    expect(re.test('public/blog/x/../../index.html')).toBe(false);
+  });
+  it('outros branches não são automáticos', () => {
+    expect(allowedFiles('feat/qualquer')).toBeNull();
+  });
+});

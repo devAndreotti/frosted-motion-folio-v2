@@ -4,7 +4,7 @@ import { CASES } from "@/data/cases";
 type Lang = "pt" | "en";
 
 const CONTACT_EMAIL = "devandreotti@gmail.com";
-const MAIN_STACK = "React · TypeScript · Node.js · Supabase";
+const MAIN_STACK = "TypeScript · React 19 · Rust · WebGL / Three.js · Godot 4 · Python & IA · Linux VPS";
 
 // The commands added to the terminal: short, public facts only (no hosts, paths or accounts).
 const COMMANDS: Record<string, { pt: string; en: string }> = {

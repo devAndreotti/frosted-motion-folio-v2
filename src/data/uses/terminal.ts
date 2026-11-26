@@ -5,17 +5,50 @@ export const TERMINAL: UsesCategory = {
   label: { pt: 'Terminal', en: 'Terminal' },
   items: [
     {
+      name: 'Windows PowerShell',
+      detail: { pt: 'PowerShell 7 · Profile customizado de automação', en: 'PowerShell 7 · Custom automation profile' },
+      why: {
+        pt: 'Shell principal no Windows, turbinado com aliases customizados e funções de produtividade.',
+        en: 'Primary Windows shell, boosted with custom aliases and productivity functions.',
+      },
+    },
+    {
+      name: 'WSL2 Ubuntu',
+      detail: { pt: 'Ambiente Linux integrado no Windows', en: 'Integrated Linux environment on Windows' },
+      why: {
+        pt: 'Execução de ferramentas e fluxos Linux diretamente no ambiente local.',
+        en: 'Running Linux tooling and workflows directly in the local environment.',
+      },
+    },
+    {
+      name: 'VPS Oracle Cloud Linux',
+      detail: { pt: 'Ambiente remoto Always Free', en: 'Always Free remote environment' },
+      why: {
+        pt: 'Instâncias remotas para automações, rotinas contínuas e execução de agentes.',
+        en: 'Remote instances for automations, background routines, and agent runs.',
+      },
+    },
+    {
+      name: 'SSH com chaves ed25519',
+      detail: { pt: 'Autenticação criptográfica segura', en: 'Secure cryptographic authentication' },
+      why: {
+        pt: 'Acesso seguro aos servidores remotos, Git e estações sem senhas.',
+        en: 'Secure, passwordless access to remote servers, Git, and workstations.',
+      },
+    },
+    {
+      name: 'Tailscale mesh network',
+      detail: { pt: 'Rede privada WireGuard ponto a ponto', en: 'Peer-to-peer WireGuard private network' },
+      why: {
+        pt: 'Conexão segura e direta entre notebook, desktop Linux, VPS e mobile.',
+        en: 'Secure, direct mesh interconnecting notebook, Linux desktop, VPS, and mobile.',
+      },
+    },
+    {
       name: 'Windows Terminal',
       why: {
         pt: 'Abas e painéis divididos, com layouts salvos para cada tipo de trabalho.',
         en: 'Tabs and split panes, with layouts saved for each kind of work.',
-      },
-    },
-    {
-      name: 'PowerShell 7',
-      why: {
-        pt: 'Shell do Windows, com um profile próprio de aliases e funções.',
-        en: 'The Windows shell, with a profile of my own of aliases and functions.',
       },
     },
     {

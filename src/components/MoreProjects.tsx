@@ -1,4 +1,4 @@
-import { useState, type CSSProperties, type MouseEvent } from 'react';
+import { useState, type CSSProperties, type MouseEvent, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import type { CuratedProject } from '@/data/curatedProjects';
@@ -12,10 +12,11 @@ export const INITIAL_CARDS = 8;
 interface MoreProjectsProps {
   projects: CuratedProject[];
   onOpen: (project: CuratedProject) => void;
+  extraAction?: ReactNode;
 }
 
 /** The gallery of smaller projects under the ranked list: a photo, a name and a line each; a click opens the same dialog as the cases. */
-const MoreProjects = ({ projects, onOpen }: MoreProjectsProps) => {
+const MoreProjects = ({ projects, onOpen, extraAction }: MoreProjectsProps) => {
   const { lang, t } = useLanguage();
   const m = t.projects.more;
   const [all, setAll] = useState(false);
@@ -38,7 +39,8 @@ const MoreProjects = ({ projects, onOpen }: MoreProjectsProps) => {
       <ul className="mp-grid">
         {shown.map((p) => (
           <li key={p.id}>
-            <Link to={casePath(p.slug)} state={CASE_STATE} className="mp-card glass" onClick={(e: MouseEvent<HTMLAnchorElement>) => openHere(e, p)} aria-label={m.cardAria(p.title)}>
+            <Link to={casePath(p.slug)} state={CASE_STATE} className="mp-card glass" onClick={(e: MouseEvent<HTMLAnchorElement>) => openHere(e, p)}>
+              <span className="sr-only">{m.cardAria('')}</span>
               <span className="mp-img" style={{ '--tint': p.tint } as CSSProperties}>
                 <img className="mp-bg" src={projectAsset(p.image)} alt="" aria-hidden="true" loading="lazy" decoding="async" />
                 <span className="mp-win">
@@ -61,11 +63,14 @@ const MoreProjects = ({ projects, onOpen }: MoreProjectsProps) => {
           </li>
         ))}
       </ul>
-      {projects.length > INITIAL_CARDS && (
+      {(projects.length > INITIAL_CARDS || extraAction) && (
         <div className="mp-more">
-          <button type="button" className="btn btn-gh btn-sm" aria-expanded={all} onClick={() => setAll((open) => !open)}>
-            {all ? m.showLess : m.showAll(projects.length)}
-          </button>
+          {projects.length > INITIAL_CARDS && (
+            <button type="button" className="btn btn-gh btn-sm" aria-expanded={all} onClick={() => setAll((open) => !open)}>
+              {all ? m.showLess : m.showAll(projects.length)}
+            </button>
+          )}
+          {extraAction}
         </div>
       )}
     </div>

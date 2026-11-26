@@ -9,7 +9,7 @@ import { USES_LINK } from '@/data/uses';
 import SiteBottomBar from '@/components/SiteBottomBar';
 import { blogNavActive, type BlogNavKey } from './blogNav';
 
-// The app's root on either deploy ("/" on devandreotti.com, "/frosted-motion-folio-v2/" on GitHub Pages).
+// The app's root on either deploy ("/" on devandreotti.com, "/motion-folio/" on GitHub Pages).
 export const HOME = import.meta.env.BASE_URL;
 
 /** The blog pages' frame: a slim bar (home, blog, RSS, accent color, language, theme) and a one-line footer. */
@@ -24,7 +24,7 @@ const BlogShell = ({ title, children, className }: { title: string; children: Re
   }, [title]);
 
   return (
-    <div className={`blog min-h-screen relative [overflow-x:clip]${className ? ` ${className}` : ''}`}>
+    <div className={`blog min-h-screen flex flex-col relative [overflow-x:clip]${className ? ` ${className}` : ''}`}>
       <header className="nav">
         <div className="nav-in blog-nav">
           <a className="brand" href={HOME}>
@@ -56,9 +56,11 @@ const BlogShell = ({ title, children, className }: { title: string; children: Re
         </div>
       </header>
 
-      {children}
+      <div className="flex-1 w-full">
+        {children}
+      </div>
 
-      <div className="wrap">
+      <div className="wrap w-full mt-auto">
         <SiteBottomBar />
       </div>
     </div>

@@ -8,6 +8,7 @@ export interface HeroCard {
   /** The photo card: full-bleed portrait, no type chip. */
   me: boolean;
   img: string;
+  svg?: ReactNode;
   title: string;
   line: string;
   type: string;

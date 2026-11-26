@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, BookOpen } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import BlogShell from '@/components/blog/BlogShell';
 import LikeBar from '@/components/blog/LikeBar';
@@ -61,6 +61,52 @@ const BlogPost = () => {
     };
   }, [post, lang]);
 
+  useEffect(() => {
+    if (!post) return;
+    const shown = localize(post, lang);
+    const scriptId = 'post-json-ld';
+    let script = document.getElementById(scriptId) as HTMLScriptElement | null;
+    if (!script) {
+      script = document.createElement('script');
+      script.id = scriptId;
+      script.type = 'application/ld+json';
+      document.head.appendChild(script);
+    }
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: shown.title,
+      description: shown.description,
+      datePublished: post.time ? `${post.date}T${post.time}:00-03:00` : `${post.date}T12:00:00Z`,
+      dateModified: post.time ? `${post.date}T${post.time}:00-03:00` : `${post.date}T12:00:00Z`,
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': `https://devandreotti.com/blog/${post.slug}/`,
+      },
+      url: `https://devandreotti.com/blog/${post.slug}/`,
+      image: post.image
+        ? (post.image.startsWith('http') ? post.image : `https://devandreotti.com${post.image.replace(/^\.?\//, '/')}`)
+        : 'https://devandreotti.com/og-image.png',
+      keywords: post.tags.join(', '),
+      inLanguage: lang === 'en' ? 'en' : 'pt-BR',
+      author: {
+        '@type': 'Person',
+        name: 'Ricardo A. Gonçalves',
+        url: 'https://devandreotti.com/',
+        jobTitle: 'Desenvolvedor Full Stack',
+      },
+      publisher: {
+        '@type': 'Person',
+        name: 'Ricardo A. Gonçalves',
+        url: 'https://devandreotti.com/',
+      },
+    };
+    script.textContent = JSON.stringify(schema);
+    return () => {
+      script?.remove();
+    };
+  }, [post, lang]);
+
   if (!post) {
     return (
       <Suspense fallback={null}>
@@ -79,31 +125,62 @@ const BlogPost = () => {
 
   return (
     <BlogShell title={`${shown.title} — Ricardo A. Gonçalves`} className={reading.on ? 'reading' : undefined}>
+      {reading.on && (
+        <button
+          type="button"
+          className="reading-exit-pill"
+          onClick={reading.toggle}
+          aria-label={lang === 'pt' ? 'Sair do modo leitura (Esc)' : 'Exit reading mode (Esc)'}
+        >
+          <BookOpen className="ic s" aria-hidden="true" />
+          <span>{lang === 'pt' ? 'Sair do modo leitura' : 'Exit reading mode'}</span>
+          <kbd>Esc</kbd>
+        </button>
+      )}
       <div className="wrap post-layout">
-        <article className="post" lang={served === 'en' ? 'en' : 'pt-BR'}>
-          <Link to="/blog/" className="post-back">
-            <ArrowLeft className="ic s" aria-hidden="true" />
-            {b.back}
-          </Link>
-          <h1 className="post-h">{shown.title}</h1>
-          <p className="post-meta">
-            <time dateTime={post.date}>{formatDay(post.date, lang)}</time>
-            <span aria-hidden="true">·</span>
-            <span>{b.minutes(shown.minutes)}</span>
-            {post.tags.map((tag) => (
-              <Link key={tag} to={`/blog/?tag=${encodeURIComponent(tag)}`} className="post-tag">
-                #{tag}
-              </Link>
-            ))}
-          </p>
-          {note && <p className="blog-note">{note}</p>}
-          <ReadingModeButton on={reading.on} onToggle={reading.toggle} />
+        <article className="post-split" lang={served === 'en' ? 'en' : 'pt-BR'}>
+          <header className="post-sidebar post-editorial">
+            <Link to="/blog/" className="post-back">
+              <ArrowLeft className="ic s" aria-hidden="true" />
+              {b.back}
+            </Link>
+            <h1 className="post-h">{shown.title}</h1>
+            <p className="post-meta">
+              <time dateTime={post.time ? `${post.date}T${post.time}` : post.date}>
+                {formatDay(post.date, lang)}{post.time ? (lang === 'pt' ? ` às ${post.time}` : ` at ${post.time}`) : ''}
+              </time>
+              <span aria-hidden="true">·</span>
+              <span>{b.minutes(shown.minutes)}</span>
+              {post.tags.map((tag) => (
+                <Link key={tag} to={`/blog/?tag=${encodeURIComponent(tag)}`} className="post-tag">
+                  #{tag}
+                </Link>
+              ))}
+            </p>
+            {note && <p className="blog-note">{note}</p>}
+            <ReadingModeButton on={reading.on} onToggle={reading.toggle} />
 
-          {body.status === 'ready' && <div className="prose" dangerouslySetInnerHTML={{ __html: body.html }} />}
-          {body.status === 'loading' && <div className="prose-ph" aria-busy="true" />}
-          {body.status === 'error' && <p className="blog-empty">{b.loadError}</p>}
+            {toc.length > 1 && (
+              <aside className="toc" aria-label={b.onThisPage}>
+                <p className="k">{b.onThisPage}</p>
+                {toc.map((entry) => (
+                  <a key={entry.id} href={`#${entry.id}`} aria-current={active === entry.id ? 'location' : undefined}>
+                    {entry.text}
+                  </a>
+                ))}
+              </aside>
+            )}
+          </header>
 
-          <LikeBar slug={post.slug} title={shown.title} />
+          <div className="post-body">
+            {body.status === 'ready' && <div className="prose" dangerouslySetInnerHTML={{ __html: body.html }} />}
+            {body.status === 'loading' && <div className="prose-ph" aria-busy="true" />}
+            {body.status === 'error' && <p className="blog-empty">{b.loadError}</p>}
+            <LikeBar slug={post.slug} title={shown.title} />
+          </div>
+        </article>
+
+        <section className="post-bottom" aria-label={b.pageTitle}>
           <NewsletterForm />
 
           {related.length > 0 && (
@@ -140,18 +217,7 @@ const BlogPost = () => {
               )}
             </nav>
           )}
-        </article>
-
-        {toc.length > 1 && (
-          <aside className="toc" aria-label={b.onThisPage}>
-            <p className="k">{b.onThisPage}</p>
-            {toc.map((entry) => (
-              <a key={entry.id} href={`#${entry.id}`} aria-current={active === entry.id ? 'location' : undefined}>
-                {entry.text}
-              </a>
-            ))}
-          </aside>
-        )}
+        </section>
       </div>
     </BlogShell>
   );

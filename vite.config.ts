@@ -15,7 +15,7 @@ const bootPalette = (): Plugin => ({
 });
 
 export default defineConfig(({ mode }) => ({
-  base: "/frosted-motion-folio-v2/",
+  base: "/motion-folio/",
   server: {
     host: "::",
     port: 8080,

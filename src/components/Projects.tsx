@@ -119,14 +119,16 @@ const Projects = () => {
         {rows.length === 0 && !showFeatured && <div className="empty">{t.projects.emptyCategory}</div>}
       </div>
 
-      <MoreProjects projects={moreProjects} onOpen={openCase} />
-
-      <div className="more">
-        <a className="btn btn-gh" href={contact.repos} target="_blank" rel="noopener noreferrer">
-          {t.projects.moreProjects(OTHERS_COUNT)}
-          <ArrowUpRight className="ic s" />
-        </a>
-      </div>
+      <MoreProjects
+        projects={moreProjects}
+        onOpen={openCase}
+        extraAction={
+          <a className="btn btn-gh btn-sm" href={contact.repos} target="_blank" rel="noopener noreferrer">
+            {t.projects.moreProjects(OTHERS_COUNT)}
+            <ArrowUpRight className="ic s" />
+          </a>
+        }
+      />
 
       {openProject && (
         <Suspense fallback={null}>

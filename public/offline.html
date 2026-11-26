@@ -136,8 +136,8 @@ h1 .ac{display:block;color:var(--ink)}
     en: { doc: 'Back soon · Ricardo Andreotti', down: 'down', badge: 'Maintenance', kicker: 'back in a moment', title: "I'm offline", title2: 'for a moment.', body: 'It may be a deploy in progress or a hiccup on the server. While the site is down, you can find me here:', email: 'Email', retry: 'Try again', role: 'Full Stack Developer', status: 'Status', portfolio: 'Portfolio', up: 'up', replying: 'answering', code: 'error 503 · service temporarily unavailable', hint: 'trying again on my own in {s} s', checked: 'last try at {t}', alt: 'Portrait of Ricardo A. Gonçalves' }
   };
   var o = window.__offline, t = T[o.lang] || T.pt;
-  // "/" on devandreotti.com, "/frosted-motion-folio-v2/" on GitHub Pages
-  var base = location.pathname.indexOf('/frosted-motion-folio-v2/') === 0 ? '/frosted-motion-folio-v2/' : '/';
+  // "/" on devandreotti.com, "/motion-folio/" on GitHub Pages
+  var base = location.pathname.indexOf('/motion-folio/') === 0 ? '/motion-folio/' : '/';
   document.documentElement.lang = o.lang === 'en' ? 'en' : 'pt-BR';
   document.title = t.doc;
   document.querySelectorAll('[data-t]').forEach(function (el) { if (t[el.dataset.t]) el.textContent = t[el.dataset.t]; });

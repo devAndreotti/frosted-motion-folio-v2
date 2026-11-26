@@ -9,7 +9,7 @@ const NovidadesBadge = () => {
   const [unseen, setUnseen] = useState(() => hasUnseen(readSeen()));
   if (!unseen) return null;
   return (
-    <Link className="nv-badge" to="/novidades/" aria-label={t.novidades.badgeAria} onClick={() => setUnseen(false)}>
+    <Link className="nv-badge" to="/novidades/" aria-label={`${t.novidades.badge}: ${t.novidades.badgeAria}`} onClick={() => setUnseen(false)}>
       {t.novidades.badge}
     </Link>
   );

@@ -44,11 +44,11 @@ const HeroFan = ({ cards }: { cards: HeroCard[] }) => {
               key={card.id}
               type="button"
               onClick={() => fan.pick(i)}
-              className={`fan-card${card.me ? ' me' : ''}${off === 0 ? ' on' : ''}${role}`}
+              className={`fan-card${card.me ? ' me' : ''}${card.svg ? ' art' : ''}${off === 0 ? ' on' : ''}${role}`}
               style={style}
             >
               <span className="fan-img">
-                <img src={card.img} alt="" draggable={false} />
+                {card.svg ? <span className="fan-svg">{card.svg}</span> : <img src={card.img} alt="" draggable={false} />}
               </span>
               <span className="fan-b">
                 <CardText card={card} />

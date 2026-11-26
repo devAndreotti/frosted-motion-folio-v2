@@ -5,11 +5,14 @@ export const HARDWARE: UsesCategory = {
   label: { pt: 'Hardware', en: 'Hardware' },
   items: [
     {
-      name: 'Notebook com Windows',
-      detail: { pt: 'Intel Core i5-12450H · 16 GB de RAM · NVIDIA GeForce RTX 2050', en: 'Intel Core i5-12450H · 16 GB RAM · NVIDIA GeForce RTX 2050' },
+      name: 'Lenovo LOQ',
+      detail: {
+        pt: 'Intel Core i5 · NVIDIA GeForce RTX 3050 · 24 GB de RAM · SSD NVMe',
+        en: 'Intel Core i5 · NVIDIA GeForce RTX 3050 · 24 GB RAM · NVMe SSD',
+      },
       why: {
-        pt: 'Trabalho e desenvolvimento, no Windows. A GPU roda modelos de IA locais com o Ollama.',
-        en: 'Work and development, on Windows. The GPU runs local AI models with Ollama.',
+        pt: 'Notebook principal de desenvolvimento. Roda modelos locais de IA e compilações pesadas.',
+        en: 'Primary development notebook. Runs local AI models and heavy compilation.',
       },
     },
     {
@@ -19,6 +22,22 @@ export const HARDWARE: UsesCategory = {
       why: {
         pt: 'Ambiente principal de Linux, com Hyprland, para desenvolvimento e ferramentas próprias.',
         en: 'My main Linux environment, with Hyprland, for development and my own tools.',
+      },
+    },
+    {
+      name: 'Tela secundária',
+      detail: { pt: 'Monitor auxiliar para visualização contínua', en: 'Auxiliary monitor for continuous monitoring' },
+      why: {
+        pt: 'Espaço extra de tela para acompanhar logs, documentação e tarefas em paralelo.',
+        en: 'Extra screen space to monitor logs, documentation, and parallel tasks.',
+      },
+    },
+    {
+      name: 'Periféricos',
+      detail: { pt: 'Teclado mecânico, mouse de precisão e fone isolante', en: 'Mechanical keyboard, precision mouse, and isolating headphones' },
+      why: {
+        pt: 'Ergonomia e precisão para longas sessões de código e terminal.',
+        en: 'Ergonomics and precision for long coding and terminal sessions.',
       },
     },
     {

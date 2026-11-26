@@ -1,9 +1,9 @@
-# ❄️ Frosted Motion Folio
+# ✨ Motion Folio
 
 <p align="center">
-  <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/devAndreotti/frosted-motion-folio-v2?style=flat-square&labelColor=111827&color=22c55e">
-  <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/devAndreotti/frosted-motion-folio-v2?style=flat-square&labelColor=111827&color=38bdf8">
-  <img alt="GitHub stars" src="https://img.shields.io/github/stars/devAndreotti/frosted-motion-folio-v2?style=flat-square&labelColor=111827&color=f59e0b">
+  <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/devAndreotti/motion-folio?style=flat-square&labelColor=111827&color=22c55e">
+  <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/devAndreotti/motion-folio?style=flat-square&labelColor=111827&color=38bdf8">
+  <img alt="GitHub stars" src="https://img.shields.io/github/stars/devAndreotti/motion-folio?style=flat-square&labelColor=111827&color=f59e0b">
   <img alt="License MIT" src="https://img.shields.io/badge/license-MIT-eab308?style=flat-square&labelColor=111827">
 </p>
 
@@ -19,11 +19,11 @@
 </p>
 
 <p align="left">
-  <strong>Portfólio interativo de alta performance com Three.js, visual frosted glass e engenharia editorial full-stack.</strong><br />
+  <strong>Portfólio interativo de alta performance com Three.js, motion design e engenharia editorial full-stack.</strong><br />
   Uma experiência web moderna com renderização 3D sob demanda, geração automatizada de currículo ATS em PDF, blog bilíngue com tradução autônoma por IA e newsletter na Cloudflare Edge.
 </p>
 
-![Banner do Frosted Motion Folio](./docs/screenshots/home.png)
+![Banner do Motion Folio](./docs/screenshots/home.png)
 
 > "Um portfólio moderno não deve ser apenas uma vitrine estática de links, mas um laboratório vivo onde engenharia de software de ponta, design imersivo e automação contínua coexistem em produção."
 
@@ -31,7 +31,7 @@
 
 ## Visão geral
 
-O **Frosted Motion Folio** é uma plataforma de portfólio e blog técnico desenvolvida com foco em alta fidelidade visual, performance extrema e automação ponta a ponta.
+O **Motion Folio** é uma plataforma de portfólio e blog técnico desenvolvida com foco em alta fidelidade visual, performance extrema e automação ponta a ponta.
 
 - **Notebook 3D Lenovo LOQ**: Modelo tridimensional interativo renderizado em Three.js, com iluminação dinâmica, animação da tampa, efeitos sonoros sintetizados em tempo real via Web Audio API (teclas mecânicas e som de boot) e arquitetura de performance `tap-to-3d` no mobile para evitar sobrecarga de GPU e assegurar 60 FPS consistentes.
 - **Seção Agora com Memory Apartment TV & Crumple**: Painel dinâmico de status diário e projetos em andamento inspirado na filosofia `/now`, apresentando cards com microinteração tátil de dobra (efeito Crumple) e a retrô Memory Apartment TV para exploração visual de marcos da trajetória.
@@ -47,7 +47,7 @@ O **Frosted Motion Folio** é uma plataforma de portfólio e blog técnico desen
 
 | Tema Claro | Tema Escuro |
 | :---: | :---: |
-| <img src="./docs/screenshots/light.png" alt="Frosted Motion Folio - Tema Claro" width="100%" /> | <img src="./docs/screenshots/dark.png" alt="Frosted Motion Folio - Tema Escuro" width="100%" /> |
+| <img src="./docs/screenshots/light.png" alt="Motion Folio - Tema Claro" width="100%" /> | <img src="./docs/screenshots/dark.png" alt="Motion Folio - Tema Escuro" width="100%" /> |
 
 ### Notebook 3D: Desktop vs Mobile (Tap-to-3D)
 
@@ -137,7 +137,7 @@ flowchart TD
 - **React 19** para construção de interfaces reativas e declarativas com Vite.
 - **TypeScript** para tipagem estática rigorosa e robustez na arquitetura do código.
 - **Vite** para build tooling ultra-rápido com Hot Module Replacement (HMR).
-- **Tailwind CSS** para estilização com classes utilitárias, design system frosted glass e tokens responsivos.
+- **Tailwind CSS** para estilização com classes utilitárias, design system com tokens responsivos.
 - **Three.js** para modelagem, materiais e renderização 3D interativa do notebook com suporte a WebGL.
 - **Framer Motion** para animações declarativas, transições de páginas e gestos táteis.
 - **Playwright & Axe-Core** para testes de regressão visual automatizados, auditorias de acessibilidade e compilação do currículo ATS em PDF (`page.pdf()`).
@@ -161,8 +161,8 @@ flowchart TD
 ### 1. Clonar e instalar dependências
 
 ```bash
-git clone https://github.com/devAndreotti/frosted-motion-folio-v2.git
-cd frosted-motion-folio-v2
+git clone https://github.com/devAndreotti/motion-folio.git
+cd motion-folio
 npm install
 ```
 
@@ -239,7 +239,7 @@ npm run build
 ## Estrutura do projeto
 
 ```text
-frosted-motion-folio-v2/
+motion-folio/
 ├── docs/                 # Documentações de arquitetura, roadmaps e capturas de tela
 ├── public/               # Ativos estáticos, fontes, modelos 3D e manifestos
 ├── scripts/              # Utilitários de automação (currículo ATS, tradução IA, newsletter)

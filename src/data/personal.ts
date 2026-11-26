@@ -19,7 +19,7 @@ export const socialLinks = [
 export const personalInfo = {
   name: "Ricardo A. Gonçalves",
   title: { pt: "Desenvolvedor Full Stack", en: "Full Stack Developer" },
-  bio: "Desenvolvedor apaixonado por criar experiências digitais. Especializado em React, Node.js e outras tecnologias modernas. Foco em soluções criativas, performance e usabilidade.",
+  bio: "Técnico em Informática & Ciência da Computação (UNIP) · Full Stack, IA & Automação, Rust, Godot 4 e WebGL2",
   avatar: "/placeholder.svg",
   location: "São Paulo, Brasil"
 };

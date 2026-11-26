@@ -1,5 +1,5 @@
 #requires -Version 5.1
-# Menu interativo para a suite E2E (Playwright) de Frosted Motion Folio.
+# Menu interativo para a suite E2E (Playwright) de Motion Folio.
 # Roda de qualquer diretorio: resolve o repo via $PSScriptRoot, nunca via cwd.
 #
 # GERADO A PARTIR de assets/launcher-template.ps1 (skill playwright-e2e-suite).
@@ -108,7 +108,7 @@ function Show-Menu {
     $homeSpecs = @(Get-SpecFiles -Under 'home')
 
     Write-Host '========================================' -ForegroundColor $ColorMuted
-    Write-Host '  Frosted Motion Folio :: Playwright E2E' -ForegroundColor $ColorBrand
+    Write-Host '  Motion Folio :: Playwright E2E' -ForegroundColor $ColorBrand
     Write-Host -NoNewline '  Dev server: ' -ForegroundColor $ColorMuted
     Write-Host $webTxt -ForegroundColor $webColor
     Write-Host "  Specs: $($allSpecs.Count) total ($($homeSpecs.Count) em home/)" -ForegroundColor $ColorMuted

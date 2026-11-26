@@ -17,6 +17,24 @@ export function filterByTag(posts: PostMeta[], tag: string | null): PostMeta[] {
   return tag ? posts.filter((post) => post.tags.includes(tag)) : posts;
 }
 
+/** Filters posts whose title, description or tags match the search query (case-insensitive). */
+export function searchPosts(posts: PostMeta[], query: string): PostMeta[] {
+  const q = query.trim().toLowerCase();
+  if (!q) return posts;
+  return posts.filter(
+    (post) =>
+      post.title.toLowerCase().includes(q) ||
+      post.description.toLowerCase().includes(q) ||
+      post.tags.some((tag) => tag.toLowerCase().includes(q))
+  );
+}
+
+/** Combines tag filter and search filter. */
+export function filterPosts(posts: PostMeta[], tag: string | null, query?: string): PostMeta[] {
+  const byTag = filterByTag(posts, tag);
+  return query ? searchPosts(byTag, query) : byTag;
+}
+
 /** Every tag in use, the most used first. */
 export function collectTags(posts: PostMeta[]): string[] {
   const counts = new Map<string, number>();

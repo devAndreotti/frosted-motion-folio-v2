@@ -55,11 +55,11 @@
 .mtv-chbtns button:active, .mtv-pwr:active { transform: translateY(2px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 1px 0 #0d0c0b; }
 .mtv-grille { display: none; }
 .mtv-pwrrow { position: relative; display: flex; align-items: center; justify-content: center; width: 100%; min-height: 40px; }
-.mtv-pwr { position: relative; width: 40px; height: 40px; padding: 0; border: 0; border-radius: 50%; cursor: pointer; background: linear-gradient(#5a544d, #2c2824); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 3px 0 #0d0c0b; }
-.mtv-pwr i { position: absolute; left: 50%; top: 50%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border: 2px solid #e6dec9; border-top-color: transparent; border-radius: 50%; }
-.mtv-pwr i::after { content: ''; position: absolute; left: 3px; top: -5px; width: 2px; height: 8px; background: #e6dec9; }
-.mtv-pled { position: absolute; left: calc(50% + 31px); top: 50%; width: 9px; height: 9px; margin-top: -4.5px; border-radius: 50%; background: #3a1210; box-shadow: inset 0 1px 2px #000; }
-.mtv-pled.on { background: #ff3b2f; box-shadow: 0 0 8px #ff3b2f; }
+.mtv-pwr { position: relative; width: 40px; height: 40px; margin-left: -12px; padding: 0; border: 0; border-radius: 50%; cursor: pointer; background: linear-gradient(#5a544d, #2c2824); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 3px 0 #0d0c0b; }
+.mtv-pwr i { position: absolute; left: 50%; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border: 2px solid #e6dec9; border-top-color: transparent; border-radius: 50%; box-sizing: border-box; }
+.mtv-pwr i::after { content: ''; position: absolute; left: 50%; top: -4px; width: 2px; height: 7px; transform: translateX(-50%); background: #e6dec9; border-radius: 1px; }
+.mtv-pled { position: absolute; left: calc(50% + 15px); top: 50%; width: 8px; height: 8px; margin-top: -4px; border-radius: 50%; background: #3a1210; box-shadow: inset 0 1px 2px #000; }
+.mtv-pled.on { background: #ff3b2f; box-shadow: 0 0 6px 1px #ff3b2f; }
 .mtv-feet { display: flex; justify-content: space-between; padding: 0 14%; }
 .mtv-feet i { width: 70px; height: 12px; border-radius: 0 0 8px 8px; background: linear-gradient(#2b1a0e, #140c06); box-shadow: 0 8px 12px rgba(0, 0, 0, 0.5); }
 .mtv-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 16px; margin-top: 22px; }
@@ -83,8 +83,9 @@
   .mtv-klbl { position: absolute; left: 50%; top: calc(100% + 6px); transform: translateX(-50%); white-space: nowrap; }
   .mtv-chbtns { grid-area: chbtns; width: auto; }
   .mtv-chbtns button { width: 38px; }
+  .mtv-pwr { margin-left: 0; }
   .mtv-pwrrow { grid-area: pwr; position: relative; width: auto; min-height: 0; }
-  .mtv-pled { left: 50%; top: calc(100% + 8px); margin: 0 0 0 -4.5px; }
+  .mtv-pled { left: 50%; top: calc(100% + 8px); margin: 0 0 0 -4px; }
   .mtv-osd { font-size: 10.5px; letter-spacing: 0.06em; }
 }
 /* 340 px phones and narrower: the +/- keys get a row of their own, centered */

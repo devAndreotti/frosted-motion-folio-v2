@@ -47,7 +47,7 @@ const ColorPickerPopover = () => {
         ref={triggerRef}
         type="button"
         onClick={() => setOpen((v) => !v)}
-        aria-label={t.colorPicker.trigger}
+        aria-label={`${t.colorPicker.hueNames[hue]}, ${t.colorPicker.trigger.toLowerCase()}`}
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-controls={open ? popId : undefined}

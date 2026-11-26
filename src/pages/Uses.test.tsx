@@ -52,7 +52,7 @@ describe('uses page', () => {
     expect(screen.queryByText('Cloudflare')).toBeNull();
     pick('Serviços');
     expect(screen.getByText('Cloudflare')).toBeTruthy();
-    expect(within(panel()).getByText('4 itens')).toBeTruthy();
+    expect(within(panel()).getByText('5 itens')).toBeTruthy();
   });
 
   it('counts each category from the data and tags one main pick per category', () => {

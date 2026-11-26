@@ -4,14 +4,14 @@ date: 2026-10-15
 description: How the posts on this site become real pages from Markdown files, with no CMS, and everything you can use in a post.
 tags: [blog, vite, cloudflare]
 draft: false
-source: dab116de3cf5
+source: 45b89fbe4211
 ---
 
 This blog has no dashboard and no login. Each post is a Markdown file in
 `src/content/posts/`, and publishing is a commit and a `git push` to `main`.
 
 This post is also the **template**: it uses everything the blog supports. Compare the
-text you are reading with the [source file on GitHub](https://github.com/devAndreotti/frosted-motion-folio-v2/blob/main/src/content/posts/2026-10-15-um-blog-publicado-com-git-push.md).
+text you are reading with the [source file on GitHub](https://github.com/devAndreotti/motion-folio/blob/main/src/content/posts/2026-10-15-um-blog-publicado-com-git-push.md).
 
 ## How a file becomes a page
 
