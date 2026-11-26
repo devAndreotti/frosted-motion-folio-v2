@@ -50,7 +50,7 @@ const Index = () => {
           surface, so it never sits on top of the header's text. */}
       <a
         href="#header"
-        className="fixed left-4 top-[4.5rem] z-[100] -translate-y-32 focus-visible:translate-y-0 transition-transform px-4 py-2 rounded-full text-sm font-semibold"
+        className="fixed left-4 top-18 z-100 -translate-y-32 focus-visible:translate-y-0 transition-transform px-4 py-2 rounded-full text-sm font-semibold"
         style={{ background: 'var(--solid)', color: 'var(--fg-1)', border: '1px solid var(--border-2)' }}
       >
         {t.common.skipToContent}
@@ -58,7 +58,7 @@ const Index = () => {
       {/* clip, not hidden: trims the hero glow and the cards' flight at the
           viewport edge without becoming a scroll container (that would
           break the sticky nav). */}
-      <div className="min-h-screen relative [overflow-x:clip]">
+      <div className="min-h-screen relative overflow-x-clip">
         <Navigation />
         <main>
           <Header />

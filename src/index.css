@@ -1,70 +1,293 @@
+@import 'tailwindcss';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@plugin 'tailwindcss-animate';
 
-html {
-  overflow-x: hidden;
-  /* Same-page anchor jumps (footer links, skip-to-content) don't run through
+@custom-variant dark (&:is(.dark *));
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+  @media (width >= --theme(--breakpoint-sm)) {
+    max-width: none;
+  }
+  @media (width >= 1400px) {
+    max-width: 1400px;
+  }
+}
+
+@theme {
+  --font-sans:
+    'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    sans-serif;
+  --font-mono:
+    'Geist Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-fade-in: fade-in 0.6s ease-out;
+  --animate-float: float 3s ease-in-out infinite;
+
+  --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
+  --background-image-gradient-conic: conic-gradient(
+    from 180deg at 50% 50%,
+    var(--tw-gradient-stops)
+  );
+
+  --backdrop-blur-xs: 2px;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@utility glass {
+  /* Real glassmorphism needs three things together, not just a blur: a soft
+     drop shadow so the panel visibly separates from the page (depth), and a
+     thin inner top-light so the edge catches light like actual glass. */
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  /* No backdrop-filter here: the background wash is fixed, so every glass card on screen
+       was re-blurred on every scroll frame (heavy on Edge/Windows GPUs), and over a soft
+       gradient the blur is invisible. The nav, the dialogs and .glass-strong keep theirs. */
+  box-shadow:
+    0 8px 32px var(--sh),
+    inset 0 1px var(--hl);
+}
+
+@utility glass-card {
+  @apply glass rounded-3xl p-8 transition-all duration-500 hover:scale-[1.02];
+  transform-style: preserve-3d;
+
+  &:hover {
+    background: var(--surface-2);
+  }
+}
+
+@utility glass-button {
+  @apply glass rounded-full px-8 py-4 transition-all duration-300 hover:scale-110 active:scale-95;
+
+  &:hover {
+    background: var(--surface-2);
+  }
+}
+
+@utility glass-strong {
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  background: var(--surface-2);
+  border: 1px solid var(--border-2);
+  /* Lower saturation than .glass -- this variant covers big panels (modals,
+       mobile menu) that can sit over detailed content like a photo, where
+       180% turns whatever bleeds through into a distractingly vivid blob. */
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  box-shadow:
+    0 16px 48px var(--sh),
+    inset 0 1px var(--hl);
+}
+
+@utility glass-intense {
+  background: var(--surface-2);
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  border: 1px solid var(--border-2);
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.22);
+}
+
+@utility custom-scrollbar {
+  /* Thin, accent-tinted scrollbar for native horizontal-scroll strips (the
+     contribution heatmap) — the OS default is a fat, theme-blind bar that
+     looks out of place against the glass panels. */
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--accent-rgb) / 0.4) transparent;
+
+  &::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgb(var(--accent-rgb) / 0.4);
+    border-radius: 999px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--accent-rgb) / 0.6);
+  }
+}
+
+@utility scrollbar-none {
+  /* For draggable rails that fake infinite content by wrapping scrollLeft
+     (the stack marquee) — a real scrollbar thumb would jump on every wrap. */
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility text-gradient {
+  background: linear-gradient(90deg, var(--accent, #3b82f6), var(--fg-1));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility shadow-3xl {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+@layer utilities {
+  html {
+    overflow-x: hidden;
+    /* Same-page anchor jumps (footer links, skip-to-content) don't run through
      our JS scrollIntoView({behavior:'smooth'}) calls, so without this they
      snap instantly instead of animating. scroll-padding-top keeps the
      landing section clear of the fixed 64px nav bar either way. Browsers
      already fall back to instant scroll under prefers-reduced-motion, so
      this doesn't fight that preference. */
-  scroll-behavior: smooth;
-  scroll-padding-top: 64px;
-  /* Page scrollbar: thin, no arrows, thumb in the theme accent. The accent
+    scroll-behavior: smooth;
+    scroll-padding-top: 64px;
+    /* Page scrollbar: thin, no arrows, thumb in the theme accent. The accent
      comes from --accent-rgb, which ThemeContext sets on this element for
      every hue and mode, so the bar follows theme and color changes. The
      fallback only shows before React has run. Firefox reads the standard
      properties; Chromium uses the ::-webkit-scrollbar rules below. */
-  scrollbar-width: thin;
-  scrollbar-color: rgb(var(--accent-rgb, 59 130 246) / 0.45) transparent;
-}
-
-html::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
-}
-
-html::-webkit-scrollbar-button {
-  display: none;
-}
-
-html::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-html::-webkit-scrollbar-thumb {
-  background: rgb(var(--accent-rgb, 59 130 246) / 0.45);
-  border-radius: 999px;
-  border: 2px solid transparent;
-  background-clip: padding-box;
-  transition: background-color 0.25s ease;
-}
-
-html::-webkit-scrollbar-thumb:hover {
-  background: rgb(var(--accent-rgb, 59 130 246) / 0.7);
-  background-clip: padding-box;
-}
-
-html::-webkit-scrollbar-thumb:active {
-  background: rgb(var(--accent-rgb, 59 130 246) / 0.85);
-  background-clip: padding-box;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html::-webkit-scrollbar-thumb {
-    transition: none;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--accent-rgb, 59 130 246) / 0.45) transparent;
   }
-}
 
-/* Mode tokens: text/dot stay simple light/dark. Everything that should carry
+  html::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+
+  html::-webkit-scrollbar-button {
+    display: none;
+  }
+
+  html::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  html::-webkit-scrollbar-thumb {
+    background: rgb(var(--accent-rgb, 59 130 246) / 0.45);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    transition: background-color 0.25s ease;
+  }
+
+  html::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--accent-rgb, 59 130 246) / 0.7);
+    background-clip: padding-box;
+  }
+
+  html::-webkit-scrollbar-thumb:active {
+    background: rgb(var(--accent-rgb, 59 130 246) / 0.85);
+    background-clip: padding-box;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html::-webkit-scrollbar-thumb {
+      transition: none;
+    }
+  }
+
+  /* Mode tokens: text/dot stay simple light/dark. Everything that should carry
    the selected color — accent, glass surface/border — is computed per
    hue+mode by src/lib/theme.ts and set on this same root element at runtime
    by ThemeContext. The background gradient + ambient blobs are rendered by
    <BackgroundLayers> instead of CSS (it needs the raw values in JS to
    crossfade a color/theme change — see that component for why). */
+}
 @layer base {
   :root {
     /* Native controls (scrollbars, form fields) follow the theme class. */
@@ -159,112 +382,13 @@ html::-webkit-scrollbar-thumb:active {
   }
 }
 
-/* The wash is `fixed inset-0`, so it is only one viewport tall. Anywhere the page runs past that
+@layer utilities {
+  /* The wash is `fixed inset-0`, so it is only one viewport tall. Anywhere the page runs past that
    (long pages, full-page captures, mobile toolbars), the body fallback shows through as a seam
    (flat #f4f4f5 in light, a visible step in dark). Pin it to #root instead, which is as tall as
    the whole page. */
-#root > [data-testid='background-layers'] {
-  position: absolute;
-}
-
-@layer components {
-  /* Real glassmorphism needs three things together, not just a blur: a soft
-     drop shadow so the panel visibly separates from the page (depth), and a
-     thin inner top-light so the edge catches light like actual glass. */
-  .glass {
-    transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
-    background: var(--surface-1);
-    border: 1px solid var(--border-1);
-    /* No backdrop-filter here: the background wash is fixed, so every glass card on screen
-       was re-blurred on every scroll frame (heavy on Edge/Windows GPUs), and over a soft
-       gradient the blur is invisible. The nav, the dialogs and .glass-strong keep theirs. */
-    box-shadow: 0 8px 32px var(--sh), inset 0 1px var(--hl);
-  }
-
-  .glass-card {
-    @apply glass rounded-3xl p-8 transition-all duration-500 hover:scale-[1.02];
-    transform-style: preserve-3d;
-  }
-
-  .glass-card:hover {
-    background: var(--surface-2);
-  }
-
-  .glass-button {
-    @apply glass rounded-full px-8 py-4 transition-all duration-300 hover:scale-110 active:scale-95;
-  }
-
-  .glass-button:hover {
-    background: var(--surface-2);
-  }
-
-  .glass-strong {
-    transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
-    background: var(--surface-2);
-    border: 1px solid var(--border-2);
-    /* Lower saturation than .glass -- this variant covers big panels (modals,
-       mobile menu) that can sit over detailed content like a photo, where
-       180% turns whatever bleeds through into a distractingly vivid blob. */
-    backdrop-filter: blur(16px) saturate(140%);
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
-    box-shadow: 0 16px 48px var(--sh), inset 0 1px var(--hl);
-  }
-
-  .glass-intense {
-    background: var(--surface-2);
-    backdrop-filter: blur(25px) saturate(180%);
-    -webkit-backdrop-filter: blur(25px) saturate(180%);
-    border: 1px solid var(--border-2);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.22);
-  }
-}
-
-@layer utilities {
-  /* Thin, accent-tinted scrollbar for native horizontal-scroll strips (the
-     contribution heatmap) — the OS default is a fat, theme-blind bar that
-     looks out of place against the glass panels. */
-  .custom-scrollbar {
-    scrollbar-width: thin;
-    scrollbar-color: rgb(var(--accent-rgb) / 0.4) transparent;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar {
-    height: 6px;
-    width: 6px;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: rgb(var(--accent-rgb) / 0.4);
-    border-radius: 999px;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: rgb(var(--accent-rgb) / 0.6);
-  }
-
-  /* For draggable rails that fake infinite content by wrapping scrollLeft
-     (the stack marquee) — a real scrollbar thumb would jump on every wrap. */
-  .scrollbar-none {
-    scrollbar-width: none;
-  }
-
-  .scrollbar-none::-webkit-scrollbar {
-    display: none;
-  }
-
-  .text-gradient {
-    background: linear-gradient(90deg, var(--accent, #3b82f6), var(--fg-1));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  .shadow-3xl {
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  #root > [data-testid='background-layers'] {
+    position: absolute;
   }
 }
 
