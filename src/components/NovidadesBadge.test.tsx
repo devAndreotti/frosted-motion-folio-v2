@@ -20,7 +20,7 @@ describe('NovidadesBadge', () => {
 
   it('shows "Novo" to a visitor who has not seen the newest change', () => {
     renderBadge();
-    const badge = screen.getByRole('link', { name: 'Novidades do site' });
+    const badge = screen.getByRole('link', { name: /Novidades do site/ });
     expect(badge.textContent).toBe('Novo');
     expect(badge.getAttribute('href')).toBe('/novidades/');
   });
@@ -33,7 +33,7 @@ describe('NovidadesBadge', () => {
 
   it('hides when clicked, before the page opens', () => {
     const { container } = renderBadge();
-    fireEvent.click(screen.getByRole('link', { name: 'Novidades do site' }));
+    fireEvent.click(screen.getByRole('link', { name: /Novidades do site/ }));
     expect(container.querySelector('a')).toBeNull();
   });
 });
