@@ -9,7 +9,7 @@ import { USES_LINK } from '@/data/uses';
 import SiteBottomBar from '@/components/SiteBottomBar';
 import { blogNavActive, type BlogNavKey } from './blogNav';
 
-// The app's root on either deploy ("/" on devandreotti.com, "/frosted-motion-folio-v2/" on GitHub Pages).
+// The app's root on either deploy ("/" on devandreotti.com, "/motion-folio/" on GitHub Pages).
 export const HOME = import.meta.env.BASE_URL;
 
 /** The blog pages' frame: a slim bar (home, blog, RSS, accent color, language, theme) and a one-line footer. */

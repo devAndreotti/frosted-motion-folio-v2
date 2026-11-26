@@ -48,7 +48,7 @@ A distribuição combina o melhor de dois mundos:
 - **Edge na Cloudflare:** Distribuição global com latência mínima para os assets estáticos do portfólio;
 - **Serviços na VPS Oracle:** O gerenciador de newsletter, coleta de métricas e orquestração de rotinas rodam em containers isolados no meu servidor Linux pessoal.
 
-O código-fonte completo está aberto no [GitHub](https://github.com/devAndreotti/frosted-motion-folio-v2).
+O código-fonte completo está aberto no [GitHub](https://github.com/devAndreotti/motion-folio).
 
 ---
 

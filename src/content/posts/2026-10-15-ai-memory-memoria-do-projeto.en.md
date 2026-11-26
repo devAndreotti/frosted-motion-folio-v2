@@ -4,7 +4,7 @@ date: 2026-10-15
 description: ai-memory keeps a project's decisions, rules and gotchas outside the chat session, so any model can pick up where the last one stopped.
 tags: [ia, mcp, ai-memory]
 draft: false
-source: a47e4a90d6ce
+source: 304610e86135
 ---
 
 > "A big f\*-you to the AI providers and the lock-in they try to push."

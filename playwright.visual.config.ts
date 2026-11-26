@@ -5,7 +5,7 @@ import { defineConfig, devices } from "@playwright/test";
 // Precisa do build antes (npm run build; os scripts test:visual* já fazem isso). As bases ficam em tests/visual/*-snapshots/
 // e são geradas no CI (Linux x64); atualizar com npm run test:visual:update.
 const PORT = 8081;
-const BASE = `http://localhost:${PORT}/frosted-motion-folio-v2/`;
+const BASE = `http://localhost:${PORT}/motion-folio/`;
 
 const VIEWPORTS = {
   mobile: { width: 390, height: 844 },
