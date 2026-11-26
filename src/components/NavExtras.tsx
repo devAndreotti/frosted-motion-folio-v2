@@ -1,4 +1,4 @@
-import { Github, Linkedin } from 'lucide-react';
+import { Github, Linkedin } from '@/components/icons/brand';
 import { contact } from '@/data/personal';
 import { track } from '@/lib/track';
 import type { Lang } from '@/lib/i18n';
