@@ -24,7 +24,7 @@ export default defineConfig({
   workers: 2,
   reporter: [["list"], ["html", { open: "never" }]],
   use: {
-    baseURL: "http://localhost:8080/frosted-motion-folio-v2/",
+    baseURL: "http://localhost:8080/motion-folio/",
     // the site follows the browser language when nothing was picked; the specs read the Portuguese copy
     locale: "pt-BR",
     trace: "on-first-retry",

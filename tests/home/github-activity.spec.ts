@@ -17,7 +17,7 @@ test("resolves to either real activity cards or the graceful fallback", async ({
             id: "evt-1",
             type: "PushEvent",
             created_at: new Date().toISOString(),
-            repo: { name: "devAndreotti/frosted-motion-folio-v2" },
+            repo: { name: "devAndreotti/motion-folio" },
             payload: {
               commits: [{ message: "feat: otimiza vitest e mock github" }],
             },
@@ -26,7 +26,7 @@ test("resolves to either real activity cards or the graceful fallback", async ({
             id: "evt-2",
             type: "PullRequestEvent",
             created_at: new Date(Date.now() - 3600000).toISOString(),
-            repo: { name: "devAndreotti/frosted-motion-folio-v2" },
+            repo: { name: "devAndreotti/motion-folio" },
             payload: {
               action: "opened",
               pull_request: { title: "Otimização de Performance e Quality Gate" },

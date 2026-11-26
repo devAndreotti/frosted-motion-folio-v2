@@ -5,7 +5,7 @@
 //   node scripts/traduzir-posts.mjs pendentes                  lista os posts sem inglês (ou com o PT mudado) e sem PR aberto
 //   node scripts/traduzir-posts.mjs aplicar <slug> <arquivo>   valida a tradução e grava o <post>.en.md
 //   node scripts/traduzir-posts.mjs publicar                   abre um PR só com os .en.md novos
-//   node scripts/traduzir-posts.mjs mesclar                    faz o merge dos PRs traducao/* com os checks verdes
+//   node scripts/traduzir-posts.mjs mesclar                    faz o merge dos PRs traducao/* e post/* com os checks verdes
 //
 // A tradução é um arquivo com `title:` e `description:` no front matter e o texto em Markdown. O resto
 // do cabeçalho (date, tags, draft) vem do original, e `source` guarda o hash do original para saber
@@ -21,6 +21,16 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const POSTS_DIR = path.join(ROOT, 'src/content/posts');
 const BRANCH_PREFIX = 'traducao/';
 const EN_FILE = /^src\/content\/posts\/[^/]+\.en\.md$/;
+// PRs post/* (importação do LinkedIn pelo cron): só podem tocar no conteúdo do blog
+const POST_PREFIX = 'post/';
+const POST_FILE = /^(src\/content\/(posts|archive)\/[^/]+\.md|public\/blog\/[^/]+\/[^/]+\.(jpe?g|png|webp|gif))$/;
+
+/** Que arquivos um PR automático pode tocar, pelo prefixo do branch; null = não é PR automático. */
+export function allowedFiles(branch) {
+  if (branch.startsWith(BRANCH_PREFIX)) return EN_FILE;
+  if (branch.startsWith(POST_PREFIX)) return POST_FILE;
+  return null;
+}
 const MIN_RATIO = 0.6;
 const MAX_RATIO = 1.8;
 
@@ -174,11 +184,13 @@ function cmdPublicar() {
 function cmdMesclar() {
   const fields = 'number,headRefName,statusCheckRollup,files,mergeStateStatus';
   const prs = JSON.parse(run('gh', ['pr', 'list', '--state', 'open', '--json', fields, '--limit', '50']));
-  for (const pr of prs.filter((p) => p.headRefName.startsWith(BRANCH_PREFIX))) {
-    const onlyTranslations = pr.files.length > 0 && pr.files.every((f) => EN_FILE.test(f.path));
+  for (const pr of prs) {
+    const allowed = allowedFiles(pr.headRefName);
+    if (!allowed) continue;
+    const onlyAllowed = pr.files.length > 0 && pr.files.every((f) => allowed.test(f.path));
     const checks = pr.statusCheckRollup ?? [];
     const green = checks.length > 0 && checks.every((c) => ['SUCCESS', 'SKIPPED', 'NEUTRAL'].includes(c.conclusion ?? c.state));
-    if (!onlyTranslations) console.log(`#${pr.number}: tem arquivo que não é tradução, não mesclo`);
+    if (!onlyAllowed) console.log(`#${pr.number}: tem arquivo fora do permitido para ${pr.headRefName.split('/')[0]}/*, não mesclo`);
     else if (pr.mergeStateStatus === 'BEHIND') {
       // a main exige o branch atualizado; os checks rodam de novo e o merge sai na próxima volta
       run('gh', ['pr', 'update-branch', String(pr.number)]);

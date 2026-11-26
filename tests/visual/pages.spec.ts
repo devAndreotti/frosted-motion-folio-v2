@@ -9,6 +9,11 @@ const PAGES = [
   { name: "404", path: "rota-que-nao-existe/" },
 ];
 
+// O que é desenhado a partir dos posts (lista, tags, destaque, mais lidos, teaser da home) muda a cada post novo:
+// a página muda de altura e todo PR de post reprovava aqui. Essas regiões saem do print; o layout em volta fica.
+// O visual dos cards em si é coberto pelos testes de componente.
+const CONTENT_DRIVEN = [".teaser", ".blog-tags", ".blog-feat", ".blog-most", ".blog-year", ".blog-filter-status"].join(", ");
+
 for (const { name, path } of PAGES) {
   test(`${name} não muda sem querer`, async ({ page }) => {
     if (name === "home") {
@@ -17,6 +22,7 @@ for (const { name, path } of PAGES) {
     await stabilize(page);
     await page.goto(path);
     await settle(page);
+    await page.addStyleTag({ content: `${CONTENT_DRIVEN} { display: none !important; }` });
     await expect(page).toHaveScreenshot(`${name}.png`, {
       fullPage: true,
       maxDiffPixelRatio: 0.05,

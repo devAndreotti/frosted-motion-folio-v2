@@ -50,8 +50,8 @@ describe('prerendered blog pages', () => {
   });
 
   it('lists the posts on /blog/ under the build base', () => {
-    const html = renderIndexPage(template, [post], '/frosted-motion-folio-v2/');
-    expect(html).toContain('<a href="/frosted-motion-folio-v2/blog/meu-post/">');
+    const html = renderIndexPage(template, [post], '/motion-folio/');
+    expect(html).toContain('<a href="/motion-folio/blog/meu-post/">');
     expect(html).toContain('<link rel="canonical" href="https://devandreotti.com/blog/" />');
   });
 

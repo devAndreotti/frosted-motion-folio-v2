@@ -3,6 +3,7 @@ title: A memória do projeto não deveria ser refém do provedor de IA
 date: 2026-10-15
 description: O ai-memory mantém decisões, regras e gotchas do projeto fora da sessão de chat, e qualquer modelo continua de onde o outro parou.
 tags: [ia, mcp, ai-memory]
+linkedin: urn:li:activity:7516483324803063808
 draft: false
 ---
 

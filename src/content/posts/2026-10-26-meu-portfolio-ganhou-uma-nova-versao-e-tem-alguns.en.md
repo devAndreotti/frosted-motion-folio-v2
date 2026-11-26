@@ -5,7 +5,7 @@ time: "16:19"
 description: "How I built the new version of my portfolio uniting adaptive design tokens, autonomous Hermes translation, interactive terminal and Cloudflare edge."
 tags: [react, tailwind, automacao, cloudflare, hermes]
 draft: false
-source: 76b86ffc450d
+source: f6eeba6b34f3
 ---
 
 *Originally published on [LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7518270888371445761/) on 10/26/2026.*
@@ -49,7 +49,7 @@ Deployment combines edge speed with server-side control:
 - **Cloudflare Edge:** Global static asset distribution ensuring single-digit millisecond latency worldwide;
 - **Oracle Linux VPS:** The newsletter dispatcher, metric collection scripts, and task orchestrators run in isolated containers on my personal server.
 
-The complete codebase is open source on [GitHub](https://github.com/devAndreotti/frosted-motion-folio-v2).
+The complete codebase is open source on [GitHub](https://github.com/devAndreotti/motion-folio).
 
 ---
 
