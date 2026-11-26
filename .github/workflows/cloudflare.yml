@@ -10,9 +10,11 @@ on:
   pull_request:
   workflow_dispatch:
 
+# Um grupo só para o Worker, sem cancelar: um preview de PR que sobe versão no meio do deploy da main faz o
+# `wrangler secret put` falhar ("latest version of your Worker isn't currently deployed"), como em 26/11.
 concurrency:
-  group: cloudflare-${{ github.ref }}
-  cancel-in-progress: true
+  group: cloudflare-worker
+  cancel-in-progress: false
 
 permissions:
   contents: read
