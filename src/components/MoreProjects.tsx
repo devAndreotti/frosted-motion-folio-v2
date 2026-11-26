@@ -39,7 +39,8 @@ const MoreProjects = ({ projects, onOpen, extraAction }: MoreProjectsProps) => {
       <ul className="mp-grid">
         {shown.map((p) => (
           <li key={p.id}>
-            <Link to={casePath(p.slug)} state={CASE_STATE} className="mp-card glass" onClick={(e: MouseEvent<HTMLAnchorElement>) => openHere(e, p)} aria-label={m.cardAria(p.title)}>
+            <Link to={casePath(p.slug)} state={CASE_STATE} className="mp-card glass" onClick={(e: MouseEvent<HTMLAnchorElement>) => openHere(e, p)}>
+              <span className="sr-only">{m.cardAria('')}</span>
               <span className="mp-img" style={{ '--tint': p.tint } as CSSProperties}>
                 <img className="mp-bg" src={projectAsset(p.image)} alt="" aria-hidden="true" loading="lazy" decoding="async" />
                 <span className="mp-win">

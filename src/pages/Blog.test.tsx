@@ -114,7 +114,7 @@ describe('blog pages', () => {
 
   it('lets the visitor change the accent color from the blog bar, as on the home page', () => {
     renderAt('/blog/');
-    fireEvent.click(screen.getByRole('button', { name: 'Escolher cor de destaque' }));
+    fireEvent.click(screen.getByRole('button', { name: /escolher cor de destaque/i }));
     fireEvent.click(screen.getByRole('button', { name: 'Cor de destaque: Roxo' }));
     expect(localStorage.getItem('hue')).toBe('purple');
     // the popover closes after a pick

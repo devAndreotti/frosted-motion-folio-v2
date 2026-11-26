@@ -19,7 +19,7 @@ describe("ColorPickerPopover", () => {
     renderPicker();
     expect(screen.queryByRole("button", { name: "Cor de destaque: Azul" })).toBeNull();
 
-    const trigger = screen.getByRole("button", { name: "Escolher cor de destaque" });
+    const trigger = screen.getByRole("button", { name: /escolher cor de destaque/i });
     fireEvent.click(trigger);
     expect(trigger.getAttribute("aria-expanded")).toBe("true");
     expect(screen.getByRole("button", { name: "Cor de destaque: Azul" })).toBeTruthy();
@@ -27,17 +27,17 @@ describe("ColorPickerPopover", () => {
 
   it("picking a swatch applies the hue and closes the popover", () => {
     renderPicker();
-    fireEvent.click(screen.getByRole("button", { name: "Escolher cor de destaque" }));
+    fireEvent.click(screen.getByRole("button", { name: /escolher cor de destaque/i }));
     fireEvent.click(screen.getByRole("button", { name: "Cor de destaque: Azul" }));
 
     expect(screen.queryByRole("button", { name: "Cor de destaque: Azul" })).toBeNull();
     expect(localStorage.getItem("hue")).toBe("blue");
-    expect(screen.getByRole("button", { name: "Escolher cor de destaque" }).textContent).toContain("Azul");
+    expect(screen.getByRole("button", { name: /escolher cor de destaque/i }).textContent).toContain("Azul");
   });
 
   it("closes on Escape and on a click outside", () => {
     renderPicker();
-    const trigger = screen.getByRole("button", { name: "Escolher cor de destaque" });
+    const trigger = screen.getByRole("button", { name: /escolher cor de destaque/i });
 
     fireEvent.click(trigger);
     fireEvent.keyDown(document, { key: "Escape" });
@@ -50,7 +50,7 @@ describe("ColorPickerPopover", () => {
 
   it("is a labelled dialog: focus goes to the swatches on open and back to the pill on Escape", () => {
     renderPicker();
-    const trigger = screen.getByRole("button", { name: "Escolher cor de destaque" });
+    const trigger = screen.getByRole("button", { name: /escolher cor de destaque/i });
     expect(trigger.getAttribute("aria-haspopup")).toBe("dialog");
 
     fireEvent.click(trigger);
@@ -65,7 +65,7 @@ describe("ColorPickerPopover", () => {
 
   it("picking a swatch also gives focus back to the pill", () => {
     renderPicker();
-    const trigger = screen.getByRole("button", { name: "Escolher cor de destaque" });
+    const trigger = screen.getByRole("button", { name: /escolher cor de destaque/i });
     fireEvent.click(trigger);
     fireEvent.click(screen.getByRole("button", { name: "Cor de destaque: Azul" }));
     expect(document.activeElement).toBe(trigger);

@@ -31,7 +31,7 @@ describe("MoreProjects", () => {
 
   it("opens the project of the clicked card, and each card links to its own page", () => {
     const onOpen = renderGallery();
-    const card = screen.getByRole("link", { name: `Ver as telas de ${moreProjects[0].title}` });
+    const card = screen.getByRole("link", { name: new RegExp(`^Ver as telas de\\s*${moreProjects[0].title}`) });
     expect(card.getAttribute("href")).toBe(`/projetos/${moreProjects[0].slug}/`);
     fireEvent.click(card);
     expect(onOpen).toHaveBeenCalledWith(moreProjects[0]);
@@ -39,7 +39,7 @@ describe("MoreProjects", () => {
 
   it("leaves a modified click to the link (a new tab), without opening the popup", () => {
     const onOpen = renderGallery();
-    fireEvent.click(screen.getByRole("link", { name: `Ver as telas de ${moreProjects[0].title}` }), { ctrlKey: true });
+    fireEvent.click(screen.getByRole("link", { name: new RegExp(`^Ver as telas de\\s*${moreProjects[0].title}`) }), { ctrlKey: true });
     expect(onOpen).not.toHaveBeenCalled();
   });
 
