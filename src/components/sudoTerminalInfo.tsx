@@ -19,7 +19,7 @@ const COMMANDS: Record<string, { pt: string; en: string }> = {
 export const terminalInfoHelp = (lang: Lang): ReactNode =>
   Object.entries(COMMANDS).map(([name, desc]) => (
     <div key={name}>
-      <span className="text-[var(--accent)] font-semibold">{name}</span> — {desc[lang]}
+      <span className="text-(--accent) font-semibold">{name}</span> — {desc[lang]}
     </div>
   ));
 

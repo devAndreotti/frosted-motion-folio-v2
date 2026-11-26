@@ -33,6 +33,13 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
+      // react-hooks 7 trouxe as regras do React Compiler para o recommended. O projeto não usa o compiler e os
+      // pontos apontados (refs lidos no render de animações, setState em efeito de sincronização) funcionam:
+      // ficam como aviso, igual ao sonarjs, em vez de reescrever 24 componentes só pela regra.
+      "react-hooks/refs": "warn",
+      "react-hooks/set-state-in-effect": "warn",
+      "react-hooks/purity": "warn",
+      "react-hooks/immutability": "warn",
       ...Object.fromEntries(
         Object.entries(sonarjs.configs.recommended.rules).map(([rule]) => [rule, "warn"])
       ),

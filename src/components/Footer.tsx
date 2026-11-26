@@ -1,4 +1,5 @@
-import { ArrowRight, ArrowUpRight, Clock, FileText, Github, Instagram, Linkedin, Mail } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Clock, FileText, Mail } from 'lucide-react';
+import { Github, Instagram, Linkedin } from '@/components/icons/brand';
 import { contact } from '@/data/personal';
 import { projects } from '@/data/projects';
 import { CASE_COUNT } from '@/data/curatedProjects';

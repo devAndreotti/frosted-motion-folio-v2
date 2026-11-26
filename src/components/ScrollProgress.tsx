@@ -5,7 +5,7 @@ const ScrollProgress = () => {
   const { scrollYProgress } = useScroll();
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-[51] h-[2.5px] pointer-events-none" aria-hidden="true">
+    <div className="fixed top-0 left-0 right-0 z-51 h-[2.5px] pointer-events-none" aria-hidden="true">
       <motion.div
         className="h-full w-full origin-left"
         style={{ scaleX: scrollYProgress, background: 'var(--accent)' }}

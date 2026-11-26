@@ -27,7 +27,7 @@ export const SudoTerminal = () => {
       command: "welcome",
       output: (
         <div className="text-white/70 space-y-1">
-          <div>Terminal Interativo v2.0 — digite <span className="text-[var(--accent)] font-bold">help</span> para comandos.</div>
+          <div>Terminal Interativo v2.0 — digite <span className="text-(--accent) font-bold">help</span> para comandos.</div>
           <div>Dica: existem segredos escondidos pela linha do tempo...</div>
         </div>
       ),
@@ -112,15 +112,15 @@ export const SudoTerminal = () => {
       case "help":
         output = (
           <div className="text-white/70 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-xs">
-            <div><span className="text-[var(--accent)] font-semibold">whoami</span> — Perfil de Ricardo</div>
-            <div><span className="text-[var(--accent)] font-semibold">skills</span> — Stack principal</div>
+            <div><span className="text-(--accent) font-semibold">whoami</span> — Perfil de Ricardo</div>
+            <div><span className="text-(--accent) font-semibold">skills</span> — Stack principal</div>
             {terminalInfoHelp(lang)}
-            <div><span className="text-[var(--accent)] font-semibold">theme &lt;cor&gt;</span> — Muda tom de cor</div>
-            <div><span className="text-[var(--accent)] font-semibold">mode</span> — Alterna dark/light</div>
-            <div><span className="text-[var(--accent)] font-semibold">contact</span> — Links e e-mail</div>
-            <div><span className="text-[var(--accent)] font-semibold">clear</span> — Limpa a tela</div>
-            <div><span className="text-[var(--accent)] font-semibold">exit</span> — Fecha terminal</div>
-            <div><span className="text-[var(--accent)] font-semibold">sudo hire ricardo</span> — {t.eggs.hireHelp}</div>
+            <div><span className="text-(--accent) font-semibold">theme &lt;cor&gt;</span> — Muda tom de cor</div>
+            <div><span className="text-(--accent) font-semibold">mode</span> — Alterna dark/light</div>
+            <div><span className="text-(--accent) font-semibold">contact</span> — Links e e-mail</div>
+            <div><span className="text-(--accent) font-semibold">clear</span> — Limpa a tela</div>
+            <div><span className="text-(--accent) font-semibold">exit</span> — Fecha terminal</div>
+            <div><span className="text-(--accent) font-semibold">sudo hire ricardo</span> — {t.eggs.hireHelp}</div>
           </div>
         );
         break;
@@ -144,8 +144,8 @@ export const SudoTerminal = () => {
       case "contact":
         output = (
           <div className="text-white/80 space-y-1">
-            <div>GitHub: <a href="https://github.com/devAndreotti" target="_blank" rel="noreferrer" className="underline text-[var(--accent)]">github.com/devAndreotti</a></div>
-            <div>LinkedIn: <a href="https://www.linkedin.com/in/ricardo-andreotti-gon%C3%A7alves-0b5785283/" target="_blank" rel="noreferrer" className="underline text-[var(--accent)]">linkedin.com/in/ricardo-andreotti</a></div>
+            <div>GitHub: <a href="https://github.com/devAndreotti" target="_blank" rel="noreferrer" className="underline text-(--accent)">github.com/devAndreotti</a></div>
+            <div>LinkedIn: <a href="https://www.linkedin.com/in/ricardo-andreotti-gon%C3%A7alves-0b5785283/" target="_blank" rel="noreferrer" className="underline text-(--accent)">linkedin.com/in/ricardo-andreotti</a></div>
             <div>Email: <span className="text-white font-mono">devandreotti@gmail.com</span></div>
           </div>
         );
@@ -153,13 +153,13 @@ export const SudoTerminal = () => {
 
       case "mode":
         toggleTheme();
-        output = <div className="text-white/80">Modo alterado para <span className="text-[var(--accent)] font-bold">{theme === "dark" ? "light" : "dark"}</span>.</div>;
+        output = <div className="text-white/80">Modo alterado para <span className="text-(--accent) font-bold">{theme === "dark" ? "light" : "dark"}</span>.</div>;
         break;
 
       case "theme":
         if (arg && VALID_HUES.includes(arg as Hue)) {
           setHue(arg as Hue);
-          output = <div className="text-white/80">Tema de cor alterado para <span className="text-[var(--accent)] font-bold">{arg}</span>!</div>;
+          output = <div className="text-white/80">Tema de cor alterado para <span className="text-(--accent) font-bold">{arg}</span>!</div>;
         } else {
           output = <div className="text-red-400">Cor inválida. Opções: {VALID_HUES.join(", ")}</div>;
         }
@@ -179,7 +179,7 @@ export const SudoTerminal = () => {
           triggerSteinsGate();
           return;
         }
-        output = <div className="text-white/50">Comando desconhecido: {cleanCmd}. Digite <span className="text-[var(--accent)]">help</span>.</div>;
+        output = <div className="text-white/50">Comando desconhecido: {cleanCmd}. Digite <span className="text-(--accent)">help</span>.</div>;
         break;
 
       case "sudo":
@@ -207,7 +207,7 @@ export const SudoTerminal = () => {
           triggerSteinsGate();
           return;
         }
-        output = <div className="text-white/50">Comando desconhecido: {cleanCmd}. Digite <span className="text-[var(--accent)]">help</span>.</div>;
+        output = <div className="text-white/50">Comando desconhecido: {cleanCmd}. Digite <span className="text-(--accent)">help</span>.</div>;
         break;
     }
 
@@ -224,7 +224,7 @@ export const SudoTerminal = () => {
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 px-4 transition-all"
+      className="fixed inset-0 z-60 flex items-center justify-center bg-black/70 px-4 transition-all"
       onClick={() => setShow(false)}
     >
       <div
@@ -247,7 +247,7 @@ export const SudoTerminal = () => {
           style={{ borderBottom: "1px solid var(--border-1)" }}
         >
           <div className="flex items-center gap-2">
-            <TerminalIcon className="w-4 h-4 text-[var(--accent)]" />
+            <TerminalIcon className="w-4 h-4 text-(--accent)" />
             <span className="text-xs font-semibold text-white/80">ricardo@portfolio: ~</span>
           </div>
           <button
@@ -263,7 +263,7 @@ export const SudoTerminal = () => {
         <div className="p-4 max-h-[380px] overflow-y-auto space-y-3 text-xs md:text-sm custom-scrollbar">
           {logs.map((log) => (
             <div key={log.id} className="space-y-1">
-              <div className="flex items-center gap-2 text-[var(--accent)] font-semibold">
+              <div className="flex items-center gap-2 text-(--accent) font-semibold">
                 <span>$</span>
                 <span>{log.command}</span>
               </div>
@@ -275,16 +275,16 @@ export const SudoTerminal = () => {
 
         <form
           onSubmit={onSubmit}
-          className="flex items-center gap-2 px-4 py-3 bg-black/40 border-t border-[var(--border-1)]"
+          className="flex items-center gap-2 px-4 py-3 bg-black/40 border-t border-(--border-1)"
         >
-          <span className="text-[var(--accent)] font-bold text-sm">$</span>
+          <span className="text-(--accent) font-bold text-sm">$</span>
           <input
             ref={inputRef}
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="digite um comando (help, theme, whoami...)"
-            className="flex-1 bg-transparent border-none outline-none text-white text-xs md:text-sm placeholder:text-white/30"
+            className="flex-1 bg-transparent border-none outline-hidden text-white text-xs md:text-sm placeholder:text-white/30"
           />
         </form>
       </div>
